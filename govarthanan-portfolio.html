@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Govarthanan — Product Designer & UX Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Geist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+/* ─────────────────────────────────────────
+   RESET
+───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─────────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────────── */
+:root {
+  --primary:        #0014D1;
+  --primary-dim:    rgba(0,20,209,0.07);
+  --primary-dim2:   rgba(0,20,209,0.14);
+  --title-color:    #1A1A1A;
+  --subtitle-color: #4A4A4A;
+  --muted:          #8a8480;
+  --bg:             #f8f7f4;
+  --bg2:            #f0ede8;
+  --surface:        #ffffff;
+  --border:         #e2ddd8;
+  --border2:        #ccc8c2;
+
+  /* hero-specific ink tints */
+  --ink-50:  rgba(13,13,13,0.50);
+  --ink-30:  rgba(13,13,13,0.30);
+  --ink-12:  rgba(13,13,13,0.12);
+  --rule:    rgba(13,13,13,0.09);
+
+  --NAV-H:    56px;
+  --PAGE-W:   1200px;
+  --PAGE-PAD: 64px;
+  --SEC-Y:    112px;
+}
+
+/* ─────────────────────────────────────────
+   BASE
+───────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--title-color);
+  font-family: 'Geist', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.5;
+}
+
+/* ─────────────────────────────────────────
+   CURSOR
+───────────────────────────────────────── */
+.cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 10000;
+  transform: translate(-50%,-50%);
+  transition: opacity .2s;
+  mix-blend-mode: multiply;
+}
+
+/* ─────────────────────────────────────────
+   LAYOUT SYSTEM
+───────────────────────────────────────── */
+.bleed { width: 100%; }
+.inner {
+  width: 100%;
+  max-width: var(--PAGE-W);
+  margin-left: auto; margin-right: auto;
+  padding-left: var(--PAGE-PAD); padding-right: var(--PAGE-PAD);
+}
+.sec { padding-top: var(--SEC-Y); padding-bottom: var(--SEC-Y); }
+.divider { height: 1px; background: var(--border); }
+
+/* ─────────────────────────────────────────
+   NAV
+───────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 200; height: var(--NAV-H);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--PAGE-PAD);
+  background: rgba(255,255,255,0.90);
+  backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  transition: border-color .2s, background .2s;
+}
+
+.nav-logo {
+  font-weight: 700; font-size: 14px; letter-spacing: -0.02em;
+  color: var(--title-color); text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--primary); flex-shrink: 0;
+}
+
+.nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+.nav-links a {
+  font-size: 13px; color: var(--muted); text-decoration: none;
+  letter-spacing: .01em; transition: color .2s;
+}
+.nav-links a:hover { color: var(--title-color); }
+
+.nav-cta {
+  font-size: 13px; font-weight: 600;
+  color: #fff !important;
+  background: var(--primary);
+  padding: 8px 20px; border-radius: 6px;
+  text-decoration: none;
+  transition: background .2s, box-shadow .2s !important;
+}
+.nav-cta:hover {
+  background: #0010a8 !important;
+  box-shadow: 0 4px 20px rgba(0,20,209,.28);
+}
+
+/* ─────────────────────────────────────────
+   TYPOGRAPHY UTILITIES
+───────────────────────────────────────── */
+.eyebrow {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 16px;
+}
+.eyebrow::before {
+  content: ''; display: block; width: 24px; height: 1.5px;
+  background: var(--primary); opacity: .45; flex-shrink: 0;
+}
+
+h2 {
+  font-family: 'Geist', sans-serif; font-weight: 800;
+  font-size: clamp(36px, 4vw, 56px);
+  line-height: 1.0; letter-spacing: -.035em;
+  color: var(--title-color);
+}
+h2 em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-weight: 400; color: var(--muted);
+}
+
+/* ─────────────────────────────────────────
+   BUTTONS
+───────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; letter-spacing: -.01em;
+  text-decoration: none; border-radius: 8px; padding: 13px 32px;
+  transition: transform .2s, box-shadow .2s, opacity .2s;
+}
+.btn-blue { color: #fff; background: var(--primary); }
+.btn-blue:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(0,20,209,.28); }
+
+.btn-ghost {
+  font-size: 13px; color: var(--subtitle-color); text-decoration: none;
+  border-bottom: 1px solid var(--border2); padding-bottom: 1px;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: color .2s, border-color .2s;
+}
+.btn-ghost:hover { color: var(--primary); border-color: var(--primary); }
+.btn-ghost i { transition: transform .2s; }
+.btn-ghost:hover i { transform: translateX(4px); }
+
+.tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: .1em;
+  padding: 4px 10px; border: 1px solid var(--border);
+  color: var(--muted); border-radius: 4px;
+}
+.tag.hl {
+  background: var(--primary-dim); border-color: var(--primary-dim2);
+  color: var(--primary);
+}
+
+.reveal { opacity: 0; transform: translateY(32px); }
+
+/* ═══════════════════════════════════════
+   HERO — grid bg, left-aligned layout
+═══════════════════════════════════════ */
+#hero {
+  position: relative;
+  width: 100%; min-height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+/* subtle grid */
+#hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none; z-index: 0;
+}
+
+/* blue radial glow — top right */
+#hero::after {
+  content: '';
+  position: absolute; top: -120px; right: -80px;
+  width: 640px; height: 640px;
+  background: radial-gradient(ellipse at center, rgba(0,20,209,0.07) 0%, transparent 68%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── hero content centering wrapper ── */
+.hero-inner {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  max-width: var(--PAGE-W); width: 100%;
+  margin: 0 auto;
+  padding: calc(var(--NAV-H) + 80px) var(--PAGE-PAD) 80px;
+}
+
+/* ── status chip + location ── */
+.hero-toprow {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 64px;
+  opacity: 0;
+}
+
+.hero-chip {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: rgba(0,20,209,0.05);
+  border: 1px solid rgba(0,20,209,0.10);
+  border-radius: 100px;
+  padding: 6px 14px 6px 10px;
+}
+.hero-chip-pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--primary); flex-shrink: 0;
+  position: relative;
+}
+.hero-chip-pulse::after {
+  content: '';
+  position: absolute; inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--primary);
+  opacity: 0;
+  animation: hpulse 2.4s ease-out infinite;
+}
+@keyframes hpulse {
+  0%   { transform: scale(1);   opacity: .5; }
+  70%  { transform: scale(2.2); opacity: 0; }
+  100% { opacity: 0; }
+}
+.hero-chip-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--primary); font-weight: 500;
+}
+.hero-location {
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-30);
+}
+
+/* ── headline block ── */
+.hero-headline-block { margin-bottom: 48px; }
+
+.hero-signature {
+  display: block;
+  font-family: 'Geist', sans-serif; font-weight: 900;
+  font-size: clamp(64px, 8.5vw, 118px);
+  line-height: .90; letter-spacing: -.055em;
+  color: var(--title-color);
+  margin-bottom: 6px;
+  opacity: 0;
+}
+.hero-signature em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-weight: 400;
+  letter-spacing: -.025em;
+  color: var(--primary);
+}
+
+.hero-rule {
+  display: block; height: 1px;
+  background: linear-gradient(90deg, var(--ink-12), transparent 60%);
+  margin: 28px 0;
+  opacity: 0; transform-origin: left;
+}
+
+.hero-position { display: flex; flex-direction: column; gap: 2px; opacity: 0; }
+.hero-pos-line {
+  font-family: 'Geist', sans-serif;
+  font-size: clamp(17px, 2vw, 26px);
+  font-weight: 500; letter-spacing: -.025em; line-height: 1.3;
+  color: var(--ink-50);
+}
+.hero-pos-line strong { font-weight: 700; color: var(--title-color); }
+.hero-pos-line .accent { color: var(--primary); font-weight: 600; }
+
+/* ── desc + CTA two-column ── */
+.hero-body-block {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 64px; align-items: end;
+  opacity: 0;
+}
+
+.hero-desc {
+  font-size: 16px; line-height: 1.75;
+  color: var(--ink-50); max-width: 52ch;
+  margin-bottom: 32px;
+  letter-spacing: -.005em;
+}
+.hero-desc strong { color: var(--title-color); font-weight: 600; }
+
+.hero-proof { display: flex; gap: 36px; align-items: center; }
+.hero-proof-item { display: flex; flex-direction: column; gap: 3px; }
+.hero-proof-val {
+  font-family: 'Geist', sans-serif;
+  font-size: 22px; font-weight: 800;
+  letter-spacing: -.04em; color: var(--primary); line-height: 1;
+}
+.hero-proof-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-30);
+}
+.hero-proof-divider {
+  width: 1px; height: 36px; background: var(--border); flex-shrink: 0;
+}
+
+.hero-cta-col {
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: 16px; flex-shrink: 0;
+}
+
+.cta-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--primary); color: #fff;
+  font-family: 'Geist', sans-serif;
+  font-size: 14px; font-weight: 600; letter-spacing: -.01em;
+  padding: 15px 32px; border-radius: 8px;
+  text-decoration: none; white-space: nowrap;
+  transition: background .2s, box-shadow .2s, transform .2s;
+}
+.cta-primary:hover {
+  background: #0010a8;
+  box-shadow: 0 8px 32px rgba(0,20,209,.30);
+  transform: translateY(-1px);
+}
+.cta-primary-icon {
+  width: 20px; height: 20px;
+  border: 1.5px solid rgba(255,255,255,.5);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; flex-shrink: 0; line-height: 1;
+}
+
+.cta-secondary {
+  font-family: 'Geist', sans-serif;
+  font-size: 13px; font-weight: 500;
+  color: var(--ink-50); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 7px;
+  letter-spacing: -.005em; transition: color .18s;
+}
+.cta-secondary:hover { color: var(--primary); }
+.cta-secondary i { transition: transform .2s; font-size: 15px; }
+.cta-secondary:hover i { transform: translateX(3px); }
+
+.hero-microcopy {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-30); text-align: right;
+}
+
+/* ── bottom stack pills ── */
+.hero-bottombar {
+  position: relative; z-index: 2;
+  max-width: var(--PAGE-W); width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--PAGE-PAD) 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  opacity: 0;
+}
+.hero-stack-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-30); margin-bottom: 10px;
+}
+.hero-stack-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-spill {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: .08em;
+  padding: 5px 11px;
+  border: 1px solid var(--border); border-radius: 4px;
+  color: var(--muted); background: var(--bg);
+  transition: border-color .18s, color .18s;
+}
+.hero-spill:hover { border-color: rgba(0,20,209,.20); color: var(--primary); }
+.hero-spill.hl {
+  background: rgba(0,20,209,0.05);
+  border-color: rgba(0,20,209,0.10);
+  color: var(--primary);
+}
+.hero-scroll-hint {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-30);
+}
+.scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--ink-12));
+}
+
+/* ═══════════════════════════════════════
+   MARQUEE — primary blue background
+═══════════════════════════════════════ */
+.marquee-bleed {
+  overflow: hidden;
+  background: var(--primary);
+  padding: 18px 0;
+}
+.marquee-track {
+  display: flex; width: max-content;
+  animation: mq 36s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+.marquee-item {
+  display: inline-flex; align-items: center;
+  padding: 0 0 0 32px;
+  white-space: nowrap;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+}
+.marquee-item::after {
+  content: '';
+  display: inline-block; width: 4px; height: 4px; border-radius: 50%;
+  background: rgba(255,255,255,0.40); flex-shrink: 0;
+  margin-left: 32px;
+}
+@keyframes mq {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ═══════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════ */
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: start;
+}
+.about-heading {
+  font-family: 'Geist', sans-serif; font-weight: 800;
+  font-size: clamp(34px, 4vw, 52px);
+  line-height: 1.0; letter-spacing: -.035em;
+  color: var(--title-color); margin-bottom: 28px;
+}
+.about-heading em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic; font-weight: 400; color: var(--muted);
+}
+.about-p { font-size: 15px; color: var(--subtitle-color); line-height: 1.8; margin-bottom: 14px; }
+.about-p strong { color: var(--title-color); font-weight: 600; }
+
+.cap-list { display: flex; flex-direction: column; }
+.cap-row {
+  display: flex; align-items: flex-start; gap: 18px;
+  padding: 18px 0; border-bottom: 1px solid var(--border);
+  transition: padding-left .25s ease;
+}
+.cap-row:first-child { border-top: 1px solid var(--border); }
+.cap-row:hover { padding-left: 6px; }
+.cap-icon {
+  width: 36px; height: 36px; flex-shrink: 0;
+  border: 1px solid var(--primary-dim2); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  background: var(--primary-dim); color: var(--primary);
+  transition: background .2s;
+}
+.cap-row:hover .cap-icon { background: rgba(0,20,209,0.12); }
+.cap-title { font-weight: 600; font-size: 14px; letter-spacing: -.01em; color: var(--title-color); margin-bottom: 4px; }
+.cap-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+/* ═══════════════════════════════════════
+   PROJECTS
+═══════════════════════════════════════ */
+.projects-head { margin-bottom: 56px; }
+.project-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
+.project-card {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 48px; position: relative; overflow: hidden;
+  transition: background .3s;
+}
+.project-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--primary);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .4s cubic-bezier(.16,1,.3,1);
+}
+.project-card:hover { background: var(--surface); }
+.project-card:hover::after { transform: scaleX(1); }
+
+.p-num {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: .12em; color: var(--primary); opacity: .7; margin-bottom: 24px;
+}
+.p-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.p-name { font-family: 'Geist', sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -.03em; color: var(--title-color); line-height: 1.1; margin-bottom: 8px; }
+.p-sub { font-size: 12px; color: var(--muted); letter-spacing: .02em; margin-bottom: 16px; }
+.p-desc { font-size: 14px; color: var(--subtitle-color); line-height: 1.7; margin-bottom: 28px; }
+.p-metrics { display: flex; gap: 28px; }
+.p-metric { display: flex; flex-direction: column; gap: 3px; }
+.p-metric-val { font-family: 'Geist', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -.02em; color: var(--title-color); }
+.p-metric-label { font-size: 11px; color: var(--muted); }
+
+.p-arrow {
+  position: absolute; top: 48px; right: 48px;
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--muted); transition: all .25s;
+}
+.project-card:hover .p-arrow {
+  background: var(--primary); border-color: var(--primary); color: #fff; transform: rotate(45deg);
+}
+
+/* ═══════════════════════════════════════
+   PRODUCT THINKING
+═══════════════════════════════════════ */
+.thinking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.principle-list { margin-top: 44px; display: flex; flex-direction: column; }
+.principle {
+  padding: 22px 0; border-bottom: 1px solid var(--border);
+  display: grid; grid-template-columns: 30px 1fr;
+  gap: 18px; align-items: start; transition: padding-left .2s;
+}
+.principle:first-child { border-top: 1px solid var(--border); }
+.principle:hover { padding-left: 4px; }
+.pr-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--primary); opacity: .8; letter-spacing: .1em; padding-top: 3px; }
+.pr-title { font-weight: 600; font-size: 14px; letter-spacing: -.01em; color: var(--title-color); margin-bottom: 5px; }
+.pr-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+.brand-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-top: 44px;
+}
+.brand-card {
+  background: var(--bg); padding: 28px 24px;
+  transition: background .2s, border-left-color .2s;
+  border-left: 3px solid transparent;
+}
+.brand-card:hover { background: var(--surface); border-left-color: var(--primary); }
+.brand-letter { font-family: 'Geist', sans-serif; font-weight: 900; font-size: 34px; letter-spacing: -.04em; color: var(--primary); opacity: .15; margin-bottom: 10px; }
+.brand-name { font-weight: 600; font-size: 14px; color: var(--title-color); margin-bottom: 3px; }
+.brand-sector { font-size: 11px; color: var(--muted); letter-spacing: .05em; }
+
+/* ═══════════════════════════════════════
+   SYSTEMS — dark section
+═══════════════════════════════════════ */
+.bleed-dark { background: var(--title-color); }
+.systems-top { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; margin-bottom: 64px; }
+.systems-heading { font-family: 'Geist', sans-serif; font-weight: 800; font-size: clamp(38px,4vw,58px); line-height: 1.0; letter-spacing: -.04em; color: #fff; }
+.systems-heading em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,.35); }
+.systems-desc { font-size: 15px; color: rgba(255,255,255,.45); line-height: 1.7; max-width: 42ch; }
+.sys-eyebrow {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(255,255,255,.30); margin-bottom: 16px;
+}
+.sys-eyebrow::before { content: ''; display: block; width: 24px; height: 1.5px; background: rgba(0,20,209,0.6); flex-shrink: 0; }
+.sys-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.07); }
+.sys-card { background: var(--title-color); padding: 40px 36px; transition: background .25s; }
+.sys-card:hover { background: #222; }
+.sys-num { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .18em; color: rgba(255,255,255,.18); margin-bottom: 24px; }
+.sys-icon-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.sys-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sys-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .12em; color: rgba(255,255,255,.22); }
+.sys-name { font-family: 'Geist', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -.02em; color: #fff; margin-bottom: 10px; }
+.sys-desc { font-size: 13px; color: rgba(255,255,255,.38); line-height: 1.6; margin-bottom: 26px; }
+.sys-pill { display: inline-flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; padding: 5px 10px; border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.35); border-radius: 4px; }
+.sys-pill.live { border-color: rgba(34,197,94,.35); color: #22c55e; }
+.sys-pill.live::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #22c55e; }
+
+/* ═══════════════════════════════════════
+   EXPERIENCE
+═══════════════════════════════════════ */
+.exp-grid { display: grid; grid-template-columns: 260px 1fr; gap: 80px; align-items: start; }
+.exp-sticky { position: sticky; top: calc(var(--NAV-H) + 24px); }
+.exp-sidebar-label { display: flex; align-items: center; gap: 12px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+.exp-sidebar-label::before { content: ''; display: block; width: 24px; height: 1.5px; background: var(--primary); opacity: .45; flex-shrink: 0; }
+.exp-sidebar-h { font-family: 'Geist', sans-serif; font-weight: 800; font-size: clamp(26px,3vw,42px); line-height: 1.0; letter-spacing: -.035em; color: var(--title-color); margin-bottom: 20px; }
+.exp-sidebar-h em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--muted); }
+.exp-sidebar-p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.exp-list { display: flex; flex-direction: column; }
+.exp-item { padding: 36px 0; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 14px; }
+.exp-item:first-child { border-top: 1px solid var(--border); }
+.exp-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.exp-role { font-family: 'Geist', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -.02em; color: var(--title-color); margin-bottom: 4px; }
+.exp-company { font-size: 13px; color: var(--muted); }
+.exp-period { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); white-space: nowrap; letter-spacing: .05em; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; flex-shrink: 0; }
+.exp-points { display: flex; flex-direction: column; gap: 9px; }
+.exp-point { display: flex; gap: 12px; font-size: 14px; color: var(--subtitle-color); line-height: 1.6; }
+.exp-point::before { font-family: 'remixicon'; content: '\ea6e'; color: var(--primary); opacity: .7; flex-shrink: 0; font-size: 12px; margin-top: 4px; line-height: 1; }
+.exp-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+.exp-badge { font-family: 'DM Mono', monospace; font-size: 11px; padding: 5px 12px; background: var(--primary-dim); border: 1px solid var(--primary-dim2); color: var(--primary); border-radius: 4px; letter-spacing: .05em; }
+
+/* ═══════════════════════════════════════
+   TECH STACK
+═══════════════════════════════════════ */
+.bleed-soft { background: var(--bg2); }
+.tech-top { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; margin-bottom: 56px; }
+.tech-heading { font-family: 'Geist', sans-serif; font-weight: 800; font-size: clamp(34px,4vw,52px); line-height: 1.0; letter-spacing: -.04em; color: var(--title-color); }
+.tech-heading em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--muted); }
+.tech-desc { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 42ch; }
+.tech-table { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.tech-row { background: var(--bg2); padding: 18px 26px; display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: background .2s; }
+.tech-row:hover { background: var(--surface); }
+.tech-row:hover .tech-name { color: var(--primary); }
+.tech-name { font-weight: 600; font-size: 14px; letter-spacing: -.01em; color: var(--title-color); transition: color .2s; }
+.tech-cat { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .12em; color: var(--primary); opacity: .55; text-transform: uppercase; }
+
+.npm-card { margin-top: 44px; border: 1px solid var(--border); background: var(--surface); padding: 34px 38px; display: flex; align-items: center; justify-content: space-between; gap: 28px; position: relative; overflow: hidden; }
+.npm-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--primary), transparent); }
+.npm-badge { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+.npm-badge::before { content: '●'; font-size: 8px; }
+.npm-title { font-family: 'Geist', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: -.02em; color: var(--title-color); margin-bottom: 7px; }
+.npm-desc { font-size: 13px; color: var(--muted); max-width: 44ch; }
+.npm-stats { display: flex; gap: 36px; flex-shrink: 0; }
+.npm-stat { text-align: center; }
+.npm-stat-val { font-family: 'Geist', sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -.03em; color: var(--primary); margin-bottom: 4px; }
+.npm-stat-label { font-size: 11px; color: var(--muted); letter-spacing: .05em; }
+
+/* ═══════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════ */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.contact-heading { font-family: 'Geist', sans-serif; font-weight: 900; font-size: clamp(44px,5vw,76px); line-height: .95; letter-spacing: -.04em; color: #fff; margin-bottom: 20px; }
+.contact-heading em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: rgba(255,255,255,.3); }
+.contact-sub { font-size: 15px; color: rgba(255,255,255,.4); line-height: 1.7; max-width: 40ch; }
+.contact-links { display: flex; flex-direction: column; }
+.contact-row { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.07); text-decoration: none; transition: padding-left .2s; }
+.contact-row:first-child { border-top: 1px solid rgba(255,255,255,.07); }
+.contact-row:hover { padding-left: 8px; }
+.contact-row-name { font-weight: 600; font-size: 14px; color: #fff; }
+.contact-row-val { font-family: 'DM Mono', monospace; font-size: 12px; color: rgba(255,255,255,.3); letter-spacing: .05em; }
+.contact-row-arrow { font-size: 18px; color: rgba(0,20,209,.5); transition: color .2s, transform .2s; }
+.contact-row:hover .contact-row-arrow { color: var(--primary); transform: translateX(3px); }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer {
+  background: var(--title-color);
+  border-top: 2px solid rgba(0,20,209,0.45);
+  padding: 22px var(--PAGE-PAD);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-l, .footer-r { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,.18); letter-spacing: .08em; }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 960px) {
+  :root { --PAGE-PAD: 24px; --SEC-Y: 72px; }
+  .nav-links { display: none; }
+  .hero-toprow { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 40px; }
+  .hero-body-block { grid-template-columns: 1fr; gap: 40px; }
+  .hero-cta-col { align-items: flex-start; }
+  .hero-microcopy { text-align: left; }
+  .hero-proof { flex-wrap: wrap; gap: 20px; }
+  .hero-bottombar { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .hero-scroll-hint { display: none; }
+  .about-grid, .thinking-grid, .exp-grid,
+  .tech-top, .systems-top, .contact-grid { grid-template-columns: 1fr; gap: 44px; }
+  .project-grid { grid-template-columns: 1fr; }
+  .project-card { padding: 32px; }
+  .p-arrow { top: 32px; right: 32px; }
+  .sys-grid { grid-template-columns: 1fr; }
+  .tech-table { grid-template-columns: 1fr; }
+  .npm-card { flex-direction: column; align-items: flex-start; }
+  .brand-grid { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 10px; text-align: center; padding: 22px 24px; }
+  .exp-grid { grid-template-columns: 1fr; }
+  .exp-sticky { position: static; }
+}
+
+@media (max-width: 560px) {
+  .hero-signature { font-size: clamp(52px, 14vw, 72px); }
+  .hero-pos-line { font-size: 16px; }
+  .hero-desc { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">
+    <span class="nav-logo-dot"></span>
+    Govarthanan S.
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#systems">Systems</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact" class="nav-cta">Let's Talk</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section id="hero">
+
+  <div class="hero-inner">
+
+    <!-- Status chip + location -->
+    <div class="hero-toprow" id="h-toprow">
+      <div class="hero-chip">
+        <span class="hero-chip-pulse"></span>
+        <span class="hero-chip-text">Open to Senior Roles &amp; Product Collaboration</span>
+      </div>
+      <span class="hero-location">Puducherry, India — Remote Ready</span>
+    </div>
+
+    <!-- Name + positioning -->
+    <div class="hero-headline-block">
+      <span class="hero-signature" id="h-name">
+        Govarthanan<br><em>Selva.</em>
+      </span>
+      <span class="hero-rule" id="h-rule"></span>
+      <div class="hero-position" id="h-position">
+        <p class="hero-pos-line">
+          <strong>Product Designer · UX Engineer · Frontend Systems Builder</strong>
+        </p>
+        <p class="hero-pos-line">
+          I close the gap between <span class="accent">product strategy</span> and
+          <span class="accent">production code</span> —
+          designing systems that ship, scale, and generate measurable outcomes.
+        </p>
+      </div>
+    </div>
+
+    <!-- Desc + CTA -->
+    <div class="hero-body-block" id="h-body">
+      <div>
+        <p class="hero-desc">
+          Over 2+ years I've owned end-to-end product work across
+          <strong>fintech platforms, SaaS products, motion infrastructure, and AI-powered tools</strong> —
+          from IA and design systems to Angular, Flutter, and published npm packages.
+          I don't hand off screens. I architect experiences and build them.
+        </p>
+        <div class="hero-proof">
+          <div class="hero-proof-item">
+            <span class="hero-proof-val">30+</span>
+            <span class="hero-proof-label">Shipped Products</span>
+          </div>
+          <div class="hero-proof-divider"></div>
+          <div class="hero-proof-item">
+            <span class="hero-proof-val">526</span>
+            <span class="hero-proof-label">npm Downloads / wk</span>
+          </div>
+          <div class="hero-proof-divider"></div>
+          <div class="hero-proof-item">
+            <span class="hero-proof-val">4+</span>
+            <span class="hero-proof-label">Live Products Built</span>
+          </div>
+          <div class="hero-proof-divider"></div>
+          <div class="hero-proof-item">
+            <span class="hero-proof-val">2 yr</span>
+            <span class="hero-proof-label">Production Experience</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-cta-col">
+        <a href="#projects" class="cta-primary">
+          See Selected Work
+          <span class="cta-primary-icon"><i class="ri-arrow-right-up-fill"></i></span>
+        </a>
+        <a href="mailto:dotcreatives6222@gmail.com" class="cta-secondary">
+          Start a Conversation
+          <i class="ri-arrow-right-fill"></i>
+        </a>
+        <p class="hero-microcopy">Available for full-time &amp; contract</p>
+      </div>
+    </div>
+
+  </div><!-- /hero-inner -->
+
+  <!-- Bottom stack pills -->
+  <div class="hero-bottombar" id="h-bottom">
+    <div>
+      <div class="hero-stack-label">Core Stack</div>
+      <div class="hero-stack-pills">
+        <span class="hero-spill hl">Angular</span>
+        <span class="hero-spill hl">Flutter</span>
+        <span class="hero-spill hl">GSAP</span>
+        <span class="hero-spill">HTML / CSS / JS</span>
+        <span class="hero-spill">Figma</span>
+        <span class="hero-spill">Design Systems</span>
+        <span class="hero-spill">Motion Architecture</span>
+        <span class="hero-spill">Claude AI</span>
+        <span class="hero-spill">npm</span>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════ MARQUEE ═══════════════ -->
+<div class="marquee-bleed">
+  <div class="marquee-track">
+    <span class="marquee-item">Figma</span>
+    <span class="marquee-item">HTML</span>
+    <span class="marquee-item">CSS</span>
+    <span class="marquee-item">JavaScript</span>
+    <span class="marquee-item">TypeScript</span>
+    <span class="marquee-item">Angular</span>
+    <span class="marquee-item">Flutter</span>
+    <span class="marquee-item">GSAP</span>
+    <span class="marquee-item">Bootstrap</span>
+    <span class="marquee-item">Adobe XD</span>
+    <span class="marquee-item">Photoshop</span>
+    <span class="marquee-item">Illustrator</span>
+    <span class="marquee-item">After Effects</span>
+    <span class="marquee-item">Razorpay</span>
+    <span class="marquee-item">Claude AI</span>
+    <span class="marquee-item">Git &amp; GitHub</span>
+    <span class="marquee-item">npm</span>
+    <span class="marquee-item">Design Systems</span>
+    <span class="marquee-item">Motion Systems</span>
+    <span class="marquee-item">SDS Motion Forge</span>
+    <span class="marquee-item">FrameStack PDF</span>
+    <!-- dup for seamless loop -->
+    <span class="marquee-item">Figma</span>
+    <span class="marquee-item">HTML</span>
+    <span class="marquee-item">CSS</span>
+    <span class="marquee-item">JavaScript</span>
+    <span class="marquee-item">TypeScript</span>
+    <span class="marquee-item">Angular</span>
+    <span class="marquee-item">Flutter</span>
+    <span class="marquee-item">GSAP</span>
+    <span class="marquee-item">Bootstrap</span>
+    <span class="marquee-item">Adobe XD</span>
+    <span class="marquee-item">Photoshop</span>
+    <span class="marquee-item">Illustrator</span>
+    <span class="marquee-item">After Effects</span>
+    <span class="marquee-item">Razorpay</span>
+    <span class="marquee-item">Claude AI</span>
+    <span class="marquee-item">Git &amp; GitHub</span>
+    <span class="marquee-item">npm</span>
+    <span class="marquee-item">Design Systems</span>
+    <span class="marquee-item">Motion Systems</span>
+    <span class="marquee-item">SDS Motion Forge</span>
+    <span class="marquee-item">FrameStack PDF</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════ ABOUT ═══════════════ -->
+<div id="about" class="bleed sec">
+  <div class="inner">
+    <div class="about-grid">
+      <div>
+        <div class="eyebrow">About</div>
+        <h2 class="about-heading reveal">
+          Designer who<br><em>ships systems,</em><br>not screens.
+        </h2>
+        <p class="about-p reveal">I'm a Product Designer and UX Engineer focused on building production-ready digital experiences. Over 2+ years, I've worked across fintech, SaaS, retail, and developer platforms — contributing to products used at real business scale.</p>
+        <p class="about-p reveal">Unlike traditional designers, I work beyond static UI. I design scalable systems, interaction models, motion behavior, and implementation-ready interfaces using Angular, Flutter, GSAP, and modern frontend workflows.</p>
+        <p class="about-p reveal">I'm also the founder of <strong>Salkom Design Studio</strong> and currently building <strong>Uxora</strong> — an AI-powered UX learning platform focused on scenario-based product thinking.</p>
+      </div>
+      <div class="cap-list reveal">
+        <div class="cap-row">
+          <div class="cap-icon"><i class="ri-layout-4-fill"></i></div>
+          <div>
+            <div class="cap-title">Product Design &amp; UX Systems</div>
+            <div class="cap-desc">Information architecture, user flows, design tokens, component systems, and scalable interaction models for complex product surfaces.</div>
+          </div>
+        </div>
+        <div class="cap-row">
+          <div class="cap-icon"><i class="ri-code-s-slash-fill"></i></div>
+          <div>
+            <div class="cap-title">Frontend Engineering</div>
+            <div class="cap-desc">HTML, CSS, JavaScript, Angular (UI), Flutter (UI), Bootstrap, GSAP — building responsive, performant, production-ready interfaces.</div>
+          </div>
+        </div>
+        <div class="cap-row">
+          <div class="cap-icon"><i class="ri-magic-fill"></i></div>
+          <div>
+            <div class="cap-title">Motion Architecture</div>
+            <div class="cap-desc">GSAP timelines, CSS animation systems, procedural motion — SDS Motion Forge published on npm with 526 weekly downloads.</div>
+          </div>
+        </div>
+        <div class="cap-row">
+          <div class="cap-icon"><i class="ri-stack-fill"></i></div>
+          <div>
+            <div class="cap-title">Design Systems &amp; Tooling</div>
+            <div class="cap-desc">Published Figma plugins and npm packages under Salkom Design Studio. Design-to-development workflow infrastructure.</div>
+          </div>
+        </div>
+        <div class="cap-row">
+          <div class="cap-icon"><i class="ri-rocket-2-fill"></i></div>
+          <div>
+            <div class="cap-title">Founder &amp; Product Builder</div>
+            <div class="cap-desc">4+ live products from 0→1: Uxora (AI SaaS), SDS Motion Forge (npm), FrameStack PDF (Figma), Aura Elite Events platform.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════ PROJECTS ═══════════════ -->
+<div id="projects" class="bleed sec">
+  <div class="inner">
+    <div class="projects-head">
+      <div class="eyebrow">Featured Work</div>
+      <h2 class="reveal">Product Systems<br><em>&amp; Case Studies</em></h2>
+    </div>
+    <div class="project-grid">
+      <div class="project-card reveal">
+        <div class="p-arrow"><i class="ri-arrow-right-up-fill"></i></div>
+        <div class="p-num">01 — Fintech</div>
+        <div class="p-tags"><span class="tag hl">Production</span><span class="tag">Flutter UI</span><span class="tag">Fintech</span><span class="tag">Transactions</span></div>
+        <h3 class="p-name">Pothys DigiGold</h3>
+        <p class="p-sub">Gold Savings Platform — JRK Consulting Services</p>
+        <p class="p-desc">End-to-end UX and frontend for a high-scale fintech system handling daily gold transactions. Designed enrollment flows, payment systems, scheme tracking, and real-time status dashboards — serving thousands of customers in production.</p>
+        <div class="p-metrics">
+          <div class="p-metric"><div class="p-metric-val">+15%</div><div class="p-metric-label">User Engagement</div></div>
+          <div class="p-metric"><div class="p-metric-val">−25%</div><div class="p-metric-label">Handoff Time</div></div>
+          <div class="p-metric"><div class="p-metric-val">Prod</div><div class="p-metric-label">Live Scale</div></div>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="p-arrow"><i class="ri-arrow-right-up-fill"></i></div>
+        <div class="p-num">02 — AI SaaS</div>
+        <div class="p-tags"><span class="tag hl">Founder-Built</span><span class="tag">AI / Claude</span><span class="tag">Flutter</span><span class="tag">Razorpay</span></div>
+        <h3 class="p-name">Uxora</h3>
+        <p class="p-sub">AI-Powered UX Learning Platform — Salkom Design Studio</p>
+        <p class="p-desc">Built an AI-powered UX learning OS from 0→1. Created 8,000+ pre-generated scenarios across 50+ domains using the Salkom Forge Engine. Features XP progression, LinkedIn sharing flows, subscription billing, cognitive maturity scoring, and anti-duplication logic.</p>
+        <div class="p-metrics">
+          <div class="p-metric"><div class="p-metric-val">8K+</div><div class="p-metric-label">UX Scenarios</div></div>
+          <div class="p-metric"><div class="p-metric-val">50+</div><div class="p-metric-label">Domains</div></div>
+          <div class="p-metric"><div class="p-metric-val">2026</div><div class="p-metric-label">Launching</div></div>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="p-arrow"><i class="ri-arrow-right-up-fill"></i></div>
+        <div class="p-num">03 — Dev Tooling</div>
+        <div class="p-tags"><span class="tag hl">Published npm</span><span class="tag">CSS Architecture</span><span class="tag">Framework-agnostic</span></div>
+        <h3 class="p-name">SDS Motion Forge</h3>
+        <p class="p-sub">Frontend Motion Infrastructure — @salkomdesignstudio/sds-motion-forge</p>
+        <p class="p-desc">A production-ready CSS animation library with 90+ named animation classes. One class name, zero JavaScript. Framework-agnostic — works with Angular, React, Vue, Tailwind. 7 published versions, 526+ weekly npm downloads.</p>
+        <div class="p-metrics">
+          <div class="p-metric"><div class="p-metric-val">526</div><div class="p-metric-label">Weekly Downloads</div></div>
+          <div class="p-metric"><div class="p-metric-val">90+</div><div class="p-metric-label">Animation Classes</div></div>
+          <div class="p-metric"><div class="p-metric-val">v3.2.1</div><div class="p-metric-label">Live on npm</div></div>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="p-arrow"><i class="ri-arrow-right-up-fill"></i></div>
+        <div class="p-num">04 — Design Tooling</div>
+        <div class="p-tags"><span class="tag hl">Figma Community</span><span class="tag">Plugin</span><span class="tag">Design Workflow</span></div>
+        <h3 class="p-name">FrameStack PDF</h3>
+        <p class="p-sub">Figma Plugin — Published by SalkomDesignStudio</p>
+        <p class="p-desc">Published Figma plugin enabling direct PDF export from design frames — streamlining design-to-document workflows for teams. Live on Figma Community with active users across the SalkomDesignStudio plugin ecosystem.</p>
+        <div class="p-metrics">
+          <div class="p-metric"><div class="p-metric-val">Live</div><div class="p-metric-label">Figma Community</div></div>
+          <div class="p-metric"><div class="p-metric-val">SDS</div><div class="p-metric-label">Plugin Ecosystem</div></div>
+          <div class="p-metric"><div class="p-metric-val">Free</div><div class="p-metric-label">Open Access</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════ PRODUCT THINKING ═══════════════ -->
+<div id="thinking" class="bleed sec">
+  <div class="inner">
+    <div class="thinking-grid">
+      <div>
+        <div class="eyebrow">Product Thinking</div>
+        <h2 class="reveal">Systems over<br><em>surfaces.</em></h2>
+        <div class="principle-list">
+          <div class="principle reveal"><div class="pr-num">01</div><div><div class="pr-title">Business context before pixels</div><div class="pr-desc">Every design decision traces back to a business constraint, user need, or product goal. Not aesthetic preference.</div></div></div>
+          <div class="principle reveal"><div class="pr-num">02</div><div><div class="pr-title">Design for scale, not for screenshots</div><div class="pr-desc">Components, tokens, and patterns built to handle edge cases, responsive states, and real data — not Dribbble viewports.</div></div></div>
+          <div class="principle reveal"><div class="pr-num">03</div><div><div class="pr-title">Handoff is part of the design</div><div class="pr-desc">Implementation-ready specs, motion documentation, and developer-aligned delivery. Reduced handoff time by 25% at JRK.</div></div></div>
+          <div class="principle reveal"><div class="pr-num">04</div><div><div class="pr-title">Founder thinking at every level</div><div class="pr-desc">Product decisions made with cost, velocity, and user retention in mind — not just UX correctness.</div></div></div>
+          <div class="principle reveal"><div class="pr-num">05</div><div><div class="pr-title">Motion as functional infrastructure</div><div class="pr-desc">Animation that communicates state, guides attention, and reduces cognitive load. Packaged and shipped as production tooling.</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">Brands &amp; Clients</div>
+        <h2 class="reveal" style="font-size:clamp(26px,3vw,42px);">Production work<br><em>for real brands.</em></h2>
+        <div class="brand-grid reveal">
+          <div class="brand-card"><div class="brand-letter">P</div><div class="brand-name">Pothys</div><div class="brand-sector">Fintech / Retail</div></div>
+          <div class="brand-card"><div class="brand-letter">G</div><div class="brand-name">GRT Jewellery</div><div class="brand-sector">Jewellery Retail</div></div>
+          <div class="brand-card"><div class="brand-letter">L</div><div class="brand-name">Lalitha Jewellery</div><div class="brand-sector">Jewellery Retail</div></div>
+          <div class="brand-card"><div class="brand-letter">V</div><div class="brand-name">VertexEleven</div><div class="brand-sector">Gaming / SaaS</div></div>
+          <div class="brand-card"><div class="brand-letter">A</div><div class="brand-name">Aura Elite Events</div><div class="brand-sector">Events / Brand</div></div>
+          <div class="brand-card"><div class="brand-letter">M</div><div class="brand-name">Mangal &amp; Mangal</div><div class="brand-sector">Jewellery Retail</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════ SYSTEMS ═══════════════ -->
+<div id="systems" class="bleed bleed-dark sec">
+  <div class="inner">
+    <div class="systems-top">
+      <div>
+        <div class="sys-eyebrow">Salkom Design Studio</div>
+        <h2 class="systems-heading reveal">Built systems.<br><em>Not mockups.</em></h2>
+      </div>
+      <p class="systems-desc reveal">Under Salkom Design Studio, I've built and published production-grade tools used by real teams — from npm packages to Figma plugins to AI-powered SaaS products.</p>
+    </div>
+    <div class="sys-grid">
+      <div class="sys-card reveal">
+        <div class="sys-num">SDS — 01</div>
+        <div class="sys-icon-row"><div class="sys-dot" style="background:var(--primary);"></div><div class="sys-label">NPM PACKAGE</div></div>
+        <div class="sys-name">SDS Motion Forge</div>
+        <div class="sys-desc">90+ production CSS animations. One class name, zero JS. Published on npm, 526 weekly downloads, v3.2.1.</div>
+        <div class="sys-pill live">Live — v3.2.1</div>
+      </div>
+      <div class="sys-card reveal">
+        <div class="sys-num">SDS — 02</div>
+        <div class="sys-icon-row"><div class="sys-dot" style="background:#a855f7;"></div><div class="sys-label">FIGMA PLUGIN</div></div>
+        <div class="sys-name">FrameStack PDF</div>
+        <div class="sys-desc">Figma plugin for direct frame-to-PDF export. Published on Figma Community by SalkomDesignStudio.</div>
+        <div class="sys-pill live">Live — Community</div>
+      </div>
+      <div class="sys-card reveal">
+        <div class="sys-num">SDS — 03</div>
+        <div class="sys-icon-row"><div class="sys-dot" style="background:#f59e0b;"></div><div class="sys-label">AI SAAS</div></div>
+        <div class="sys-name">Uxora</div>
+        <div class="sys-desc">AI-powered UX learning OS. 8,000+ scenarios, Claude AI integration, XP system, subscription billing. Launching 2026.</div>
+        <div class="sys-pill" style="border-color:rgba(245,158,11,.4);color:#f59e0b;">In Development</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ EXPERIENCE ═══════════════ -->
+<div id="experience" class="bleed sec">
+  <div class="inner">
+    <div class="exp-grid">
+      <div class="exp-sticky">
+        <div class="exp-sidebar-label">Experience</div>
+        <div class="exp-sidebar-h reveal">2+ years<br><em>building</em><br>at scale.</div>
+        <p class="exp-sidebar-p reveal">From trainee designer to founder. Every role with production accountability, stakeholder management, and measurable outcomes.</p>
+      </div>
+      <div class="exp-list">
+        <div class="exp-item reveal">
+          <div class="exp-top">
+            <div>
+              <div class="exp-role">Founder &amp; Product Designer</div>
+              <div class="exp-company">Salkom Design Studio, Pondicherry</div>
+            </div>
+            <div class="exp-period">Jul 2025 — Present</div>
+          </div>
+          <div class="exp-points">
+            <div class="exp-point">Founded and scaled multidisciplinary design studio serving 3+ active clients across brand, product, and digital marketing.</div>
+            <div class="exp-point">Led end-to-end execution for Aura Elite Events — brand identity, campaign strategy, sold-out event (1,200 tickets), 200+ additional sales in final week.</div>
+            <div class="exp-point">Designed VertexEleven Gamehub fantasy app from 0→1: UX research, wireframes, UI systems, interactive prototypes, core product decisions.</div>
+            <div class="exp-point">Building Uxora — AI-powered UX learning SaaS with Claude AI integration, 8,000+ scenarios, XP systems, and subscription monetization.</div>
+            <div class="exp-point">Published SDS Motion Forge on npm (526 weekly downloads, v3.2.1) and FrameStack PDF on Figma Community.</div>
+          </div>
+          <div class="exp-badges">
+            <span class="exp-badge">1,200 Tickets Sold</span>
+            <span class="exp-badge">526 npm Downloads/wk</span>
+            <span class="exp-badge">3+ Active Clients</span>
+          </div>
+        </div>
+        <div class="exp-item reveal">
+          <div class="exp-top">
+            <div>
+              <div class="exp-role">UI/UX Designer</div>
+              <div class="exp-company">JRK Consulting Services, Chennai</div>
+            </div>
+            <div class="exp-period">Mar 2024 — Present</div>
+          </div>
+          <div class="exp-points">
+            <div class="exp-point">Led UX and frontend for DigiGold App — a high-scale gold savings fintech platform handling daily financial transactions in production.</div>
+            <div class="exp-point">Designed and shipped 30+ web and mobile products for Pothys, GRT Jewellers, Lalitha Jewellery, and Mangal &amp; Mangal.</div>
+            <div class="exp-point">Built responsive interfaces in Flutter (UI), Angular, Bootstrap, and GSAP — driving 15% increase in user engagement across key projects.</div>
+            <div class="exp-point">Established pixel-perfect UI systems and motion standards, reducing design-to-development handoff time by 25%.</div>
+            <div class="exp-point">Acted as design-engineering bridge: translated business requirements into scalable product experiences with stakeholders and developers.</div>
+          </div>
+          <div class="exp-badges">
+            <span class="exp-badge">+15% Engagement</span>
+            <span class="exp-badge">−25% Handoff Time</span>
+            <span class="exp-badge">30+ Products Shipped</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════ TECH STACK ═══════════════ -->
+<div id="motion" class="bleed bleed-soft sec">
+  <div class="inner">
+    <div class="tech-top">
+      <div>
+        <div class="eyebrow">Tech Stack &amp; Motion Systems</div>
+        <h2 class="tech-heading reveal">Frontend<br><em>engineering</em><br>stack.</h2>
+      </div>
+      <p class="tech-desc reveal">I don't just design — I build. Every tool below is something I've used in a shipped, production environment across fintech, SaaS, or open-source systems.</p>
+    </div>
+    <div class="tech-table reveal">
+      <div class="tech-row"><div class="tech-name">HTML / CSS / JavaScript</div><div class="tech-cat">Core Web</div></div>
+      <div class="tech-row"><div class="tech-name">Angular (UI Layer)</div><div class="tech-cat">Frontend Framework</div></div>
+      <div class="tech-row"><div class="tech-name">Flutter (UI Layer)</div><div class="tech-cat">Cross-Platform</div></div>
+      <div class="tech-row"><div class="tech-name">Bootstrap</div><div class="tech-cat">CSS Framework</div></div>
+      <div class="tech-row"><div class="tech-name">GSAP + ScrollTrigger</div><div class="tech-cat">Motion Systems</div></div>
+      <div class="tech-row"><div class="tech-name">CSS Animations / @keyframes</div><div class="tech-cat">Motion Architecture</div></div>
+      <div class="tech-row"><div class="tech-name">Figma + Prototyping</div><div class="tech-cat">Design System</div></div>
+      <div class="tech-row"><div class="tech-name">Razorpay / APIs</div><div class="tech-cat">Product Integration</div></div>
+      <div class="tech-row"><div class="tech-name">Claude AI (Anthropic SDK)</div><div class="tech-cat">AI Integration</div></div>
+      <div class="tech-row"><div class="tech-name">Git / GitHub / SVN</div><div class="tech-cat">Version Control</div></div>
+    </div>
+    <div class="npm-card reveal">
+      <div>
+        <div class="npm-badge">Published Package — npm</div>
+        <div class="npm-title">@salkomdesignstudio/sds-motion-forge</div>
+        <div class="npm-desc">Production-ready CSS animation library. 90+ semantically named animation classes — text, buttons, inputs, cards, loaders, scroll-triggered effects. Zero JavaScript, zero dependencies, framework-agnostic.</div>
+      </div>
+      <div class="npm-stats">
+        <div class="npm-stat"><div class="npm-stat-val">526</div><div class="npm-stat-label">Weekly Downloads</div></div>
+        <div class="npm-stat"><div class="npm-stat-val">7</div><div class="npm-stat-label">Versions</div></div>
+        <div class="npm-stat"><div class="npm-stat-val">MIT</div><div class="npm-stat-label">License</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CONTACT ═══════════════ -->
+<div id="contact" class="bleed bleed-dark sec">
+  <div class="inner">
+    <div class="contact-grid">
+      <div>
+        <div class="sys-eyebrow">Let's Build</div>
+        <h2 class="contact-heading reveal">Ready to<br>build<br><em>together?</em></h2>
+        <p class="contact-sub reveal">Open to senior product design roles, UX engineering positions, design system work, and global startup opportunities — particularly fintech, SaaS, and developer-focused products.</p>
+      </div>
+      <div class="contact-links reveal">
+        <a href="mailto:dotcreatives6222@gmail.com" class="contact-row"><div><div class="contact-row-name">Email</div><div class="contact-row-val">dotcreatives6222@gmail.com</div></div><i class="ri-arrow-right-fill contact-row-arrow"></i></a>
+        <a href="tel:+919344081006" class="contact-row"><div><div class="contact-row-name">Phone</div><div class="contact-row-val">+91 9344081006</div></div><i class="ri-arrow-right-fill contact-row-arrow"></i></a>
+        <a href="https://linkedin.com/in/govarthananuxui" target="_blank" class="contact-row"><div><div class="contact-row-name">LinkedIn</div><div class="contact-row-val">govarthananuxui</div></div><i class="ri-arrow-right-fill contact-row-arrow"></i></a>
+        <a href="https://github.com/sgovarthanan" target="_blank" class="contact-row"><div><div class="contact-row-name">GitHub</div><div class="contact-row-val">sgovarthanan</div></div><i class="ri-arrow-right-fill contact-row-arrow"></i></a>
+        <a href="https://npmjs.com/package/@salkomdesignstudio/sds-motion-forge" target="_blank" class="contact-row"><div><div class="contact-row-name">npm Package</div><div class="contact-row-val">@salkomdesignstudio/sds-motion-forge</div></div><i class="ri-arrow-right-fill contact-row-arrow"></i></a>
+        <a href="https://instagram.com/govarthananofficial" target="_blank" class="contact-row"><div><div class="contact-row-name">Instagram</div><div class="contact-row-val">Govarthananofficial</div></div><i class="ri-arrow-right-fill contact-row-arrow"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-l">© 2025 Govarthanan Selvaganessane — Salkom Design Studio</div>
+  <div class="footer-r">Product Designer &amp; UX Engineer — Puducherry, India</div>
+</footer>
+
+<script>
+/* ─── CURSOR ─── */
+const dot = document.getElementById('cursorDot');
+document.addEventListener('mousemove', e => {
+  dot.style.left = e.clientX + 'px';
+  dot.style.top  = e.clientY + 'px';
+});
+document.documentElement.addEventListener('mouseleave', () => dot.style.opacity = '0');
+document.documentElement.addEventListener('mouseenter', () => dot.style.opacity = '1');
+
+/* ─── NAV SCROLL ─── */
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  nav.style.background = window.scrollY > 10
+    ? 'rgba(248,247,244,0.95)'
+    : 'rgba(255,255,255,0.90)';
+  nav.style.borderBottomColor = window.scrollY > 10
+    ? 'rgba(13,13,13,0.12)' : '#e2ddd8';
+});
+
+/* ─── GSAP ─── */
+gsap.registerPlugin(ScrollTrigger);
+
+/* hero entrance */
+const heroTl = gsap.timeline({ delay: 0.1 });
+
+heroTl.fromTo('#mainNav',
+  { opacity: 0, y: -16 },
+  { opacity: 1, y: 0, duration: .7, ease: 'power3.out' }, 0
+);
+heroTl.fromTo('#h-toprow',
+  { opacity: 0, y: 14 },
+  { opacity: 1, y: 0, duration: .75, ease: 'power3.out' }, 0.18
+);
+heroTl.fromTo('#h-name',
+  { opacity: 0, y: 60, skewY: 1.5 },
+  { opacity: 1, y: 0, skewY: 0, duration: 1.1, ease: 'power4.out' }, 0.26
+);
+heroTl.fromTo('#h-rule',
+  { opacity: 0, scaleX: 0 },
+  { opacity: 1, scaleX: 1, duration: .9, ease: 'power3.inOut' }, 0.76
+);
+heroTl.fromTo('#h-position',
+  { opacity: 0, y: 24 },
+  { opacity: 1, y: 0, duration: .85, ease: 'power3.out' }, 0.86
+);
+heroTl.fromTo('#h-body',
+  { opacity: 0, y: 20 },
+  { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, 1.08
+);
+heroTl.fromTo('#h-bottom',
+  { opacity: 0, y: 12 },
+  { opacity: 1, y: 0, duration: .65, ease: 'power3.out' }, 1.28
+);
+
+/* scroll reveals */
+gsap.utils.toArray('.reveal').forEach(el => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 32 },
+    { opacity: 1, y: 0, duration: 0.88, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 86%', once: true } }
+  );
+});
+</script>
+</body>
+</html>

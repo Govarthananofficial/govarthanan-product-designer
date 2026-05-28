@@ -2509,98 +2509,169 @@
       }
       .foot-grid {
         display: grid;
-        grid-template-columns: 1.4fr 1fr 1fr;
-        gap: 64px;
-        padding-bottom: 56px;
+        grid-template-columns: 1.25fr 1fr 1fr;
+        gap: 56px;
+        padding-bottom: 52px;
         border-bottom: 1px solid var(--bd);
-      }
-      .foot-brand-name {
-        font-family: "Geist", sans-serif;
-        font-weight: 800;
-        font-size: 17px;
-        letter-spacing: -0.03em;
-        color: var(--t1);
-        margin-bottom: 8px;
-      }
-      .foot-brand-tag {
-        font-size: 13px;
-        color: var(--t4);
-        line-height: 1.6;
-        max-width: 28ch;
-        margin-bottom: 28px;
-      }
-      .foot-social {
-        display: flex;
-        gap: 8px;
-      }
-      .foot-social-link {
-        width: 34px;
-        height: 34px;
-        border-radius: 8px;
-        border: 1px solid var(--bd2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        color: var(--t4);
-        text-decoration: none;
-        transition:
-          background 0.18s,
-          border-color 0.18s,
-          color 0.18s;
-      }
-      .foot-social-link:hover {
-        background: var(--bg-sub);
-        border-color: var(--primary-border);
-        color: var(--primary);
+        text-align: left;
       }
       .foot-col-label {
         font-family: "DM Mono", monospace;
         font-size: 9px;
         letter-spacing: 0.2em;
         text-transform: uppercase;
-        color: var(--t4);
-        margin-bottom: 20px;
+        color: var(--primary);
+        margin-bottom: 24px;
+        font-weight: 600;
+        text-align: left;
       }
+      /* ── Contact column ── */
+      .foot-cinfo-list {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+      .foot-cinfo-item {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        text-align: left;
+      }
+      .foot-cinfo-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--t1);
+        font-weight: 600;
+        font-size: 13px;
+        text-align: left;
+      }
+      .foot-cinfo-head i {
+        font-size: 16px;
+        color: var(--t3);
+        flex-shrink: 0;
+        transition: color 0.18s;
+      }
+      .foot-cinfo-item:hover .foot-cinfo-head i {
+        color: var(--primary);
+      }
+      .foot-cinfo-val {
+        font-size: 13px;
+        color: var(--t3);
+        text-decoration: none;
+        padding-left: 24px;
+        line-height: 1.6;
+        text-align: left;
+        transition: color 0.18s;
+      }
+      a.foot-cinfo-val:hover {
+        color: var(--primary);
+      }
+      /* ── Social & nav links ── */
       .foot-links {
         display: flex;
         flex-direction: column;
-        gap: 0;
+        text-align: left;
       }
       .foot-link {
         font-size: 14px;
         font-weight: 500;
         color: var(--t2);
         text-decoration: none;
-        padding: 9px 0;
+        padding: 10px 0;
         border-bottom: 1px solid var(--bd);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        transition:
-          color 0.18s,
-          padding-left 0.18s;
+        text-align: left;
+        transition: color 0.18s;
       }
-      .foot-link:last-child {
-        border-bottom: none;
+      .foot-links > .foot-link:first-child {
+        border-top: 1px solid var(--bd);
       }
       .foot-link:hover {
         color: var(--primary);
-        padding-left: 4px;
       }
-      .foot-link i {
-        font-size: 13px;
+      .foot-link-inner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-align: left;
+      }
+      .foot-link-inner i {
+        font-size: 18px;
+        color: var(--t3);
+        flex-shrink: 0;
+        transition: color 0.18s;
+      }
+      .foot-link:hover .foot-link-inner i,
+      .foot-link:hover .foot-arrow {
+        color: var(--primary);
+      }
+      .foot-arrow {
+        font-size: 15px;
         opacity: 0;
-        transition: opacity 0.18s;
+        color: var(--t3);
+        flex-shrink: 0;
+        transition: opacity 0.18s, color 0.18s;
       }
-      .foot-link:hover i {
+      .foot-link:hover .foot-arrow {
         opacity: 1;
       }
+      /* ── Big name display ── */
+      .foot-name-display {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 20px 0 16px;
+        border-bottom: 1px solid var(--bd);
+        overflow: visible;
+      }
+      @keyframes footNameWave {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-10px); }
+      }
+      @keyframes footNameWaveGray {
+        0%, 100% { transform: translateY(0);    color: rgba(0, 20, 209, 0.16); }
+        40%, 60% { transform: translateY(-10px); color: var(--primary); }
+      }
+      .foot-name-display span {
+        font-family: "Geist", sans-serif;
+        font-weight: 900;
+        font-size: clamp(36px, 5.6vw, 82px);
+        letter-spacing: -0.01em;
+        line-height: 1;
+        text-transform: uppercase;
+        user-select: none;
+        display: inline-block;
+        will-change: transform;
+      }
+      .fn-blue {
+        color: var(--primary);
+        animation: footNameWave 1.8s ease-in-out infinite;
+      }
+      .fn-gray {
+        color: rgba(0, 20, 209, 0.16);
+        animation: footNameWaveGray 1.8s ease-in-out infinite;
+      }
+      .foot-name-display span:nth-child(1)  { animation-delay: 0.00s; }
+      .foot-name-display span:nth-child(2)  { animation-delay: 0.14s; }
+      .foot-name-display span:nth-child(3)  { animation-delay: 0.28s; }
+      .foot-name-display span:nth-child(4)  { animation-delay: 0.42s; }
+      .foot-name-display span:nth-child(5)  { animation-delay: 0.56s; }
+      .foot-name-display span:nth-child(6)  { animation-delay: 0.70s; }
+      .foot-name-display span:nth-child(7)  { animation-delay: 0.84s; }
+      .foot-name-display span:nth-child(8)  { animation-delay: 0.98s; }
+      .foot-name-display span:nth-child(9)  { animation-delay: 1.12s; }
+      .foot-name-display span:nth-child(10) { animation-delay: 1.26s; }
+      .foot-name-display span:nth-child(11) { animation-delay: 1.40s; }
+      /* ── Bottom bar ── */
       .foot-bottom {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 20px 0;
+        text-align: left;
       }
       .foot-copy,
       .foot-built {
@@ -2615,11 +2686,6 @@
       }
       .foot-built a:hover {
         text-decoration: underline;
-      }
-      .foot-link--static {
-        cursor: default;
-        pointer-events: none;
-        color: var(--t4);
       }
       .form-label-opt {
         opacity: 0.5;
@@ -2833,8 +2899,8 @@
           grid-template-columns: 1fr;
           gap: 36px;
         }
-        .foot-grid > div:last-child {
-          display: none;
+        .foot-name-display span {
+          font-size: clamp(28px, 8vw, 56px);
         }
         .form-row {
           grid-template-columns: 1fr;
@@ -5155,99 +5221,126 @@
     <footer>
       <div class="inner">
         <div class="foot-grid">
-          <!-- Col 1: Brand -->
-          <div>
-            <div class="foot-brand-name">Govarthanan S.</div>
-            <p class="foot-brand-tag">
-              Product Designer &amp; UX Engineer building scalable systems at
-              Salkom Design Studio.
-            </p>
-            <div class="foot-social">
-              <a
-                href="https://linkedin.com/in/govarthananuxui"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="foot-social-link"
-                aria-label="LinkedIn"
-                ><i class="ri-linkedin-fill"></i
-              ></a>
-              <a
-                href="https://github.com/sgovarthanan"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="foot-social-link"
-                aria-label="GitHub"
-                ><i class="ri-github-fill"></i
-              ></a>
-              <a
-                href="https://instagram.com/govarthananofficial"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="foot-social-link"
-                aria-label="Instagram"
-                ><i class="ri-instagram-fill"></i
-              ></a>
-              <a
-                href="https://npmjs.com/package/@salkomdesignstudio/sds-motion-forge"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="foot-social-link"
-                aria-label="npm"
-                ><i class="ri-npmjs-fill"></i
-              ></a>
-            </div>
-          </div>
-
-          <!-- Col 2: Navigation -->
-          <div>
-            <div class="foot-col-label">Navigation</div>
-            <div class="foot-links">
-              <a href="#about" class="foot-link"
-                >About <i class="ri-arrow-right-line"></i
-              ></a>
-              <a href="#projects" class="foot-link"
-                >Work <i class="ri-arrow-right-line"></i
-              ></a>
-              <a href="#systems" class="foot-link"
-                >Systems <i class="ri-arrow-right-line"></i
-              ></a>
-              <a href="#experience" class="foot-link"
-                >Experience <i class="ri-arrow-right-line"></i
-              ></a>
-              <a href="#clients" class="foot-link"
-                >Clients <i class="ri-arrow-right-line"></i
-              ></a>
-              <a href="#testimonials" class="foot-link"
-                >Testimonials <i class="ri-arrow-right-line"></i
-              ></a>
-              <a href="#contact" class="foot-link"
-                >Contact <i class="ri-arrow-right-line"></i
-              ></a>
-              <a
-                href="Govarthanan_Resume.pdf"
-                download="Govarthanan_Resume.pdf"
-                class="foot-link"
-                >Resume <i class="ri-download-2-line"></i
-              ></a>
-            </div>
-          </div>
-
-          <!-- Col 3: Contact info -->
+          <!-- Col 1: Contact -->
           <div>
             <div class="foot-col-label">Contact</div>
-            <div class="foot-links">
-              <a
-                href="mailto:govarthanan@salkomdesignstudio.com"
-                class="foot-link"
-                >govarthanan@salkomdesignstudio.com
-                <i class="ri-arrow-right-up-line"></i
-              ></a>
-              <a href="tel:+919344081006" class="foot-link"
-                >+91 9344081006 <i class="ri-arrow-right-up-line"></i
-              ></a>
-              <span class="foot-link foot-link--static">Puducherry, India</span>
+            <div class="foot-cinfo-list">
+              <div class="foot-cinfo-item">
+                <div class="foot-cinfo-head">
+                  <i class="ri-mail-fill"></i><span>Email</span>
+                </div>
+                <a
+                  href="mailto:govarthanan@salkomdesignstudio.com"
+                  class="foot-cinfo-val"
+                  >govarthanan@salkomdesignstudio.com</a
+                >
+              </div>
+              <div class="foot-cinfo-item">
+                <div class="foot-cinfo-head">
+                  <i class="ri-phone-fill"></i><span>Phone</span>
+                </div>
+                <a href="tel:+919344081006" class="foot-cinfo-val"
+                  >+91 9344081006</a
+                >
+              </div>
+              <div class="foot-cinfo-item">
+                <div class="foot-cinfo-head">
+                  <i class="ri-map-pin-fill"></i><span>Location</span>
+                </div>
+                <span class="foot-cinfo-val">Puducherry, India</span>
+              </div>
             </div>
           </div>
+
+          <!-- Col 2: Social Links -->
+          <div>
+            <div class="foot-col-label">Social Links</div>
+            <div class="foot-links">
+              <a
+                href="https://www.linkedin.com/in/sgovarthanan/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="foot-link"
+                ><span class="foot-link-inner"
+                  ><i class="ri-linkedin-fill"></i>LinkedIn</span
+                ><i class="foot-arrow ri-arrow-right-up-line"></i
+              ></a>
+              <a
+                href="https://github.com/salkomdesignstudio"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="foot-link"
+                ><span class="foot-link-inner"
+                  ><i class="ri-github-fill"></i>GitHub</span
+                ><i class="foot-arrow ri-arrow-right-up-line"></i
+              ></a>
+              <a
+                href="https://www.behance.net/govarthananuxui"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="foot-link"
+                ><span class="foot-link-inner"
+                  ><i class="ri-behance-fill"></i>Behance</span
+                ><i class="foot-arrow ri-arrow-right-up-line"></i
+              ></a>
+              <a
+                href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="foot-link"
+                ><span class="foot-link-inner"
+                  ><i class="ri-npmjs-fill"></i>npm Package</span
+                ><i class="foot-arrow ri-arrow-right-up-line"></i
+              ></a>
+            </div>
+          </div>
+
+          <!-- Col 3: Useful Links -->
+          <div>
+            <div class="foot-col-label">Useful Links</div>
+            <div class="foot-links">
+              <a href="#about" class="foot-link"
+                ><span class="foot-link-inner"
+                  ><i class="ri-user-fill"></i>About</span
+                ><i class="foot-arrow ri-arrow-right-up-line"></i
+              ></a>
+              <a href="#projects" class="foot-link"
+                ><span class="foot-link-inner"
+                  ><i class="ri-briefcase-fill"></i>Work</span
+                ><i class="foot-arrow ri-arrow-right-up-line"></i
+              ></a>
+              <a href="#systems" class="foot-link"
+                ><span class="foot-link-inner"
+                  ><i class="ri-layout-grid-fill"></i>Systems</span
+                ><i class="foot-arrow ri-arrow-right-up-line"></i
+              ></a>
+              <a href="#experience" class="foot-link"
+                ><span class="foot-link-inner"
+                  ><i class="ri-award-fill"></i>Experience</span
+                ><i class="foot-arrow ri-arrow-right-up-line"></i
+              ></a>
+              <a href="#contact" class="foot-link"
+                ><span class="foot-link-inner"
+                  ><i class="ri-message-3-fill"></i>Contact</span
+                ><i class="foot-arrow ri-arrow-right-up-line"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Big name display -->
+        <div class="foot-name-display">
+          <span class="fn-blue">G</span>
+          <span class="fn-gray">O</span>
+          <span class="fn-blue">V</span>
+          <span class="fn-gray">A</span>
+          <span class="fn-blue">R</span>
+          <span class="fn-gray">T</span>
+          <span class="fn-blue">H</span>
+          <span class="fn-gray">A</span>
+          <span class="fn-blue">N</span>
+          <span class="fn-gray">A</span>
+          <span class="fn-blue">N</span>
         </div>
 
         <div class="foot-bottom">

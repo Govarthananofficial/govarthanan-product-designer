@@ -5293,7 +5293,8 @@
         }
       });
 
-      /* SCROLL REVEALS */
+      /* SCROLL REVEALS — guarded: a CDN failure must not kill the particle system */
+      try {
       gsap.registerPlugin(ScrollTrigger);
 
       gsap.utils.toArray(".reveal").forEach((el) => {
@@ -5383,6 +5384,9 @@
           return function () {};
         });
       })();
+      } catch (e) {
+        console.warn("GSAP unavailable — scroll animations skipped:", e.message);
+      }
 
       /* ─── HERO PARTICLE SYSTEM ─── */
       (function () {

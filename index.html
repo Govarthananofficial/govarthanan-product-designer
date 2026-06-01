@@ -1,14 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Govarthanan — Product Designer & UX Engineer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Geist:wght@300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
     <link
       href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
       rel="stylesheet"
@@ -16,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&display=swap');
       /* ─── RESET ─── */
       *,
       *::before,
@@ -82,7 +78,7 @@
       body {
         background: var(--bg);
         color: var(--t1);
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-size: 15px;
         line-height: 1.6;
         overflow-x: hidden;
@@ -135,7 +131,7 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
@@ -153,7 +149,7 @@
 
       /* ─── HEADINGS ─── */
       h2 {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 800;
         font-size: clamp(40px, 4.5vw, 64px);
         line-height: 1;
@@ -161,7 +157,7 @@
         color: var(--t1);
       }
       h2 em {
-        font-family: "Instrument Serif", serif;
+        font-family: "DM Serif Display", serif;
         font-style: italic;
         font-weight: 400;
         letter-spacing: -0.02em;
@@ -347,7 +343,7 @@
         }
       }
       .avail-text {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
@@ -355,7 +351,7 @@
         font-weight: 500;
       }
       .hero-location {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
@@ -382,7 +378,7 @@
       }
       .hero-name {
         display: block;
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 900;
         font-size: clamp(64px, 9vw, 124px);
         line-height: 0.86;
@@ -431,7 +427,7 @@
         gap: 10px;
         background: var(--primary);
         color: #fff;
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-size: 14px;
         font-weight: 600;
         letter-spacing: -0.02em;
@@ -471,7 +467,7 @@
         gap: 10px;
         background: #ffffff;
         color: var(--t2);
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-size: 14px;
         font-weight: 500;
         letter-spacing: -0.02em;
@@ -487,7 +483,8 @@
       .cta-secondary-btn:hover {
         color: var(--primary);
         border-color: var(--primary-border);
-        background: var(--primary-faint);
+        background: #ffffff;
+        box-shadow: var(--sh1);
       }
       .cta-secondary-btn i {
         font-size: 16px;
@@ -498,7 +495,7 @@
       }
 
       .cta-note {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9.5px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
@@ -534,7 +531,7 @@
         background: var(--bg-sub);
       }
       .proof-val {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 900;
         font-size: 26px;
         letter-spacing: -0.05em;
@@ -542,7 +539,7 @@
         line-height: 1;
       }
       .proof-label {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -577,7 +574,7 @@
         transform: translateX(3px);
       }
       .hero-social-name {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 500;
         font-size: 13px;
         letter-spacing: -0.01em;
@@ -585,7 +582,7 @@
         transition: color 0.22s;
       }
       .hero-social-val {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         color: var(--t4);
         letter-spacing: 0.03em;
@@ -628,7 +625,7 @@
         z-index: 1;
       }
       .stack-label {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9px;
         letter-spacing: 0.18em;
         text-transform: uppercase;
@@ -641,7 +638,7 @@
         flex-wrap: wrap;
       }
       .stack-pill {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9.5px;
         letter-spacing: 0.06em;
         padding: 3px 9px;
@@ -668,7 +665,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9.5px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -701,7 +698,7 @@
         align-items: center;
         padding: 0 0 0 36px;
         white-space: nowrap;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 12px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
@@ -734,13 +731,13 @@
 
       .about-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr);
         gap: 96px;
-        align-items: start;
+        align-items: stretch;
       }
 
       .about-h {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 800;
         font-size: clamp(36px, 4vw, 56px);
         line-height: 1;
@@ -749,7 +746,7 @@
         margin-bottom: 32px;
       }
       .about-h em {
-        font-family: "Instrument Serif", serif;
+        font-family: "DM Serif Display", serif;
         font-style: italic;
         font-weight: 400;
         color: rgba(0, 20, 209, 0.3);
@@ -768,26 +765,36 @@
 
       /* capability list */
       .cap-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        align-content: start;
+        padding-top: 0;
       }
 
       .cap-item {
         display: flex;
+        flex-direction: column;
         align-items: flex-start;
         gap: 16px;
-        padding: 20px 0;
-        border-bottom: 1px solid var(--bd);
-        transition: padding-left 0.22s ease;
+        min-height: 0;
+        padding: 26px;
+        border: 1px solid var(--bd);
+        border-radius: 12px;
+        background: var(--surface);
+        transition:
+          transform 0.22s ease,
+          border-color 0.22s ease,
+          box-shadow 0.22s ease;
       }
-      .cap-item:first-child {
-        border-top: 1px solid var(--bd);
+      .cap-item:nth-child(n + 3) {
+        margin-top: 0;
       }
       .cap-item:hover {
-        padding-left: 8px;
+        transform: translateY(-4px);
+        border-color: var(--primary-border);
+        box-shadow: var(--sh1);
       }
-
       .cap-icon {
         width: 38px;
         height: 38px;
@@ -810,15 +817,36 @@
 
       .cap-name {
         font-weight: 600;
-        font-size: 14px;
+        font-size: 15px;
         letter-spacing: -0.015em;
         color: var(--t1);
-        margin-bottom: 4px;
+        margin-bottom: 8px;
       }
       .cap-info {
-        font-size: 12.5px;
+        font-size: 13px;
         color: var(--t4);
-        line-height: 1.55;
+        line-height: 1.65;
+      }
+      .cap-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: auto;
+        padding-top: 8px;
+      }
+      .cap-tags span {
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        border: 1px solid var(--primary-border);
+        background: var(--primary-faint);
+        color: var(--primary);
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1;
+        white-space: nowrap;
       }
 
       /* ═══════════════════════════════════
@@ -886,7 +914,7 @@
         margin-bottom: 28px;
       }
       .p-num {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.14em;
         color: var(--primary);
@@ -919,7 +947,7 @@
         margin-bottom: 16px;
       }
       .p-tag {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.08em;
         padding: 4px 10px;
@@ -934,7 +962,7 @@
       }
 
       .p-name {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 800;
         font-size: 24px;
         letter-spacing: -0.03em;
@@ -982,7 +1010,7 @@
         padding-left: 16px;
       }
       .p-met-val {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: 18px;
         letter-spacing: -0.025em;
@@ -1028,7 +1056,7 @@
       }
 
       .pr-n {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 11px;
         color: var(--primary);
         letter-spacing: 0.08em;
@@ -1050,7 +1078,7 @@
 
       /* brand grid */
       .clients-h {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 800;
         font-size: clamp(26px, 3vw, 40px);
         line-height: 1;
@@ -1060,7 +1088,7 @@
         margin-top: 4px;
       }
       .clients-h em {
-        font-family: "Instrument Serif", serif;
+        font-family: "DM Serif Display", serif;
         font-style: italic;
         font-weight: 400;
         color: rgba(0, 20, 209, 0.3);
@@ -1089,7 +1117,7 @@
         transform: translateY(-2px);
       }
       .brand-letter {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 900;
         font-size: 32px;
         letter-spacing: -0.05em;
@@ -1183,7 +1211,7 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
@@ -1214,7 +1242,7 @@
       }
 
       .sys-h {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 800;
         font-size: clamp(40px, 4.5vw, 64px);
         line-height: 1;
@@ -1223,7 +1251,7 @@
         margin: 0;
       }
       .sys-h em {
-        font-family: "Instrument Serif", serif;
+        font-family: "DM Serif Display", serif;
         font-style: italic;
         font-weight: 400;
         letter-spacing: -0.02em;
@@ -1277,7 +1305,7 @@
       }
 
       .sys-stat-val {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 800;
         font-size: 22px;
         letter-spacing: -0.045em;
@@ -1286,7 +1314,7 @@
       }
 
       .sys-stat-lbl {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -1376,7 +1404,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9.5px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -1402,7 +1430,7 @@
       }
 
       .sys-card-num {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.16em;
         color: var(--t4);
@@ -1416,7 +1444,7 @@
 
       /* Card name: dark on white, transitions to primary on hover */
       .sys-card-name {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: 20px;
         letter-spacing: -0.028em;
@@ -1452,7 +1480,7 @@
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.1em;
         padding: 5px 12px;
@@ -1580,7 +1608,7 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
@@ -1597,7 +1625,7 @@
       }
 
       .exp-sidebar-h {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 800;
         font-size: clamp(28px, 3vw, 44px);
         line-height: 1;
@@ -1606,7 +1634,7 @@
         margin-bottom: 20px;
       }
       .exp-sidebar-h em {
-        font-family: "Instrument Serif", serif;
+        font-family: "DM Serif Display", serif;
         font-style: italic;
         font-weight: 400;
         color: rgba(0, 20, 209, 0.28);
@@ -1641,7 +1669,7 @@
         gap: 20px;
       }
       .exp-role {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: 17px;
         letter-spacing: -0.02em;
@@ -1654,7 +1682,7 @@
       }
 
       .exp-period {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 11px;
         color: var(--t4);
         white-space: nowrap;
@@ -1697,7 +1725,7 @@
         flex-wrap: wrap;
       }
       .exp-badge {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 11px;
         padding: 5px 12px;
         background: var(--primary-faint);
@@ -1708,7 +1736,7 @@
       }
 
       /* ═══════════════════════════════════
-   TECH STACK
+   SKILLS STACK
 ═══════════════════════════════════ */
       #motion {
         background: var(--bg);
@@ -1723,7 +1751,7 @@
       }
 
       .tech-h {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 800;
         font-size: clamp(36px, 4vw, 56px);
         line-height: 1;
@@ -1731,7 +1759,7 @@
         color: var(--t1);
       }
       .tech-h em {
-        font-family: "Instrument Serif", serif;
+        font-family: "DM Serif Display", serif;
         font-style: italic;
         font-weight: 400;
         color: rgba(0, 20, 209, 0.28);
@@ -1782,7 +1810,7 @@
         transition: color 0.2s;
       }
       .tech-cat {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.1em;
         color: var(--primary);
@@ -1817,7 +1845,7 @@
         );
       }
       .npm-badge {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
@@ -1832,7 +1860,7 @@
         font-size: 7px;
       }
       .npm-title {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: 20px;
         letter-spacing: -0.025em;
@@ -1859,7 +1887,7 @@
         border-left: none;
       }
       .npm-stat-val {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 800;
         font-size: 28px;
         letter-spacing: -0.04em;
@@ -1943,7 +1971,7 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
@@ -1959,7 +1987,7 @@
       }
 
       .contact-h {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 900;
         font-size: clamp(52px, 6vw, 88px);
         line-height: 0.92;
@@ -1968,7 +1996,7 @@
         margin: 0 0 28px;
       }
       .contact-h em {
-        font-family: "Instrument Serif", serif;
+        font-family: "DM Serif Display", serif;
         font-style: italic;
         font-weight: 400;
         font-size: 1.04em;
@@ -1992,7 +2020,7 @@
         gap: 10px;
         background: #fff;
         color: var(--primary);
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: 14px;
         letter-spacing: -0.02em;
@@ -2048,7 +2076,7 @@
       }
 
       .contact-group-label {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9.5px;
         letter-spacing: 0.18em;
         text-transform: uppercase;
@@ -2107,7 +2135,6 @@
       .contact-row:hover {
         background: #ffffff;
         border-color: rgba(255, 255, 255, 0.9);
-        transform: translateY(-2px) translateX(3px);
         box-shadow:
           0 6px 28px rgba(0, 0, 100, 0.28),
           0 2px 8px rgba(0, 0, 0, 0.1);
@@ -2128,7 +2155,7 @@
         gap: 3px;
       }
       .contact-row-name {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 600;
         font-size: 14px;
         color: #fff;
@@ -2137,7 +2164,7 @@
         transition: color 0.24s;
       }
       .contact-row-val {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10.5px;
         letter-spacing: 0.03em;
         line-height: 1.4;
@@ -2166,7 +2193,6 @@
         border-color: var(--primary-border);
         background: var(--bg-sub);
         color: var(--primary);
-        transform: translate(3px, -3px);
       }
 
       /* ═══════════════════════════════════
@@ -2237,7 +2263,7 @@
       }
 
       .modal-label {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
@@ -2245,7 +2271,7 @@
         margin-bottom: 7px;
       }
       .modal-title {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 800;
         font-size: 26px;
         letter-spacing: -0.04em;
@@ -2293,7 +2319,7 @@
         left: 14px;
         top: 50%;
         transform: translateY(-50%);
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-size: 13px;
         color: var(--t3);
         pointer-events: none;
@@ -2318,7 +2344,7 @@
         font-size: 9px;
         letter-spacing: 0.13em;
         text-transform: uppercase;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
       }
       .fl-group.is-textarea.focused .fl-label,
       .fl-group.is-textarea.has-val .fl-label {
@@ -2346,7 +2372,7 @@
         display: block;
         width: 100%;
         box-sizing: border-box;
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-size: 14px;
         color: var(--t1);
         background: var(--bg-alt);
@@ -2407,7 +2433,7 @@
         width: 100%;
         background: var(--primary);
         color: #fff;
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: 14px;
         letter-spacing: -0.01em;
@@ -2485,7 +2511,7 @@
         margin-bottom: 18px;
       }
       .form-success-title {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: 21px;
         letter-spacing: -0.03em;
@@ -2516,7 +2542,7 @@
         text-align: left;
       }
       .foot-col-label {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9px;
         letter-spacing: 0.2em;
         text-transform: uppercase;
@@ -2636,7 +2662,7 @@
         40%, 60% { transform: translateY(-10px); color: var(--primary); }
       }
       .foot-name-display span {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 900;
         font-size: clamp(36px, 5.6vw, 82px);
         letter-spacing: -0.01em;
@@ -2675,7 +2701,7 @@
       }
       .foot-copy,
       .foot-built {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.06em;
         color: var(--t4);
@@ -2717,6 +2743,12 @@
         .contact-grid {
           grid-template-columns: 1fr;
           gap: 48px;
+        }
+        .cap-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .cap-item:nth-child(n + 3) {
+          margin-top: 0;
         }
         .project-grid {
           grid-template-columns: 1fr;
@@ -2830,6 +2862,13 @@
         }
         .brand-grid {
           grid-template-columns: 1fr 1fr;
+        }
+        .cap-list {
+          grid-template-columns: 1fr;
+          height: auto;
+        }
+        .cap-item:nth-child(n + 3) {
+          margin-top: 0;
         }
         .exp-layout {
           grid-template-columns: 1fr;
@@ -3003,7 +3042,7 @@
         justify-content: center;
       }
       .client-logo-letter {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 900;
         font-size: 22px;
         letter-spacing: -0.04em;
@@ -3016,7 +3055,7 @@
         min-width: 0;
       }
       .client-name {
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: 15px;
         letter-spacing: -0.02em;
@@ -3036,7 +3075,7 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9.5px;
         letter-spacing: 0.1em;
         text-transform: uppercase;
@@ -3089,7 +3128,7 @@
         flex: 1;
       }
       .client-tag {
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         font-size: 9.5px;
         letter-spacing: 0.08em;
         padding: 4px 10px;
@@ -3102,7 +3141,7 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-size: 12px;
         font-weight: 600;
         letter-spacing: -0.01em;
@@ -3195,14 +3234,14 @@
         font-weight: 700;
         color: var(--primary);
         line-height: 1;
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
         letter-spacing: -0.02em;
       }
       .testi-count-sep,
       .testi-count-total {
         font-size: 18px;
         color: var(--t4);
-        font-family: "DM Mono", monospace;
+        font-family: "DM Sans", sans-serif;
       }
       .testi-progress-track {
         width: 160px;
@@ -3299,7 +3338,7 @@
         line-height: 0.65;
         color: var(--primary);
         opacity: 0.12;
-        font-family: "Instrument Serif", serif;
+        font-family: "DM Serif Display", serif;
         flex-shrink: 0;
       }
       .testi-body-h {
@@ -3608,7 +3647,7 @@
         gap: 10px;
         background: transparent;
         color: var(--t2);
-        font-family: "Geist", sans-serif;
+        font-family: "DM Sans", sans-serif;
         font-size: 14px;
         font-weight: 500;
         letter-spacing: -0.02em;
@@ -3635,6 +3674,17 @@
       }
       .resume-dl-btn:hover i {
         transform: translateY(-2px);
+      }
+      .hero-resume-btn {
+        background: #ffffff;
+        color: var(--t2);
+        border-color: var(--bd2);
+      }
+      .hero-resume-btn:hover {
+        background: #ffffff;
+        color: var(--primary);
+        border-color: var(--primary-border);
+        box-shadow: var(--sh1);
       }
       .resume-dl-btn--full {
         width: 100%;
@@ -3766,7 +3816,7 @@
           >Testimonials <i class="ri-arrow-right-line"></i
         ></a>
         <a href="#motion" class="mob-link mob-nav-link"
-          >Tech Stack <i class="ri-arrow-right-line"></i
+          >Skills <i class="ri-arrow-right-line"></i
         ></a>
         <a href="#contact" class="mob-link mob-nav-link"
           >Contact <i class="ri-arrow-right-line"></i
@@ -3840,7 +3890,7 @@
               <a
                 href="Govarthanan_Resume.pdf"
                 download="Govarthanan_Resume.pdf"
-                class="resume-dl-btn"
+                class="resume-dl-btn hero-resume-btn"
               >
                 <i class="ri-download-2-line"></i>
                 Download CV
@@ -3919,15 +3969,14 @@
         <div>
           <div class="stack-label">Core Stack</div>
           <div class="stack-pills">
-            <span class="stack-pill active">Angular</span>
-            <span class="stack-pill active">Flutter</span>
-            <span class="stack-pill active">GSAP</span>
+            <span class="stack-pill active">Figma</span>
+            <span class="stack-pill active">Adobe Photoshop</span>
+            <span class="stack-pill active">Adobe Illustrator</span>
+            <span class="stack-pill">UI/UX Design</span>
+            <span class="stack-pill">Graphic Design</span>
             <span class="stack-pill">HTML / CSS / JS</span>
-            <span class="stack-pill">Figma</span>
-            <span class="stack-pill">Design Systems</span>
-            <span class="stack-pill">Motion Architecture</span>
-            <span class="stack-pill">Claude AI</span>
-            <span class="stack-pill">npm</span>
+            <span class="stack-pill">Angular</span>
+            <span class="stack-pill">Flutter UI</span>
           </div>
         </div>
         <div class="scroll-hint">
@@ -3941,47 +3990,41 @@
     <div class="marquee-wrap">
       <div class="marquee-track">
         <span class="marquee-item">Figma</span>
+        <span class="marquee-item">Adobe Photoshop</span>
+        <span class="marquee-item">Adobe Illustrator</span>
+        <span class="marquee-item">Learning Premiere Pro</span>
+        <span class="marquee-item">Learning After Effects</span>
+        <span class="marquee-item">Learning Blender</span>
+        <span class="marquee-item">UI/UX Design</span>
+        <span class="marquee-item">Wireframing</span>
+        <span class="marquee-item">Prototyping</span>
+        <span class="marquee-item">Design Systems</span>
         <span class="marquee-item">HTML</span>
         <span class="marquee-item">CSS</span>
         <span class="marquee-item">JavaScript</span>
         <span class="marquee-item">TypeScript</span>
         <span class="marquee-item">Angular</span>
-        <span class="marquee-item">Flutter</span>
-        <span class="marquee-item">GSAP</span>
+        <span class="marquee-item">Flutter UI</span>
         <span class="marquee-item">Bootstrap</span>
-        <span class="marquee-item">Adobe XD</span>
-        <span class="marquee-item">Photoshop</span>
-        <span class="marquee-item">Illustrator</span>
-        <span class="marquee-item">After Effects</span>
-        <span class="marquee-item">Razorpay</span>
-        <span class="marquee-item">Claude AI</span>
-        <span class="marquee-item">Git &amp; GitHub</span>
-        <span class="marquee-item">npm</span>
-        <span class="marquee-item">Design Systems</span>
-        <span class="marquee-item">Motion Systems</span>
-        <span class="marquee-item">SDS Motion Forge</span>
-        <span class="marquee-item">FrameStack PDF</span>
+        <span class="marquee-item">GSAP</span>
         <span class="marquee-item">Figma</span>
+        <span class="marquee-item">Adobe Photoshop</span>
+        <span class="marquee-item">Adobe Illustrator</span>
+        <span class="marquee-item">Learning Premiere Pro</span>
+        <span class="marquee-item">Learning After Effects</span>
+        <span class="marquee-item">Learning Blender</span>
+        <span class="marquee-item">UI/UX Design</span>
+        <span class="marquee-item">Wireframing</span>
+        <span class="marquee-item">Prototyping</span>
+        <span class="marquee-item">Design Systems</span>
         <span class="marquee-item">HTML</span>
         <span class="marquee-item">CSS</span>
         <span class="marquee-item">JavaScript</span>
         <span class="marquee-item">TypeScript</span>
         <span class="marquee-item">Angular</span>
-        <span class="marquee-item">Flutter</span>
-        <span class="marquee-item">GSAP</span>
+        <span class="marquee-item">Flutter UI</span>
         <span class="marquee-item">Bootstrap</span>
-        <span class="marquee-item">Adobe XD</span>
-        <span class="marquee-item">Photoshop</span>
-        <span class="marquee-item">Illustrator</span>
-        <span class="marquee-item">After Effects</span>
-        <span class="marquee-item">Razorpay</span>
-        <span class="marquee-item">Claude AI</span>
-        <span class="marquee-item">Git &amp; GitHub</span>
-        <span class="marquee-item">npm</span>
-        <span class="marquee-item">Design Systems</span>
-        <span class="marquee-item">Motion Systems</span>
-        <span class="marquee-item">SDS Motion Forge</span>
-        <span class="marquee-item">FrameStack PDF</span>
+        <span class="marquee-item">GSAP</span>
       </div>
     </div>
 
@@ -4018,52 +4061,69 @@
             <div class="cap-item">
               <div class="cap-icon"><i class="ri-layout-4-fill"></i></div>
               <div>
-                <div class="cap-name">Product Design &amp; UX Systems</div>
+                <div class="cap-name">Graphic Design Skills</div>
                 <div class="cap-info">
-                  Information architecture, user flows, design tokens, component
-                  systems, and scalable interaction models for complex product
-                  surfaces.
+                  Adobe Photoshop and Illustrator for brand visuals, poster
+                  layouts, social creatives, image editing, typography, icons,
+                  and clean marketing graphics.
+                </div>
+                <div class="cap-tags" aria-label="Graphic design tools">
+                  <span>Photoshop</span>
+                  <span>Illustrator</span>
+                  <span>Posters</span>
+                  <span>Brand visuals</span>
+                </div>
+              </div>
+            </div>
+            <div class="cap-item">
+              <div class="cap-icon"><i class="ri-pencil-ruler-2-fill"></i></div>
+              <div>
+                <div class="cap-name">UI/UX &amp; Product Design</div>
+                <div class="cap-info">
+                  Figma, user flows, wireframes, interactive prototypes,
+                  product thinking, design systems, responsive UI, usability,
+                  and developer-ready handoff.
+                </div>
+                <div class="cap-tags" aria-label="UI UX and product design skills">
+                  <span>Figma</span>
+                  <span>User flows</span>
+                  <span>Prototype</span>
+                  <span>Design systems</span>
                 </div>
               </div>
             </div>
             <div class="cap-item">
               <div class="cap-icon"><i class="ri-code-s-slash-fill"></i></div>
               <div>
-                <div class="cap-name">Frontend Engineering</div>
+                <div class="cap-name">Frontend Skills</div>
                 <div class="cap-info">
-                  HTML, CSS, JavaScript, Angular (UI), Flutter (UI), Bootstrap,
-                  GSAP — building responsive, performant, production-ready
-                  interfaces.
+                  HTML, CSS, JavaScript, TypeScript, Angular UI, Flutter UI,
+                  Bootstrap, GSAP, responsive layouts, animation polish, and
+                  production-ready implementation.
+                </div>
+                <div class="cap-tags" aria-label="Frontend skills">
+                  <span>HTML/CSS</span>
+                  <span>JavaScript</span>
+                  <span>Angular</span>
+                  <span>Flutter UI</span>
+                  <span>GSAP</span>
                 </div>
               </div>
             </div>
-            <div class="cap-item">
-              <div class="cap-icon"><i class="ri-magic-fill"></i></div>
+            <div class="cap-item cap-learning">
+              <div class="cap-icon"><i class="ri-movie-2-fill"></i></div>
               <div>
-                <div class="cap-name">Motion Architecture</div>
+                <div class="cap-name">Currently Learning</div>
                 <div class="cap-info">
-                  GSAP timelines, CSS animation systems, procedural motion — SDS
-                  Motion Forge published on npm with 526 weekly downloads.
+                  Adobe Premiere Pro for editing, After Effects for motion
+                  graphics, and Blender for 3D product visuals and creative
+                  presentation workflows.
                 </div>
-              </div>
-            </div>
-            <div class="cap-item">
-              <div class="cap-icon"><i class="ri-stack-fill"></i></div>
-              <div>
-                <div class="cap-name">Design Systems &amp; Tooling</div>
-                <div class="cap-info">
-                  Published Figma plugins and npm packages under Salkom Design
-                  Studio. Design-to-development workflow infrastructure.
-                </div>
-              </div>
-            </div>
-            <div class="cap-item">
-              <div class="cap-icon"><i class="ri-rocket-2-fill"></i></div>
-              <div>
-                <div class="cap-name">Founder &amp; Product Builder</div>
-                <div class="cap-info">
-                  4+ live products from 0→1: Uxora (AI SaaS), SDS Motion Forge
-                  (npm), FrameStack PDF (Figma), Aura Elite Events platform.
+                <div class="cap-tags" aria-label="Currently learning tools">
+                  <span>Premiere Pro</span>
+                  <span>After Effects</span>
+                  <span>Blender</span>
+                  <span>Motion</span>
                 </div>
               </div>
             </div>
@@ -4771,89 +4831,62 @@
 
     <div class="divider"></div>
 
-    <!-- ═══ TECH STACK ═══ -->
+    <!-- ═══ SKILLS STACK ═══ -->
     <div id="motion" class="bleed sec">
       <div class="inner">
         <div class="tech-layout">
           <div>
-            <div class="label">Tech Stack &amp; Motion Systems</div>
+            <div class="label">Skills Stack</div>
             <h2 class="tech-h reveal">
-              Frontend<br /><em>engineering</em><br />stack.
+              Design first,<br /><em>frontend</em><br />ready.
             </h2>
           </div>
           <p class="tech-sub reveal">
-            I don't just design — I build. Every tool below has been used in a
-            shipped, production environment across fintech, SaaS, or open-source
-            systems.
+            A focused stack across graphic design, UI/UX design, and frontend
+            implementation, with video, motion, and 3D skills currently in
+            progress.
           </p>
         </div>
         <div class="tech-table reveal">
           <div class="tech-row">
+            <div class="tech-name">Adobe Photoshop</div>
+            <div class="tech-cat">Graphic Design</div>
+          </div>
+          <div class="tech-row">
+            <div class="tech-name">Adobe Illustrator</div>
+            <div class="tech-cat">Graphic Design</div>
+          </div>
+          <div class="tech-row">
+            <div class="tech-name">Figma</div>
+            <div class="tech-cat">UI/UX Design</div>
+          </div>
+          <div class="tech-row">
+            <div class="tech-name">Wireframing / Prototyping</div>
+            <div class="tech-cat">UI/UX Design</div>
+          </div>
+          <div class="tech-row">
+            <div class="tech-name">Design Systems / Components</div>
+            <div class="tech-cat">UI/UX Design</div>
+          </div>
+          <div class="tech-row">
             <div class="tech-name">HTML / CSS / JavaScript</div>
-            <div class="tech-cat">Core Web</div>
+            <div class="tech-cat">Frontend Skills</div>
           </div>
           <div class="tech-row">
-            <div class="tech-name">Angular (UI Layer)</div>
-            <div class="tech-cat">Frontend Framework</div>
+            <div class="tech-name">TypeScript / Angular UI</div>
+            <div class="tech-cat">Frontend Skills</div>
           </div>
           <div class="tech-row">
-            <div class="tech-name">Flutter (UI Layer)</div>
-            <div class="tech-cat">Cross-Platform</div>
+            <div class="tech-name">Flutter UI / Bootstrap</div>
+            <div class="tech-cat">Frontend Skills</div>
           </div>
           <div class="tech-row">
-            <div class="tech-name">Bootstrap</div>
-            <div class="tech-cat">CSS Framework</div>
+            <div class="tech-name">GSAP / CSS Animations</div>
+            <div class="tech-cat">Frontend Skills</div>
           </div>
           <div class="tech-row">
-            <div class="tech-name">GSAP + ScrollTrigger</div>
-            <div class="tech-cat">Motion Systems</div>
-          </div>
-          <div class="tech-row">
-            <div class="tech-name">CSS Animations / @keyframes</div>
-            <div class="tech-cat">Motion Architecture</div>
-          </div>
-          <div class="tech-row">
-            <div class="tech-name">Figma + Prototyping</div>
-            <div class="tech-cat">Design System</div>
-          </div>
-          <div class="tech-row">
-            <div class="tech-name">Razorpay / APIs</div>
-            <div class="tech-cat">Product Integration</div>
-          </div>
-          <div class="tech-row">
-            <div class="tech-name">Claude AI (Anthropic SDK)</div>
-            <div class="tech-cat">AI Integration</div>
-          </div>
-          <div class="tech-row">
-            <div class="tech-name">Git / GitHub / SVN</div>
-            <div class="tech-cat">Version Control</div>
-          </div>
-        </div>
-
-        <div class="npm-card reveal">
-          <div>
-            <div class="npm-badge">Published Package — npm</div>
-            <div class="npm-title">@salkomdesignstudio/sds-motion-forge</div>
-            <div class="npm-desc">
-              Production-ready CSS animation library. 90+ semantically named
-              animation classes — text, buttons, inputs, cards, loaders,
-              scroll-triggered effects. Zero JavaScript, zero dependencies,
-              framework-agnostic.
-            </div>
-          </div>
-          <div class="npm-stats">
-            <div class="npm-stat">
-              <div class="npm-stat-val">526</div>
-              <div class="npm-stat-lbl">Weekly Downloads</div>
-            </div>
-            <div class="npm-stat">
-              <div class="npm-stat-val">7</div>
-              <div class="npm-stat-lbl">Versions</div>
-            </div>
-            <div class="npm-stat">
-              <div class="npm-stat-val">MIT</div>
-              <div class="npm-stat-lbl">License</div>
-            </div>
+            <div class="tech-name">Premiere Pro / After Effects / Blender</div>
+            <div class="tech-cat">Learning</div>
           </div>
         </div>
       </div>

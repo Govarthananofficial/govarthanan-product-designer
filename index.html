@@ -3,7 +3,88 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Govarthanan — Product Designer & UX Engineer</title>
+
+    <!-- ═══ PRIMARY META ═══ -->
+    <title>Govarthanan Selvaganessane — Product Designer & Frontend Engineer</title>
+    <meta name="description" content="Product Designer & Frontend Engineer with 2+ years shipping 30+ production products across fintech, retail & SaaS. Designing in Figma, building in Angular, Flutter & GSAP. Based in Puducherry, India — open to senior roles & remote collaboration." />
+    <meta name="keywords" content="product designer, UX designer, frontend engineer, UI/UX, Figma, Angular, Flutter, GSAP, design systems, fintech design, SaaS design, India, Puducherry, remote designer, product engineer, open source" />
+    <meta name="author" content="Govarthanan Selvaganessane" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light" />
+    <link rel="canonical" href="https://govarthanan-product-engineer.netlify.app/" />
+
+    <!-- ═══ OPEN GRAPH — Facebook, LinkedIn, WhatsApp, Discord ═══ -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Govarthanan — Portfolio" />
+    <meta property="og:url" content="https://govarthanan-product-engineer.netlify.app/" />
+    <meta property="og:title" content="Govarthanan Selvaganessane — Product Designer & Frontend Engineer" />
+    <meta property="og:description" content="Shipped 30+ production products across fintech, retail & SaaS — including a gold savings platform handling crores in daily transactions. Designs in Figma, builds in Angular, Flutter & GSAP. Open to senior roles & collaboration." />
+    <meta property="og:image" content="https://govarthanan-product-engineer.netlify.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Govarthanan Selvaganessane — Product Designer & Frontend Engineer portfolio" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- ═══ TWITTER / X CARD ═══ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@govarthanan" />
+    <meta name="twitter:creator" content="@govarthanan" />
+    <meta name="twitter:url" content="https://govarthanan-product-engineer.netlify.app/" />
+    <meta name="twitter:title" content="Govarthanan Selvaganessane — Product Designer & Frontend Engineer" />
+    <meta name="twitter:description" content="Shipped 30+ production products across fintech, retail & SaaS. Designs in Figma, builds in Angular, Flutter & GSAP. Open to senior roles & remote collaboration." />
+    <meta name="twitter:image" content="https://govarthanan-product-engineer.netlify.app/og-image.png" />
+    <meta name="twitter:image:alt" content="Govarthanan Selvaganessane — Product Designer & Frontend Engineer portfolio" />
+
+    <!-- ═══ STRUCTURED DATA — Person + WebSite (JSON-LD) ═══ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://govarthanan-product-engineer.netlify.app/#person",
+          "name": "Govarthanan Selvaganessane",
+          "jobTitle": "Product Designer & Frontend Engineer",
+          "description": "Product Designer & Frontend Engineer with 2+ years shipping 30+ production products across fintech, retail & SaaS. Based in Puducherry, India.",
+          "url": "https://govarthanan-product-engineer.netlify.app/",
+          "email": "govarthanan@salkomdesignstudio.com",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Puducherry",
+            "addressCountry": "IN"
+          },
+          "knowsAbout": ["Product Design", "UX Design", "UI Design", "Figma", "Angular", "Flutter", "GSAP", "Design Systems", "Frontend Development", "TypeScript"],
+          "sameAs": [
+            "https://www.behance.net/govarthananuxui",
+            "https://calendly.com/salkomdesignstudio"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://govarthanan-product-engineer.netlify.app/#website",
+          "url": "https://govarthanan-product-engineer.netlify.app/",
+          "name": "Govarthanan Selvaganessane — Portfolio",
+          "description": "Product Designer & Frontend Engineer portfolio — 30+ production products shipped across fintech, retail & SaaS.",
+          "author": { "@id": "https://govarthanan-product-engineer.netlify.app/#person" },
+          "inLanguage": "en-IN"
+        }
+      ]
+    }
+    </script>
+
+    <!-- ═══ FAVICONS ═══ -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- ═══ PRECONNECT / PERFORMANCE ═══ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+
     <link
       href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
       rel="stylesheet"
@@ -551,12 +632,13 @@
         font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: clamp(40px, 7.2vw, 104px);
-        line-height: 1;
+        line-height: 0.98;
         letter-spacing: -0.05em;
         color: var(--ah-ink);
         margin: 0 0 16px;
         width: 100%;
         text-align: center;
+        white-space: nowrap;
       }
       .ah-h1-line {
         display: block;
@@ -3027,47 +3109,37 @@
         }
         .ah-meta {
           flex-direction: column;
-          align-items: center;
-          gap: 8px;
+          align-items: flex-start;
+          gap: 10px;
         }
         .ah-stage {
-          padding: 16px 0 28px;
+          padding: 36px 0 40px;
         }
         .ah-eyebrow {
           font-size: 10px;
-          letter-spacing: 0.12em;
-          gap: 8px;
-          margin-bottom: 10px;
-          justify-content: center;
+          letter-spacing: 0.14em;
+          flex-wrap: wrap;
+          gap: 10px;
         }
-        .ah-eyebrow::before,
-        .ah-eyebrow::after {
-          display: none;
+        .ah-eyebrow::before {
+          width: 24px;
         }
         .ah-h1 {
-          font-size: clamp(32px, 10vw, 56px);
-          letter-spacing: -0.04em;
-          line-height: 1.08;
-          margin-bottom: 16px;
-          text-align: center;
-          white-space: normal;
-          word-break: break-word;
+          font-size: clamp(44px, 13vw, 72px);
+          letter-spacing: -0.045em;
+          margin-bottom: 22px;
         }
         .ah-sub {
-          font-size: 14px;
-          line-height: 1.65;
-          margin-bottom: 24px;
-          text-align: center;
+          font-size: 15px;
+          margin-bottom: 32px;
         }
         .ah-cta {
           flex-direction: column;
-          align-items: stretch;
-          gap: 10px;
+          align-items: center;
         }
         .ah-btn-dark,
         .ah-btn-ghost {
           justify-content: center;
-          width: 100%;
         }
         .ah-cta-note {
           margin-left: 0;
@@ -3191,7 +3263,7 @@
           --PAGE-PAD: 16px;
         }
         .ah-h1 {
-          font-size: clamp(28px, 9.5vw, 44px);
+          font-size: clamp(38px, 12.5vw, 52px);
         }
         .ah-metrics {
           grid-template-columns: 1fr 1fr;
@@ -4166,11 +4238,11 @@
           </h1>
 
           <p class="ah-sub">
-            A Product Designer who <strong>ships production code</strong> — I
-            design interfaces in <strong>Figma</strong> and build them in
-            <strong>Angular, Flutter &amp; GSAP</strong>. 30+ products live for
-            India's top jewellery brands, plus my own design-engineering tools
-            on npm and Figma Community.
+            Designed and shipped <strong>30+ production products</strong> across
+            fintech, retail &amp; SaaS — including a gold savings platform
+            handling <strong>crores in daily transactions</strong> for India's
+            top jewellery brands. I design in Figma and build in
+            <strong>Angular, Flutter &amp; GSAP.</strong>
           </p>
 
           <!-- Proof metrics -->
@@ -4281,21 +4353,22 @@
               Designer who<br /><em>ships systems,</em><br />not screens.
             </h2>
             <p class="about-p reveal">
-              I'm a Product Designer and UX Engineer building production-ready
-              digital experiences. Over 2+ years I've worked across fintech,
-              SaaS, retail, and developer platforms — contributing to products
-              operating at real business scale.
+              I've shipped 30+ production products across fintech, retail, SaaS,
+              and developer tooling — including DigiGold, a gold savings
+              platform built for Pothys and India's top jewellery brands,
+              operating at real transaction scale daily.
             </p>
             <p class="about-p reveal">
-              Unlike traditional designers, I work beyond static UI. I design
-              scalable systems, interaction models, motion behavior, and
-              implementation-ready interfaces using Angular, Flutter, GSAP, and
-              modern frontend workflows.
+              Unlike designers who stop at Figma, I build what I design — in
+              Angular, Flutter, and GSAP. That hybrid means faster decisions,
+              fewer handoff gaps, and products that actually ship the way they
+              were designed.
             </p>
             <p class="about-p reveal">
-              I'm the founder of <strong>Salkom Design Studio</strong> and
-              currently building <strong>Uxora</strong> — an AI-powered UX
-              learning platform focused on scenario-based product thinking.
+              Outside client work, I publish open-source tools used by 1,000+
+              developers weekly, and I'm building <strong>Uxora</strong> — an
+              AI-powered UX learning platform focused on real-world product
+              thinking, not quizzes.
             </p>
           </div>
           <div class="cap-list reveal">
@@ -4479,12 +4552,12 @@
               Services Pvt Ltd
             </div>
             <p class="p-desc">
-              End-to-end UX and frontend for a high-scale gold savings fintech
-              system shipped for India's top South &amp; North Indian jewellery
-              brands — Pothys, Siva Valli Vilas, Super Saravana Stores, Lalitha
-              and more. Enrollment flows, payment systems, scheme tracking, and
-              real-time dashboards across website and app, built in Angular and
-              Flutter.
+              Led end-to-end UX and frontend for a gold savings fintech platform
+              handling crores in daily transactions for India's top jewellery
+              brands — Pothys, Lalitha, Siva Valli Vilas, and Super Saravana
+              Stores. Designed enrollment flows, payment journeys, scheme
+              tracking, and real-time dashboards. Built in Angular and Flutter,
+              live in production.
             </p>
             <div class="p-metrics">
               <div class="p-met">
@@ -4528,10 +4601,11 @@
               AI-Powered UX Learning Platform — Salkom Design Studio
             </div>
             <p class="p-desc">
-              Built an AI-powered UX learning OS from 0→1. Created 8,000+
-              pre-generated scenarios across 50+ domains. Features XP
-              progression, LinkedIn sharing flows, subscription billing,
-              cognitive maturity scoring, and anti-duplication logic.
+              Founder-built AI UX learning platform from 0→1. Designed the full
+              product: scenario engine, XP progression, LinkedIn sharing flows,
+              subscription billing, cognitive maturity scoring, and anti-abuse
+              logic. 8,000+ pre-generated scenarios across 50+ domains. Built in
+              Flutter with Claude AI and Razorpay. Pre-launch — launching 2026.
             </p>
             <div class="p-metrics">
               <div class="p-met">
@@ -5311,27 +5385,30 @@
               </div>
               <div class="exp-points">
                 <div class="exp-point">
-                  Founded and scaled multidisciplinary design studio serving 3+
-                  active clients across brand, product, and digital marketing.
+                  Sold out Aura Elite New Year event — led end-to-end brand,
+                  campaign, and team execution. 1,200 tickets sold, 200+
+                  additional sales driven in the final week through extended
+                  campaign strategy.
                 </div>
                 <div class="exp-point">
-                  Led end-to-end execution for Aura Elite Events — brand
-                  identity, campaign strategy, sold-out event (1,200 tickets),
-                  200+ additional sales in final week.
-                </div>
-                <div class="exp-point">
-                  Designed VertexEleven Gamehub fantasy app from 0→1: UX
-                  research, wireframes, UI systems, interactive prototypes, core
-                  product decisions.
-                </div>
-                <div class="exp-point">
-                  Building Uxora — AI-powered UX learning SaaS with Claude AI
-                  integration, 8,000+ scenarios, XP systems, and subscription
-                  monetization.
+                  Designed VertexEleven Gamehub fantasy gaming app from 0→1: UX
+                  research, wireframes, UI systems, interactive prototypes, and
+                  core product decisions with the founder.
                 </div>
                 <div class="exp-point">
                   Published SDS Motion Forge on npm (1,000+ weekly downloads,
-                  v3.2.1) and FrameStack PDF on Figma Community.
+                  v3.2.1) and FrameStack PDF on Figma Community — open-source
+                  tools used by developers globally.
+                </div>
+                <div class="exp-point">
+                  Founded studio serving 3+ active clients across brand,
+                  product, and digital marketing with end-to-end delivery
+                  ownership.
+                </div>
+                <div class="exp-point">
+                  Building Uxora — AI-powered UX learning SaaS using Claude AI,
+                  Flutter, and Razorpay. 8,000+ scenarios, XP systems, and
+                  subscription monetization. Pre-launch 2026.
                 </div>
               </div>
               <div class="exp-badges">
@@ -5343,34 +5420,39 @@
             <div class="exp-item reveal">
               <div class="exp-header">
                 <div>
-                  <div class="exp-role">UI/UX Designer</div>
+                  <div class="exp-role">
+                    Product Designer &amp; Frontend Engineer
+                  </div>
                   <div class="exp-org">JRK Consulting Services, Chennai</div>
                 </div>
                 <div class="exp-period">Mar 2024 — Present</div>
               </div>
               <div class="exp-points">
                 <div class="exp-point">
-                  Led UX and frontend for DigiGold App — a high-scale gold
-                  savings fintech platform handling daily financial transactions
-                  in production.
+                  Owned UX and frontend for DigiGold — a gold savings fintech
+                  platform handling crores in daily transactions for Pothys and
+                  India's top jewellery brands, live in production.
                 </div>
                 <div class="exp-point">
                   Designed and shipped 30+ web and mobile products for Pothys,
-                  GRT Jewellers, and Lalitha Jewellery.
+                  GRT Jewellers, Lalitha Jewellery, and Mangal &amp; Mangal —
+                  consistently increasing engagement by 15% across key launches.
                 </div>
                 <div class="exp-point">
-                  Built responsive interfaces in Flutter (UI), Angular,
-                  Bootstrap, and GSAP — driving 15% increase in user engagement
-                  across key projects.
-                </div>
-                <div class="exp-point">
-                  Established pixel-perfect UI systems and motion standards,
-                  reducing design-to-development handoff time by 25%.
+                  Built production interfaces in Flutter (UI), Angular,
+                  Bootstrap, and GSAP — reducing design-to-development handoff
+                  time by 25% through shared component systems.
                 </div>
                 <div class="exp-point">
                   Acted as design-engineering bridge: translated business
-                  requirements into scalable product experiences with
-                  stakeholders and developers.
+                  requirements into scalable product experiences, working
+                  directly with client stakeholders, retail managers, and
+                  development teams.
+                </div>
+                <div class="exp-point">
+                  Progressed from Trainee UI/UX Designer to UI/UX Designer
+                  within the same engagement — driven by delivery ownership and
+                  cross-functional impact.
                 </div>
               </div>
               <div class="exp-badges">

@@ -10,6 +10,13 @@
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script>
+      // Always start at the top on refresh — don't restore scroll position
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      window.addEventListener("pageshow", function () {
+        window.scrollTo(0, 0);
+      });
+    </script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&display=swap");
       /* ─── RESET ─── */
@@ -272,13 +279,150 @@
         --ah-line: rgba(29, 29, 31, 0.1);
         --ah-ease: cubic-bezier(0.16, 1, 0.3, 1);
         width: 100%;
-        min-height: 100vh;
-        min-height: 100svh;
+        height: calc(100vh - 48px);
+        height: calc(100svh - 48px);
         display: flex;
         flex-direction: column;
         background: var(--ah-bg);
         position: relative;
         overflow: hidden;
+      }
+
+      /* Grid box background in hero */
+      .hero-grid-bg {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .hero-grid-bg div {
+        border-right: 1px solid rgba(29, 29, 31, 0.035);
+        border-bottom: 1px solid rgba(29, 29, 31, 0.035);
+        transition: background-color 1.2s ease;
+      }
+      .hero-grid-bg div.hovered {
+        background-color: rgba(29, 29, 31, 0.06) !important;
+        transition: none;
+      }
+      /* Ambient self-filling cells — fade via the cell's own
+         1.2s background-color transition */
+      .hero-grid-bg div.auto {
+        background-color: rgba(29, 29, 31, 0.055);
+      }
+
+      .ah-ambient-icons-container {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+      }
+      .ah-ambient-icon {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+        z-index: 2; /* sits above background grid */
+        transform: translate(-50%, -50%);
+        filter: grayscale(1) contrast(1);
+        opacity: 0.5;
+        transition:
+          opacity 0.4s ease,
+          filter 0.4s ease,
+          transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        pointer-events: auto; /* enable hover despite container being inert */
+      }
+      .ah-ambient-icon:hover {
+        filter: grayscale(0) contrast(1);
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.18);
+      }
+
+      /* Global tooltip */
+      .ah-tooltip {
+        position: absolute;
+        background: rgba(28, 28, 30, 0.9);
+        -webkit-backdrop-filter: blur(16px) saturate(1.4);
+        backdrop-filter: blur(16px) saturate(1.4);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+        padding: 12px 14px;
+        border-radius: 14px;
+        pointer-events: none;
+        z-index: 100;
+        opacity: 0;
+        /* hidden state sits 10px short of final spot → short rise on show */
+        transform: translate(-50%, -100%) translateY(-28px) scale(0.96);
+        transition:
+          opacity 0.28s ease,
+          transform 0.34s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow:
+          0 12px 32px rgba(0, 0, 0, 0.28),
+          0 2px 8px rgba(0, 0, 0, 0.12);
+        width: max-content;
+        max-width: 248px;
+        text-align: left;
+      }
+      .ah-tooltip::after {
+        /* caret pointing at the icon */
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: var(--caret-x, 50%);
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: rgba(28, 28, 30, 0.92);
+      }
+      .ah-tooltip.show {
+        opacity: 1;
+        /* -38px clears the icon's upper half (24px) plus hover scale */
+        transform: translate(-50%, -100%) translateY(-38px) scale(1);
+      }
+      /* Flipped variant for top-row icons (no room above the icon) */
+      .ah-tooltip.below {
+        transform: translate(-50%, 0) translateY(28px) scale(0.96);
+      }
+      .ah-tooltip.below::after {
+        top: auto;
+        bottom: 100%;
+        border-top-color: transparent;
+        border-bottom-color: rgba(28, 28, 30, 0.92);
+      }
+      .ah-tooltip.below.show {
+        transform: translate(-50%, 0) translateY(38px) scale(1);
+      }
+      .ah-tooltip-head {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+      }
+      .ah-tooltip-ico {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+        flex-shrink: 0;
+      }
+      .ah-tooltip-title {
+        font-size: 12.5px;
+        font-weight: 650;
+        letter-spacing: -0.01em;
+        color: #ffffff;
+      }
+      .ah-tooltip-desc {
+        font-size: 11.5px;
+        line-height: 1.55;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.68);
+      }
+
+      /* Hide framing icons and tooltip on mobile & tablets */
+      @media (max-width: 1024px) {
+        .ah-ambient-icons-container,
+        .ah-tooltip {
+          display: none !important;
+        }
       }
 
       /* Ambient neutral wash — depth without color */
@@ -304,10 +448,11 @@
         flex: 1;
         display: flex;
         flex-direction: column;
+        justify-content: center; /* center pill + content as one block */
         max-width: var(--PAGE-W);
         width: 100%;
         margin: 0 auto;
-        padding: calc(var(--NAV-H) + 32px) var(--PAGE-PAD) 0;
+        padding: calc(var(--NAV-H) + 16px) var(--PAGE-PAD) 24px;
         position: relative;
         z-index: 1;
       }
@@ -318,6 +463,7 @@
         align-items: center;
         justify-content: center;
         gap: 16px;
+        margin-bottom: 40px;
         opacity: 0;
         animation: ahFade 0.9s var(--ah-ease) 0.95s forwards;
       }
@@ -376,13 +522,10 @@
 
       /* ── Center stage ── */
       .ah-stage {
-        flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: stretch;
         text-align: center;
-        padding: 24px 0 34px;
       }
 
       .ah-eyebrow {
@@ -395,7 +538,7 @@
         letter-spacing: 0.18em;
         text-transform: uppercase;
         color: var(--ah-mut);
-        margin-bottom: 28px;
+        margin-bottom: 14px;
         opacity: 0;
         animation: ahFade 0.9s var(--ah-ease) 0.15s forwards;
       }
@@ -411,7 +554,7 @@
         line-height: 0.98;
         letter-spacing: -0.05em;
         color: var(--ah-ink);
-        margin: 0 0 26px;
+        margin: 0 0 16px;
         width: 100%;
         text-align: center;
         white-space: nowrap;
@@ -447,7 +590,7 @@
         line-height: 1.65;
         letter-spacing: -0.01em;
         color: var(--ah-mut);
-        margin-bottom: 34px;
+        margin-bottom: 22px;
         text-align: center;
         opacity: 0;
         animation: ahUp 0.9s var(--ah-ease) 0.62s forwards;
@@ -530,47 +673,34 @@
         color: var(--ah-ink);
       }
       .ah-cta-note {
+        flex-basis: 100%;
         font-size: 9.5px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--ah-mut);
-        margin-left: 6px;
+        margin-top: 6px;
+        text-align: center;
       }
 
-      /* ── Bottom: metrics + scroll ── */
-      .ah-foot {
-        width: 100%;
-        border-top: 1px solid var(--ah-line);
-        position: relative;
-        z-index: 1;
-        opacity: 0;
-        animation: ahFade 1s var(--ah-ease) 0.9s forwards;
-      }
-      .ah-foot-inner {
-        max-width: var(--PAGE-W);
-        width: 100%;
-        margin: 0 auto;
-        padding: 26px var(--PAGE-PAD) 30px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 32px;
-      }
+      /* ── Proof metrics (between sub & CTA) ── */
       .ah-metrics {
         display: flex;
-        align-items: stretch;
-        gap: 0;
-        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 28px;
+        opacity: 0;
+        animation: ahUp 0.9s var(--ah-ease) 0.68s forwards;
       }
       .ah-metric {
         display: flex;
         flex-direction: column;
         gap: 4px;
-        padding: 0 36px;
+        align-items: center;
+        text-align: center;
         border-left: 1px solid var(--ah-line);
+        padding: 0 32px;
       }
       .ah-metric:first-child {
-        padding-left: 0;
         border-left: none;
       }
       .ah-mv {
@@ -652,7 +782,7 @@
         .ah-eyebrow,
         .ah-sub,
         .ah-cta,
-        .ah-foot {
+        .ah-metrics {
           opacity: 1;
           animation: none;
         }
@@ -671,7 +801,10 @@
       .marquee-wrap {
         overflow: hidden;
         background: #1d1d1f;
-        padding: 16px 0;
+        height: 48px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
       }
       .marquee-track {
         display: flex;
@@ -861,7 +994,7 @@
         background: var(--surface);
         border: 1.5px solid var(--bd);
         border-radius: 20px;
-        padding: 44px;
+        padding: 26px;
         position: relative;
         overflow: hidden;
         transition:
@@ -897,9 +1030,9 @@
 
       .p-top {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         justify-content: space-between;
-        margin-bottom: 28px;
+        margin-bottom: 16px;
       }
       .p-num {
         font-family: "DM Sans", sans-serif;
@@ -962,14 +1095,27 @@
         font-size: 12px;
         color: var(--t4);
         letter-spacing: 0.02em;
-        margin-bottom: 16px;
+        margin-bottom: 8px;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: calc(12px * 1 * 2);
       }
       .p-desc {
         font-size: 14px;
         color: var(--t3);
         line-height: 1.72;
-        margin-bottom: 32px;
+        margin-bottom: 20px;
         letter-spacing: -0.005em;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: calc(14px * 1.72 * 4);
       }
 
       .p-metrics {
@@ -1007,6 +1153,71 @@
       .p-met-label {
         font-size: 11px;
         color: var(--t4);
+      }
+
+      /* p-card links row */
+      .p-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--bd);
+      }
+      .p-link-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--t1);
+        background: #ffffff;
+        border: 1px solid var(--bd3);
+        padding: 7px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        white-space: nowrap;
+        flex-shrink: 0;
+        cursor: pointer;
+        transition:
+          background 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+          color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .p-link-btn:hover {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(29, 29, 31, 0.08);
+        transform: translateY(-1.5px);
+      }
+      .p-link-btn:active {
+        transform: translateY(-0.5px);
+        box-shadow: 0 2px 6px rgba(29, 29, 31, 0.06);
+      }
+      .p-link-btn i {
+        font-size: 13px;
+        flex-shrink: 0;
+      }
+      .p-link-btn--disabled {
+        color: var(--t4);
+        background: transparent;
+        border-color: var(--bd);
+        cursor: not-allowed;
+        pointer-events: none;
+        opacity: 0.5;
+      }
+      /* multi-link wrapper for client cards */
+      .client-btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        flex-shrink: 0;
       }
 
       /* ═══════════════════════════════════
@@ -1498,25 +1709,48 @@
         background: #ffffff;
       }
 
-      /* Arrow — dark on white, fills with primary on hover */
+      /* Arrow row — shows "Open" label + arrow icon at rest */
       .sys-card-arr {
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        border: 1px solid var(--bd2);
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        color: var(--t4);
-        flex-shrink: 0;
-        transition: all 0.25s ease;
+        gap: 6px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: var(--t3);
+        background: var(--bg-alt);
+        border: 1px solid var(--bd2);
+        padding: 6px 12px 6px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition:
+          background 0.25s ease,
+          color 0.25s ease,
+          border-color 0.25s ease,
+          transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 0.25s ease;
       }
-      .sys-card:hover .sys-card-arr {
+      .sys-card-arr i {
+        font-size: 15px;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        flex-shrink: 0;
+      }
+      /* Only clickable cards get full hover state */
+      a.sys-card:hover .sys-card-arr {
         background: var(--primary);
         border-color: var(--primary);
         color: #fff;
-        transform: rotate(45deg);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+        transform: translateY(-1px);
+      }
+      a.sys-card:hover .sys-card-arr i {
+        transform: translate(2px, -2px);
+      }
+      /* Non-clickable (Uxora) keeps arrow muted */
+      div.sys-card .sys-card-arr {
+        cursor: default;
+        opacity: 0.45;
       }
 
       .sys-card-glow {
@@ -2765,11 +2999,6 @@
         .brand-grid {
           grid-template-columns: 1fr 1fr;
         }
-        .ah-foot-inner {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 20px;
-        }
         .ah-scroll {
           display: none;
         }
@@ -2793,8 +3022,9 @@
           display: none;
         }
         #hero {
-          height: auto;
-          min-height: 100svh;
+          height: calc(100vh - 48px);
+          height: calc(100svh - 48px);
+          min-height: calc(100svh - 48px);
         }
         .ah-meta {
           flex-direction: column;
@@ -2837,15 +3067,17 @@
         .ah-metrics {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 20px 0;
+          gap: 16px 0;
           width: 100%;
         }
         .ah-metric {
-          padding: 0 20px;
-        }
-        .ah-metric:nth-child(odd) {
-          padding-left: 0;
+          padding: 0 10px;
           border-left: none;
+          align-items: center;
+          text-align: center;
+        }
+        .ah-metric:nth-child(even) {
+          border-left: 1px solid var(--ah-line);
         }
         .ah-mv {
           font-size: 22px;
@@ -2994,30 +3226,39 @@
       }
 
       .client-card {
+        position: relative;
         background: var(--surface);
         border: 1.5px solid var(--bd);
         border-radius: 18px;
-        padding: 28px;
+        padding: 18px;
         display: flex;
         flex-direction: column;
         gap: 18px;
         transition:
           box-shadow 0.32s ease,
-          transform 0.32s ease,
           border-color 0.28s;
         box-shadow: var(--sh1);
       }
       .client-card:hover {
-        box-shadow: var(--sh2);
         border-color: var(--primary-border);
-        transform: translateY(-3px);
       }
 
       .client-card-top {
         display: flex;
+        flex-direction: row;
         align-items: flex-start;
         gap: 14px;
-        flex-wrap: wrap;
+        min-height: auto;
+        width: 100%;
+        padding-right: 65px; /* Prevent text overlap with absolutely positioned status badge */
+      }
+      .client-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
       }
 
       .client-logo-wrap {
@@ -3036,32 +3277,42 @@
         font-weight: 900;
         font-size: 22px;
         letter-spacing: -0.04em;
-        color: var(--t3);
+        color: var(--t1);
         line-height: 1;
       }
 
-      .client-meta {
-        flex: 1;
-        min-width: 0;
-      }
       .client-name {
         font-family: "DM Sans", sans-serif;
         font-weight: 700;
-        font-size: 15px;
+        font-size: 14.5px;
         letter-spacing: -0.02em;
         color: var(--t1);
-        margin-bottom: 3px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
       .client-cat {
-        font-size: 11.5px;
+        font-size: 11px;
         color: var(--t4);
         line-height: 1.4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .client-agency {
+        font-size: 11px;
+        color: var(--t4);
+        line-height: 1.4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        opacity: 0.85;
       }
 
       .client-status {
+        position: absolute;
+        top: 28px;
+        right: 28px;
         display: inline-flex;
         align-items: center;
         gap: 6px;
@@ -3073,7 +3324,6 @@
         border-radius: 5px;
         font-weight: 500;
         flex-shrink: 0;
-        align-self: flex-start;
       }
       .client-status.live {
         background: #ffffff;
@@ -3096,72 +3346,94 @@
       .client-desc {
         font-size: 13.5px;
         color: var(--t3);
-        line-height: 1.72;
+        line-height: 1.62;
         letter-spacing: -0.005em;
-        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: calc(13.5px * 1.62 * 4);
       }
 
       .client-card-foot {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+        flex-direction: column;
+        gap: 10px;
         padding-top: 16px;
         border-top: 1px solid var(--bd);
         margin-top: auto;
+      }
+      .client-card-foot-links {
+        display: flex;
         flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
       }
       .client-tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 6px;
-        flex: 1;
+        gap: 5px;
       }
       .client-tag {
         font-family: "DM Sans", sans-serif;
         font-size: 9.5px;
-        letter-spacing: 0.08em;
-        padding: 4px 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 3px 8px;
         border-radius: 4px;
         border: 1px solid var(--bd2);
         color: var(--t4);
-        background: var(--surface);
+        background: transparent;
       }
+
       .client-view-btn {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 6px;
         font-family: "DM Sans", sans-serif;
-        font-size: 12px;
+        font-size: 11.5px;
         font-weight: 600;
         letter-spacing: -0.01em;
-        color: var(--primary);
-        background: var(--primary-faint);
-        border: 1px solid var(--primary-border);
+        color: var(--t1);
+        background: #ffffff;
+        border: 1px solid var(--bd3);
         padding: 7px 14px;
-        border-radius: 7px;
+        border-radius: 8px;
         text-decoration: none;
         white-space: nowrap;
         flex-shrink: 0;
+        cursor: pointer;
         transition:
-          background 0.2s,
-          box-shadow 0.2s,
-          transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+          background 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+          color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .client-view-btn:hover {
-        background: var(--primary-tint);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-        transform: translateY(-1px);
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(29, 29, 31, 0.08);
+        transform: translateY(-1.5px);
+      }
+      .client-view-btn:active {
+        transform: translateY(-0.5px);
+        box-shadow: 0 2px 6px rgba(29, 29, 31, 0.06);
       }
       .client-view-btn i {
         font-size: 13px;
+        flex-shrink: 0;
       }
       .client-view-btn--disabled {
         color: var(--t4);
-        background: var(--bg-sub);
+        background: transparent;
         border-color: var(--bd);
-        cursor: default;
+        cursor: not-allowed;
         pointer-events: none;
+        opacity: 0.5;
       }
 
       /* ═══════════════════════════════════
@@ -3458,12 +3730,35 @@
           grid-template-columns: 1fr 1fr;
         }
       }
-      @media (max-width: 640px) {
+      @media (max-width: 768px) {
+        .client-cards {
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+        }
+        .sys-cards {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+      }
+      @media (max-width: 480px) {
         .client-cards {
           grid-template-columns: 1fr;
+          gap: 12px;
         }
         .client-card {
-          padding: 22px 18px;
+          padding: 20px 16px;
+        }
+        .client-status {
+          top: 20px;
+          right: 16px;
+        }
+        .client-card-foot-links {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .client-card-foot-links .client-view-btn {
+          width: 100%;
+          justify-content: center;
         }
       }
 
@@ -3835,6 +4130,7 @@
 
     <!-- ═══ HERO ═══ -->
     <section id="hero">
+      <div class="hero-grid-bg" aria-hidden="true"></div>
       <div class="ah-wash" aria-hidden="true"></div>
 
       <div class="ah-inner">
@@ -3846,7 +4142,6 @@
           </div>
           <span class="ah-loc">Puducherry, India — Remote Ready</span>
         </div>
-
         <!-- Identity-first statement -->
         <div class="ah-stage">
           <p class="ah-eyebrow">
@@ -3869,34 +4164,7 @@
             on npm and Figma Community.
           </p>
 
-          <div class="ah-cta">
-            <a href="#projects" class="ah-btn-dark">
-              View Case Studies
-              <i class="ri-arrow-right-up-line"></i>
-            </a>
-            <a
-              href="mailto:govarthanan@salkomdesignstudio.com"
-              class="ah-btn-ghost"
-            >
-              Book a Call
-              <i class="ri-arrow-right-line"></i>
-            </a>
-            <a
-              href="Govarthanan_Resume.pdf"
-              download="Govarthanan_Resume.pdf"
-              class="ah-btn-ghost"
-            >
-              <i class="ri-download-2-line"></i>
-              Download CV
-            </a>
-            <span class="ah-cta-note">Full-time &amp; contract</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Proof metrics + scroll cue -->
-      <div class="ah-foot">
-        <div class="ah-foot-inner">
+          <!-- Proof metrics -->
           <div class="ah-metrics">
             <div class="ah-metric">
               <span class="ah-mv" data-count="30" data-suffix="+">30+</span>
@@ -3917,9 +4185,34 @@
               <span class="ah-ml">Experience</span>
             </div>
           </div>
-          <div class="ah-scroll">
-            <span class="ah-scroll-line"></span>
-            Scroll
+
+          <div class="ah-cta">
+            <a
+              href="https://www.behance.net/govarthananuxui"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="ah-btn-dark"
+            >
+              View Case Studies
+              <i class="ri-arrow-right-up-line"></i>
+            </a>
+            <a
+              href="https://calendly.com/salkomdesignstudio"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="ah-btn-ghost"
+            >
+              Book a Call
+              <i class="ri-arrow-right-line"></i>
+            </a>
+            <a
+              href="Govarthanan_Resume.pdf"
+              download="Govarthanan_Resume.pdf"
+              class="ah-btn-ghost"
+            >
+              <i class="ri-download-2-line"></i>
+              Download CV
+            </a>
           </div>
         </div>
       </div>
@@ -4174,7 +4467,7 @@
             <div class="p-name">DigiGold App</div>
             <div class="p-sub">
               Gold Savings Platform for Top Jewellery Brands — JRK Consulting
-              Services
+              Services Pvt Ltd
             </div>
             <p class="p-desc">
               End-to-end UX and frontend for a high-scale gold savings fintech
@@ -4197,6 +4490,16 @@
                 <div class="p-met-val">Prod</div>
                 <div class="p-met-label">Live Scale</div>
               </div>
+            </div>
+            <div class="p-links">
+              <a
+                href="https://play.google.com/store/apps/details?id=com.pothys.digigold"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-link-btn"
+              >
+                <i class="ri-google-play-fill"></i> Play Store
+              </a>
             </div>
           </div>
 
@@ -4235,6 +4538,11 @@
                 <div class="p-met-label">In Development</div>
               </div>
             </div>
+            <div class="p-links">
+              <span class="p-link-btn p-link-btn--disabled">
+                <i class="ri-time-line"></i> Beta Coming Soon
+              </span>
+            </div>
           </div>
 
           <div class="p-card reveal">
@@ -4272,6 +4580,24 @@
                 <div class="p-met-label">Live on npm</div>
               </div>
             </div>
+            <div class="p-links">
+              <a
+                href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-link-btn"
+              >
+                <i class="ri-npmjs-fill"></i> Live on npm
+              </a>
+              <a
+                href="https://github.com/salkomdesignstudio/SDS-Motion-Forge"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-link-btn"
+              >
+                <i class="ri-github-fill"></i> Code
+              </a>
+            </div>
           </div>
 
           <div class="p-card reveal">
@@ -4308,6 +4634,24 @@
                 <div class="p-met-label">Open Access</div>
               </div>
             </div>
+            <div class="p-links">
+              <a
+                href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-link-btn"
+              >
+                <i class="ri-plug-line"></i> Live Plugin
+              </a>
+              <a
+                href="https://github.com/salkomdesignstudio/SDS-FrameStack-PDF"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-link-btn"
+              >
+                <i class="ri-github-fill"></i> Code
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -4328,19 +4672,19 @@
               </div>
               <div class="client-meta">
                 <div class="client-name">DigiGold App</div>
-                <div class="client-cat">
-                  Fintech · Multi-Brand — JRK Consulting
-                </div>
+                <div class="client-cat">Fintech · Multi-Brand</div>
+                <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Live</span
               >
             </div>
             <p class="client-desc">
-              Gold savings app designed and frontend-developed for top South
-              &amp; North Indian jewellery brands — Pothys, Siva Valli Vilas,
-              Super Saravana Stores, Lalitha and more — across website and app,
-              built in Angular and Flutter.
+              Designed and frontend-developed an end-to-end gold savings
+              platform for India's top jewellery brands — Pothys, Siva Valli
+              Vilas, Super Saravana Stores, Lalitha and more. Enrollment flows,
+              payment systems, scheme tracking, and real-time dashboards built
+              in Angular and Flutter.
             </p>
             <div class="client-card-foot">
               <div class="client-tags">
@@ -4348,84 +4692,82 @@
                 <span class="client-tag">Flutter UI</span>
                 <span class="client-tag">Fintech</span>
               </div>
-              <a
-                href="https://play.google.com/store/apps/details?id=com.pothys.digigold"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="client-view-btn"
-              >
-                <i class="ri-google-play-fill"></i> Play Store
-              </a>
+              <div class="client-card-foot-links">
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.pothys.digigold"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-google-play-fill"></i> Play Store
+                </a>
+              </div>
             </div>
           </div>
 
           <div class="client-card">
             <div class="client-card-top">
-              <div
-                class="client-logo-wrap"
-                style="
-                  background: rgba(29, 29, 31, 0.06);
-                  border-color: rgba(29, 29, 31, 0.18);
-                "
-              >
-                <span class="client-logo-letter" style="color: var(--primary)"
-                  >A</span
-                >
+              <div class="client-logo-wrap">
+                <span class="client-logo-letter">A</span>
               </div>
               <div class="client-meta">
                 <div class="client-name">Aura Elite Events</div>
-                <div class="client-cat">
-                  Events · Brand — Salkom Design Studio
-                </div>
+                <div class="client-cat">Events · Brand</div>
+                <div class="client-agency">Salkom Design Studio</div>
               </div>
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Sold Out</span
               >
             </div>
             <p class="client-desc">
-              Full brand identity, campaign strategy, and event platform design.
-              Led execution from 0 to sold-out — 1,200 tickets, 200+ additional
-              walk-in sales in the final week alone.
+              Led full brand identity, campaign strategy, social content, and
+              event platform design from scratch. Executed 0 to sold-out — 1,200
+              tickets sold, 200+ additional walk-in sales in the final week
+              alone, through targeted digital campaigns.
             </p>
             <div class="client-card-foot">
               <div class="client-tags">
                 <span class="client-tag">Brand Identity</span>
                 <span class="client-tag">Campaign Design</span>
               </div>
-              <a
-                href="https://instagram.com/auraeliteevents"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="client-view-btn"
-              >
-                <i class="ri-instagram-fill"></i> Instagram
-              </a>
+              <div class="client-card-foot-links">
+                <a
+                  href="https://theauraeliteevents.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-global-line"></i> Live Website
+                </a>
+                <a
+                  href="https://instagram.com/auraeliteevents"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-instagram-fill"></i> Instagram
+                </a>
+              </div>
             </div>
           </div>
 
           <div class="client-card">
             <div class="client-card-top">
-              <div
-                class="client-logo-wrap"
-                style="
-                  background: rgba(29, 29, 31, 0.06);
-                  border-color: rgba(29, 29, 31, 0.18);
-                "
-              >
-                <span class="client-logo-letter" style="color: #1d1d1f">V</span>
+              <div class="client-logo-wrap">
+                <span class="client-logo-letter">V</span>
               </div>
               <div class="client-meta">
                 <div class="client-name">VertexEleven</div>
-                <div class="client-cat">
-                  Gaming · SaaS — Salkom Design Studio
-                </div>
+                <div class="client-cat">Gaming · SaaS</div>
+                <div class="client-agency">Salkom Design Studio</div>
               </div>
               <span class="client-status dev">In Dev</span>
             </div>
             <p class="client-desc">
               Designed a fantasy gaming hub app from 0→1 — UX research,
-              information architecture, wireframes, full UI system, and
-              interactive prototypes for core product flows.
+              competitive analysis, information architecture, wireframes, full
+              UI design system, and interactive Figma prototypes across all core
+              product flows, onboarding, and game discovery screens.
             </p>
             <div class="client-card-foot">
               <div class="client-tags">
@@ -4433,26 +4775,28 @@
                 <span class="client-tag">UI System</span>
                 <span class="client-tag">Gaming</span>
               </div>
-              <span class="client-view-btn client-view-btn--disabled">
-                <i class="ri-time-line"></i> Coming Soon
-              </span>
+              <div class="client-card-foot-links">
+                <a
+                  href="https://www.figma.com/proto/hQOsEnAn9s45mZT8TiJVGx/Game-App-Design?node-id=442-1356&p=f&viewport=94%2C437%2C0.08&t=nB1bdDgVHnh431n7-8&scaling=scale-down&content-scaling=fixed&starting-point-node-id=442%3A575&page-id=304%3A238&hide-ui=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-eye-line"></i> Figma Prototype
+                </a>
+              </div>
             </div>
           </div>
 
           <div class="client-card">
             <div class="client-card-top">
-              <div
-                class="client-logo-wrap"
-                style="
-                  background: rgba(29, 29, 31, 0.06);
-                  border-color: rgba(29, 29, 31, 0.18);
-                "
-              >
-                <span class="client-logo-letter" style="color: #1d1d1f">G</span>
+              <div class="client-logo-wrap">
+                <span class="client-logo-letter">G</span>
               </div>
               <div class="client-meta">
                 <div class="client-name">GRT Jewellery</div>
-                <div class="client-cat">Jewellery Retail — JRK Consulting</div>
+                <div class="client-cat">Jewellery Retail</div>
+                <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Live</span
@@ -4460,8 +4804,10 @@
             </div>
             <p class="client-desc">
               Designed operational dashboards with real metrics and live data —
-              billing, store management, sales tracking and more — for GRT's
-              retail jewellery platform, built in Angular.
+              billing, store management, inventory, and sales tracking — for
+              GRT's retail jewellery platform. Also designed the purchase
+              estimate workflow and enterprise desktop application, built in
+              Angular.
             </p>
             <div class="client-card-foot">
               <div class="client-tags">
@@ -4469,40 +4815,46 @@
                 <span class="client-tag">Angular UI</span>
                 <span class="client-tag">Data UX</span>
               </div>
-              <a
-                href="https://www.grtjewels.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="client-view-btn"
-              >
-                <i class="ri-global-line"></i> Website
-              </a>
+              <div class="client-card-foot-links">
+                <a
+                  href="https://www.figma.com/proto/K84CLqVqOr5Gcyu9zJKQAi/Purchase-Estimate-Screen-GRT-Jeweller-s?node-id=101-1262&viewport=-3240%2C3463%2C0.5&t=sHfv6wsuibIzFZIx-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=101%3A1262"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-pie-chart-2-line"></i> Purchase Estimate
+                </a>
+                <a
+                  href="https://www.figma.com/proto/Y5brRc3t3w4J0uxR9d4SZ2/Grt-desktop-application-main-screeen?node-id=405-21666&viewport=-105%2C-109%2C0.09&t=bKtkHbhQhqIbp0Zs-8&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=405%3A21666&page-id=405%3A11094&hide-ui=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-computer-line"></i> Desktop App
+                </a>
+              </div>
             </div>
           </div>
 
           <div class="client-card">
             <div class="client-card-top">
-              <div
-                class="client-logo-wrap"
-                style="
-                  background: rgba(29, 29, 31, 0.06);
-                  border-color: rgba(29, 29, 31, 0.18);
-                "
-              >
-                <span class="client-logo-letter" style="color: #1d1d1f">L</span>
+              <div class="client-logo-wrap">
+                <span class="client-logo-letter">L</span>
               </div>
               <div class="client-meta">
                 <div class="client-name">Lalitha Jewellery</div>
-                <div class="client-cat">Jewellery Retail — JRK Consulting</div>
+                <div class="client-cat">Jewellery Retail</div>
+                <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Live</span
               >
             </div>
             <p class="client-desc">
-              Designed dashboard systems with real metrics and live data,
-              alongside UI components for product listing, customer onboarding,
-              and loyalty screens — shipped in Flutter.
+              Designed dashboard systems with real metrics and live data for
+              store operations, alongside UI components for product listing,
+              customer onboarding, loyalty screens, and desktop management views
+              — fully shipped in Flutter across all retail touchpoints.
             </p>
             <div class="client-card-foot">
               <div class="client-tags">
@@ -4510,55 +4862,264 @@
                 <span class="client-tag">Flutter UI</span>
                 <span class="client-tag">Retail</span>
               </div>
-              <a
-                href="https://www.lalithajewellery.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="client-view-btn"
-              >
-                <i class="ri-global-line"></i> Website
-              </a>
+              <div class="client-card-foot-links">
+                <a
+                  href="https://www.figma.com/proto/YOzDmagdvckDWsxjTBEFBx/lalitha-desktop?node-id=226-1664&p=f&viewport=875%2C240%2C0.72&t=RrkLdiSNLPFLg7ZR-8&scaling=min-zoom&content-scaling=fixed&page-id=166%3A1111&hide-ui=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-eye-line"></i> Dashboard Prototype
+                </a>
+              </div>
             </div>
           </div>
 
+          <!-- Rujas Andavar Jewellery -->
           <div class="client-card">
             <div class="client-card-top">
-              <div
-                class="client-logo-wrap"
-                style="
-                  background: rgba(29, 29, 31, 0.06);
-                  border-color: rgba(29, 29, 31, 0.18);
-                "
-              >
-                <span class="client-logo-letter" style="color: #1d1d1f">M</span>
+              <div class="client-logo-wrap">
+                <span class="client-logo-letter">R</span>
               </div>
               <div class="client-meta">
-                <div class="client-name">Mangal &amp; Mangal</div>
-                <div class="client-cat">Jewellery Retail — JRK Consulting</div>
+                <div class="client-name">Rujas Andavar Jewellery</div>
+                <div class="client-cat">Jewellery · Brand</div>
+                <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Live</span
               >
             </div>
             <p class="client-desc">
-              Designed and built a product suite for Mangal &amp; Mangal — a
-              parking app, a delivery app, and the ecommerce website design —
-              from product discovery to transaction flows in production.
+              Designed a luxury jewellery brand website focused on product
+              showcase, collection browsing, customer engagement, and digital
+              presence — covering landing pages, product detail flows, and brand
+              storytelling for a premium jewellery retail experience.
             </p>
             <div class="client-card-foot">
               <div class="client-tags">
-                <span class="client-tag">Apps Suite</span>
-                <span class="client-tag">Ecommerce</span>
+                <span class="client-tag">Brand Website</span>
+                <span class="client-tag">Jewellery</span>
+                <span class="client-tag">UI Design</span>
+              </div>
+              <div class="client-card-foot-links">
+                <a
+                  href="https://rujasandavarjewellery.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-global-line"></i> Live Website
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Saravana Elite -->
+          <div class="client-card">
+            <div class="client-card-top">
+              <div class="client-logo-wrap">
+                <span class="client-logo-letter">S</span>
+              </div>
+              <div class="client-meta">
+                <div class="client-name">Saravana Elite</div>
+                <div class="client-cat">Jewellery · E-Commerce</div>
+                <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
+              </div>
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
+            <p class="client-desc">
+              Designed a premium jewellery e-commerce and brand experience
+              website — covering product catalogue, collection filters, gold
+              scheme listings, customer account flows, and a modern UI built for
+              seamless jewellery browsing across all device sizes.
+            </p>
+            <div class="client-card-foot">
+              <div class="client-tags">
+                <span class="client-tag">E-Commerce</span>
+                <span class="client-tag">Jewellery</span>
+                <span class="client-tag">Web UI</span>
+              </div>
+              <div class="client-card-foot-links">
+                <a
+                  href="https://saravanaelite.com/#/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-global-line"></i> Live Website
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sakthi Jewellers -->
+          <div class="client-card">
+            <div class="client-card-top">
+              <div class="client-logo-wrap">
+                <span class="client-logo-letter">S</span>
+              </div>
+              <div class="client-meta">
+                <div class="client-name">Sakthi Jewellers</div>
+                <div class="client-cat">Jewellery · Website + App</div>
+                <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
+              </div>
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
+            <p class="client-desc">
+              Designed an end-to-end jewellery ecosystem — website and mobile
+              app — covering gold scheme management, customer onboarding,
+              product browsing, account management, and jewellery transactions,
+              shipped in Flutter UI with full production deployment.
+            </p>
+            <div class="client-card-foot">
+              <div class="client-tags">
+                <span class="client-tag">Website</span>
+                <span class="client-tag">Android App</span>
                 <span class="client-tag">Flutter UI</span>
               </div>
-              <a
-                href="https://play.google.com/store/search?q=mangal+jewellery"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="client-view-btn"
+              <div class="client-card-foot-links">
+                <a
+                  href="https://sakthijeweller.com/#/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-global-line"></i> Live Website
+                </a>
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.jilaba.sakthijewellers&pcampaignid=web_share"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-google-play-fill"></i> Android App
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- SRM Jewellery App -->
+          <div class="client-card">
+            <div class="client-card-top">
+              <div class="client-logo-wrap">
+                <span class="client-logo-letter">S</span>
+              </div>
+              <div class="client-meta">
+                <div class="client-name">SRM Jewellery App</div>
+                <div class="client-cat">Jewellery · Mobile App</div>
+                <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
+              </div>
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
               >
-                <i class="ri-google-play-fill"></i> Play Store
-              </a>
+            </div>
+            <p class="client-desc">
+              Designed a customer-focused jewellery mobile application covering
+              digital gold services, scheme enrollment, account management,
+              transaction history, and product discovery — shipped as a fully
+              production-live Android app built in Flutter UI.
+            </p>
+            <div class="client-card-foot">
+              <div class="client-tags">
+                <span class="client-tag">Android App</span>
+                <span class="client-tag">Flutter UI</span>
+                <span class="client-tag">Jewellery</span>
+              </div>
+              <div class="client-card-foot-links">
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.jilaba.srmjewellery"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-google-play-fill"></i> Android App
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sunil Estimate App -->
+          <div class="client-card">
+            <div class="client-card-top">
+              <div class="client-logo-wrap">
+                <span class="client-logo-letter">S</span>
+              </div>
+              <div class="client-meta">
+                <div class="client-name">Sunil Estimate App</div>
+                <div class="client-cat">Business Utility · Mobile App</div>
+                <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
+              </div>
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
+            <p class="client-desc">
+              Designed a business utility application for estimate generation,
+              billing, and operational workflows — covering item catalogues,
+              quantity inputs, GST calculation, and PDF estimate output —
+              streamlining the quotation-to-delivery process end to end.
+            </p>
+            <div class="client-card-foot">
+              <div class="client-tags">
+                <span class="client-tag">Android App</span>
+                <span class="client-tag">Flutter UI</span>
+                <span class="client-tag">Business Tool</span>
+              </div>
+              <div class="client-card-foot-links">
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.jilaba.sunilestimate"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-google-play-fill"></i> Android App
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pothys Desktop Dashboard -->
+          <div class="client-card">
+            <div class="client-card-top">
+              <div class="client-logo-wrap">
+                <span class="client-logo-letter">P</span>
+              </div>
+              <div class="client-meta">
+                <div class="client-name">Pothys Desktop Dashboard</div>
+                <div class="client-cat">Retail · Enterprise</div>
+                <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
+              </div>
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
+            <p class="client-desc">
+              Designed a retail management dashboard for large-scale operations
+              — covering analytics, transaction monitoring, inventory tracking,
+              store performance reports, and billing workflows across all Pothys
+              branches, built in .NET with full desktop resolution support.
+            </p>
+            <div class="client-card-foot">
+              <div class="client-tags">
+                <span class="client-tag">Dashboard</span>
+                <span class="client-tag">Data UX</span>
+                <span class="client-tag">Retail</span>
+              </div>
+              <div class="client-card-foot-links">
+                <a
+                  href="https://www.figma.com/proto/yb3iaWKZnjnlK4yLMmBo9T/Pothys-Desktop-Dot-Net?node-id=223-2434&viewport=507%2C231%2C0.07&t=u8TDXPEHookTtvut-8&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=262%3A50&page-id=220%3A1879&hide-ui=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="client-view-btn"
+                >
+                  <i class="ri-eye-line"></i> Dashboard Prototype
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -4604,7 +5165,13 @@
         <div class="sys-sep"></div>
 
         <div class="sys-cards">
-          <div class="sys-card reveal">
+          <a
+            href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="sys-card reveal"
+            style="text-decoration: none; display: block"
+          >
             <div class="sys-card-inner">
               <div class="sys-card-top">
                 <div class="sys-card-tag">
@@ -4626,13 +5193,20 @@
                   Live — v3.2.1
                 </span>
                 <div class="sys-card-arr">
+                  Open
                   <i class="ri-arrow-right-up-line"></i>
                 </div>
               </div>
             </div>
-          </div>
+          </a>
 
-          <div class="sys-card reveal">
+          <a
+            href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="sys-card reveal"
+            style="text-decoration: none; display: block"
+          >
             <div class="sys-card-inner">
               <div class="sys-card-top">
                 <div class="sys-card-tag">
@@ -4654,11 +5228,12 @@
                   Live — Community
                 </span>
                 <div class="sys-card-arr">
+                  Open
                   <i class="ri-arrow-right-up-line"></i>
                 </div>
               </div>
             </div>
-          </div>
+          </a>
 
           <div class="sys-card reveal">
             <div class="sys-card-inner">
@@ -4680,7 +5255,8 @@
               <div class="sys-card-foot">
                 <span class="sys-pill dev">In Development</span>
                 <div class="sys-card-arr">
-                  <i class="ri-arrow-right-up-line"></i>
+                  Coming Soon
+                  <i class="ri-time-line"></i>
                 </div>
               </div>
             </div>
@@ -4771,7 +5347,7 @@
                 </div>
                 <div class="exp-point">
                   Designed and shipped 30+ web and mobile products for Pothys,
-                  GRT Jewellers, Lalitha Jewellery, and Mangal &amp; Mangal.
+                  GRT Jewellers, and Lalitha Jewellery.
                 </div>
                 <div class="exp-point">
                   Built responsive interfaces in Flutter (UI), Angular,
@@ -5059,28 +5635,42 @@
             <div class="contact-group-label">Social &amp; Work</div>
             <div class="contact-links">
               <a
-                href="https://linkedin.com/in/govarthananuxui"
+                href="https://www.linkedin.com/in/sgovarthanan/"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="contact-row"
               >
                 <div class="contact-left">
                   <div class="contact-row-name">LinkedIn</div>
-                  <div class="contact-row-val">govarthananuxui</div>
+                  <div class="contact-row-val">sgovarthanan</div>
                 </div>
                 <div class="contact-row-arrow">
                   <i class="ri-arrow-right-up-line"></i>
                 </div>
               </a>
               <a
-                href="https://github.com/sgovarthanan"
+                href="https://github.com/salkomdesignstudio"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="contact-row"
               >
                 <div class="contact-left">
                   <div class="contact-row-name">GitHub</div>
-                  <div class="contact-row-val">sgovarthanan</div>
+                  <div class="contact-row-val">salkomdesignstudio</div>
+                </div>
+                <div class="contact-row-arrow">
+                  <i class="ri-arrow-right-up-line"></i>
+                </div>
+              </a>
+              <a
+                href="https://www.behance.net/govarthananuxui"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="contact-row"
+              >
+                <div class="contact-left">
+                  <div class="contact-row-name">Behance</div>
+                  <div class="contact-row-val">govarthananuxui</div>
                 </div>
                 <div class="contact-row-arrow">
                   <i class="ri-arrow-right-up-line"></i>
@@ -5596,15 +6186,22 @@
           const target = parseInt(el.dataset.count, 10);
           const suffix = el.dataset.suffix || "";
           if (reduce || isNaN(target)) return; /* keep static markup value */
-          const DUR = 1100;
-          const t0 = performance.now();
+          const DUR = 1600;
+          /* metrics row fades in via ahUp at 0.68s — start counting
+             once it's visible so every number is seen rolling */
+          const DELAY = 750;
           const ease = (t) => 1 - Math.pow(1 - t, 4);
-          function tick(now) {
-            const p = Math.min((now - t0) / DUR, 1);
-            el.textContent = Math.round(ease(p) * target) + suffix;
-            if (p < 1) requestAnimationFrame(tick);
-          }
-          requestAnimationFrame(tick);
+          el.textContent = "0" + suffix;
+          setTimeout(() => {
+            const t0 = performance.now();
+            function tick(now) {
+              const p = Math.min((now - t0) / DUR, 1);
+              const val = Math.round(ease(p) * target);
+              el.textContent = val.toLocaleString("en-US") + suffix;
+              if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+          }, DELAY);
         }
 
         const obs = new IntersectionObserver(
@@ -5619,6 +6216,287 @@
           { threshold: 0.4 },
         );
         els.forEach((el) => obs.observe(el));
+      })();
+
+      /* ─── HERO BACKGROUND GRID ─── */
+      (function () {
+        const bg = document.querySelector(".hero-grid-bg");
+        const hero = document.getElementById("hero");
+        if (!bg || !hero) return;
+
+        let cols = 0;
+        let rows = 0;
+        let cellW = 0;
+        let cellH = 0;
+        const cellSize = 60;
+
+        function build() {
+          bg.innerHTML = "";
+          const w = bg.offsetWidth;
+          const h = bg.offsetHeight;
+          cols = Math.ceil(w / cellSize);
+          rows = Math.ceil(h / cellSize);
+          cellW = w / cols;
+          cellH = h / rows;
+          const total = cols * rows;
+          bg.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+          bg.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+          const fragment = document.createDocumentFragment();
+          for (let i = 0; i < total; i++) {
+            const cell = document.createElement("div");
+            fragment.appendChild(cell);
+          }
+          bg.appendChild(fragment);
+        }
+
+        build();
+        let timer;
+        window.addEventListener("resize", function () {
+          clearTimeout(timer);
+          timer = setTimeout(build, 150);
+        });
+
+        /* Ambient random fills — cells light up and fade out on their
+           own, no mouse needed (a few visible at any moment) */
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          setInterval(function () {
+            if (document.hidden) return;
+            const cells = bg.children;
+            if (!cells.length) return;
+            const cell = cells[Math.floor(Math.random() * cells.length)];
+            if (
+              cell.classList.contains("auto") ||
+              cell.classList.contains("hovered")
+            )
+              return;
+            cell.classList.add("auto");
+            // hold while lit, then let the 1.2s transition fade it out
+            setTimeout(
+              function () {
+                cell.classList.remove("auto");
+              },
+              1200 + Math.random() * 2200,
+            );
+          }, 650);
+        }
+
+        let activeCell = null;
+        hero.addEventListener("mousemove", function (e) {
+          const rect = bg.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          if (x < 0 || x >= rect.width || y < 0 || y >= rect.height) {
+            if (activeCell) {
+              activeCell.classList.remove("hovered");
+              activeCell = null;
+            }
+            return;
+          }
+          const col = Math.floor(x / cellW);
+          const row = Math.floor(y / cellH);
+          if (col >= 0 && col < cols && row >= 0 && row < rows) {
+            const idx = row * cols + col;
+            const cell = bg.children[idx];
+            if (cell !== activeCell) {
+              if (activeCell) {
+                activeCell.classList.remove("hovered");
+              }
+              if (cell) {
+                cell.classList.add("hovered");
+                activeCell = cell;
+              } else {
+                activeCell = null;
+              }
+            }
+          }
+        });
+
+        hero.addEventListener("mouseleave", function () {
+          if (activeCell) {
+            activeCell.classList.remove("hovered");
+            activeCell = null;
+          }
+        });
+      })();
+
+      /* ─── HERO ELLIPTICAL FRAMING ICONS ─── */
+      (function () {
+        const hero = document.getElementById("hero");
+        if (!hero) return;
+
+        // 10 tools arranged as an elliptical frame around the hero content.
+        // x/y are % coordinates inside #hero (icon is centered on the point).
+        // 5 icons per side with identical vertical steps (y: 14 → 86,
+        // 18% apart), x mirrored on a smooth arc — even rhythm per side
+        const icons = [
+          {
+            src: "images/adobe illustrotr.png",
+            name: "Illustrator",
+            x: 30,
+            y: 14,
+            desc: "Vector illustration, iconography & brand identity work.",
+          },
+          {
+            src: "images/html.png",
+            name: "HTML",
+            x: 70,
+            y: 14,
+            desc: "Semantic, accessible markup for production-ready interfaces.",
+          },
+          {
+            src: "images/adobe photoshop.png",
+            name: "Photoshop",
+            x: 18,
+            y: 30,
+            desc: "Advanced image editing, visual assets & polished marketing creatives.",
+          },
+          {
+            src: "images/Frame 7.png",
+            name: "React",
+            x: 84,
+            y: 30,
+            desc: "Component-driven thinking for clean, developer-ready handoff.",
+          },
+          {
+            src: "images/figma.png",
+            name: "Figma",
+            x: 8,
+            y: 50,
+            desc: "Primary design tool — end-to-end UI design, prototyping & scalable design systems.",
+          },
+          {
+            src: "images/flutter.png",
+            name: "Flutter",
+            x: 92,
+            y: 50,
+            desc: "Pixel-perfect, cross-platform mobile UI development.",
+          },
+          {
+            src: "images/lightroom.png",
+            name: "Lightroom",
+            x: 18,
+            y: 70,
+            desc: "Professional photo grading & color correction.",
+          },
+          {
+            src: "images/css.png",
+            name: "CSS",
+            x: 84,
+            y: 70,
+            desc: "Responsive layouts, modern styling & fine-tuned visual polish.",
+          },
+          {
+            src: "images/procreate.png",
+            name: "Procreate",
+            x: 30,
+            y: 86,
+            desc: "Hand-crafted digital illustration & custom artwork.",
+          },
+          {
+            src: "images/gsap.png",
+            name: "GSAP",
+            x: 70,
+            y: 86,
+            desc: "High-performance motion design & scroll-driven animations.",
+          },
+        ];
+
+        const container = document.createElement("div");
+        container.className = "ah-ambient-icons-container";
+        container.setAttribute("aria-hidden", "true");
+        hero.appendChild(container);
+
+        // Single shared tooltip, repositioned per icon on hover
+        const tooltip = document.createElement("div");
+        tooltip.className = "ah-tooltip";
+        tooltip.setAttribute("role", "tooltip");
+        const tipHead = document.createElement("div");
+        tipHead.className = "ah-tooltip-head";
+        const tipIco = document.createElement("img");
+        tipIco.className = "ah-tooltip-ico";
+        tipIco.alt = "";
+        const tipTitle = document.createElement("div");
+        tipTitle.className = "ah-tooltip-title";
+        tipHead.append(tipIco, tipTitle);
+        const tipDesc = document.createElement("div");
+        tipDesc.className = "ah-tooltip-desc";
+        tooltip.append(tipHead, tipDesc);
+        hero.appendChild(tooltip);
+
+        const els = icons.map((icon) => {
+          const img = document.createElement("img");
+          img.src = icon.src;
+          img.alt = icon.name;
+          img.className = "ah-ambient-icon";
+          img.style.left = icon.x + "%";
+          img.style.top = icon.y + "%";
+
+          img.addEventListener("mouseenter", () => {
+            tipIco.src = icon.src;
+            tipTitle.textContent = icon.name;
+            tipDesc.textContent = icon.desc;
+            // Clamp horizontally so edge icons don't push the
+            // (translate(-50%)-centered) tooltip off-screen
+            const half = tooltip.offsetWidth / 2;
+            const desired = (hero.clientWidth * icon.x) / 100;
+            const clamped = Math.min(
+              Math.max(desired, half + 12),
+              hero.clientWidth - half - 12,
+            );
+            tooltip.style.left = clamped + "px";
+            tooltip.style.top = icon.y + "%";
+            // Keep the caret aimed at the icon even when clamped
+            const caretX = Math.min(
+              Math.max(desired - (clamped - half), 16),
+              tooltip.offsetWidth - 16,
+            );
+            tooltip.style.setProperty("--caret-x", caretX + "px");
+            // Flip below the icon when the nav would clip it above
+            const iconCY = (hero.clientHeight * icon.y) / 100;
+            tooltip.classList.toggle(
+              "below",
+              iconCY - tooltip.offsetHeight - 38 < 72,
+            );
+            tooltip.classList.add("show");
+          });
+          img.addEventListener("mouseleave", () => {
+            tooltip.classList.remove("show");
+          });
+
+          container.appendChild(img);
+          return img;
+        });
+
+        // Outward burst from center on load (desktop only — icons are
+        // display:none under 1024px, so skip the tween there)
+        if (window.gsap && window.matchMedia("(min-width: 1025px)").matches) {
+          gsap.fromTo(
+            els,
+            {
+              left: "50%",
+              top: "50%",
+              xPercent: -50,
+              yPercent: -50,
+              scale: 0,
+              opacity: 0,
+            },
+            {
+              left: (i) => icons[i].x + "%",
+              top: (i) => icons[i].y + "%",
+              xPercent: -50,
+              yPercent: -50,
+              scale: 1,
+              opacity: 0.5,
+              duration: 1.4,
+              delay: 0.6,
+              ease: "power4.out",
+              stagger: 0.06,
+              // hand transform/opacity back to the CSS class so the
+              // hover transitions defined there take over
+              clearProps: "transform,opacity",
+            },
+          );
+        }
       })();
 
       /* ─── MOBILE MENU ─── */

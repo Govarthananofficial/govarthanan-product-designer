@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(Get-ChildItem -Path \"d:\\\\Angular-projects\\\\govarthanan-product-designer\" -Force)",
-      "Bash(Select-Object Name, PSIsContainer)",
-      "Bash(Format-Table -AutoSize)"
-    ]
-  }
-}

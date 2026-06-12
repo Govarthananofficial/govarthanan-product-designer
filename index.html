@@ -557,6 +557,7 @@
         margin: 0 0 16px;
         width: 100%;
         text-align: center;
+        white-space: nowrap;
       }
       .ah-h1-line {
         display: block;
@@ -3020,112 +3021,68 @@
         .nav-links {
           display: none;
         }
-
-        /* ── Hero: fill screen cleanly ── */
         #hero {
-          min-height: 100svh;
-          display: flex;
-          flex-direction: column;
+          height: calc(100vh - 48px);
+          height: calc(100svh - 48px);
+          min-height: calc(100svh - 48px);
         }
-        .ah-inner {
-          flex: 1;
-          padding-top: calc(var(--NAV-H) + 24px);
-          padding-bottom: 0;
-          justify-content: flex-start;
-        }
-
-        /* Meta row: pill + location stacked, left-aligned */
         .ah-meta {
           flex-direction: column;
-          align-items: flex-start;
+          align-items: center;
           gap: 8px;
-          margin-bottom: 28px;
         }
-
-        /* Eyebrow: no lines, compact */
+        .ah-stage {
+          padding: 36px 0 40px;
+        }
         .ah-eyebrow {
           font-size: 10px;
-          letter-spacing: 0.12em;
-          margin-bottom: 10px;
-          gap: 0;
+          letter-spacing: 0.14em;
+          flex-wrap: wrap;
+          gap: 10px;
         }
-        .ah-eyebrow::before,
-        .ah-eyebrow::after {
-          display: none;
+        .ah-eyebrow::before {
+          width: 24px;
         }
-
-        /* Name: allow wrap, fluid size, no nowrap */
         .ah-h1 {
-          font-size: clamp(36px, 11.5vw, 64px);
-          letter-spacing: -0.04em;
-          white-space: normal;
-          margin-bottom: 16px;
-          line-height: 1;
+          font-size: clamp(44px, 13vw, 72px);
+          letter-spacing: -0.045em;
+          margin-bottom: 22px;
         }
-
-        /* Stage: tighter spacing */
-        .ah-stage {
-          padding: 0 0 24px;
-        }
-
-        /* Description: readable on small screen */
         .ah-sub {
-          font-size: 14px;
-          line-height: 1.6;
-          margin-bottom: 24px;
-          text-align: left;
+          font-size: 15px;
+          margin-bottom: 32px;
+          text-align: center;
         }
-
-        /* Metrics: 2-col grid, centered values */
-        .ah-metrics {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 12px 0;
-          width: 100%;
-          margin-bottom: 24px;
-        }
-        .ah-metric {
-          padding: 0 10px;
-          border-left: none;
-          align-items: flex-start;
-          text-align: left;
-        }
-        .ah-metric:nth-child(even) {
-          border-left: 1px solid var(--ah-line);
-          padding-left: 16px;
-        }
-        .ah-mv {
-          font-size: 22px;
-        }
-
-        /* CTA: vertical stack, full width */
         .ah-cta {
           flex-direction: column;
-          align-items: stretch;
-          gap: 10px;
-          width: 100%;
+          align-items: center;
         }
         .ah-btn-dark,
         .ah-btn-ghost {
           justify-content: center;
-          width: 100%;
         }
         .ah-cta-note {
           margin-left: 0;
           text-align: center;
         }
-
-        /* Foot: minimal on mobile */
-        .ah-foot-inner {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 16px;
+        .ah-metrics {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px 0;
+          width: 100%;
         }
-        .ah-scroll {
-          display: none;
+        .ah-metric {
+          padding: 0 10px;
+          border-left: none;
+          align-items: center;
+          text-align: center;
         }
-
-        /* ── Non-hero 640px rules ── */
+        .ah-metric:nth-child(even) {
+          border-left: 1px solid var(--ah-line);
+        }
+        .ah-mv {
+          font-size: 22px;
+        }
         .brand-grid {
           grid-template-columns: 1fr 1fr;
         }
@@ -3142,6 +3099,8 @@
         }
         .exp-sticky {
           position: static;
+        }
+        .exp-sidebar-resume {
           display: block;
           margin-top: 20px;
         }
@@ -3224,7 +3183,7 @@
           --PAGE-PAD: 16px;
         }
         .ah-h1 {
-          font-size: clamp(28px, 10vw, 42px);
+          font-size: clamp(38px, 12.5vw, 52px);
         }
         .ah-metrics {
           grid-template-columns: 1fr 1fr;

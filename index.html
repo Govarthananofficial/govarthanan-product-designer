@@ -316,7 +316,7 @@
       .ah-meta {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
         gap: 16px;
         opacity: 0;
         animation: ahFade 0.9s var(--ah-ease) 0.95s forwards;
@@ -380,12 +380,15 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: stretch;
+        text-align: center;
         padding: 24px 0 34px;
       }
 
       .ah-eyebrow {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 14px;
         font-size: 11px;
         font-weight: 600;
@@ -396,13 +399,6 @@
         opacity: 0;
         animation: ahFade 0.9s var(--ah-ease) 0.15s forwards;
       }
-      .ah-eyebrow::before {
-        content: "";
-        width: 36px;
-        height: 1px;
-        background: var(--ah-ink);
-        flex-shrink: 0;
-      }
       .ah-eyebrow strong {
         color: var(--ah-ink);
         font-weight: 700;
@@ -411,12 +407,14 @@
       .ah-h1 {
         font-family: "DM Sans", sans-serif;
         font-weight: 700;
-        font-size: clamp(52px, 9.4vw, 126px);
+        font-size: clamp(40px, 7.2vw, 104px);
         line-height: 0.98;
         letter-spacing: -0.05em;
         color: var(--ah-ink);
         margin: 0 0 26px;
-        max-width: 1080px;
+        width: 100%;
+        text-align: center;
+        white-space: nowrap;
       }
       .ah-h1-line {
         display: block;
@@ -444,12 +442,13 @@
       }
 
       .ah-sub {
-        max-width: 580px;
+        width: 100%;
         font-size: clamp(15px, 1.35vw, 18px);
         line-height: 1.65;
         letter-spacing: -0.01em;
         color: var(--ah-mut);
         margin-bottom: 34px;
+        text-align: center;
         opacity: 0;
         animation: ahUp 0.9s var(--ah-ease) 0.62s forwards;
       }
@@ -462,8 +461,10 @@
       .ah-cta {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 12px;
         flex-wrap: wrap;
+        width: 100%;
         opacity: 0;
         animation: ahUp 0.9s var(--ah-ease) 0.74s forwards;
       }
@@ -538,6 +539,14 @@
 
       /* ── Bottom: metrics + scroll ── */
       .ah-foot {
+        width: 100%;
+        border-top: 1px solid var(--ah-line);
+        position: relative;
+        z-index: 1;
+        opacity: 0;
+        animation: ahFade 1s var(--ah-ease) 0.9s forwards;
+      }
+      .ah-foot-inner {
         max-width: var(--PAGE-W);
         width: 100%;
         margin: 0 auto;
@@ -546,11 +555,6 @@
         align-items: center;
         justify-content: space-between;
         gap: 32px;
-        border-top: 1px solid var(--ah-line);
-        position: relative;
-        z-index: 1;
-        opacity: 0;
-        animation: ahFade 1s var(--ah-ease) 0.9s forwards;
       }
       .ah-metrics {
         display: flex;
@@ -2761,7 +2765,7 @@
         .brand-grid {
           grid-template-columns: 1fr 1fr;
         }
-        .ah-foot {
+        .ah-foot-inner {
           flex-direction: column;
           align-items: flex-start;
           gap: 20px;
@@ -2820,7 +2824,7 @@
         }
         .ah-cta {
           flex-direction: column;
-          align-items: stretch;
+          align-items: center;
         }
         .ah-btn-dark,
         .ah-btn-ghost {
@@ -3846,14 +3850,14 @@
         <!-- Identity-first statement -->
         <div class="ah-stage">
           <p class="ah-eyebrow">
-            <strong>Product Designer × Frontend Engineer</strong>&nbsp;· Salkom
-            Design Studio
+            <strong>Product Designer × Frontend Engineer</strong>
           </p>
 
           <h1 class="ah-h1">
-            <span class="ah-h1-line"><span>Govarthanan</span></span>
             <span class="ah-h1-line"
-              ><span><em class="ah-serif">Selvaganessane.</em></span></span
+              ><span
+                >Govarthanan <em class="ah-serif">Selvaganessane.</em></span
+              ></span
             >
           </h1>
 
@@ -3892,27 +3896,31 @@
 
       <!-- Proof metrics + scroll cue -->
       <div class="ah-foot">
-        <div class="ah-metrics">
-          <div class="ah-metric">
-            <span class="ah-mv" data-count="30" data-suffix="+">30+</span>
-            <span class="ah-ml">Products Shipped</span>
+        <div class="ah-foot-inner">
+          <div class="ah-metrics">
+            <div class="ah-metric">
+              <span class="ah-mv" data-count="30" data-suffix="+">30+</span>
+              <span class="ah-ml">Products Shipped</span>
+            </div>
+            <div class="ah-metric">
+              <span class="ah-mv" data-count="1000" data-suffix="+"
+                >1,000+</span
+              >
+              <span class="ah-ml">npm Downloads / wk</span>
+            </div>
+            <div class="ah-metric">
+              <span class="ah-mv" data-count="4" data-suffix="+">4+</span>
+              <span class="ah-ml">Live Products</span>
+            </div>
+            <div class="ah-metric">
+              <span class="ah-mv" data-count="2" data-suffix="+ yr">2+ yr</span>
+              <span class="ah-ml">Experience</span>
+            </div>
           </div>
-          <div class="ah-metric">
-            <span class="ah-mv" data-count="1000" data-suffix="+">1,000+</span>
-            <span class="ah-ml">npm Downloads / wk</span>
+          <div class="ah-scroll">
+            <span class="ah-scroll-line"></span>
+            Scroll
           </div>
-          <div class="ah-metric">
-            <span class="ah-mv" data-count="4" data-suffix="+">4+</span>
-            <span class="ah-ml">Live Products</span>
-          </div>
-          <div class="ah-metric">
-            <span class="ah-mv" data-count="2" data-suffix="+ yr">2+ yr</span>
-            <span class="ah-ml">Experience</span>
-          </div>
-        </div>
-        <div class="ah-scroll">
-          <span class="ah-scroll-line"></span>
-          Scroll
         </div>
       </div>
     </section>

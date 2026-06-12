@@ -638,7 +638,6 @@
         margin: 0 0 16px;
         width: 100%;
         text-align: center;
-        white-space: nowrap;
       }
       .ah-h1-line {
         display: block;
@@ -761,6 +760,10 @@
         color: var(--ah-mut);
         margin-top: 6px;
         text-align: center;
+      }
+      /* Wrapper for the two ghost buttons — transparent on desktop, row on mobile */
+      .ah-cta-row {
+        display: contents; /* on desktop: ghost buttons flow in the same flex row as the primary */
       }
 
       /* ── Proof metrics (between sub & CTA) ── */
@@ -3103,56 +3106,65 @@
           display: none;
         }
         #hero {
-          height: calc(100vh - 48px);
-          height: calc(100svh - 48px);
-          min-height: calc(100svh - 48px);
+          height: 100svh;
+          height: 100vh;
+          min-height: 100svh;
+          overflow: hidden; /* hard clip — nothing bleeds below fold */
+        }
+        /* Push content to top so padding-top alone controls gap from nav */
+        .ah-inner {
+          justify-content: flex-start;
+          padding-top: calc(var(--NAV-H) + 12px);
+          padding-bottom: 16px;
         }
         .ah-meta {
           flex-direction: column;
-          align-items: flex-start;
-          gap: 10px;
-        }
-        .ah-stage {
-          padding: 36px 0 40px;
-        }
-        .ah-eyebrow {
-          font-size: 10px;
-          letter-spacing: 0.14em;
-          flex-wrap: wrap;
-          gap: 10px;
-        }
-        .ah-eyebrow::before {
-          width: 24px;
-        }
-        .ah-h1 {
-          font-size: clamp(44px, 13vw, 72px);
-          letter-spacing: -0.045em;
-          margin-bottom: 22px;
-        }
-        .ah-sub {
-          font-size: 15px;
-          margin-bottom: 32px;
-        }
-        .ah-cta {
-          flex-direction: column;
           align-items: center;
-        }
-        .ah-btn-dark,
-        .ah-btn-ghost {
-          justify-content: center;
-        }
-        .ah-cta-note {
-          margin-left: 0;
+          gap: 6px;
+          margin-bottom: 10px; /* was 40px — freed ~30px */
           text-align: center;
         }
+        .ah-loc {
+          text-align: center;
+        }
+        .ah-stage {
+          padding: 0; /* remove 36px top + 40px bottom = 76px freed */
+          text-align: center;
+          align-items: center;
+        }
+        .ah-eyebrow {
+          font-size: 9px;
+          letter-spacing: 0.13em;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-bottom: 8px;
+        }
+        .ah-eyebrow::before {
+          width: 20px;
+        }
+        /* Name: two tight centered lines — stop overflowing right edge */
+        .ah-h1 {
+          font-size: clamp(30px, 9vw, 44px);
+          letter-spacing: -0.04em;
+          line-height: 1.03;
+          margin-bottom: 12px;
+          white-space: normal;
+        }
+        .ah-sub {
+          font-size: 13.5px;
+          line-height: 1.55;
+          margin-bottom: 14px;
+        }
+        /* Metrics: compact 2×2 grid */
         .ah-metrics {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 16px 0;
+          gap: 10px 0;
           width: 100%;
+          margin-bottom: 14px;
         }
         .ah-metric {
-          padding: 0 10px;
+          padding: 0 8px;
           border-left: none;
           align-items: center;
           text-align: center;
@@ -3161,7 +3173,51 @@
           border-left: 1px solid var(--ah-line);
         }
         .ah-mv {
-          font-size: 22px;
+          font-size: 19px;
+        }
+        .ah-ml {
+          font-size: 8.5px;
+          letter-spacing: 0.1em;
+        }
+        /* CTA: primary button full-width, 2 ghost buttons side by side below */
+        .ah-cta {
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          width: 100%;
+        }
+        .ah-btn-dark {
+          width: 100%;
+          justify-content: center;
+          padding: 11px 20px;
+          font-size: 13px;
+        }
+        .ah-btn-ghost {
+          flex: 1;
+          justify-content: center;
+          padding: 10px 14px;
+          font-size: 12px;
+        }
+        /* Put the two ghost buttons on one row */
+        .ah-cta .ah-btn-ghost ~ .ah-btn-ghost,
+        .ah-cta .ah-btn-dark ~ .ah-btn-ghost {
+          /* handled by flex row wrapper below — use a trick: float ghost pair via order */
+        }
+        .ah-cta-note {
+          margin-left: 0;
+          text-align: center;
+        }
+        /* Ghost pair becomes a proper flex row — 50/50 side by side */
+        .ah-cta-row {
+          display: flex;
+          gap: 8px;
+          width: 100%;
+        }
+        .ah-cta-row .ah-btn-ghost {
+          flex: 1;
+          justify-content: center;
+          padding: 10px 12px;
+          font-size: 12px;
         }
         .brand-grid {
           grid-template-columns: 1fr 1fr;
@@ -4105,6 +4161,249 @@
           display: none;
         }
       }
+
+      /* ═══════════════════════════════════
+   HOW I BUILD — process pipeline
+═══════════════════════════════════ */
+      .hiw-grid {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 96px;
+        align-items: start;
+      }
+      .hiw-left {
+        position: sticky;
+        top: calc(var(--NAV-H) + 32px);
+      }
+      .hiw-intro {
+        font-size: 15px;
+        color: var(--t3);
+        line-height: 1.78;
+        margin-top: 20px;
+        max-width: 34ch;
+      }
+      .hiw-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .hiw-step {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        gap: 24px;
+        align-items: flex-start;
+        padding: 28px 0;
+        border-bottom: 1px solid var(--bd);
+        position: relative;
+      }
+      .hiw-step:first-child {
+        border-top: 1px solid var(--bd);
+      }
+      .hiw-step-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        padding-top: 4px;
+      }
+      .hiw-step-num {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--t4);
+        line-height: 1;
+        margin-bottom: 10px;
+      }
+      .hiw-step-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        border: 1.5px solid var(--bd2);
+        background: var(--surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: var(--t1);
+        flex-shrink: 0;
+        transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+      }
+      .hiw-step:hover .hiw-step-icon {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+        box-shadow: var(--sh1);
+      }
+      .hiw-step-body {
+        padding-top: 2px;
+      }
+      .hiw-step-title {
+        font-family: "DM Sans", sans-serif;
+        font-size: 15.5px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--t1);
+        margin-bottom: 6px;
+      }
+      .hiw-step-desc {
+        font-size: 13.5px;
+        color: var(--t3);
+        line-height: 1.65;
+        letter-spacing: -0.005em;
+        max-width: 52ch;
+      }
+      .hiw-step-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 10px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--t4);
+        background: var(--bg-alt);
+        border: 1px solid var(--bd2);
+        border-radius: 5px;
+        padding: 3px 9px;
+      }
+
+      /* ═══════════════════════════════════
+   IMPACT SECTION
+═══════════════════════════════════ */
+      .impact-grid {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 96px;
+        align-items: start;
+      }
+      .impact-left {
+        position: sticky;
+        top: calc(var(--NAV-H) + 32px);
+      }
+      .impact-intro {
+        font-size: 15px;
+        color: var(--t3);
+        line-height: 1.78;
+        margin-top: 20px;
+        max-width: 34ch;
+      }
+      .impact-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+      .impact-card {
+        background: var(--surface);
+        border: 1.5px solid var(--bd);
+        border-radius: 16px;
+        padding: 24px 26px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition: border-color 0.25s, box-shadow 0.25s;
+        box-shadow: var(--sh1);
+      }
+      .impact-card:hover {
+        border-color: var(--primary-border);
+        box-shadow: var(--sh2);
+      }
+      .impact-card.featured {
+        grid-column: span 2;
+        background: var(--primary);
+        border-color: var(--primary);
+        flex-direction: row;
+        align-items: center;
+        gap: 32px;
+        padding: 28px 32px;
+      }
+      .impact-card.featured .impact-val,
+      .impact-card.featured .impact-label,
+      .impact-card.featured .impact-context,
+      .impact-card.featured .impact-icon {
+        color: #fff;
+      }
+      .impact-card.featured .impact-label {
+        opacity: 0.75;
+      }
+      .impact-card.featured .impact-context {
+        opacity: 0.55;
+      }
+      .impact-card.featured .impact-divider {
+        width: 1px;
+        height: 64px;
+        background: rgba(255,255,255,0.18);
+        flex-shrink: 0;
+      }
+      .impact-icon {
+        font-size: 20px;
+        color: var(--t1);
+        opacity: 0.7;
+        margin-bottom: 2px;
+      }
+      .impact-val {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 800;
+        font-size: clamp(28px, 3.2vw, 42px);
+        letter-spacing: -0.05em;
+        line-height: 1;
+        color: var(--t1);
+      }
+      .impact-val em {
+        font-family: "DM Serif Display", serif;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        color: var(--t3);
+      }
+      .impact-label {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--t2);
+        line-height: 1.4;
+      }
+      .impact-context {
+        font-size: 11.5px;
+        color: var(--t4);
+        line-height: 1.5;
+        margin-top: 2px;
+      }
+      .impact-featured-text {
+        flex: 1;
+      }
+
+      /* ─── Responsive ─── */
+      @media (max-width: 1024px) {
+        .hiw-grid,
+        .impact-grid {
+          grid-template-columns: 1fr;
+          gap: 48px;
+        }
+        .hiw-left,
+        .impact-left {
+          position: static;
+        }
+        .impact-cards {
+          grid-template-columns: 1fr;
+        }
+        .impact-card.featured {
+          grid-column: span 1;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+        }
+        .impact-card.featured .impact-divider {
+          display: none;
+        }
+      }
+      @media (max-width: 768px) {
+        .hiw-step {
+          grid-template-columns: 44px 1fr;
+          gap: 16px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -4118,6 +4417,8 @@
       </a>
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
+        <li><a href="#how-i-build">Process</a></li>
+        <li><a href="#impact">Impact</a></li>
         <li><a href="#projects">Work</a></li>
         <li><a href="#systems">Systems</a></li>
         <li><a href="#experience">Experience</a></li>
@@ -4169,6 +4470,12 @@
       <div class="mob-links">
         <a href="#about" class="mob-link mob-nav-link"
           >About <i class="ri-arrow-right-line"></i
+        ></a>
+        <a href="#how-i-build" class="mob-link mob-nav-link"
+          >Process <i class="ri-arrow-right-line"></i
+        ></a>
+        <a href="#impact" class="mob-link mob-nav-link"
+          >Impact <i class="ri-arrow-right-line"></i
         ></a>
         <a href="#projects" class="mob-link mob-nav-link"
           >Work <i class="ri-arrow-right-line"></i
@@ -4277,23 +4584,25 @@
               View Case Studies
               <i class="ri-arrow-right-up-line"></i>
             </a>
-            <a
-              href="https://calendly.com/salkomdesignstudio"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="ah-btn-ghost"
-            >
-              Book a Call
-              <i class="ri-arrow-right-line"></i>
-            </a>
-            <a
-              href="Govarthanan_Resume.pdf"
-              download="Govarthanan_Resume.pdf"
-              class="ah-btn-ghost"
-            >
-              <i class="ri-download-2-line"></i>
-              Download CV
-            </a>
+            <div class="ah-cta-row">
+              <a
+                href="https://calendly.com/salkomdesignstudio"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ah-btn-ghost"
+              >
+                Book a Call
+                <i class="ri-arrow-right-line"></i>
+              </a>
+              <a
+                href="Govarthanan_Resume.pdf"
+                download="Govarthanan_Resume.pdf"
+                class="ah-btn-ghost"
+              >
+                <i class="ri-download-2-line"></i>
+                Download CV
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -4444,6 +4753,191 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══ HOW I BUILD ═══ -->
+    <div id="how-i-build" class="bleed sec" style="background: var(--bg-alt)">
+      <div class="inner">
+        <div class="hiw-grid">
+          <div class="hiw-left">
+            <div class="label">Process</div>
+            <h2 class="reveal">How I <em>build</em><br />products.</h2>
+            <p class="hiw-intro reveal">
+              Most designers stop at Figma. I go end-to-end — from business goals
+              to shipped frontend. That's what makes the difference.
+            </p>
+          </div>
+          <div class="hiw-steps">
+
+            <div class="hiw-step reveal">
+              <div class="hiw-step-left">
+                <div class="hiw-step-num">01</div>
+                <div class="hiw-step-icon"><i class="ri-focus-3-line"></i></div>
+              </div>
+              <div class="hiw-step-body">
+                <div class="hiw-step-title">Understand business goals</div>
+                <div class="hiw-step-desc">I start every engagement by mapping business constraints, KPIs, and stakeholder priorities — before opening Figma. Design that doesn't serve a business goal is decoration.</div>
+                <span class="hiw-step-tag"><i class="ri-briefcase-line"></i> Stakeholder alignment</span>
+              </div>
+            </div>
+
+            <div class="hiw-step reveal">
+              <div class="hiw-step-left">
+                <div class="hiw-step-num">02</div>
+                <div class="hiw-step-icon"><i class="ri-user-search-line"></i></div>
+              </div>
+              <div class="hiw-step-body">
+                <div class="hiw-step-title">Research users</div>
+                <div class="hiw-step-desc">Interviews, usage data, and behaviour patterns — to understand what users actually need versus what they say they want. This is where most product decisions get made.</div>
+                <span class="hiw-step-tag"><i class="ri-bar-chart-line"></i> User research</span>
+              </div>
+            </div>
+
+            <div class="hiw-step reveal">
+              <div class="hiw-step-left">
+                <div class="hiw-step-num">03</div>
+                <div class="hiw-step-icon"><i class="ri-git-branch-line"></i></div>
+              </div>
+              <div class="hiw-step-body">
+                <div class="hiw-step-title">Define flows</div>
+                <div class="hiw-step-desc">Information architecture, task flows, and edge case mapping before any visual work begins. A clear flow prevents expensive redesigns downstream.</div>
+                <span class="hiw-step-tag"><i class="ri-flow-chart"></i> Information architecture</span>
+              </div>
+            </div>
+
+            <div class="hiw-step reveal">
+              <div class="hiw-step-left">
+                <div class="hiw-step-num">04</div>
+                <div class="hiw-step-icon"><i class="ri-stack-line"></i></div>
+              </div>
+              <div class="hiw-step-body">
+                <div class="hiw-step-title">Design systems</div>
+                <div class="hiw-step-desc">Components, tokens, and patterns built for scale — not one-off screens. Reusable systems ship 25% faster and stay consistent across teams and platforms.</div>
+                <span class="hiw-step-tag"><i class="ri-layout-4-line"></i> Figma design systems</span>
+              </div>
+            </div>
+
+            <div class="hiw-step reveal">
+              <div class="hiw-step-left">
+                <div class="hiw-step-num">05</div>
+                <div class="hiw-step-icon"><i class="ri-cursor-line"></i></div>
+              </div>
+              <div class="hiw-step-body">
+                <div class="hiw-step-title">Prototype</div>
+                <div class="hiw-step-desc">High-fidelity interactive prototypes that communicate motion, micro-interactions, and state transitions. Stakeholders see the real product — not a static mockup.</div>
+                <span class="hiw-step-tag"><i class="ri-play-circle-line"></i> Interactive prototyping</span>
+              </div>
+            </div>
+
+            <div class="hiw-step reveal">
+              <div class="hiw-step-left">
+                <div class="hiw-step-num">06</div>
+                <div class="hiw-step-icon"><i class="ri-code-s-slash-line"></i></div>
+              </div>
+              <div class="hiw-step-body">
+                <div class="hiw-step-title">Build frontend</div>
+                <div class="hiw-step-desc">I implement in Angular, Flutter, and GSAP — so the shipped product matches the design exactly. No handoff gaps, no translation loss, no "the dev changed it" problems.</div>
+                <span class="hiw-step-tag"><i class="ri-terminal-box-line"></i> Angular · Flutter · GSAP</span>
+              </div>
+            </div>
+
+            <div class="hiw-step reveal">
+              <div class="hiw-step-left">
+                <div class="hiw-step-num">07</div>
+                <div class="hiw-step-icon"><i class="ri-line-chart-line"></i></div>
+              </div>
+              <div class="hiw-step-body">
+                <div class="hiw-step-title">Measure outcomes</div>
+                <div class="hiw-step-desc">Engagement rates, task completion, retention, and business impact tracked post-launch. Design accountability doesn't end at handoff — it ends when the metric moves.</div>
+                <span class="hiw-step-tag"><i class="ri-pulse-line"></i> Analytics · Impact tracking</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══ SELECTED IMPACT ═══ -->
+    <div id="impact" class="bleed sec" style="background: var(--bg)">
+      <div class="inner">
+        <div class="impact-grid">
+          <div class="impact-left">
+            <div class="label">Selected Impact</div>
+            <h2 class="reveal">Numbers that<br /><em>speak for</em><br />themselves.</h2>
+            <p class="impact-intro reveal">
+              Real outcomes from real products. Not estimated, not projected —
+              shipped and measured.
+            </p>
+          </div>
+          <div class="impact-cards">
+
+            <!-- Featured full-width card -->
+            <div class="impact-card featured reveal">
+              <div class="impact-featured-text">
+                <div class="impact-icon"><i class="ri-secure-payment-line"></i></div>
+                <div class="impact-val">₹1–2 Cr</div>
+                <div class="impact-label">Daily transaction volume</div>
+                <div class="impact-context">DigiGold platform built for Pothys & India's top jewellery brands — processing real gold savings transactions at scale daily.</div>
+              </div>
+              <div class="impact-divider"></div>
+              <div class="impact-featured-text">
+                <div class="impact-icon"><i class="ri-store-2-line"></i></div>
+                <div class="impact-val">30<em>+</em></div>
+                <div class="impact-label">Production products launched</div>
+                <div class="impact-context">Across fintech, retail, SaaS, and developer tooling — each shipped end-to-end from design to frontend implementation.</div>
+              </div>
+            </div>
+
+            <div class="impact-card reveal">
+              <div class="impact-icon"><i class="ri-ticket-2-line"></i></div>
+              <div class="impact-val">1,200<em>+</em></div>
+              <div class="impact-label">Event tickets sold</div>
+              <div class="impact-context">Total ticket sales driven through product design and UX improvements for event platforms.</div>
+            </div>
+
+            <div class="impact-card reveal">
+              <div class="impact-icon"><i class="ri-rocket-line"></i></div>
+              <div class="impact-val">200<em>+</em></div>
+              <div class="impact-label">Final-week ticket sales</div>
+              <div class="impact-context">Conversion-focused late-stage UX drove a concentrated surge in last-week purchases.</div>
+            </div>
+
+            <div class="impact-card reveal">
+              <div class="impact-icon"><i class="ri-line-chart-line"></i></div>
+              <div class="impact-val">15<em>%</em></div>
+              <div class="impact-label">Engagement improvement</div>
+              <div class="impact-context">UX restructuring and interaction design changes measurably increased user engagement across key product surfaces.</div>
+            </div>
+
+            <div class="impact-card reveal">
+              <div class="impact-icon"><i class="ri-time-line"></i></div>
+              <div class="impact-val">25<em>%</em></div>
+              <div class="impact-label">Faster design handoff</div>
+              <div class="impact-context">Implementation-ready specs and developer-aligned delivery reduced handoff time by 25% at JRK — directly accelerating ship cycles.</div>
+            </div>
+
+            <div class="impact-card reveal">
+              <div class="impact-icon"><i class="ri-team-line"></i></div>
+              <div class="impact-val">3<em>+</em></div>
+              <div class="impact-label">Active studio clients</div>
+              <div class="impact-context">Ongoing engagements through Salkom Design Studio — delivering product design and frontend across multiple live accounts.</div>
+            </div>
+
+            <div class="impact-card reveal">
+              <div class="impact-icon"><i class="ri-npmjs-line"></i></div>
+              <div class="impact-val">1,000<em>+</em></div>
+              <div class="impact-label">npm downloads / week</div>
+              <div class="impact-context">Open-source developer tools published and actively used by 1,000+ developers weekly across the ecosystem.</div>
+            </div>
+
           </div>
         </div>
       </div>

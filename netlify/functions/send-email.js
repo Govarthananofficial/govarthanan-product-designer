@@ -2,7 +2,7 @@
 // Handles Resend email sending for the portfolio contact form.
 // Sends:
 //   1. A confirmation email to the person who filled the form.
-//   2. A notification email to govvarthanan@salkomdesignstudio.com.
+//   2. A notification email to govarthanan@salkomdesignstudio.com.
 
 exports.handler = async function (event) {
   // Only allow POST
@@ -45,7 +45,7 @@ exports.handler = async function (event) {
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const RESEND_URL = "https://api.resend.com/emails";
-  const MY_EMAIL = "govvarthanan@salkomdesignstudio.com";
+  const MY_EMAIL = "govarthanan@salkomdesignstudio.com";
   const FROM_EMAIL = "Govarthanan | Portfolio <govarthanan@salkomdesignstudio.com>";
 
   // ── 1. Confirmation email to the user ──────────────────────────────────────

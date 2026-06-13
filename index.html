@@ -3879,15 +3879,6 @@
       }
 
       @media (max-width: 1024px) {
-        .testi-sticky-wrap {
-          height: auto;
-          overflow: visible;
-          display: block;
-        }
-        .testi-sticky-inner {
-          height: auto;
-          overflow: visible;
-        }
         .testi-top-bar {
           padding: 64px 24px 20px;
           flex-direction: column;
@@ -3898,16 +3889,9 @@
           padding-bottom: 0;
         }
         .testi-cards-area {
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
           display: flex;
           align-items: stretch;
           padding-bottom: 48px;
-          scroll-snap-type: x proximity;
-        }
-        .testi-cards-area::-webkit-scrollbar {
-          display: none;
         }
         .testi-track {
           padding: 8px 24px 0;
@@ -3918,10 +3902,7 @@
         .testi-card-h:first-child {
           width: min(420px, 78vw);
           height: auto;
-          opacity: 1 !important;
-          transform: none !important;
           padding: 28px 22px;
-          scroll-snap-align: center;
         }
         #testiCountNum {
           font-size: 32px;
@@ -6934,62 +6915,49 @@
             track.querySelectorAll(".testi-card-h"),
           );
           var total = cards.length;
-          var mm = gsap.matchMedia();
 
-          mm.add("(min-width: 1025px)", function () {
-            gsap.set(cards, { opacity: 0, y: 28 });
+          gsap.set(cards, { opacity: 0, y: 28 });
 
-            gsap.to(track, {
-              x: function () {
-                return -(track.scrollWidth - window.innerWidth);
+          gsap.to(track, {
+            x: function () {
+              return -(track.scrollWidth - window.innerWidth);
+            },
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".testi-sticky-wrap",
+              pin: true,
+              scrub: 1.2,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+              end: function () {
+                return "+=" + (track.scrollWidth - window.innerWidth);
               },
-              ease: "none",
-              scrollTrigger: {
-                trigger: ".testi-sticky-wrap",
-                pin: true,
-                scrub: 1.2,
-                anticipatePin: 1,
-                invalidateOnRefresh: true,
-                end: function () {
-                  return "+=" + (track.scrollWidth - window.innerWidth);
-                },
-                onUpdate: function (self) {
-                  if (progressEl)
-                    progressEl.style.width = self.progress * 100 + "%";
-                  if (countEl) {
-                    var idx = Math.min(
-                      Math.floor(self.progress * total),
-                      total - 1,
-                    );
-                    countEl.textContent = String(idx + 1).padStart(2, "0");
-                  }
-                },
+              onUpdate: function (self) {
+                if (progressEl)
+                  progressEl.style.width = self.progress * 100 + "%";
+                if (countEl) {
+                  var idx = Math.min(
+                    Math.floor(self.progress * total),
+                    total - 1,
+                  );
+                  countEl.textContent = String(idx + 1).padStart(2, "0");
+                }
               },
-            });
-
-            // All 5 cards reveal on section entry with a left-to-right stagger.
-            // Cards 4 & 5 are off-screen (clipped by overflow:hidden) so their
-            // opacity change has no visual effect until the horizontal scroll
-            // brings them into view — at which point they are already opacity:1.
-            gsap.to(cards, {
-              opacity: 1,
-              y: 0,
-              duration: 0.65,
-              stagger: 0.1,
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: ".testi-sticky-wrap",
-                start: "top 80%",
-                once: true,
-              },
-            });
-
-            return function () {};
+            },
           });
 
-          mm.add("(max-width: 1024px)", function () {
-            gsap.set(cards, { clearProps: "opacity,transform" });
-            return function () {};
+          // All cards reveal on section entry with a left-to-right stagger
+          gsap.to(cards, {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            stagger: 0.1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: ".testi-sticky-wrap",
+              start: "top 80%",
+              once: true,
+            },
           });
         })();
       } catch (e) {
@@ -6998,67 +6966,11 @@
           e.message,
         );
         /* Resilience: never leave content invisible if the CDN fails */
-        document.querySelectorAll(".reveal").forEach((el) => {
+        document.querySelectorAll(".reveal, .testi-card-h").forEach((el) => {
           el.style.opacity = "1";
           el.style.transform = "none";
         });
       }
-
-      /* ─── Testimonials: native touch-scroll counter (mobile ≤1024px) ───
-         The GSAP ScrollTrigger above only drives the counter on desktop.
-         On mobile the carousel is native overflow-x scroll, so the counter
-         and progress bar are driven here — vanilla, GSAP-independent. */
-      (function () {
-        var area = document.querySelector(".testi-cards-area");
-        var countEl = document.getElementById("testiCountNum");
-        var progressEl = document.getElementById("testiProgress");
-        if (!area || !countEl) return;
-        var cards = Array.prototype.slice.call(
-          area.querySelectorAll(".testi-card-h"),
-        );
-        if (!cards.length) return;
-
-        var ticking = false;
-        function update() {
-          ticking = false;
-          var maxScroll = area.scrollWidth - area.clientWidth;
-          /* Desktop (GSAP transform, no native scroll): maxScroll ≈ 0 → skip */
-          if (maxScroll < 4) return;
-
-          if (progressEl) {
-            progressEl.style.width =
-              Math.min(area.scrollLeft / maxScroll, 1) * 100 + "%";
-          }
-
-          /* Active card = the one whose center is nearest viewport center */
-          var areaRect = area.getBoundingClientRect();
-          var center = areaRect.left + areaRect.width / 2;
-          var best = 0;
-          var bestDist = Infinity;
-          for (var i = 0; i < cards.length; i++) {
-            var r = cards[i].getBoundingClientRect();
-            var d = Math.abs(r.left + r.width / 2 - center);
-            if (d < bestDist) {
-              bestDist = d;
-              best = i;
-            }
-          }
-          countEl.textContent = String(best + 1).padStart(2, "0");
-        }
-
-        area.addEventListener(
-          "scroll",
-          function () {
-            if (!ticking) {
-              ticking = true;
-              requestAnimationFrame(update);
-            }
-          },
-          { passive: true },
-        );
-        window.addEventListener("resize", update, { passive: true });
-        update();
-      })();
 
       /* ─── HERO METRIC COUNTERS ─── */
       (function () {
@@ -7425,7 +7337,9 @@
         const FETCH_TIMEOUT = 8000;
 
         const overlay = document.getElementById("contactModal");
-        const openBtn = document.getElementById("openContactModal");
+        const openBtns = document.querySelectorAll(
+          "#openContactModal, .nav-cta, .mob-foot-cta, .mob-link[href='#contact']"
+        );
         const closeBtn = document.getElementById("closeContactModal");
         const form = document.getElementById("contactForm");
         const submitBtn = document.getElementById("cfSubmitBtn");
@@ -7496,7 +7410,18 @@
           });
         }
 
-        openBtn.addEventListener("click", openModal);
+        openBtns.forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            // Close mobile menu if open
+            const mobMenu = document.getElementById("mobileMenu");
+            if (mobMenu && mobMenu.classList.contains("open")) {
+              const closeMobBtn = document.getElementById("menuCloseBtn");
+              if (closeMobBtn) closeMobBtn.click();
+            }
+            openModal();
+          });
+        });
         closeBtn.addEventListener("click", closeModal);
         overlay.addEventListener("click", (e) => {
           if (e.target === overlay) closeModal();

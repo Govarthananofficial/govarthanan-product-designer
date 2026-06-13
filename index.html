@@ -1888,6 +1888,9 @@
         border-radius: 8px;
         text-decoration: none;
         white-space: nowrap;
+        appearance: none;
+        -webkit-appearance: none;
+        background: none;
         transition:
           background-color 0.2s ease,
           color 0.2s ease,
@@ -3673,7 +3676,9 @@
 
       /* ─── Testimonials GSAP Horizontal Scroll ─── */
       .testi-sticky-wrap {
+        height: 100svh;
         height: 100vh;
+        min-height: 480px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -3924,6 +3929,31 @@
         }
         .testi-top-bar {
           padding: 56px 20px 16px;
+        }
+      }
+      @media (max-width: 480px) {
+        .testi-top-bar {
+          padding: 40px 16px 12px;
+          gap: 10px;
+        }
+        .testi-top-left h2 {
+          font-size: clamp(22px, 6.5vw, 32px);
+        }
+        .testi-card-h,
+        .testi-card-h:first-child {
+          width: min(260px, 82vw);
+          padding: 20px 16px;
+          gap: 12px;
+        }
+        .testi-body-h {
+          font-size: 13px;
+          line-height: 1.6;
+        }
+        .testi-track {
+          padding: 6px 16px 0;
+        }
+        .testi-cards-area {
+          padding-bottom: 32px;
         }
       }
 
@@ -5206,12 +5236,13 @@
                 Hire me to design and engineer systems for your next product.
               </div>
               <div class="mt-4 w-100">
-                <a
-                  href="#contact"
-                  class="sys-btn white d-inline-flex align-items-center gap-2 w-100 justify-content-center"
+                <button
+                  type="button"
+                  class="sys-btn white d-inline-flex align-items-center gap-2 w-100 justify-content-center impact-cta-btn"
+                  style="border:none;cursor:pointer;"
                 >
                   Get in Touch <i class="ri-arrow-right-line"></i>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -7338,7 +7369,7 @@
 
         const overlay = document.getElementById("contactModal");
         const openBtns = document.querySelectorAll(
-          "#openContactModal, .nav-cta, .mob-foot-cta, .mob-link[href='#contact']"
+          "#openContactModal, .nav-cta, .mob-foot-cta, .mob-link[href='#contact'], .impact-cta-btn"
         );
         const closeBtn = document.getElementById("closeContactModal");
         const form = document.getElementById("contactForm");

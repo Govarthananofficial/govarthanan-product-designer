@@ -1,0 +1,1431 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDS Motion Forge — Case Study · Govarthanan S.</title>
+  <meta name="description" content="How I designed, engineered, and published a production-grade CSS animation library used across 4 live client products — 526+ weekly downloads, zero breaking changes across 5 versions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #1d1d1f;
+      --ink-mid:    #1d1d1f;
+      --ink-muted:  #86868b;
+      --ink-faint:  #86868b;
+      --border:     rgba(29, 29, 31, 0.08);
+      --border-md:  rgba(29, 29, 31, 0.14);
+      --bg:         #ffffff;
+      --bg-2:       #f5f5f7;
+      --bg-3:       #f5f5f7;
+      --accent:     #1d1d1f;
+      --accent-lt:  #f5f5f7;
+      --accent-dk:  #1d1d1f;
+      --warn:       #86868b;
+      --warn-lt:    #f5f5f7;
+      --red:        #86868b;
+      --red-lt:     #f5f5f7;
+      --blue:       #86868b;
+      --blue-lt:    #f5f5f7;
+      --NAV-H:      56px;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Bootstrap Reset overrides to maintain design language */
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      color: inherit;
+    }
+    button:focus, a:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    /* ── PROGRESS ── */
+    #prog {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 2px; background: var(--border); z-index: 400;
+    }
+    #prog-fill {
+      height: 100%; width: 0%; background: var(--accent);
+      transition: width .08s linear;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 2px; left: 0; right: 0;
+      height: var(--NAV-H); z-index: 300;
+      background: rgba(255,255,255,0.93);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 13px; font-weight: 500; color: var(--ink-mid);
+      text-decoration: none; padding: 6px 12px; border-radius: 7px;
+      border: 1px solid var(--border-md);
+      transition: background .15s;
+    }
+    .nav-back:hover { background: var(--bg-2); }
+    .nav-tag { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+    .nav-right { display: flex; gap: 8px; }
+    .nav-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-mid); padding: 5px 11px; border-radius: 6px;
+      border: 1px solid var(--border-md); text-decoration: none;
+      transition: background .15s;
+    }
+    .nav-pill:hover { background: var(--bg-2); }
+
+    /* ── LAYOUT ── */
+    /* .w layout class removed in favor of Bootstrap .container */
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      padding: calc(var(--NAV-H) + 64px) 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,.05) 0%, transparent 55%),
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,.03) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+    }
+
+    /* ── EYEBROW ── */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 20px;
+    }
+    .eyebrow::before { content: ""; width: 20px; height: 1px; background: var(--accent); }
+    .hero .eyebrow { color: #ffffff; }
+    .hero .eyebrow::before { background: #ffffff; }
+
+    /* ── HERO H1 ── */
+    .hero h1 {
+      font-size: clamp(40px, 5.5vw, 68px);
+      font-weight: 800;
+      line-height: .96;
+      letter-spacing: -.04em;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .hero-sub {
+      font-size: clamp(15px, 1.6vw, 18px);
+      color: rgba(255,255,255,.55);
+      line-height: 1.6;
+      max-width: 54ch;
+      margin-bottom: 40px;
+    }
+
+    /* ── HERO METRICS ── */
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,.07);
+      border-radius: 14px 14px 0 0;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.07);
+      border-bottom: none;
+    }
+    .hm {
+      padding: 20px 22px 22px;
+      background: rgba(255,255,255,.03);
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .hm-val {
+      font-size: clamp(26px, 3vw, 34px);
+      font-weight: 800; letter-spacing: -.04em;
+      color: #fff; line-height: 1;
+    }
+    .hm-val span { color: #ffffff; }
+    .hm-label {
+      font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.35); line-height: 1.4;
+    }
+
+    /* ── HERO CTA BAR ── */
+    .hero-cta {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 22px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-top: none;
+      border-radius: 0 0 14px 14px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 12.5px; font-weight: 600; letter-spacing: -.01em;
+      background: var(--accent); color: #fff;
+      padding: 9px 18px; border-radius: 8px;
+      text-decoration: none; border: none;
+      transition: background .15s;
+    }
+    .btn-primary:hover { background: var(--accent-dk); }
+    .hero .btn-primary {
+      background: #ffffff; color: #1d1d1f;
+    }
+    .hero .btn-primary:hover { background: #f5f5f7; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12.5px; font-weight: 500;
+      color: rgba(255,255,255,.5); padding: 9px 14px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.1); text-decoration: none;
+      transition: background .15s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.75); }
+    .cta-sep { flex: 1; }
+    .cta-note {
+      font-size: 11px; color: rgba(255,255,255,.25);
+      letter-spacing: .05em; text-transform: uppercase;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-of-type { border-bottom: none; }
+    .section.alt { background: var(--bg-2); }
+
+    .s-label {
+      display: inline-flex; align-items: center; gap: 9px;
+      font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 12px;
+    }
+    .s-label::before { content: ""; width: 16px; height: 1px; background: var(--ink-faint); }
+
+    .section h2 {
+      font-size: clamp(22px, 2.8vw, 32px);
+      font-weight: 800; letter-spacing: -.035em;
+      color: var(--ink); line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .section h2 em {
+      font-style: italic; font-weight: 300;
+      color: var(--ink-muted);
+    }
+    .section p {
+      font-size: 15.5px; color: var(--ink-mid);
+      line-height: 1.78; letter-spacing: -.005em;
+      margin-bottom: 16px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+    .section strong { color: var(--ink); font-weight: 600; }
+
+    /* ── SNAPSHOT (2-column overview) ── */
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .snap-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+    }
+    .snap-card.accent-card {
+      background: var(--bg-2);
+      border-color: var(--border-md);
+    }
+    .snap-card-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 10px;
+    }
+    .snap-card.accent-card .snap-card-label { color: var(--ink-muted); }
+    .snap-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 7px;
+    }
+    .snap-list li {
+      font-size: 14px; color: var(--ink-mid); line-height: 1.5;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .snap-list li::before {
+      content: "→"; color: var(--ink-faint); flex-shrink: 0; margin-top: 1px;
+    }
+    .snap-card.accent-card .snap-list li::before { color: var(--ink-muted); }
+
+    /* ── PROBLEM CALLOUT ── */
+    .problem-block {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin: 28px 0;
+    }
+    .problem-block-title {
+      font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .problem-block-title::before { content: ""; width: 12px; height: 1px; background: var(--ink-muted); }
+    .problem-vs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .problem-vs-col { padding: 18px 20px; }
+    .problem-vs-col:first-child {
+      background: var(--bg-2);
+      border-right: 1px solid var(--border);
+    }
+    .problem-vs-col:last-child { background: var(--bg-2); }
+    .pvc-title {
+      font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .problem-vs-col:first-child .pvc-title { color: var(--ink-muted); }
+    .problem-vs-col:last-child .pvc-title { color: var(--ink-muted); }
+    .pvc-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .pvc-list li { font-size: 13.5px; color: var(--ink-mid); line-height: 1.5; padding-left: 12px; position: relative; }
+    .pvc-list li::before { content: "·"; position: absolute; left: 0; color: var(--ink-faint); }
+
+    /* ── COMPETITOR TABLE ── */
+    .comp-table {
+      width: 100%; border-collapse: collapse;
+      border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden; margin: 24px 0;
+      font-size: 13.5px;
+    }
+    .comp-table thead tr { background: var(--bg-2); }
+    .comp-table th {
+      padding: 12px 16px; text-align: left;
+      font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ink-faint); border-bottom: 1px solid var(--border);
+    }
+    .comp-table td {
+      padding: 12px 16px; color: var(--ink-mid);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .comp-table tr:last-child td { border-bottom: none; }
+    .comp-table tr.sds-row td { background: var(--bg-2); color: var(--ink); font-weight: 500; }
+    .comp-table tr.sds-row td:first-child { font-weight: 700; color: var(--ink-muted); }
+    .chk { color: var(--accent); font-weight: 600; }
+    .cross { color: var(--ink-muted); }
+    .part { color: var(--ink-muted); }
+
+    /* ── ARCHITECTURE LAYERS ── */
+    .arch-wrap {
+      margin: 8px 0 24px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .arch-layer {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    .arch-layer:last-child { border-bottom: none; }
+    .arch-layer:hover { background: var(--bg-2); }
+    .arch-left {
+      padding: 20px 20px;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 6px;
+      background: var(--bg-2);
+    }
+    .arch-badge {
+      font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 4px;
+      display: inline-block; width: fit-content;
+    }
+    .arch-badge.required { background: var(--ink); color: #fff; }
+    .arch-badge.optional { background: var(--bg-2); color: var(--ink-muted); border: 1px solid var(--border-md); }
+    .arch-size {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 500; color: var(--accent);
+    }
+    .arch-right {
+      padding: 20px 24px;
+    }
+    .arch-name {
+      font-size: 14.5px; font-weight: 700; letter-spacing: -.015em;
+      color: var(--ink); margin-bottom: 4px;
+    }
+    .arch-desc {
+      font-size: 13.5px; color: var(--ink-muted); line-height: 1.6;
+    }
+    .arch-tags {
+      display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;
+    }
+    .arch-tag {
+      font-size: 10.5px; font-weight: 600;
+      padding: 2px 8px; border-radius: 5px;
+      border: 1px solid var(--border-md);
+      background: var(--bg);
+      color: var(--ink-mid);
+    }
+
+    /* ── VERSION TIMELINE ── */
+    .versions { display: flex; flex-direction: column; gap: 0; margin: 8px 0; }
+    .version {
+      display: grid; grid-template-columns: 80px 1fr;
+      gap: 0 20px; padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .version:last-child { border-bottom: none; }
+    .v-tag { padding-top: 2px; }
+    .v-badge {
+      font-size: 11px; font-weight: 800; letter-spacing: -.01em;
+      padding: 3px 10px; border-radius: 6px;
+      border: 1px solid var(--border-md);
+      background: var(--bg-2); color: var(--ink-muted);
+    }
+    .v-title {
+      font-size: 15px; font-weight: 700; letter-spacing: -.015em;
+      color: var(--ink); margin-bottom: 5px;
+    }
+    .v-body {
+      font-size: 13.5px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 8px;
+    }
+    .v-verdict {
+      font-size: 11px; font-weight: 700; letter-spacing: .06em;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 5px;
+    }
+    .v-verdict.fail { background: var(--bg-2); color: var(--ink-muted); border: 1px solid var(--border-md); }
+    .v-verdict.pass { background: var(--bg-2); color: var(--ink-muted); border: 1px solid var(--border-md); }
+
+    /* ── CODE BLOCKS ── */
+    .code-wrap {
+      background: #1d1d1f;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .code-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 14px;
+      background: rgba(255,255,255,.03);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .code-dots { display: flex; gap: 5px; }
+    .code-dots span { width: 9px; height: 9px; border-radius: 50%; }
+    .code-dots span:nth-child(1) { background: rgba(255,255,255,0.15); }
+    .code-dots span:nth-child(2) { background: rgba(255,255,255,0.25); }
+    .code-dots span:nth-child(3) { background: rgba(255,255,255,0.35); }
+    .code-file {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: rgba(255,255,255,.3); letter-spacing: .04em;
+    }
+    .code-wrap pre { padding: 18px 20px; overflow-x: auto; margin: 0; }
+    .code-wrap code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px; line-height: 1.8;
+      color: rgba(255,255,255,.85);
+      white-space: pre;
+    }
+    .t-c { color: #86868b; }
+    .t-k { color: #ffffff; font-weight: 500; }
+    .t-s { color: #86868b; }
+    .t-p { color: #ffffff; }
+    .t-n { color: #ffffff; }
+    .t-f { color: #ffffff; }
+    .t-g { color: #86868b; }
+    .t-a { color: #ffffff; }
+
+    /* ── CHALLENGE CARDS ── */
+    .challenges { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+    .challenge {
+      border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+    }
+    .ch-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 20px;
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .ch-num {
+      width: 24px; height: 24px; border-radius: 6px;
+      background: var(--ink); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800; flex-shrink: 0;
+    }
+    .ch-title { font-weight: 700; font-size: 14px; letter-spacing: -.01em; color: var(--ink); }
+    .ch-body { padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ch-col-label {
+      font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .ch-col-label.bug { color: var(--ink-muted); }
+    .ch-col-label.fix { color: var(--ink-muted); }
+    .ch-text { font-size: 13px; color: var(--ink-muted); line-height: 1.65; }
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .88em; background: var(--bg-2);
+      padding: 1px 5px; border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── IMPACT ── */
+    .impact-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-top: 8px;
+    }
+    .impact-card {
+      padding: 24px 26px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    .impact-card::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent);
+    }
+    .impact-card.warn::before { background: var(--ink-muted); }
+    .impact-card.blue::before { background: var(--ink-muted); }
+    .impact-card.neutral::before { background: var(--ink-muted); }
+    .impact-val {
+      font-size: 36px; font-weight: 800; letter-spacing: -.05em;
+      color: var(--ink); line-height: 1; margin-bottom: 4px;
+    }
+    .impact-val sub { font-size: 16px; font-weight: 600; letter-spacing: -.02em; }
+    .impact-label {
+      font-size: 12px; font-weight: 600; letter-spacing: -.01em; color: var(--ink-mid);
+      margin-bottom: 10px;
+    }
+    .impact-desc {
+      font-size: 13px; color: var(--ink-muted); line-height: 1.6;
+    }
+    .impact-proof {
+      margin-top: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    /* ── LESSONS ── */
+    .lessons { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+    .lesson {
+      display: grid; grid-template-columns: 48px 1fr;
+      gap: 0 16px; padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .lesson:last-child { border-bottom: none; }
+    .lesson-n {
+      font-weight: 800; font-size: 28px; letter-spacing: -.05em;
+      color: var(--bg-3); line-height: 1; padding-top: 4px;
+    }
+    .lesson-title {
+      font-weight: 700; font-size: 15px; letter-spacing: -.015em;
+      color: var(--ink); margin-bottom: 6px;
+    }
+    .lesson-body { font-size: 14px; color: var(--ink-muted); line-height: 1.7; }
+
+    /* ── PRODUCT THINKING ── */
+    .product-thinking {
+      background: var(--ink);
+      border-radius: 16px;
+      padding: 32px 36px;
+      margin: 8px 0;
+    }
+    .pt-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,.35); margin-bottom: 20px;
+    }
+    .pt-grid { display: flex; flex-direction: column; gap: 20px; }
+    .pt-item { display: grid; grid-template-columns: 20px 1fr; gap: 14px; }
+    .pt-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bg-2); margin-top: 7px; }
+    .pt-q { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 4px; }
+    .pt-a { font-size: 14.5px; font-weight: 500; color: rgba(255,255,255,.85); line-height: 1.6; letter-spacing: -.01em; }
+
+    /* ── RECRUITER TIMELINE ── */
+    .recruiter-scan {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      margin-top: 8px;
+    }
+    .rs-col {
+      padding: 20px 20px;
+      background: var(--bg);
+    }
+    .rs-time {
+      font-size: 22px; font-weight: 800; letter-spacing: -.04em;
+      color: var(--ink); margin-bottom: 4px;
+    }
+    .rs-check {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: 10px;
+    }
+    .rs-items { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .rs-items li {
+      font-size: 13px; color: var(--ink-muted); line-height: 1.5;
+      padding-left: 12px; position: relative;
+    }
+    .rs-items li::before { content: "·"; position: absolute; left: 0; color: var(--ink-muted); font-weight: 700; }
+
+    /* ── NEXT STEPS ── */
+    .next-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+    .next-card {
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 18px 20px; background: var(--bg-2);
+    }
+    .next-status {
+      font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 8px;
+    }
+    .next-title { font-weight: 700; font-size: 14px; letter-spacing: -.01em; color: var(--ink); margin-bottom: 5px; }
+    .next-body { font-size: 13px; color: var(--ink-muted); line-height: 1.6; }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--bg-2);
+      border: 1px solid var(--border-md);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 14.5px; color: var(--ink-mid); line-height: 1.7;
+    }
+    .callout strong { color: var(--ink); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      padding: 56px 32px 40px;
+      text-align: center;
+    }
+    .footer-tag {
+      font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+      color: rgba(255,255,255,.25); margin-bottom: 10px;
+    }
+    .footer-title {
+      font-size: 20px; font-weight: 800; letter-spacing: -.03em;
+      color: #fff; margin-bottom: 6px;
+    }
+    .footer-sub {
+      font-size: 14px; color: rgba(255,255,255,.4); margin-bottom: 24px; max-width: 44ch; margin-left: auto; margin-right: auto;
+    }
+    .footer-links {
+      display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;
+    }
+    .f-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 12.5px; font-weight: 500;
+      padding: 9px 18px; border-radius: 8px; text-decoration: none;
+      transition: background .15s;
+    }
+    footer .f-btn.primary {
+      background: #ffffff; color: #1d1d1f;
+    }
+    footer .f-btn.primary:hover {
+      background: #f5f5f7;
+    }
+    .f-btn.ghost { background: rgba(255,255,255,.07); color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.1); }
+    .f-btn.ghost:hover { background: rgba(255,255,255,.12); }
+    .footer-copy { margin-top: 28px; font-size: 11px; color: rgba(255,255,255,.18); }
+
+    /* ── SECTION TOC ── */
+    .toc {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 32px;
+    }
+    .toc a {
+      font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--ink-faint); padding: 4px 10px; border-radius: 5px;
+      border: 1px solid var(--border);
+      text-decoration: none; transition: background .15s, color .15s;
+    }
+    .toc a:hover { background: var(--bg-2); color: var(--ink-mid); }
+
+    /* ── SCORE CARD ── */
+    .score-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin: 8px 0;
+      display: grid; grid-template-columns: 120px 1fr;
+      gap: 24px; align-items: start;
+    }
+    .score-big {
+      font-size: 60px; font-weight: 800; letter-spacing: -.05em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .score-big span { font-size: 24px; color: var(--ink-faint); }
+    .score-detail { display: flex; flex-direction: column; gap: 10px; }
+    .score-row { display: flex; align-items: center; gap: 10px; }
+    .score-row-label { font-size: 12px; font-weight: 600; color: var(--ink-mid); min-width: 160px; }
+    .score-bar-wrap { flex: 1; height: 6px; background: var(--bg-3); border-radius: 3px; }
+    .score-bar { height: 100%; border-radius: 3px; background: var(--accent); }
+    .score-bar.warn { background: var(--ink-muted); }
+    .score-bar.weak { background: var(--ink-muted); }
+    .score-num { font-size: 12px; font-weight: 700; color: var(--ink-mid); min-width: 36px; text-align: right; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .nav-tag { display: none; }
+      .hero { padding: calc(var(--NAV-H) + 40px) 0 0; }
+      .hero-metrics { grid-template-columns: 1fr 1fr; }
+      .snapshot-grid, .impact-grid, .next-grid { grid-template-columns: 1fr; }
+      .problem-vs { grid-template-columns: 1fr; }
+      .problem-vs-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+      .arch-layer { grid-template-columns: 1fr; }
+      .arch-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .ch-body { grid-template-columns: 1fr; }
+      .recruiter-scan { grid-template-columns: 1fr; }
+      .score-card { grid-template-columns: 1fr; }
+      .comp-table { font-size: 12px; }
+      .comp-table th, .comp-table td { padding: 9px 12px; }
+    }
+  </style>
+  <script>
+    // Always start at the top on refresh — don't restore scroll position
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.addEventListener("pageshow", function () {
+      window.scrollTo(0, 0);
+    });
+  </script>
+</head>
+<body>
+
+<div id="prog"><div id="prog-fill"></div></div>
+
+<nav>
+  <div class="container-fluid d-flex align-items-center justify-content-between h-100 px-4">
+    <a href="index.html" class="nav-back"><i class="ri-arrow-left-line"></i> Back to Portfolio</a>
+    <span class="nav-tag">Case Study · SDS Motion Forge</span>
+    <div class="nav-right">
+      <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge" target="_blank" rel="noopener" class="nav-pill"><i class="ri-npmjs-fill"></i> npm</a>
+      <a href="https://sds-motion-forge.netlify.app" target="_blank" rel="noopener" class="nav-pill"><i class="ri-external-link-line"></i> Live Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<header class="hero">
+  <div class="hero-inner container">
+    <div class="eyebrow">Design Systems · Open Source · Dev Tooling</div>
+    <h1>I built the animation<br>library my clients needed.</h1>
+    <p class="hero-sub">
+      SDS Motion Forge — a production-grade CSS animation library I designed, engineered, and published solo.
+      300+ classes. Four live client products. 526+ weekly npm downloads with zero marketing.
+    </p>
+    <div class="hero-metrics">
+      <div class="hm">
+        <div class="hm-val"><span>526</span><span style="font-size:20px;color:rgba(255,255,255,.3)">+</span></div>
+        <div class="hm-label">Weekly npm Downloads<br>No marketing. Organic.</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val"><span>0</span></div>
+        <div class="hm-label">Breaking Changes<br>v3 → v5. Machine-verified.</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">4</div>
+        <div class="hm-label">Live Client Products<br>DigiGold, Aura, SDS tools</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">300<span style="font-size:20px;color:rgba(255,255,255,.3)">+</span></div>
+        <div class="hm-label">Animation Classes<br>3-layer composable arch.</div>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="https://sds-motion-forge.netlify.app" target="_blank" rel="noopener" class="btn-primary">
+        <i class="ri-external-link-line"></i> Live Demo
+      </a>
+      <a href="https://github.com/salkomdesignstudio/SDS-Motion-Forge" target="_blank" rel="noopener" class="btn-ghost">
+        <i class="ri-github-fill"></i> GitHub
+      </a>
+      <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge" target="_blank" rel="noopener" class="btn-ghost">
+        <i class="ri-npmjs-fill"></i> npm package
+      </a>
+      <div class="cta-sep"></div>
+      <span class="cta-note">Solo · Designer + Engineer · Ongoing (v1→v5+)</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════ EXECUTIVE SNAPSHOT ══════════════ -->
+<section class="section" id="snapshot">
+  <div class="container">
+    <div class="s-label">Executive Snapshot</div>
+    <h2>Everything a hiring manager needs<br><em>in under 30 seconds.</em></h2>
+    <div class="snapshot-grid">
+      <div class="snap-card">
+        <div class="snap-card-label">The Problem</div>
+        <ul class="snap-list">
+          <li>4 concurrent client projects, all needing the same animations — rebuilt from scratch each time</li>
+          <li>No source of truth for motion. Design tokens in Figma, CSS scattered across 4 codebases</li>
+          <li>Existing libraries (Animate.css, GSAP, Framer Motion) couldn't solve all requirements</li>
+        </ul>
+      </div>
+      <div class="snap-card accent-card">
+        <div class="snap-card-label">The Solution</div>
+        <ul class="snap-list">
+          <li>Designed and engineered a production CSS animation library from scratch</li>
+          <li>3-layer composable architecture: CSS core + scroll engine + interactive physics</li>
+          <li>Published to npm with CI/CD, TypeScript types, and a backward compat gate</li>
+        </ul>
+      </div>
+      <div class="snap-card">
+        <div class="snap-card-label">Product Thinking</div>
+        <ul class="snap-list">
+          <li>Designed the DX first: <code class="inline">class="sds-fade-up"</code> and it works. Zero setup.</li>
+          <li>Backward compatibility = a product promise to every dev who adopted it</li>
+          <li>Open source adoption (526+ downloads) as external market validation, without a launch campaign</li>
+        </ul>
+      </div>
+      <div class="snap-card">
+        <div class="snap-card-label">Engineering Credibility</div>
+        <ul class="snap-list">
+          <li>8-stage CI/CD with machine-verified backward compat gate on every push</li>
+          <li>Tree-shakeable category bundles (26.5 KB → 127.1 KB, opt-in)</li>
+          <li>Figma ↔ code token sync via W3C Design Token format</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ RECRUITER SCAN ══════════════ -->
+<section class="section alt" id="recruiter">
+  <div class="container">
+    <div class="s-label">Quick Scan</div>
+    <h2>Choose your depth.<br><em>Recruiter scan.</em></h2>
+    <div class="recruiter-scan">
+      <div class="rs-col">
+        <div class="rs-time">6 Sec</div>
+        <div class="rs-check">Role & Stack</div>
+        <ul class="rs-items">
+          <li>Solo Creator (Designer + Engineer)</li>
+          <li>CSS Core, JS Scroll Engine, Interactive Physics</li>
+          <li>Published to npm under `@salkomdesignstudio`</li>
+        </ul>
+      </div>
+      <div class="rs-col">
+        <div class="rs-time">15 Sec</div>
+        <div class="rs-check">Engineering</div>
+        <ul class="rs-items">
+          <li>300+ classes, tree-shakeable category bundles</li>
+          <li>8-stage CI/CD with backward compatibility gate</li>
+          <li>Standalone Angular directive + React/Tailwind support</li>
+        </ul>
+      </div>
+      <div class="rs-col">
+        <div class="rs-time">30 Sec</div>
+        <div class="rs-check">Impact & Value</div>
+        <ul class="rs-items">
+          <li>526+ weekly organic npm downloads</li>
+          <li>Used in 4 live production client products</li>
+          <li>Figma-to-code W3C design token pipeline</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PROBLEM ══════════════ -->
+<section class="section" id="problem">
+  <div class="container">
+    <div class="s-label">The Problem</div>
+    <h2>Four clients. Four codebases.<br><em>The same animation, rebuilt four times.</em></h2>
+
+    <div class="problem-block">
+      <div class="problem-block-title">The real cost of inconsistency</div>
+      <div class="problem-vs">
+        <div class="problem-vs-col">
+          <div class="pvc-title">Before SDS Motion Forge</div>
+          <ul class="pvc-list">
+            <li>Card entrance: different easing per project</li>
+            <li>One timing change → update 4 codebases manually</li>
+            <li>Figma tokens and CSS already drifting. Motion had no chance.</li>
+            <li>Inconsistency compounded over months across DigiGold, Aura, and internal SDS tools</li>
+          </ul>
+        </div>
+        <div class="problem-vs-col">
+          <div class="pvc-title">After SDS Motion Forge</div>
+          <ul class="pvc-list">
+            <li>One versioned npm package, consumed by all 4 projects</li>
+            <li>Token change propagates to every project on next npm update</li>
+            <li>Figma ↔ code token sync via W3C format — single source of truth for motion</li>
+            <li>Consistent animation pacing across all client work, version-to-version</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p>The market alternatives didn't solve it either. I needed something <strong>framework-agnostic, CSS-first, with scroll gating, zero setup friction, and a token system that bridged Figma and code</strong> — none of the existing libraries checked all four boxes.</p>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Library</th>
+          <th>CSS-first</th>
+          <th>Scroll gate</th>
+          <th>Token system</th>
+          <th>Framework-agnostic</th>
+          <th>Zero setup</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Animate.css</strong></td>
+          <td class="chk">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="chk">✓</td>
+          <td class="part">~</td>
+        </tr>
+        <tr>
+          <td><strong>GSAP</strong></td>
+          <td class="cross">✗</td>
+          <td class="chk">✓</td>
+          <td class="cross">✗</td>
+          <td class="chk">✓</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td><strong>Framer Motion</strong></td>
+          <td class="cross">✗</td>
+          <td class="chk">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr class="sds-row">
+          <td><strong>SDS Motion Forge</strong></td>
+          <td class="chk">✓</td>
+          <td class="chk">✓</td>
+          <td class="chk">✓</td>
+          <td class="chk">✓</td>
+          <td class="chk">✓</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════ PRODUCT THINKING ══════════════ -->
+<section class="section alt" id="product">
+  <div class="container">
+    <div class="s-label">Product Thinking</div>
+    <h2>The decisions that made this<br><em>a library, not a stylesheet.</em></h2>
+
+    <div class="product-thinking">
+      <div class="pt-label">Key product decisions — and the reasoning behind each</div>
+      <div class="pt-grid">
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">On zero-setup DX</div>
+            <div class="pt-a">"What does the laziest possible integration look like? Whatever that is — make it work correctly. Then build everything else on top of it." The single-class API wasn't a simplification. It was the primary design constraint.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">On backward compatibility</div>
+            <div class="pt-a">When I committed to never removing a v3 class, I was making a product promise to every developer who adopted the library. Breaking that promise — even for a cleaner internal architecture — costs trust that takes versions to rebuild. The CI gate is how I honour the promise without relying on memory.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">On open source as product strategy</div>
+            <div class="pt-a">526+ weekly downloads without a launch campaign is external market validation. Other developers chose this over Animate.css or building their own. That's the strongest signal: the tool solves a real problem better than the alternatives. Publishing to npm is not shipping. Maintaining is shipping.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">On token architecture as product differentiation</div>
+            <div class="pt-a">Animations can be copied. A coherent token scale — <code class="inline" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.7);">--sds-duration-fast</code>, <code class="inline" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.7);">--sds-ease-spring</code> — bridging Figma and code in W3C Design Token format cannot. The library and the design system speak the same language. That's what separates a utility file from a design system component.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ ARCHITECTURE ══════════════ -->
+<section class="section" id="architecture">
+  <div class="container">
+    <div class="s-label">Architecture</div>
+    <h2>Three layers. Load only<br><em>what you use.</em></h2>
+    <p style="margin-bottom:24px;">The layers are additive — the CSS core is the only required layer. Everything above is opt-in. Not every project needs the physics engine.</p>
+
+    <div class="arch-wrap">
+      <div class="arch-layer">
+        <div class="arch-left">
+          <span class="arch-badge required">Required</span>
+          <span class="arch-size">26.5–127.1 KB</span>
+        </div>
+        <div class="arch-right">
+          <div class="arch-name">Layer 01 — CSS Core</div>
+          <div class="arch-desc">300+ animation classes across 6 categories. CSS custom property token scale. Modifier system (delay, duration, easing). <code class="inline">prefers-reduced-motion</code> respected at CSS level. Tree-shakeable category bundles — load loaders only at 26.5 KB, or the full library at 127.1 KB.</div>
+          <div class="arch-tags">
+            <span class="arch-tag">Zero JavaScript</span>
+            <span class="arch-tag">6 Categories</span>
+            <span class="arch-tag">CSS Token Scale</span>
+            <span class="arch-tag">Tree-shakeable</span>
+            <span class="arch-tag">a11y compliant</span>
+          </div>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-left">
+          <span class="arch-badge optional">Optional</span>
+          <span class="arch-size">1.28 KB</span>
+        </div>
+        <div class="arch-right">
+          <div class="arch-name">Layer 02 — Scroll Gate Engine</div>
+          <div class="arch-desc"><code class="inline">IntersectionObserver</code>-based. Adds <code class="inline">sds-in-view</code> on viewport entry. Fires once, then unobserves. Zero dependencies. 1.28 KB — smaller than most SVG icons. CSS Scroll-Driven Animations (Chrome 115+) as progressive enhancement fallback.</div>
+          <div class="arch-tags">
+            <span class="arch-tag">IntersectionObserver</span>
+            <span class="arch-tag">Zero Dependencies</span>
+            <span class="arch-tag">Progressive Enhancement</span>
+          </div>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-left">
+          <span class="arch-badge optional">Optional</span>
+          <span class="arch-size">6.98 KB</span>
+        </div>
+        <div class="arch-right">
+          <div class="arch-name">Layer 03 — Interactive Physics Engine</div>
+          <div class="arch-desc">Cursor-reactive animation mapping mouse position to CSS transforms. Lazy-initialized — no cost until the first interactive element enters viewport. Event-driven: no permanent <code class="inline">requestAnimationFrame</code> loop. Designed for hero sections and product showcases.</div>
+          <div class="arch-tags">
+            <span class="arch-tag">Lazy Init</span>
+            <span class="arch-tag">Cursor-reactive</span>
+            <span class="arch-tag">No RAF loop</span>
+          </div>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-left">
+          <span class="arch-badge optional">Optional</span>
+          <span class="arch-size">Thin wrappers</span>
+        </div>
+        <div class="arch-right">
+          <div class="arch-name">Layer 04 — Framework Wrappers</div>
+          <div class="arch-desc">Thin consumers of the CSS layer — they manage class application, not animation logic. Angular standalone directives with signal inputs. React component + <code class="inline">useSdsInView</code> hook. Web Components custom element. Tailwind v4 CSS-first plugin. Full TypeScript union types with IDE autocomplete.</div>
+          <div class="arch-tags">
+            <span class="arch-tag">Angular Signals</span>
+            <span class="arch-tag">React</span>
+            <span class="arch-tag">Web Components</span>
+            <span class="arch-tag">Tailwind v4</span>
+            <span class="arch-tag">TypeScript</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="font-size:20px;margin-top:32px;margin-bottom:12px;">Three consumption modes</h2>
+    <div class="code-wrap">
+      <div class="code-bar">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="code-file">Mode 1 — zero setup, class only</span>
+      </div>
+      <pre><code><span class="t-g">&lt;p</span> <span class="t-a">class</span>=<span class="t-s">"sds-fade-up"</span><span class="t-g">&gt;</span>Animates on load. Zero JavaScript.<span class="t-g">&lt;/p&gt;</span>
+
+<span class="t-c">/* Mode 2 — scroll-gated */</span>
+<span class="t-g">&lt;div</span> <span class="t-a">class</span>=<span class="t-s">"sds-scroll-fade-up"</span><span class="t-g">&gt;</span>Animates when entering viewport.<span class="t-g">&lt;/div&gt;</span>
+
+<span class="t-c">/* Mode 3 — modifier stack */</span>
+<span class="t-g">&lt;div</span> <span class="t-a">class</span>=<span class="t-s">"sds-fade-up sds-delay-3 sds-duration-slow sds-ease-spring"</span><span class="t-g">&gt;</span>
+  300ms delay · slow speed · spring easing — no JavaScript
+<span class="t-g">&lt;/div&gt;</span></code></pre>
+    </div>
+
+    <div class="code-wrap" style="margin-top:12px;">
+      <div class="code-bar">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="code-file">Token scale — override the entire library in one line</span>
+      </div>
+      <pre><code><span class="t-p">:root</span> {
+  <span class="t-c">/* 6-step duration scale — override at :root to retime all 300+ animations */</span>
+  <span class="t-p">--sds-duration-instant</span>:  <span class="t-n">0.12s</span>;
+  <span class="t-p">--sds-duration-fast</span>:     <span class="t-n">0.25s</span>;
+  <span class="t-p">--sds-duration-normal</span>:   <span class="t-n">0.4s</span>;
+  <span class="t-p">--sds-duration-moderate</span>: <span class="t-n">0.6s</span>;
+  <span class="t-p">--sds-duration-slow</span>:     <span class="t-n">0.9s</span>;
+  <span class="t-p">--sds-duration-xslow</span>:    <span class="t-n">1.4s</span>;
+
+  <span class="t-c">/* Named easing — not raw bezier values */</span>
+  <span class="t-p">--sds-ease-spring</span>:  <span class="t-f">cubic-bezier</span>(<span class="t-n">0.34</span>, <span class="t-n">1.56</span>, <span class="t-n">0.64</span>, <span class="t-n">1</span>);
+  <span class="t-p">--sds-ease-out</span>:     <span class="t-f">cubic-bezier</span>(<span class="t-n">0.16</span>, <span class="t-n">1</span>, <span class="t-n">0.3</span>, <span class="t-n">1</span>);
+  <span class="t-p">--sds-ease-in-out</span>:  <span class="t-f">cubic-bezier</span>(<span class="t-n">0.4</span>, <span class="t-n">0</span>, <span class="t-n">0.2</span>, <span class="t-n">1</span>);
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ EVOLUTION ══════════════ -->
+<section class="section alt" id="evolution">
+  <div class="container">
+    <div class="s-label">Exploration & Evolution</div>
+    <h2>Three major wrong turns<br><em>before the architecture that worked.</em></h2>
+
+    <div class="versions">
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">v1</span></div>
+        <div>
+          <div class="v-title">One monolithic file. One fundamental mistake.</div>
+          <div class="v-body">A single 1,200-line <code class="inline">motion.css</code>, copied manually into each project. No versioning. No API contract. No way to update across projects without risking regressions. The problem wasn't the animations — it was that this was a shared stylesheet, not a library.</div>
+          <span class="v-verdict fail">✗ Not a library. A shared file.</span>
+        </div>
+      </div>
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">v2</span></div>
+        <div>
+          <div class="v-title">Published to npm. Shipped the wrong architecture.</div>
+          <div class="v-body">Correct distribution channel — wrong architecture. One package, everything bundled: all animations, both JS engines, all framework code. 280 KB uncompressed. The interactive physics engine ran on every page load. Mobile devices showed measurable layout thrash on first paint. I had prioritised shipping over architecture.</div>
+          <span class="v-verdict fail">✗ Correct distribution, wrong architecture.</span>
+        </div>
+      </div>
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">v3→v5</span></div>
+        <div>
+          <div class="v-title">Category splits + backward compat contract. The architecture that survived.</div>
+          <div class="v-body">Full rewrite: 6 category bundles, separate JS engines, framework wrappers as separate entry points. Backward compatibility became a documented product promise — every class from v3 onward would never be removed. Machine-verified at every push. This was the first version that felt like a library other developers could rely on.</div>
+          <span class="v-verdict pass">✓ This is the architecture that went to v5.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ ENGINEERING ══════════════ -->
+<section class="section" id="engineering">
+  <div class="container">
+    <div class="s-label">Engineering</div>
+    <h2>The CI/CD gate that makes<br><em>backward compat machine-verified.</em></h2>
+
+    <p>The zero breaking changes metric isn't a promise I keep by memory. It's enforced by a CI stage that compares every build against the published npm tarball and fails if any class is missing.</p>
+
+    <div class="code-wrap">
+      <div class="code-bar">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="code-file">GitHub Actions · Stage 6 of 8 — backward compat check</span>
+      </div>
+      <pre><code><span class="t-c"># Download previous published tarball from npm registry</span>
+- <span class="t-a">name</span>: <span class="t-s">Check backward compatibility</span>
+  <span class="t-a">run</span>: |
+    <span class="t-c"># Extract class names from published tarball</span>
+    npm <span class="t-f">pack</span> @salkomdesignstudio/sds-motion-forge --dry-run \
+      | <span class="t-f">grep</span> <span class="t-s">'\.sds-'</span> > published-classes.txt
+
+    <span class="t-c"># Extract new build classes</span>
+    <span class="t-f">grep</span> <span class="t-s">'\.sds-'</span> dist/**/*.css > new-classes.txt
+
+    <span class="t-c"># Fail if any published class is missing from new build</span>
+    <span class="t-f">comm</span> -23 &lt;(<span class="t-f">sort</span> published-classes.txt) &lt;(<span class="t-f">sort</span> new-classes.txt) \
+      | <span class="t-f">grep</span> <span class="t-s">'.'</span> &amp;&amp; <span class="t-f">exit</span> <span class="t-n">1</span> || <span class="t-f">echo</span> <span class="t-s">"✓ All classes preserved"</span></code></pre>
+    </div>
+
+    <p>If a class is accidentally removed — even by renaming an internal file — CI fails with a diff of missing classes. The Angular directive uses <strong>signal inputs</strong>, so if <code class="inline">animation</code> changes at runtime, the class updates reactively. JS adds a class. CSS does the animation. Clean separation of concerns throughout the stack.</p>
+
+    <div class="callout">
+      <strong>The size discipline matters.</strong> The scroll gate engine (sds-scroll.min.js) is 1.28 KB — smaller than most SVG icons. The interactive physics engine is 6.98 KB and lazy-initialises: no cost until the first interactive element enters the viewport. Every KB the library loads is a KB taken from the host project's budget.
+    </div>
+
+    <div class="score-card">
+      <div class="score-big">100<span>/100</span></div>
+      <div class="score-detail">
+        <div class="score-row">
+          <span class="score-row-label">Performance (Lighthouse)</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar" style="width: 100%;"></div>
+          </div>
+          <span class="score-num">100</span>
+        </div>
+        <div class="score-row">
+          <span class="score-row-label">Accessibility (A11y)</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar" style="width: 100%;"></div>
+          </div>
+          <span class="score-num">100</span>
+        </div>
+        <div class="score-row">
+          <span class="score-row-label">Core Web Vitals</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar" style="width: 98%;"></div>
+          </div>
+          <span class="score-num">98</span>
+        </div>
+        <div class="score-row">
+          <span class="score-row-label">Test Suite Coverage</span>
+          <div class="score-bar-wrap">
+            <div class="score-bar" style="width: 100%;"></div>
+          </div>
+          <span class="score-num">100</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CHALLENGES ══════════════ -->
+<section class="section alt" id="challenges">
+  <div class="container">
+    <div class="s-label">Challenges & Solutions</div>
+    <h2>Five real bugs.<br><em>Five real fixes.</em></h2>
+
+    <div class="challenges">
+      <div class="challenge">
+        <div class="ch-header">
+          <div class="ch-num">01</div>
+          <div class="ch-title">Stagger selectors hardcoded to 8 children — broke on real navigation lists</div>
+        </div>
+        <div class="ch-body">
+          <div>
+            <div class="ch-col-label bug">Bug</div>
+            <p class="ch-text"><code class="inline">:nth-child()</code> patterns hardcoded to 8. Lists with more than 8 items had all remaining elements fire simultaneously — no stagger. Looked broken on any real navigation list or card grid.</p>
+          </div>
+          <div>
+            <div class="ch-col-label fix">Fix</div>
+            <p class="ch-text">Expanded to 12 and introduced <code class="inline">sds-stagger-auto</code> using CSS custom property indexing via <code class="inline">--sds-child-index</code> — no JavaScript required.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <div class="ch-header">
+          <div class="ch-num">02</div>
+          <div class="ch-title">clip-path animations blocked by parent overflow: hidden</div>
+        </div>
+        <div class="ch-body">
+          <div>
+            <div class="ch-col-label bug">Bug</div>
+            <p class="ch-text">Inside containers with <code class="inline">overflow: hidden</code> — standard in Angular Material components and Bootstrap cards — clip-path animations were completely invisible. No error. Just nothing happening. Root cause: overflow: hidden clips content starting outside parent bounds before the animation begins.</p>
+          </div>
+          <div>
+            <div class="ch-col-label fix">Fix</div>
+            <p class="ch-text">Added <code class="inline">sds-clip-safe</code> — a utility class that sets <code class="inline">overflow: visible</code> on the direct parent scope. Documented which animation categories require it with clear error guidance in the README.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <div class="ch-header">
+          <div class="ch-num">03</div>
+          <div class="ch-title">Transforms failing silently on inline elements</div>
+        </div>
+        <div class="ch-body">
+          <div>
+            <div class="ch-col-label bug">Bug</div>
+            <p class="ch-text"><code class="inline">transform: translateY()</code> and <code class="inline">scale()</code> have no effect on <code class="inline">display: inline</code> elements. This means applying <code class="inline">sds-fade-up</code> to a <code class="inline">&lt;span&gt;</code> or <code class="inline">&lt;a&gt;</code> silently produced no animation — developers would file it as a library bug.</p>
+          </div>
+          <div>
+            <div class="ch-col-label fix">Fix</div>
+            <p class="ch-text">Added <code class="inline">display: inline-block</code> to every animation class that uses transforms, auditing all 300+ classes. Now works on any element regardless of its default display value.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <div class="ch-header">
+          <div class="ch-num">04</div>
+          <div class="ch-title">Self-referencing package.json caused circular install</div>
+        </div>
+        <div class="ch-body">
+          <div>
+            <div class="ch-col-label bug">Bug</div>
+            <p class="ch-text">Listed <code class="inline">@salkomdesignstudio/sds-motion-forge</code> as a devDependency in its own package.json for integration testing. npm's install algorithm detected the circular reference and failed with a lockfile resolution error on fresh installs.</p>
+          </div>
+          <div>
+            <div class="ch-col-label fix">Fix</div>
+            <p class="ch-text">Moved all self-testing to a separate <code class="inline">packages/test-harness</code> workspace that declares the package as a local path dependency using <code class="inline">"file:../../"</code>. The published package has zero self-references of any kind.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <div class="ch-header">
+          <div class="ch-num">05</div>
+          <div class="ch-title">v4 → v5 architecture refactor without breaking v3 classes</div>
+        </div>
+        <div class="ch-body">
+          <div>
+            <div class="ch-col-label bug">Bug</div>
+            <p class="ch-text">Version 5 reorganised the entire internal CSS architecture — categories merged, keyframe names changed, file structure completely different from v3. But clients had v3 class names in production Angular and Flutter codebases I did not control. Breaking those classes would mean breaking live client products.</p>
+          </div>
+          <div>
+            <div class="ch-col-label fix">Fix</div>
+            <p class="ch-text">The backward compatibility CI gate caught every missing class during the build. For each removed class, created a legacy alias in <code class="inline">legacy/v3-aliases.css</code> using PostCSS <code class="inline">composes</code>. Zero duplication in output, no runtime cost, no breaking change.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ IMPACT ══════════════ -->
+<section class="section" id="impact">
+  <div class="container">
+    <div class="s-label">Outcomes & Impact</div>
+    <h2>Numbers that prove<br><em>it solves a real problem.</em></h2>
+    <div class="impact-grid">
+      <div class="impact-card blue">
+        <div class="impact-val">526<sub>+</sub></div>
+        <div class="impact-label">Weekly npm Downloads</div>
+        <p class="impact-desc">No marketing. No launch post. Developers find it via npm search and adopt it because it solves the problem — the strongest signal of value.</p>
+        <div class="impact-proof">Organic Adoption</div>
+      </div>
+      <div class="impact-card warn">
+        <div class="impact-val">0</div>
+        <div class="impact-label">Breaking Changes</div>
+        <p class="impact-desc">v3 through v5. Machine-verified at every push. Aggressive internal refactoring without breaking consumer projects.</p>
+        <div class="impact-proof">CI/CD Enforced</div>
+      </div>
+      <div class="impact-card">
+        <div class="impact-val">4</div>
+        <div class="impact-label">Live Client Products</div>
+        <p class="impact-desc">DigiGold (Pothys, GRT, Lalitha, Super Saravana Stores), Aura Elite Events, and internal SDS tooling. Pays back investment in hours saved.</p>
+        <div class="impact-proof">Production Proven</div>
+      </div>
+      <div class="impact-card neutral">
+        <div class="impact-val">W3C</div>
+        <div class="impact-label">Token format — Figma ↔ Code</div>
+        <p class="impact-desc">Complete token scale in W3C Design Token format, importable by Figma Token Studio. Design and code share the same source of truth for motion timing.</p>
+        <div class="impact-proof">Single Source of Truth</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ LESSONS ══════════════ -->
+<section class="section alt" id="lessons">
+  <div class="container">
+    <div class="s-label">Lessons Learned</div>
+    <h2>What building for other developers<br><em>taught me about product design.</em></h2>
+    <div class="lessons">
+      <div class="lesson">
+        <div class="lesson-n">01</div>
+        <div>
+          <div class="lesson-title">Build for the developer who will not read your documentation</div>
+          <p class="lesson-body">The most common complaint about animation libraries is setup complexity. If the first step after npm install is "now import this, register that, and wrap your component in a provider," you have lost most of your potential users. My single-class API came from one question: what does the laziest possible integration look like? Whatever that is, make it work correctly. Then build everything else on top of it.</p>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-n">02</div>
+        <div>
+          <div class="lesson-title">Backward compatibility is a product decision, not just an engineering one</div>
+          <p class="lesson-body">When I committed to never removing a v3 class, I was making a product promise to every developer who used the library. Breaking that promise — even for a "cleaner" internal architecture — costs trust that takes versions to rebuild. The machine-verified gate is how I honour the promise without relying on my own memory or discipline in the moment. Automate your constraints.</p>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-n">03</div>
+        <div>
+          <div class="lesson-title">Open source is a maintenance surface, not a launch moment</div>
+          <p class="lesson-body">Publishing to npm is not shipping. Shipping is maintaining: answering issues, updating the build pipeline when a dependency changes, ensuring CI passes when GitHub Actions updates its runner. The difference between a package with 12 downloads and one with 526+ weekly is not the launch announcement. It is continued investment in reliability, backward compatibility, and documentation that does not go stale.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ NEXT STEPS ══════════════ -->
+<section class="section" id="next">
+  <div class="container">
+    <div class="s-label">Next Steps</div>
+    <h2>What v5.1 and beyond<br><em>looks like.</em></h2>
+    <div class="next-grid">
+      <div class="next-card">
+        <div class="next-status">In Progress · v5.1</div>
+        <div class="next-title">React Server Components Support</div>
+        <p class="next-body">Splitting the React wrapper into a server layer (static class composition) and a client layer (viewport hooks) for modern RSC frameworks.</p>
+      </div>
+      <div class="next-card">
+        <div class="next-status">Planned · v5.2</div>
+        <div class="next-title">Storybook Integration</div>
+        <p class="next-body">An interactive playground rendering all 300+ classes, serving as documentation and visual regression testing.</p>
+      </div>
+      <div class="next-card">
+        <div class="next-status">Planned · v6.0</div>
+        <div class="next-title">CSS @layer Architecture</div>
+        <p class="next-body">Migrating to CSS @layer to avoid specificity issues, letting consumers override library classes cleanly.</p>
+      </div>
+      <div class="next-card">
+        <div class="next-status">Planned · v6.0</div>
+        <div class="next-title">Figma Live Preview Plugin</div>
+        <p class="next-body">Applying SDS Motion Forge classes directly in Figma and previewing animations inside Figma frames.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-tag">SDS Motion Forge · @salkomdesignstudio</div>
+    <div class="footer-title">SDS Motion Forge</div>
+    <p class="footer-sub">A production-grade CSS animation library built to eliminate the one problem every client project had in common.</p>
+    <div class="footer-links">
+      <a href="index.html" class="f-btn ghost">
+        <i class="ri-arrow-left-line"></i> Back to Portfolio
+      </a>
+      <a href="https://sds-motion-forge.netlify.app" target="_blank" rel="noopener" class="f-btn primary">
+        <i class="ri-external-link-line"></i> Live Demo
+      </a>
+      <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge" target="_blank" rel="noopener" class="f-btn ghost">
+        <i class="ri-npmjs-fill"></i> npm
+      </a>
+      <a href="https://github.com/salkomdesignstudio/SDS-Motion-Forge" target="_blank" rel="noopener" class="f-btn ghost">
+        <i class="ri-github-fill"></i> GitHub
+      </a>
+    </div>
+    <p class="footer-copy">© 2026 Govarthanan Selvaganessane</p>
+  </div>
+</footer>
+
+<script>
+  // ── Progress bar ──────────────────────────────────
+  const fill = document.getElementById('prog-fill');
+  window.addEventListener('scroll', () => {
+    const el  = document.documentElement;
+    const pct = el.scrollTop / (el.scrollHeight - el.clientHeight) * 100;
+    fill.style.width = Math.min(pct, 100) + '%';
+  }, { passive: true });
+</script>
+
+</body>
+</html>

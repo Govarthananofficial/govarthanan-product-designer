@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -129,6 +129,20 @@
         ]
       }
     </script>
+    <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "x69v01ahkr");
+    </script>
 
     <!-- ═══ FAVICONS ═══ -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -145,6 +159,13 @@
     <link
       href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
       rel="stylesheet"
+    />
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -239,6 +260,20 @@
         opacity: 0.45;
       }
 
+      /* Bootstrap Reset overrides to maintain design language */
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      a:hover {
+        color: inherit;
+      }
+      button:focus,
+      a:focus {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
       /* ─── CURSOR ─── */
       .cursor-dot {
         width: 6px;
@@ -258,12 +293,7 @@
       .bleed {
         width: 100%;
       }
-      .inner {
-        width: 100%;
-        max-width: var(--PAGE-W);
-        margin: 0 auto;
-        padding: 0 var(--PAGE-PAD);
-      }
+      /* .inner styling removed in favor of Bootstrap container */
       .sec {
         padding-top: var(--SEC-Y);
         padding-bottom: var(--SEC-Y);
@@ -329,10 +359,6 @@
         right: 0;
         z-index: 200;
         height: var(--NAV-H);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 var(--PAGE-PAD);
         background: rgba(255, 255, 255, 0.94);
         -webkit-backdrop-filter: blur(20px) saturate(180%);
         backdrop-filter: blur(20px) saturate(180%);
@@ -372,6 +398,7 @@
         gap: 36px;
         list-style: none;
         align-items: center;
+        margin: 0px;
       }
       .nav-links a {
         font-size: 13px;
@@ -587,10 +614,8 @@
         display: flex;
         flex-direction: column;
         justify-content: center; /* center pill + content as one block */
-        max-width: var(--PAGE-W);
         width: 100%;
-        margin: 0 auto;
-        padding: calc(var(--NAV-H) + 16px) var(--PAGE-PAD) 24px;
+        padding: calc(var(--NAV-H) + 16px) 0 24px;
         position: relative;
         z-index: 1;
       }
@@ -1485,20 +1510,20 @@
    SYSTEMS — Primary blue system
 ═══════════════════════════════════ */
       #systems {
-        /* Odd section — primary white background */
-        background: #ffffff;
+        /* Premium dark background */
+        background: #1d1d1f;
         position: relative;
         overflow: hidden;
       }
 
-      /* Fine dot grid — faint ink texture on white */
+      /* Fine dot grid — faint white texture on dark */
       #systems::before {
         content: "";
         position: absolute;
         inset: 0;
         background-image: radial-gradient(
           circle,
-          rgba(29, 29, 31, 0.06) 1px,
+          rgba(255, 255, 255, 0.03) 1px,
           transparent 1px
         );
         background-size: 28px 28px;
@@ -1514,11 +1539,11 @@
         left: 0;
         right: 0;
         height: 1px;
-        background: rgba(29, 29, 31, 0.1);
+        background: rgba(255, 255, 255, 0.08);
         z-index: 1;
       }
 
-      #systems .inner {
+      #systems .container {
         position: relative;
         z-index: 2;
       }
@@ -1544,7 +1569,7 @@
         display: block;
         width: 20px;
         height: 1px;
-        background: #1d1d1f;
+        background: #ffffff;
         flex-shrink: 0;
       }
 
@@ -1568,7 +1593,7 @@
         font-size: clamp(40px, 4.5vw, 64px);
         line-height: 1;
         letter-spacing: -0.04em;
-        color: #1d1d1f;
+        color: #ffffff;
         margin: 0;
       }
       .sys-h em {
@@ -1596,7 +1621,7 @@
         margin: 0;
       }
 
-      /* White stat cards — individual cards, equal width, fills right column */
+      /* Dark stat cards */
       .sys-stats-row {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -1604,25 +1629,24 @@
       }
 
       .sys-stat {
-        background: #f5f5f7;
+        background: #ffffff;
         border: 1px solid rgba(29, 29, 31, 0.08);
         border-radius: 12px;
         padding: 16px 18px;
         display: flex;
         flex-direction: column;
         gap: 5px;
-        box-shadow:
-          0 1px 2px rgba(0, 0, 0, 0.04),
-          0 4px 14px rgba(0, 0, 0, 0.07);
         transition:
           transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-          box-shadow 0.22s ease;
+          box-shadow 0.22s ease,
+          background-color 0.22s ease,
+          border-color 0.22s ease;
       }
       .sys-stat:hover {
         transform: translateY(-2px);
-        box-shadow:
-          0 2px 8px rgba(0, 0, 0, 0.07),
-          0 8px 24px rgba(0, 0, 0, 0.1);
+        background: #f5f5f7;
+        border-color: rgba(29, 29, 31, 0.18);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       }
 
       .sys-stat-val {
@@ -1630,7 +1654,7 @@
         font-weight: 800;
         font-size: 22px;
         letter-spacing: -0.045em;
-        color: var(--primary);
+        color: #1d1d1f;
         line-height: 1;
       }
 
@@ -1639,40 +1663,40 @@
         font-size: 9px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: var(--t4);
+        color: #86868b;
         line-height: 1.3;
       }
 
       /* Separator */
       .sys-sep {
         height: 1px;
-        background: rgba(29, 29, 31, 0.1);
+        background: rgba(255, 255, 255, 0.08);
         margin-bottom: 52px;
       }
 
-      /* ── Cards: 3-col equal-width white cards ── */
+      /* ── Cards: 3-col equal-width dark cards ── */
       .sys-cards {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 16px;
       }
 
-      /* Soft-gray card on the white section */
+      /* Premium white card surface */
       .sys-card {
-        background: #f5f5f7;
-        border: 1.5px solid var(--bd);
+        background: #ffffff;
+        border: 1.5px solid rgba(29, 29, 31, 0.08);
         border-radius: 20px;
         position: relative;
         overflow: hidden;
-        cursor: pointer;
-        box-shadow: var(--sh1);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         transition:
           border-color 0.3s ease,
           transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-          box-shadow 0.4s ease;
+          box-shadow 0.4s ease,
+          background-color 0.3s ease;
       }
 
-      /* Blue accent bar slides in from left on hover — premium interaction */
+      /* Monochromatic accent bar slides in from left on hover */
       .sys-card::before {
         content: "";
         position: absolute;
@@ -1682,7 +1706,7 @@
         height: 3px;
         background: linear-gradient(
           90deg,
-          var(--primary) 0%,
+          #1d1d1f 0%,
           rgba(29, 29, 31, 0.28) 100%
         );
         transform: scaleX(0);
@@ -1694,9 +1718,10 @@
       }
 
       .sys-card:hover {
-        border-color: var(--primary-border);
+        border-color: rgba(29, 29, 31, 0.18);
+        background: #f5f5f7;
         transform: translateY(-5px);
-        box-shadow: var(--sh3);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
       }
 
       .sys-card-inner {
@@ -1714,7 +1739,7 @@
         margin-bottom: 32px;
       }
 
-      /* Tag text — dark on white, readable */
+      /* Tag text — muted gray on white */
       .sys-card-tag {
         display: inline-flex;
         align-items: center;
@@ -1723,7 +1748,7 @@
         font-size: 9.5px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: var(--t4);
+        color: #86868b;
       }
 
       .sys-tag-dot {
@@ -1732,23 +1757,22 @@
         border-radius: 50%;
         flex-shrink: 0;
       }
-      /* Primary-blue dot hierarchy on white */
+      /* Dot colors — simple indicators */
       .sys-dot--npm {
-        background: var(--primary);
-        box-shadow: none;
+        background: #1d1d1f;
       }
       .sys-dot--figma {
-        background: rgba(29, 29, 31, 0.55);
+        background: #86868b;
       }
       .sys-dot--ai {
-        background: rgba(29, 29, 31, 0.28);
+        background: rgba(29, 29, 31, 0.3);
       }
 
       .sys-card-num {
         font-family: "DM Sans", sans-serif;
         font-size: 10px;
         letter-spacing: 0.16em;
-        color: var(--t4);
+        color: #86868b;
         opacity: 0.45;
       }
 
@@ -1757,25 +1781,22 @@
         margin-bottom: 24px;
       }
 
-      /* Card name: dark on white, transitions to primary on hover */
+      /* Card name: dark ink */
       .sys-card-name {
         font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: 20px;
         letter-spacing: -0.028em;
-        color: var(--t1);
+        color: #1d1d1f;
         line-height: 1.15;
         margin-bottom: 10px;
         transition: color 0.22s ease;
       }
-      .sys-card:hover .sys-card-name {
-        color: var(--primary);
-      }
 
-      /* Description: readable body text */
+      /* Description: readable muted body text */
       .sys-card-desc {
         font-size: 13px;
-        color: var(--t3);
+        color: #555557;
         line-height: 1.72;
         margin: 0;
         letter-spacing: -0.003em;
@@ -1786,7 +1807,7 @@
         align-items: center;
         justify-content: space-between;
         padding-top: 20px;
-        border-top: 1px solid var(--bd);
+        border-top: 1px solid rgba(29, 29, 31, 0.08);
         margin-top: auto;
       }
 
@@ -1811,11 +1832,11 @@
         flex-shrink: 0;
       }
 
-      /* Live — ink pill: strongest neutral signal */
+      /* Live — dark pill outline */
       .sys-pill.live {
         border: 1px solid rgba(29, 29, 31, 0.22);
         color: #1d1d1f;
-        background: #ffffff;
+        background: transparent;
       }
       .sys-pill.live .sys-pill-dot {
         background: #1d1d1f;
@@ -1847,46 +1868,53 @@
         }
       }
 
-      /* Dev — muted pill: secondary neutral signal */
+      /* Dev — muted gray outline */
       .sys-pill.dev {
         border: 1px solid rgba(29, 29, 31, 0.12);
         color: #86868b;
-        background: #ffffff;
+        background: transparent;
       }
 
-      /* Arrow row — shows "Open" label + arrow icon at rest */
-      .sys-card-arr {
+      /* ── Button actions in cards ── */
+      .sys-btn {
         display: inline-flex;
         align-items: center;
         gap: 6px;
         font-family: "DM Sans", sans-serif;
-        font-size: 11.5px;
+        font-size: 11px;
         font-weight: 700;
-        letter-spacing: 0.02em;
-        color: var(--t3);
-        background: var(--bg-alt);
-        border: 1px solid var(--bd2);
-        padding: 6px 12px 6px 10px;
+        letter-spacing: 0.01em;
+        padding: 6px 14px;
         border-radius: 8px;
-        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
         transition:
-          background 0.25s ease,
-          color 0.25s ease,
-          border-color 0.25s ease,
-          transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-          box-shadow 0.25s ease;
+          background-color 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease,
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
       }
-      .sys-card-arr i {
-        font-size: 15px;
-        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        flex-shrink: 0;
+      .sys-btn.primary {
+        background: #1d1d1f;
+        color: #ffffff !important;
+        border: 1px solid #1d1d1f;
       }
-      /* Only clickable cards get full hover state */
-      a.sys-card:hover .sys-card-arr {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      .sys-btn.primary:hover {
+        background: #000000;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(29, 29, 31, 0.25);
+      }
+      .sys-btn.secondary {
+        background: transparent;
+        color: #1d1d1f !important;
+        border: 1px solid rgba(29, 29, 31, 0.18);
+      }
+      .sys-btn.secondary:hover {
+        background: rgba(29, 29, 31, 0.05);
+        border-color: rgba(29, 29, 31, 0.3);
+        color: #1d1d1f !important;
         transform: translateY(-1px);
       }
       a.sys-card:hover .sys-card-arr i {
@@ -2267,7 +2295,7 @@
         background: rgba(29, 29, 31, 0.1);
         z-index: 1;
       }
-      #contact .inner {
+      #contact .container {
         position: relative;
         z-index: 2;
       }
@@ -2844,7 +2872,7 @@
       footer {
         background: var(--bg-alt);
         border-top: 1px solid var(--bd);
-        padding: 64px var(--PAGE-PAD) 0;
+        padding: 64px 0 0;
       }
       .foot-grid {
         display: grid;
@@ -3657,7 +3685,7 @@
         overflow: hidden;
       }
       .testi-top-bar {
-        padding: 52px var(--PAGE-PAD) 20px;
+        padding: 52px 0 20px;
         flex-shrink: 0;
         display: flex;
         align-items: flex-end;
@@ -4317,7 +4345,7 @@
         color: var(--t3);
         line-height: 1.65;
         letter-spacing: -0.005em;
-        max-width: 52ch;
+        max-width: none;
       }
       .hiw-step-tag {
         display: inline-flex;
@@ -4339,28 +4367,22 @@
    IMPACT SECTION
 ═══════════════════════════════════ */
       .impact-grid {
-        display: grid;
-        grid-template-columns: 340px 1fr;
-        gap: 96px;
-        align-items: start;
+        /* Layout handled via Bootstrap row */
       }
       .impact-left {
-        position: sticky;
-        top: calc(var(--NAV-H) + 32px);
+        /* Sticky positioning handled inside Bootstrap column classes */
       }
       .impact-intro {
         font-size: 15px;
         color: var(--t3);
         line-height: 1.78;
-        margin-top: 20px;
-        max-width: 34ch;
+        max-width: 56ch;
       }
       .impact-cards {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
+        /* Layout handled via Bootstrap row */
       }
       .impact-card {
+        position: relative; /* For absolute positioning of icons */
         background: var(--surface);
         border: 1.5px solid var(--bd);
         border-radius: 16px;
@@ -4378,7 +4400,6 @@
         box-shadow: var(--sh2);
       }
       .impact-card.featured {
-        grid-column: span 2;
         background: var(--primary);
         border-color: var(--primary);
         flex-direction: row;
@@ -4405,10 +4426,41 @@
         flex-shrink: 0;
       }
       .impact-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-top-right-radius: 14.5px; /* sit perfectly in card corner */
+        border-bottom-left-radius: 16px;
+        background: rgba(29, 29, 31, 0.04);
         font-size: 20px;
         color: var(--t1);
-        opacity: 0.7;
-        margin-bottom: 2px;
+        transition:
+          background-color 0.25s ease,
+          color 0.25s ease;
+      }
+      .impact-card:hover .impact-icon {
+        background: var(--primary); /* gray */
+        color: #ffffff; /* white */
+      }
+      .impact-card.featured .impact-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        transition: background-color 0.25s ease;
+      }
+      .impact-card.featured:hover .impact-icon {
+        background: rgba(255, 255, 255, 0.18);
+        transform: none;
       }
       .impact-val {
         font-family: "DM Sans", sans-serif;
@@ -4417,6 +4469,7 @@
         letter-spacing: -0.05em;
         line-height: 1;
         color: var(--t1);
+        white-space: nowrap; /* Prevent symbol wrapping */
       }
       .impact-val em {
         font-family: "DM Serif Display", serif;
@@ -4426,38 +4479,85 @@
         color: var(--t3);
       }
       .impact-label {
-        font-size: 13px;
+        font-size: 15px; /* Increased from 13px */
         font-weight: 600;
         letter-spacing: -0.01em;
         color: var(--t2);
         line-height: 1.4;
       }
       .impact-context {
-        font-size: 11.5px;
+        font-size: 13.5px; /* Increased from 11.5px */
         color: var(--t4);
-        line-height: 1.5;
-        margin-top: 2px;
+        line-height: 1.6; /* Increased line-height */
+        margin-top: 6px; /* Increased top margin */
       }
       .impact-featured-text {
         flex: 1;
+        position: relative;
+      }
+
+      /* ─── CTA Card ─── */
+      .impact-card.cta-card {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #ffffff;
+      }
+      .impact-card.cta-card .impact-icon,
+      .impact-card.cta-card .impact-val,
+      .impact-card.cta-card .impact-label,
+      .impact-card.cta-card .impact-context {
+        color: #ffffff;
+      }
+      .impact-card.cta-card .impact-icon {
+        position: absolute;
+        top: 24px;
+        right: 26px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        transition: background-color 0.25s ease;
+      }
+      .impact-card.cta-card:hover .impact-icon {
+        background: rgba(255, 255, 255, 0.18);
+        transform: none;
+      }
+      .impact-card.cta-card .impact-label {
+        opacity: 0.85;
+      }
+      .impact-card.cta-card .impact-context {
+        opacity: 0.65;
+        margin-bottom: auto;
+      }
+      .impact-card.cta-card:hover {
+        background: #2c2c2e;
+        border-color: #2c2c2e;
+        box-shadow: var(--sh2);
+      }
+      .impact-card.cta-card .sys-btn.white {
+        background: #ffffff;
+        color: #1d1d1f !important;
+        border: 1px solid #ffffff;
+      }
+      .impact-card.cta-card .sys-btn.white:hover {
+        background: #f5f5f7;
+        color: #1d1d1f !important;
+        border-color: #f5f5f7;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.25);
       }
 
       /* ─── Responsive ─── */
       @media (max-width: 1024px) {
-        .hiw-grid,
-        .impact-grid {
+        .hiw-grid {
           grid-template-columns: 1fr;
           gap: 48px;
         }
-        .hiw-left,
-        .impact-left {
+        .hiw-left {
           position: static;
         }
-        .impact-cards {
-          grid-template-columns: 1fr;
-        }
         .impact-card.featured {
-          grid-column: span 1;
           flex-direction: column;
           align-items: flex-start;
           gap: 16px;
@@ -4479,37 +4579,41 @@
 
     <!-- ═══ NAV ═══ -->
     <nav id="mainNav">
-      <a href="#" class="nav-logo">
-        <span class="nav-dot"></span>
-        Govarthanan S.
-      </a>
-      <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#how-i-build">Process</a></li>
-        <li><a href="#impact">Impact</a></li>
-        <li><a href="#projects">Work</a></li>
-        <li><a href="#systems">Systems</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li>
-          <a
-            href="Govarthanan_Resume.pdf"
-            download="Govarthanan_Resume.pdf"
-            class="nav-resume-btn"
-          >
-            <i class="ri-download-2-line"></i> Resume
-          </a>
-        </li>
-        <li><a href="#contact" class="nav-cta">Let's Talk</a></li>
-      </ul>
-      <button
-        type="button"
-        class="nav-hamburger"
-        id="menuOpenBtn"
-        aria-label="Open menu"
-        aria-expanded="false"
+      <div
+        class="container-fluid d-flex align-items-center justify-content-between h-100 px-md-5 px-4"
       >
-        <i class="ri-menu-3-line"></i>
-      </button>
+        <a href="#" class="nav-logo">
+          <span class="nav-dot"></span>
+          Govarthanan S.
+        </a>
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#how-i-build">Process</a></li>
+          <li><a href="#impact">Impact</a></li>
+          <li><a href="#projects">Work</a></li>
+          <li><a href="#systems">Systems</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li>
+            <a
+              href="Govarthanan_Resume.pdf"
+              download="Govarthanan_Resume.pdf"
+              class="nav-resume-btn"
+            >
+              <i class="ri-download-2-line"></i> Resume
+            </a>
+          </li>
+          <li><a href="#contact" class="nav-cta">Let's Talk</a></li>
+        </ul>
+        <button
+          type="button"
+          class="nav-hamburger"
+          id="menuOpenBtn"
+          aria-label="Open menu"
+          aria-expanded="false"
+        >
+          <i class="ri-menu-3-line"></i>
+        </button>
+      </div>
     </nav>
 
     <!-- ═══ MOBILE MENU ═══ -->
@@ -4589,7 +4693,7 @@
       <div class="hero-grid-bg" aria-hidden="true"></div>
       <div class="ah-wash" aria-hidden="true"></div>
 
-      <div class="ah-inner">
+      <div class="ah-inner container">
         <!-- Status row -->
         <div class="ah-meta">
           <div class="ah-pill">
@@ -4721,7 +4825,7 @@
 
     <!-- ═══ ABOUT ═══ -->
     <div id="about" class="bleed sec">
-      <div class="inner">
+      <div class="container">
         <div class="about-grid">
           <div>
             <div class="label">About</div>
@@ -4829,7 +4933,7 @@
 
     <!-- ═══ HOW I BUILD ═══ -->
     <div id="how-i-build" class="bleed sec" style="background: var(--bg-alt)">
-      <div class="inner">
+      <div class="container">
         <div class="hiw-grid">
           <div class="hiw-left">
             <div class="label">Process</div>
@@ -4985,21 +5089,28 @@
 
     <!-- ═══ SELECTED IMPACT ═══ -->
     <div id="impact" class="bleed sec" style="background: var(--bg)">
-      <div class="inner">
-        <div class="impact-grid">
-          <div class="impact-left">
+      <div class="container">
+        <!-- Section Header Row -->
+        <div class="row align-items-end mb-5">
+          <div class="col-12 col-lg-6">
             <div class="label">Selected Impact</div>
-            <h2 class="reveal">
+            <h2 class="reveal mb-3 mb-lg-0">
               Numbers that<br /><em>speak for</em><br />themselves.
             </h2>
-            <p class="impact-intro reveal">
+          </div>
+          <div class="col-12 col-lg-6">
+            <p class="impact-intro reveal mb-0">
               Real outcomes from real products. Not estimated, not projected —
               shipped and measured.
             </p>
           </div>
-          <div class="impact-cards">
-            <!-- Featured full-width card -->
-            <div class="impact-card featured reveal">
+        </div>
+
+        <!-- Cards Bento Grid Row -->
+        <div class="row g-4">
+          <!-- Row 1: Featured Card (spans 2/3 width on desktop) -->
+          <div class="col-12 col-lg-8">
+            <div class="impact-card featured h-100 reveal">
               <div class="impact-featured-text">
                 <div class="impact-icon">
                   <i class="ri-secure-payment-line"></i>
@@ -5023,8 +5134,11 @@
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="impact-card reveal">
+          <!-- Row 1: Card 2 (spans 1/3 width on desktop) -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="impact-card h-100 reveal">
               <div class="impact-icon"><i class="ri-ticket-2-line"></i></div>
               <div class="impact-val">1,200<em>+</em></div>
               <div class="impact-label">Event tickets sold</div>
@@ -5033,8 +5147,11 @@
                 improvements for event platforms.
               </div>
             </div>
+          </div>
 
-            <div class="impact-card reveal">
+          <!-- Row 2: Card 3, Card 4, Card 5 (each spans 1/3 width on desktop) -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="impact-card h-100 reveal">
               <div class="impact-icon"><i class="ri-rocket-line"></i></div>
               <div class="impact-val">200<em>+</em></div>
               <div class="impact-label">Final-week ticket sales</div>
@@ -5043,8 +5160,10 @@
                 last-week purchases.
               </div>
             </div>
+          </div>
 
-            <div class="impact-card reveal">
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="impact-card h-100 reveal">
               <div class="impact-icon"><i class="ri-line-chart-line"></i></div>
               <div class="impact-val">15<em>%</em></div>
               <div class="impact-label">Engagement improvement</div>
@@ -5053,8 +5172,10 @@
                 increased user engagement across key product surfaces.
               </div>
             </div>
+          </div>
 
-            <div class="impact-card reveal">
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="impact-card h-100 reveal">
               <div class="impact-icon"><i class="ri-time-line"></i></div>
               <div class="impact-val">25<em>%</em></div>
               <div class="impact-label">Faster design handoff</div>
@@ -5064,24 +5185,52 @@
                 cycles.
               </div>
             </div>
+          </div>
 
-            <div class="impact-card reveal">
+          <!-- Row 3: Card 6, Card 7, and new CTA Card -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="impact-card h-100 reveal">
               <div class="impact-icon"><i class="ri-team-line"></i></div>
               <div class="impact-val">3<em>+</em></div>
               <div class="impact-label">Active studio clients</div>
               <div class="impact-context">
-                Ongoing engagements through Salkom Design Studio — delivering
-                product design and frontend across multiple live accounts.
+                Ongoing long-term engagements through Salkom Design Studio —
+                delivering end-to-end product design, scalable frontend
+                engineering, and cohesive design systems integration across
+                multiple active client accounts to accelerate product delivery.
               </div>
             </div>
+          </div>
 
-            <div class="impact-card reveal">
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="impact-card h-100 reveal">
               <div class="impact-icon"><i class="ri-npmjs-line"></i></div>
               <div class="impact-val">1,000<em>+</em></div>
               <div class="impact-label">npm downloads / week</div>
               <div class="impact-context">
-                Open-source developer tools published and actively used by
-                1,000+ developers weekly across the ecosystem.
+                Open-source developer tools, utilities, and motion UI libraries
+                published to npm, actively maintained and downloaded by 1,000+
+                developers weekly across the global JavaScript and frontend
+                ecosystem.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="impact-card cta-card h-100 reveal">
+              <div class="impact-icon"><i class="ri-message-3-line"></i></div>
+              <div class="impact-val">Let's talk</div>
+              <div class="impact-label">Start a project</div>
+              <div class="impact-context">
+                Hire me to design and engineer systems for your next product.
+              </div>
+              <div class="mt-4 w-100">
+                <a
+                  href="#contact"
+                  class="sys-btn white d-inline-flex align-items-center gap-2 w-100 justify-content-center"
+                >
+                  Get in Touch <i class="ri-arrow-right-line"></i>
+                </a>
               </div>
             </div>
           </div>
@@ -5093,7 +5242,7 @@
 
     <!-- ═══ PRODUCT THINKING ═══ -->
     <div id="thinking" class="bleed sec" style="background: var(--bg-alt)">
-      <div class="inner">
+      <div class="container">
         <div class="thinking-solo-grid">
           <div class="thinking-solo-left">
             <div class="label">Product Thinking</div>
@@ -5167,7 +5316,7 @@
 
     <!-- ═══ PROJECTS ═══ -->
     <div id="projects" class="bleed sec" style="background: var(--bg)">
-      <div class="inner">
+      <div class="container">
         <div class="sec-head">
           <div class="label">Featured Work</div>
           <h2 class="reveal">
@@ -5304,6 +5453,9 @@
               </div>
             </div>
             <div class="p-links">
+              <a href="sds-motion-forge.html" class="p-link-btn">
+                <i class="ri-file-text-line"></i> Case Study
+              </a>
               <a
                 href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge"
                 target="_blank"
@@ -5382,7 +5534,7 @@
 
     <!-- ═══ CLIENTS & WORK ═══ -->
     <div id="clients" class="bleed sec" style="background: var(--bg-alt)">
-      <div class="inner">
+      <div class="container">
         <div class="sec-head">
           <div class="label">Brands &amp; Clients</div>
           <h2 class="reveal">Production work<br /><em>for real brands.</em></h2>
@@ -5851,7 +6003,7 @@
 
     <!-- ═══ SYSTEMS ═══ -->
     <div id="systems" class="bleed sec">
-      <div class="inner">
+      <div class="container">
         <div class="sys-head">
           <div class="sys-label">Salkom Design Studio</div>
           <div class="sys-head-grid">
@@ -5888,13 +6040,7 @@
         <div class="sys-sep"></div>
 
         <div class="sys-cards">
-          <a
-            href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="sys-card reveal"
-            style="text-decoration: none; display: block"
-          >
+          <div class="sys-card reveal" style="display: block">
             <div class="sys-card-inner">
               <div class="sys-card-top">
                 <div class="sys-card-tag">
@@ -5915,21 +6061,24 @@
                   <span class="sys-pill-dot"></span>
                   Live — v3.2.1
                 </span>
-                <div class="sys-card-arr">
-                  Open
-                  <i class="ri-arrow-right-up-line"></i>
+                <div style="display: flex; gap: 8px; align-items: center">
+                  <a href="sds-motion-forge.html" class="sys-btn primary">
+                    <i class="ri-file-text-line"></i> Case Study
+                  </a>
+                  <a
+                    href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="sys-btn secondary"
+                  >
+                    npm <i class="ri-arrow-right-up-line"></i>
+                  </a>
                 </div>
               </div>
             </div>
-          </a>
+          </div>
 
-          <a
-            href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="sys-card reveal"
-            style="text-decoration: none; display: block"
-          >
+          <div class="sys-card reveal" style="display: block">
             <div class="sys-card-inner">
               <div class="sys-card-top">
                 <div class="sys-card-tag">
@@ -5950,15 +6099,19 @@
                   <span class="sys-pill-dot"></span>
                   Live — Community
                 </span>
-                <div class="sys-card-arr">
-                  Open
-                  <i class="ri-arrow-right-up-line"></i>
-                </div>
+                <a
+                  href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="sys-btn primary"
+                >
+                  Open Plugin <i class="ri-arrow-right-up-line"></i>
+                </a>
               </div>
             </div>
-          </a>
+          </div>
 
-          <div class="sys-card reveal">
+          <div class="sys-card reveal" style="display: block">
             <div class="sys-card-inner">
               <div class="sys-card-top">
                 <div class="sys-card-tag">
@@ -5977,10 +6130,12 @@
               </div>
               <div class="sys-card-foot">
                 <span class="sys-pill dev">In Development</span>
-                <div class="sys-card-arr">
-                  Coming Soon
-                  <i class="ri-time-line"></i>
-                </div>
+                <span
+                  class="sys-btn secondary"
+                  style="cursor: default; opacity: 0.75"
+                >
+                  Coming Soon <i class="ri-time-line"></i>
+                </span>
               </div>
             </div>
           </div>
@@ -5992,7 +6147,7 @@
 
     <!-- ═══ EXPERIENCE ═══ -->
     <div id="experience" class="bleed sec">
-      <div class="inner">
+      <div class="container">
         <div class="exp-layout">
           <div class="exp-sticky">
             <div class="exp-sidebar-lbl">Experience</div>
@@ -6110,7 +6265,7 @@
 
     <!-- ═══ SKILLS STACK ═══ -->
     <div id="motion" class="bleed sec">
-      <div class="inner">
+      <div class="container">
         <div class="tech-layout">
           <div>
             <div class="label">Skills Stack</div>
@@ -6175,7 +6330,7 @@
       <div class="testi-sticky-wrap">
         <div class="testi-sticky-inner">
           <!-- top bar: label + heading left, counter + progress right -->
-          <div class="testi-top-bar inner">
+          <div class="testi-top-bar container">
             <div class="testi-top-left">
               <div class="label">Testimonials</div>
               <h2 class="reveal">
@@ -6309,7 +6464,7 @@
 
     <!-- ═══ CONTACT ═══ -->
     <div id="contact" class="bleed sec">
-      <div class="inner">
+      <div class="container">
         <div class="contact-grid">
           <!-- LEFT: Heading + CTA -->
           <div>
@@ -6579,7 +6734,7 @@
 
     <!-- ═══ FOOTER ═══ -->
     <footer>
-      <div class="inner">
+      <div class="container">
         <div class="foot-grid">
           <!-- Col 1: Contact -->
           <div>

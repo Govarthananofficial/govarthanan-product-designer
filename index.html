@@ -7585,6 +7585,31 @@
           return false;
         }
 
+        /* Send emails via Netlify Function → Resend API */
+        async function sendEmails(payload) {
+          try {
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT);
+            const res = await fetch("/.netlify/functions/send-email", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name: payload.name,
+                email: payload.email,
+                company: payload.company,
+                mobile: payload.mobile,
+                message: payload.message,
+              }),
+              signal: ctrl.signal,
+            });
+            clearTimeout(timer);
+            return res.ok;
+          } catch {
+            // Email sending is best-effort — don't block UX on failure
+            return false;
+          }
+        }
+
         /* Submit */
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
@@ -7621,8 +7646,13 @@
             pageUrl: location.href,
           };
 
-          const ok = await postToSheets(payload);
-          if (!ok) {
+          // Run Google Sheets save + Resend emails in parallel
+          const [sheetsOk] = await Promise.all([
+            postToSheets(payload),
+            sendEmails(payload),   // best-effort — won't block success state
+          ]);
+
+          if (!sheetsOk) {
             submitBtn.disabled = false;
             submitBtn.classList.remove("loading");
             showBanner(

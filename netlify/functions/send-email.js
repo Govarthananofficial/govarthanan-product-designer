@@ -43,7 +43,7 @@ exports.handler = async function (event) {
     };
   }
 
-  const RESEND_API_KEY = "re_WtLoD8ZX_27f3rvgFY6ELtxyvzEtMdUdT";
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const RESEND_URL = "https://api.resend.com/emails";
   const MY_EMAIL = "govvarthanan@salkomdesignstudio.com";
   const FROM_EMAIL = "Govarthanan | Portfolio <govarthanan@salkomdesignstudio.com>";

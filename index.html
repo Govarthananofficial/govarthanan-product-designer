@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -2588,30 +2588,38 @@
         overflow: hidden;
       }
       .modal-panel-left::before {
-        content: '';
+        content: "";
         position: absolute;
         top: -80px;
         left: -80px;
         width: 320px;
         height: 320px;
-        background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 65%);
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.04) 0%,
+          transparent 65%
+        );
         pointer-events: none;
       }
       .modal-panel-left::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: -60px;
         right: -60px;
         width: 260px;
         height: 260px;
-        background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 65%);
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.03) 0%,
+          transparent 65%
+        );
         pointer-events: none;
       }
       .modal-left-eyebrow {
         font-size: 9px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: rgba(255,255,255,0.4);
+        color: rgba(255, 255, 255, 0.4);
         font-weight: 600;
         margin-bottom: 16px;
         display: flex;
@@ -2619,11 +2627,11 @@
         gap: 10px;
       }
       .modal-left-eyebrow::before {
-        content: '';
+        content: "";
         display: block;
         width: 16px;
         height: 1px;
-        background: rgba(255,255,255,0.3);
+        background: rgba(255, 255, 255, 0.3);
         flex-shrink: 0;
       }
       .modal-left-title {
@@ -2639,18 +2647,18 @@
         font-family: "DM Serif Display", serif;
         font-style: italic;
         font-weight: 400;
-        color: rgba(255,255,255,0.5);
+        color: rgba(255, 255, 255, 0.5);
         letter-spacing: -0.02em;
       }
       .modal-left-sub {
         font-size: 13px;
         line-height: 1.65;
-        color: rgba(255,255,255,0.45);
+        color: rgba(255, 255, 255, 0.45);
         margin-bottom: 36px;
       }
       .modal-left-divider {
         height: 1px;
-        background: rgba(255,255,255,0.08);
+        background: rgba(255, 255, 255, 0.08);
         margin-bottom: 28px;
       }
       .modal-left-links {
@@ -2664,7 +2672,7 @@
         align-items: center;
         gap: 12px;
         text-decoration: none;
-        color: rgba(255,255,255,0.55);
+        color: rgba(255, 255, 255, 0.55);
         font-size: 13px;
         font-weight: 500;
         letter-spacing: -0.01em;
@@ -2675,12 +2683,12 @@
       }
       .modal-left-link i {
         font-size: 15px;
-        color: rgba(255,255,255,0.3);
+        color: rgba(255, 255, 255, 0.3);
         flex-shrink: 0;
         transition: color 0.18s;
       }
       .modal-left-link:hover i {
-        color: rgba(255,255,255,0.75);
+        color: rgba(255, 255, 255, 0.75);
       }
       .modal-left-spacer {
         flex: 1;
@@ -2689,8 +2697,8 @@
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 100px;
         padding: 6px 12px 6px 9px;
         margin-bottom: 28px;
@@ -2704,7 +2712,7 @@
         position: relative;
       }
       .modal-left-badge-dot::after {
-        content: '';
+        content: "";
         position: absolute;
         inset: -3px;
         border-radius: 50%;
@@ -2713,16 +2721,24 @@
         animation: modalPulse 2.4s ease-out infinite;
       }
       @keyframes modalPulse {
-        0%  { transform: scale(1); opacity: 0.5; }
-        70% { transform: scale(2.4); opacity: 0; }
-        100%{ opacity: 0; }
+        0% {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+        70% {
+          transform: scale(2.4);
+          opacity: 0;
+        }
+        100% {
+          opacity: 0;
+        }
       }
       .modal-left-badge span {
         font-size: 10px;
         font-weight: 600;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: rgba(255,255,255,0.55);
+        color: rgba(255, 255, 255, 0.55);
       }
 
       /* ── Right panel (form) ── */
@@ -2733,7 +2749,9 @@
         scrollbar-width: none;
         position: relative;
       }
-      .modal-panel-right::-webkit-scrollbar { display: none; }
+      .modal-panel-right::-webkit-scrollbar {
+        display: none;
+      }
 
       /* Close button — card level (floats over dark panel on mobile) */
       .modal-close {
@@ -2744,7 +2762,7 @@
         height: 34px;
         border-radius: 9px;
         border: 1.5px solid var(--bd2);
-        background: rgba(255,255,255,0.9);
+        background: rgba(255, 255, 255, 0.9);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -2861,7 +2879,7 @@
         font-size: 14px;
         color: var(--t1);
         background: #f8f8fa;
-        border: 1.5px solid rgba(29,29,31,0.1);
+        border: 1.5px solid rgba(29, 29, 31, 0.1);
         border-radius: 12px;
         padding: 22px 14px 8px;
         height: 54px;
@@ -2887,7 +2905,7 @@
       .fl-group.has-error .fl-input,
       .fl-group.has-error .fl-textarea {
         border-color: #dc2626;
-        box-shadow: 0 0 0 3px rgba(220,38,38,0.08);
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
       }
       .fl-error {
         font-size: 11px;
@@ -2917,7 +2935,7 @@
         height: 54px;
         padding: 22px 14px 8px;
         background: #f8f8fa;
-        border: 1.5px solid rgba(29,29,31,0.1);
+        border: 1.5px solid rgba(29, 29, 31, 0.1);
         border-radius: 12px;
         transition:
           border-color 0.18s,
@@ -2931,7 +2949,7 @@
       }
       .fl-group.has-error .fl-phone-box {
         border-color: #dc2626;
-        box-shadow: 0 0 0 3px rgba(220,38,38,0.08);
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
       }
       .fl-cc {
         flex: 0 0 auto;
@@ -2959,7 +2977,7 @@
       .fl-divider {
         width: 1px;
         height: 24px;
-        background: rgba(29,29,31,0.12);
+        background: rgba(29, 29, 31, 0.12);
         flex-shrink: 0;
       }
       .fl-phone-input {
@@ -3012,10 +3030,14 @@
         overflow: hidden;
       }
       .form-submit-btn::after {
-        content: '';
+        content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 60%);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.07) 0%,
+          transparent 60%
+        );
         pointer-events: none;
       }
       .form-submit-btn:hover:not(:disabled) {
@@ -3042,11 +3064,17 @@
         will-change: transform;
         display: none;
       }
-      .form-submit-btn.loading .btn-text { display: none; }
-      .form-submit-btn.loading .btn-spinner { display: block; }
+      .form-submit-btn.loading .btn-text {
+        display: none;
+      }
+      .form-submit-btn.loading .btn-spinner {
+        display: block;
+      }
 
       @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       /* Success state — shown inside right panel */
@@ -3057,7 +3085,9 @@
         text-align: center;
         padding: 48px 0 24px;
       }
-      .form-success.show { display: flex; }
+      .form-success.show {
+        display: flex;
+      }
       .form-success-icon {
         width: 64px;
         height: 64px;
@@ -3069,7 +3099,7 @@
         font-size: 26px;
         color: #ffffff;
         margin-bottom: 20px;
-        box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
       }
       .form-success-title {
         font-family: "DM Sans", sans-serif;
@@ -3094,7 +3124,6 @@
          ─ Full-width message + button
       ════════════════════════════════════════════════════ */
       @media (max-width: 1024px) {
-
         /* ── Overlay: sheet anchored to bottom ── */
         .modal-overlay {
           padding: 0;
@@ -3114,7 +3143,7 @@
           overflow: hidden;
           transform: translateY(100%);
           transition: transform 0.44s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: 0 -24px 80px rgba(0,0,0,0.6);
+          box-shadow: 0 -24px 80px rgba(0, 0, 0, 0.6);
         }
         .modal-overlay.open .modal-card {
           transform: translateY(0);
@@ -3131,13 +3160,17 @@
         }
         /* Hide decorative glows */
         .modal-panel-left::before,
-        .modal-panel-left::after { display: none; }
+        .modal-panel-left::after {
+          display: none;
+        }
 
         /* Hide badge, divider, and contact links — clean header like reference */
         .modal-left-badge,
         .modal-left-divider,
         .modal-left-links,
-        .modal-left-spacer { display: none; }
+        .modal-left-spacer {
+          display: none;
+        }
 
         /* Eyebrow: "✦ GET IN TOUCH" */
         .modal-left-eyebrow {
@@ -3154,7 +3187,9 @@
           white-space: nowrap;
         }
         /* Hide the <br> that splits "Build" / "Together" */
-        .modal-left-title br { display: none; }
+        .modal-left-title br {
+          display: none;
+        }
         .modal-left-title em {
           font-style: normal;
           color: #ffffff;
@@ -3167,7 +3202,7 @@
         .modal-left-sub {
           font-size: 13px;
           line-height: 1.55;
-          color: rgba(255,255,255,0.52);
+          color: rgba(255, 255, 255, 0.52);
           margin-bottom: 0;
         }
 
@@ -3175,16 +3210,16 @@
         .modal-close {
           top: 16px;
           right: 16px;
-          background: rgba(255,255,255,0.1);
+          background: rgba(255, 255, 255, 0.1);
           -webkit-backdrop-filter: blur(8px);
           backdrop-filter: blur(8px);
-          border-color: rgba(255,255,255,0.15);
-          color: rgba(255,255,255,0.85);
+          border-color: rgba(255, 255, 255, 0.15);
+          color: rgba(255, 255, 255, 0.85);
           z-index: 20;
         }
         .modal-close:hover {
-          background: rgba(255,255,255,0.18);
-          border-color: rgba(255,255,255,0.25);
+          background: rgba(255, 255, 255, 0.18);
+          border-color: rgba(255, 255, 255, 0.25);
           color: #fff;
         }
 
@@ -3199,7 +3234,9 @@
           scrollbar-width: none;
           background: #ffffff;
         }
-        .modal-panel-right::-webkit-scrollbar { display: none; }
+        .modal-panel-right::-webkit-scrollbar {
+          display: none;
+        }
 
         /* ── Form: single column layout on mobile and tablet ── */
         .form-row {
@@ -3207,9 +3244,15 @@
           grid-template-columns: 1fr;
           gap: 10px;
         }
-        .fl-group { margin-bottom: 10px; }
-        .fl-group:last-of-type { margin-bottom: 0; }
-        .modal-section-label { margin-bottom: 14px; }
+        .fl-group {
+          margin-bottom: 10px;
+        }
+        .fl-group:last-of-type {
+          margin-bottom: 0;
+        }
+        .modal-section-label {
+          margin-bottom: 14px;
+        }
         .form-submit-btn {
           margin-top: 16px;
           padding: 16px;
@@ -3218,15 +3261,26 @@
         }
 
         /* Success state */
-        .form-success { padding: 28px 0 12px; }
+        .form-success {
+          padding: 28px 0 12px;
+        }
       }
 
       /* ── Small phones (≤ 480px) adjustments ── */
       @media (max-width: 480px) {
-        .modal-card { height: 94dvh; max-height: 94dvh; }
-        .modal-panel-left { padding: 24px 18px 20px; }
-        .modal-left-title { font-size: 24px; }
-        .modal-panel-right { padding: 20px 16px 36px; }
+        .modal-card {
+          height: 94dvh;
+          max-height: 94dvh;
+        }
+        .modal-panel-left {
+          padding: 24px 18px 20px;
+        }
+        .modal-left-title {
+          font-size: 24px;
+        }
+        .modal-panel-right {
+          padding: 20px 16px 36px;
+        }
       }
 
       /* ═══════════════════════════════════
@@ -3755,7 +3809,6 @@
           font-size: clamp(28px, 8vw, 56px);
         }
 
-
         .modal-card {
           padding: 28px 20px;
         }
@@ -4200,7 +4253,6 @@
         font-size: 14.5px;
         line-height: 1.72;
         color: var(--t2);
-        flex: 1;
         letter-spacing: -0.01em;
       }
       .testi-author-h {
@@ -4209,7 +4261,6 @@
         gap: 14px;
         padding-top: 20px;
         border-top: 1px solid var(--bd);
-        margin-top: auto;
         flex-shrink: 0;
       }
       .testi-avatar-h {
@@ -5598,7 +5649,7 @@
                 <button
                   type="button"
                   class="sys-btn white d-inline-flex align-items-center gap-2 w-100 justify-content-center impact-cta-btn"
-                  style="border:none;cursor:pointer;"
+                  style="border: none; cursor: pointer"
                 >
                   Get in Touch <i class="ri-arrow-right-line"></i>
                 </button>
@@ -6755,7 +6806,8 @@
                   systems, interaction design, and frontend implementation. He
                   consistently brings clarity to complex design problems while
                   maintaining clean visual hierarchy and production-focused
-                  thinking across projects.
+                  thinking across projects. His ability to align user needs,
+                  business goals, and technical feasibility.
                 </p>
                 <div class="testi-author-h">
                   <div class="testi-avatar-h">AR</div>
@@ -6775,7 +6827,10 @@
                   Working with Gova on web and Flutter front-end projects was an
                   absolute pleasure. His clear design thinking, UI/UX focus, and
                   structured approach bring ideas to life seamlessly, balancing
-                  creativity with technical execution.
+                  creativity with technical execution. He consistently delivers
+                  polished user experiences, collaborates effectively with
+                  teams, and maintains strong attention to detail throughout
+                  development.
                 </p>
                 <div class="testi-author-h">
                   <div class="testi-avatar-h">C</div>
@@ -6793,7 +6848,10 @@
                   I collaborated with Gova during my final year research project
                   in Cognitive Psychology, transforming complex data into an
                   intuitive and visually meaningful UI/UX design that reflects
-                  empathy, clarity, and strong design principles.
+                  empathy, clarity, and strong design principles. His ability to
+                  simplify information, understand user behavior, and create
+                  engaging interfaces contributed significantly to the project's
+                  success.
                 </p>
                 <div class="testi-author-h">
                   <div class="testi-avatar-h">KB</div>
@@ -6813,7 +6871,10 @@
                   Collaborating with Gova on UI/UX app design was an outstanding
                   experience. He approaches design strategically, blending
                   visual storytelling with user experience, showing clarity,
-                  depth, and developer understanding.
+                  depth, and developer understanding. His ability to translate
+                  concepts into practical solutions, maintain consistency, and
+                  focus on user needs helped create impactful and well-crafted
+                  digital products.
                 </p>
                 <div class="testi-author-h">
                   <div class="testi-avatar-h">A</div>
@@ -6978,7 +7039,6 @@
       aria-labelledby="modalTitle"
     >
       <div class="modal-card">
-
         <!-- Close button — card level, floats top-right always -->
         <button
           class="modal-close"
@@ -6999,7 +7059,7 @@
           <div class="modal-left-eyebrow">Get In Touch</div>
           <div class="modal-left-title" id="modalTitle">
             Let's Build
-            <br><em>Together<span class="modal-title-dot">.</span></em>
+            <br /><em>Together<span class="modal-title-dot">.</span></em>
           </div>
           <p class="modal-left-sub">
             Fill in your details — I'll reply within 24 hours.
@@ -7008,7 +7068,10 @@
           <div class="modal-left-divider"></div>
 
           <div class="modal-left-links">
-            <a href="mailto:govarthanan@salkomdesignstudio.com" class="modal-left-link">
+            <a
+              href="mailto:govarthanan@salkomdesignstudio.com"
+              class="modal-left-link"
+            >
               <i class="ri-mail-line"></i>
               govarthanan@salkomdesignstudio.com
             </a>
@@ -7016,11 +7079,21 @@
               <i class="ri-phone-line"></i>
               +91 9344081006
             </a>
-            <a href="https://calendly.com/salkomdesignstudio" target="_blank" rel="noopener noreferrer" class="modal-left-link">
+            <a
+              href="https://calendly.com/salkomdesignstudio"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="modal-left-link"
+            >
               <i class="ri-calendar-line"></i>
               Book a call on Calendly
             </a>
-            <a href="https://www.linkedin.com/in/sgovarthanan/" target="_blank" rel="noopener noreferrer" class="modal-left-link">
+            <a
+              href="https://www.linkedin.com/in/sgovarthanan/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="modal-left-link"
+            >
               <i class="ri-linkedin-box-line"></i>
               linkedin.com/in/sgovarthanan
             </a>
@@ -7031,7 +7104,6 @@
 
         <!-- ── Right: Form Panel ── -->
         <div class="modal-panel-right">
-
           <div id="modalFormWrap">
             <div class="modal-section-label">Your Details</div>
 
@@ -7084,7 +7156,11 @@
               <div class="form-row">
                 <div class="fl-group has-val fl-phone-group" id="fg-mobile">
                   <div class="fl-phone-box">
-                    <select class="fl-cc" id="cf-mobile-cc" aria-label="Country code">
+                    <select
+                      class="fl-cc"
+                      id="cf-mobile-cc"
+                      aria-label="Country code"
+                    >
                       <option value="+91" selected>🇮🇳 +91</option>
                       <option value="+1">🇺🇸 +1</option>
                       <option value="+44">🇬🇧 +44</option>
@@ -7128,7 +7204,9 @@
                 </div>
               </div>
 
-              <div class="modal-section-label" style="margin-top:8px;">Your Message</div>
+              <div class="modal-section-label" style="margin-top: 8px">
+                Your Message
+              </div>
 
               <div class="fl-group is-textarea" id="fg-message">
                 <textarea
@@ -7161,7 +7239,6 @@
             </p>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -7790,7 +7867,7 @@
 
         const overlay = document.getElementById("contactModal");
         const openBtns = document.querySelectorAll(
-          "#openContactModal, .nav-cta, .mob-foot-cta, .mob-link[href='#contact'], .impact-cta-btn"
+          "#openContactModal, .nav-cta, .mob-foot-cta, .mob-link[href='#contact'], .impact-cta-btn",
         );
         const closeBtn = document.getElementById("closeContactModal");
         const form = document.getElementById("contactForm");
@@ -8028,7 +8105,8 @@
         }
 
         function getDeviceType(ua) {
-          const mobileRegex = /Mobi|Android|iPhone|iPad|iPod|Windows Phone|IEMobile|BlackBerry/i;
+          const mobileRegex =
+            /Mobi|Android|iPhone|iPad|iPod|Windows Phone|IEMobile|BlackBerry/i;
           const tabletRegex = /Tablet|iPad|PlayBook|Silk/i;
           if (tabletRegex.test(ua)) return "Tablet";
           if (mobileRegex.test(ua)) return "Mobile";
@@ -8047,7 +8125,8 @@
             return "Android Device";
           }
           if (/macintosh/i.test(ua) || /mac os x/i.test(ua)) {
-            if (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) return "iPad (macOS Mode)";
+            if (navigator.maxTouchPoints && navigator.maxTouchPoints > 2)
+              return "iPad (macOS Mode)";
             return "Macintosh";
           }
           if (/windows/i.test(ua)) return "Windows PC";
@@ -8167,7 +8246,7 @@
           // Run Google Sheets save + Resend emails in parallel
           const [sheetsOk] = await Promise.all([
             postToSheets(payload),
-            sendEmails(payload),   // best-effort — won't block success state
+            sendEmails(payload), // best-effort — won't block success state
           ]);
 
           if (!sheetsOk) {

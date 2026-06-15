@@ -7974,11 +7974,16 @@
 
         /* Fetch with timeout + single retry */
         async function postToSheets(payload) {
+          // Clone payload and prefix mobile with a single quote to prevent Google Sheets from parsing it as a formula
+          const sheetsPayload = {
+            ...payload,
+            mobile: payload.mobile ? "'" + payload.mobile : "",
+          };
           const opts = {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify(payload),
+            body: JSON.stringify(sheetsPayload),
           };
           for (let i = 0; i < 2; i++) {
             const ctrl = new AbortController();

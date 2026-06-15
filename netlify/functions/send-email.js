@@ -234,39 +234,6 @@ exports.handler = async function (event) {
       <!-- CONTENT -->
       <div class="content">
 
-        <!-- WHAT HAPPENS NEXT -->
-        <div class="timeline">
-          <div class="eyebrow">What happens next</div>
-          <div class="t-step">
-            <div class="t-num"><div class="t-num-inner done">✓</div></div>
-            <div class="t-body">
-              <div class="t-title done">Message received</div>
-              <div class="t-desc">Your enquiry has landed safely in my inbox.</div>
-            </div>
-          </div>
-          <div class="t-step">
-            <div class="t-num"><div class="t-num-inner pending">2</div></div>
-            <div class="t-body">
-              <div class="t-title pending">Reviewing your brief</div>
-              <div class="t-desc">I go through every project detail carefully before responding.</div>
-            </div>
-          </div>
-          <div class="t-step">
-            <div class="t-num"><div class="t-num-inner pending">3</div></div>
-            <div class="t-body">
-              <div class="t-title pending">Personal reply — within 24 hrs</div>
-              <div class="t-desc">You hear from me directly. No auto-replies. No handoffs.</div>
-            </div>
-          </div>
-          <div class="t-step">
-            <div class="t-num"><div class="t-num-inner pending">4</div></div>
-            <div class="t-body">
-              <div class="t-title pending">Project kick-off</div>
-              <div class="t-desc">We align on scope, timeline &amp; deliverables.</div>
-            </div>
-          </div>
-        </div>
-
         <!-- YOUR DETAILS -->
         <div class="info-block">
           <div class="eyebrow">Your details</div>
@@ -314,14 +281,13 @@ exports.handler = async function (event) {
           </table>
         </div>
 
-      </div>
-
-      <!-- FOOTER -->
-      <div class="footer">
+              <div class="footer">
         <div class="footer-sig">Govarthanan Selvaganessane</div>
         <div class="footer-role">Product Designer &amp; Frontend Engineer</div>
         <div class="footer-loc">Puducherry, India &nbsp;&middot;&nbsp; <a href="mailto:govarthanan@salkomdesignstudio.com">govarthanan@salkomdesignstudio.com</a></div>
         ${socialRow}
+      </div>
+
       </div>
 
     </div>

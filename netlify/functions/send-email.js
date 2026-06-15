@@ -46,7 +46,8 @@ exports.handler = async function (event) {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const RESEND_URL = "https://api.resend.com/emails";
   const MY_EMAIL = "govarthanan@salkomdesignstudio.com";
-  const FROM_EMAIL = "Govarthanan | Portfolio <govarthanan@salkomdesignstudio.com>";
+  const FROM_EMAIL =
+    "Govarthanan | Portfolio <govarthanan@salkomdesignstudio.com>";
 
   // ── 1. Confirmation email to the user ──────────────────────────────────────
   const userEmailHtml = `

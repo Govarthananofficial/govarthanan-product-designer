@@ -2,7 +2,7 @@
 // Handles Resend email sending for the portfolio contact form.
 // Sends:
 //   1. A confirmation email to the person who filled the form.
-//   2. A notification email to govvarthanan@salkomdesignstudio.com.
+//   2. A notification email to govarthanan@salkomdesignstudio.com.
 
 exports.handler = async function (event) {
   // Only allow POST
@@ -45,8 +45,9 @@ exports.handler = async function (event) {
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const RESEND_URL = "https://api.resend.com/emails";
-  const MY_EMAIL = "govvarthanan@salkomdesignstudio.com";
-  const FROM_EMAIL = "Govarthanan | Portfolio <govarthanan@salkomdesignstudio.com>";
+  const MY_EMAIL = "govarthanan@salkomdesignstudio.com";
+  const FROM_EMAIL =
+    "Govarthanan | Portfolio <govarthanan@salkomdesignstudio.com>";
 
   // ── 1. Confirmation email to the user ──────────────────────────────────────
   const userEmailHtml = `
@@ -86,7 +87,7 @@ exports.handler = async function (event) {
     <div class="body">
       <div class="greeting">Hey ${name}, thanks for reaching out! 👋</div>
       <p class="para">
-        I received your message and will get back to you within <strong>24 hours</strong>. 
+        I received your message and will get back to you within <strong>24 hours</strong>.
         In the meantime, feel free to explore my work or connect on LinkedIn.
       </p>
 
@@ -99,7 +100,7 @@ exports.handler = async function (event) {
       </div>
 
       <p class="para">
-        I'm Govarthanan Selvaganessane — a Product Designer &amp; Frontend Engineer with 2+ years 
+        I'm Govarthanan Selvaganessane — a Product Designer &amp; Frontend Engineer with 2+ years
         shipping 30+ production products across fintech, retail &amp; SaaS. Looking forward to connecting!
       </p>
 
@@ -248,7 +249,10 @@ exports.handler = async function (event) {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: "Internal server error", detail: err.message }),
+      body: JSON.stringify({
+        error: "Internal server error",
+        detail: err.message,
+      }),
     };
   }
 };

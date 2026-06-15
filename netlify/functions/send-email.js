@@ -113,75 +113,52 @@ exports.handler = async function (event) {
     hour12: true,
   });
 
-  // ── Social links — self-hosted white SVG icons (served from Netlify, no CDN dependency) ─
-  // Icons are in /public/email-icons/ — deployed to govarthanan-product-engineer.netlify.app
-  // SVG src works in Gmail & Apple Mail; Outlook falls back to the alt text.
-  const BASE = "https://govarthanan-product-engineer.netlify.app/email-icons";
+  // ── Social links — base64 embedded SVG icons (zero external requests) ─────
+  // Icons are embedded directly — works in Gmail & Apple Mail with no deployment needed.
+  // White fill is baked into each SVG. Outlook will show the alt text (still looks fine).
+  const IC = {
+    linkedin: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik0yMC40NDcgMjAuNDUyaC0zLjU1NHYtNS41NjljMC0xLjMyOC0uMDI3LTMuMDM3LTEuODUyLTMuMDM3Yy0xLjg1MyAwLTIuMTM2IDEuNDQ1LTIuMTM2IDIuOTM5djUuNjY3SDkuMzUxVjloMy40MTR2MS41NjFoLjA0NmMuNDc3LS45IDEuNjM3LTEuODUgMy4zNy0xLjg1YzMuNjAxIDAgNC4yNjcgMi4zNyA0LjI2NyA1LjQ1NXY2LjI4NnpNNS4zMzcgNy40MzNhMi4wNiAyLjA2IDAgMCAxLTIuMDYzLTIuMDY1YTIuMDY0IDIuMDY0IDAgMSAxIDIuMDYzIDIuMDY1bTEuNzgyIDEzLjAxOUgzLjU1NVY5aDMuNTY0ek0yMi4yMjUgMEgxLjc3MUMuNzkyIDAgMCAuNzc0IDAgMS43Mjl2MjAuNTQyQzAgMjMuMjI3Ljc5MiAyNCAxLjc3MSAyNGgyMC40NTFDMjMuMiAyNCAyNCAyMy4yMjcgMjQgMjIuMjcxVjEuNzI5QzI0IC43NzQgMjMuMiAwIDIyLjIyMiAweiIvPjwvc3ZnPg==",
+    behance:  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik0xNi45NjkgMTYuOTI3YTIuNTYgMi41NiAwIDAgMCAxLjkwMS42NzdhMi41IDIuNSAwIDAgMCAxLjUzMS0uNDc1Yy4zNjItLjIzNS42MzYtLjU4NC43NzktLjk5aDIuNTg1YTUuMSA1LjEgMCAwIDEtMS45IDIuODk2YTUuMyA1LjMgMCAwIDEtMy4wOTEuODhhNS44IDUuOCAwIDAgMS0yLjI4NC0uNDMzYTQuOSA0LjkgMCAwIDEtMS43MjMtMS4yMTFhNS43IDUuNyAwIDAgMS0xLjA4LTEuODc0YTcgNyAwIDAgMS0uMzgzLTIuMzkzYy0uMDA1LS44LjEyOS0xLjU5NS4zOTYtMi4zNDlhNS4zMSA1LjMxIDAgMCAxIDUuMDg4LTMuNjA0YTQuOSA0LjkgMCAwIDEgMi4zNzYuNTYzYy42NjEuMzYyIDEuMjMxLjg3IDEuNjY4IDEuNDg1YTYuMiA2LjIgMCAwIDEgLjk0MyAyLjEzM2MuMTk0LjgyMS4yNjMgMS42NjYuMjA1IDIuNTA4aC03LjY5OWMtLjA2My43OS4xODQgMS41NzQuNjg4IDIuMTg3TTYuOTQ3IDQuMDg0YTggOCAwIDAgMSAxLjkyOC4xOThhNC4zIDQuMyAwIDAgMSAxLjQ5LjYzOGMuNDE4LjMwMy43NDguNzExLjk1OCAxLjE4MmMuMjQxLjU3OS4zNTcgMS4yMDMuMzQxIDEuODNhMy41IDMuNSAwIDAgMS0uNTA2IDEuOTYxYTMuNyAzLjcgMCAwIDEtMS41MDMgMS4yODdhMy42IDMuNiAwIDAgMSAyLjAyNyAxLjQzN2MuNDY0Ljc0Ny42OTcgMS42MTUuNjcgMi40OTRhNC42IDQuNiAwIDAgMS0uNDIzIDIuMDMyYTMuOTUgMy45NSAwIDAgMS0xLjE2MyAxLjQxM2E1LjEgNS4xIDAgMCAxLTEuNjgzLjgwN2E3IDcgMCAwIDEtMS45MjguMjU5SDBWNC4wODR6bS0uMjM1IDEyLjlxLjQ2NC4wMDYuOTE2LS4wOTlhMi4yIDIuMiAwIDAgMCAuNzY2LS4zMzJjLjIyOC0uMTU4LjQxMS0uMzcxLjUzNC0uNjE5Yy4xNDItLjMxNy4yMDgtLjY2My4xOTEtMS4wMDlhMi4wOCAyLjA4IDAgMCAwLS42NDItMS43MTVhMi42MiAyLjYyIDAgMCAwLTEuNjk2LS41MDVoLTMuNTR2NC4yNzl6bTEzLjYzNS01Ljk2N2EyLjEzIDIuMTMgMCAwIDAtMS42NTQtLjYxOWEyLjM0IDIuMzQgMCAwIDAtMS4xNjMuMjU5YTIuNSAyLjUgMCAwIDAtLjczOC42MmEyLjQgMi40IDAgMCAwLS4zOTYuNzkydi0uMTExLjM2LS4xMzcuNzM0aDQuNzY5YTMuMjQgMy4yNCAwIDAgMC0uNjc5LTEuNzg1em0tMTMuODEzLS42NDhhMi4yNSAyLjI1IDAgMCAwIDEuNDIzLS40MzNjLjM5OS0uMzU1LjYwNy0uODguNTYtMS40MTNhMS45IDEuOSAwIDAgMC0uMTc4LS44OTFhMS4zIDEuMyAwIDAgMC0uNDk1LS41MzNhMS44NSAxLjg1IDAgMCAwLS43MTEtLjI3NGE0IDQgMCAwIDAtLjgzNS0uMDczSDMuMjQxdjMuNjMxaDMuMjkzek0yMS42MiA1LjEyMmgtNS45NzZ2MS41MjdoNS45NzZ6Ii8+PC9zdmc+",
+    github:   "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik0xMiAuMjk3Yy02LjYzIDAtMTIgNS4zNzMtMTIgMTJjMCA1LjMwMyAzLjQzOCA5LjggOC4yMDUgMTEuMzg1Yy42LjExMy44Mi0uMjU4LjgyLS41NzdjMC0uMjg1LS4wMS0xLjA0LS4wMTUtMi4wNGMtMy4zMzguNzI0LTQuMDQyLTEuNjEtNC4wNDItMS42MUM0LjQyMiAxOC4wNyAzLjYzMyAxNy43IDMuNjMzIDE3LjdjLTEuMDg3LS43NDQuMDg0LS43MjkuMDg0LS43MjljMS4yMDUuMDg0IDEuODM4IDEuMjM2IDEuODM4IDEuMjM2YzEuMDcgMS44MzUgMi44MDkgMS4zMDUgMy40OTUuOTk4Yy4xMDgtLjc3Ni40MTctMS4zMDUuNzYtMS42MDVjLTIuNjY1LS4zLTUuNDY2LTEuMzMyLTUuNDY2LTUuOTNjMC0xLjMxLjQ2NS0yLjM4IDEuMjM1LTMuMjJjLS4xMzUtLjMwMy0uNTQtMS41MjMuMTA1LTMuMTc2YzAgMCAxLjAwNS0uMzIyIDMuMyAxLjIzYy45Ni0uMjY3IDEuOTgtLjM5OSAzLS40MDVjMS4wMi4wMDYgMi4wNC4xMzggMyAuNDA1YzIuMjgtMS41NTIgMy4yODUtMS4yMyAzLjI4NS0xLjIzYy42NDUgMS42NTMuMjQgMi44NzMuMTIgMy4xNzZjLjc2NS44NCAxLjIzIDEuOTEgMS4yMyAzLjIyYzAgNC42MS0yLjgwNSA1LjYyNS01LjQ3NSA1LjkyYy40Mi4zNi44MSAxLjA5Ni44MSAyLjIyYzAgMS42MDYtLjAxNSAyLjg5Ni0uMDE1IDMuMjg2YzAgLjMxNS4yMS42OS44MjUuNTdDMjAuNTY1IDIyLjA5MiAyNCAxNy41OTIgMjQgMTIuMjk3YzAtNi42MjctNS4zNzMtMTItMTItMTIiLz48L3N2Zz4=",
+    npm:      "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik0xLjc2MyAwQy43ODYgMCAwIC43ODYgMCAxLjc2M3YyMC40NzRDMCAyMy4yMTQuNzg2IDI0IDEuNzYzIDI0aDIwLjQ3NGMuOTc3IDAgMS43NjMtLjc4NiAxLjc2My0xLjc2M1YxLjc2M0MyNCAuNzg2IDIzLjIxNCAwIDIyLjIzNyAwek01LjEzIDUuMzIzbDEzLjgzNy4wMTlsLS4wMDkgMTMuODM2aC0zLjQ2NGwuMDEtMTAuMzgyaC0zLjQ1NkwxMi4wNCAxOS4xN0g1LjExM3oiLz48L3N2Zz4=",
+    figma:    "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik0xNS44NTIgOC45ODFoLTQuNTg4VjBoNC41ODhjMi40NzYgMCA0LjQ5IDIuMDE0IDQuNDkgNC40OXMtMi4wMTQgNC40OTEtNC40OSA0LjQ5MU0xMi43MzUgNy41MWgzLjExN2MxLjY2NSAwIDMuMDE5LTEuMzU1IDMuMDE5LTMuMDE5cy0xLjM1NS0zLjAxOS0zLjAxOS0zLjAxOWgtMy4xMTd6bTAgMS40NzFIOC4xNDhjLTIuNDc2IDAtNC40OS0yLjAxNC00LjQ5LTQuNDlTNS42NzIgMCA4LjE0OCAwaDQuNTg4djguOTgxem0tNC41ODctNy41MWMtMS42NjUgMC0zLjAxOSAxLjM1NS0zLjAxOSAzLjAxOXMxLjM1NCAzLjAyIDMuMDE5IDMuMDJoMy4xMTdWMS40NzF6bTQuNTg3IDE1LjAxOUg4LjE0OGMtMi40NzYgMC00LjQ5LTIuMDE0LTQuNDktNC40OXMyLjAxNC00LjQ5IDQuNDktNC40OWg0LjU4OHY4Ljk4ek04LjE0OCA4Ljk4MWMtMS42NjUgMC0zLjAxOSAxLjM1NS0zLjAxOSAzLjAxOXMxLjM1NSAzLjAxOSAzLjAxOSAzLjAxOWgzLjExN1Y4Ljk4MXpNOC4xNzIgMjRjLTIuNDg5IDAtNC41MTUtMi4wMTQtNC41MTUtNC40OXMyLjAxNC00LjQ5IDQuNDktNC40OWg0LjU4OHY0LjQ0MWMwIDIuNTAzLTIuMDQ3IDQuNTM5LTQuNTYzIDQuNTM5bS0uMDI0LTcuNTFhMy4wMjMgMy4wMjMgMCAwIDAtMy4wMTkgMy4wMTljMCAxLjY2NSAxLjM2NSAzLjAxOSAzLjA0NCAzLjAxOWMxLjcwNSAwIDMuMDkzLTEuMzc2IDMuMDkzLTMuMDY4di0yLjk3em03LjcwNCAwaC0uMDk4Yy0yLjQ3NiAwLTQuNDktMi4wMTQtNC40OS00LjQ5czIuMDE0LTQuNDkgNC40OS00LjQ5aC4wOThjMi40NzYgMCA0LjQ5IDIuMDE0IDQuNDkgNC40OXMtMi4wMTQgNC40OS00LjQ5IDQuNDltLS4wOTctNy41MDljLTEuNjY1IDAtMy4wMTkgMS4zNTUtMy4wMTkgMy4wMTlzMS4zNTUgMy4wMTkgMy4wMTkgMy4wMTloLjA5OGMxLjY2NSAwIDMuMDE5LTEuMzU1IDMuMDE5LTMuMDE5cy0xLjM1NS0zLjAxOS0zLjAxOS0zLjAxOXoiLz48L3N2Zz4="
+  };
   const socialLinksHtml = `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
       <tr>
-        <!-- LinkedIn -->
         <td style="padding: 0 4px;">
           <a href="https://www.linkedin.com/in/sgovarthanan/"
-             style="display:inline-block;background:#1A1A18;text-decoration:none;
-                    border-radius:6px;padding:11px;width:40px;height:40px;
-                    box-sizing:border-box;text-align:center;vertical-align:middle;"
-             title="LinkedIn">
-            <img src="${BASE}/linkedin-white.svg"
-                 alt="in" width="18" height="18"
-                 style="display:block;margin:0 auto;border:0;outline:none;" />
+             style="display:inline-block;background:#1A1A18;text-decoration:none;border-radius:6px;padding:11px;width:40px;height:40px;box-sizing:border-box;text-align:center;vertical-align:middle;" title="LinkedIn">
+            <img src="${IC.linkedin}" alt="in" width="18" height="18" style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
-        <!-- Behance -->
         <td style="padding: 0 4px;">
           <a href="https://www.behance.net/govarthananuxui"
-             style="display:inline-block;background:#1A1A18;text-decoration:none;
-                    border-radius:6px;padding:11px;width:40px;height:40px;
-                    box-sizing:border-box;text-align:center;vertical-align:middle;"
-             title="Behance">
-            <img src="${BASE}/behance-white.svg"
-                 alt="Be" width="18" height="18"
-                 style="display:block;margin:0 auto;border:0;outline:none;" />
+             style="display:inline-block;background:#1A1A18;text-decoration:none;border-radius:6px;padding:11px;width:40px;height:40px;box-sizing:border-box;text-align:center;vertical-align:middle;" title="Behance">
+            <img src="${IC.behance}" alt="Be" width="18" height="18" style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
-        <!-- GitHub -->
         <td style="padding: 0 4px;">
           <a href="https://github.com/salkomdesignstudio"
-             style="display:inline-block;background:#1A1A18;text-decoration:none;
-                    border-radius:6px;padding:11px;width:40px;height:40px;
-                    box-sizing:border-box;text-align:center;vertical-align:middle;"
-             title="GitHub">
-            <img src="${BASE}/github-white.svg"
-                 alt="GH" width="18" height="18"
-                 style="display:block;margin:0 auto;border:0;outline:none;" />
+             style="display:inline-block;background:#1A1A18;text-decoration:none;border-radius:6px;padding:11px;width:40px;height:40px;box-sizing:border-box;text-align:center;vertical-align:middle;" title="GitHub">
+            <img src="${IC.github}" alt="GH" width="18" height="18" style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
-        <!-- npm -->
         <td style="padding: 0 4px;">
           <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge"
-             style="display:inline-block;background:#1A1A18;text-decoration:none;
-                    border-radius:6px;padding:11px;width:40px;height:40px;
-                    box-sizing:border-box;text-align:center;vertical-align:middle;"
-             title="npm">
-            <img src="${BASE}/npm-white.svg"
-                 alt="npm" width="18" height="18"
-                 style="display:block;margin:0 auto;border:0;outline:none;" />
+             style="display:inline-block;background:#1A1A18;text-decoration:none;border-radius:6px;padding:11px;width:40px;height:40px;box-sizing:border-box;text-align:center;vertical-align:middle;" title="npm">
+            <img src="${IC.npm}" alt="npm" width="18" height="18" style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
-        <!-- Figma -->
         <td style="padding: 0 4px;">
           <a href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf"
-             style="display:inline-block;background:#1A1A18;text-decoration:none;
-                    border-radius:6px;padding:11px;width:40px;height:40px;
-                    box-sizing:border-box;text-align:center;vertical-align:middle;"
-             title="Figma">
-            <img src="${BASE}/figma-white.svg"
-                 alt="Fig" width="18" height="18"
-                 style="display:block;margin:0 auto;border:0;outline:none;" />
+             style="display:inline-block;background:#1A1A18;text-decoration:none;border-radius:6px;padding:11px;width:40px;height:40px;box-sizing:border-box;text-align:center;vertical-align:middle;" title="Figma">
+            <img src="${IC.figma}" alt="Fig" width="18" height="18" style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
       </tr>
     </table>`;
+
 
   // ════════════════════════════════════════════════════════════════════════════
   // 1. CONFIRMATION EMAIL — sent to the person who filled the form

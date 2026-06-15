@@ -2795,7 +2795,7 @@
       /* Form layout */
       .form-row {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 12px;
       }
 
@@ -2922,7 +2922,7 @@
         width: 100%;
         box-sizing: border-box;
         height: 54px;
-        padding: 20px 14px 6px;
+        padding: 22px 14px 8px;
         background: #f8f8fa;
         border: 1.5px solid rgba(29,29,31,0.1);
         border-radius: 12px;
@@ -2944,6 +2944,9 @@
         flex: 0 0 auto;
         width: auto;
         max-width: 84px;
+        height: 24px;
+        line-height: 24px;
+        box-sizing: border-box;
         border: none;
         background: transparent
           url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2386868B' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
@@ -3159,6 +3162,13 @@
         }
         /* Hide the <br> that splits "Build" / "Together" */
         .modal-left-title br { display: none; }
+        .modal-left-title em {
+          font-style: normal;
+          color: #ffffff;
+        }
+        .modal-title-dot {
+          display: none;
+        }
 
         /* Subtitle */
         .modal-left-sub {
@@ -3198,10 +3208,10 @@
         }
         .modal-panel-right::-webkit-scrollbar { display: none; }
 
-        /* ── Form: keep TWO-column grid (matches reference image) ── */
+        /* ── Form: single column layout on mobile and tablet ── */
         .form-row {
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: 1fr;
           gap: 10px;
         }
         .fl-group { margin-bottom: 10px; }
@@ -3218,14 +3228,12 @@
         .form-success { padding: 28px 0 12px; }
       }
 
-      /* ── Small phones (≤ 480px): single-column form to prevent cramping ── */
+      /* ── Small phones (≤ 480px) adjustments ── */
       @media (max-width: 480px) {
         .modal-card { height: 94dvh; max-height: 94dvh; }
         .modal-panel-left { padding: 24px 18px 20px; }
         .modal-left-title { font-size: 24px; }
         .modal-panel-right { padding: 20px 16px 36px; }
-        /* Collapse to single column on very small screens */
-        .form-row { grid-template-columns: 1fr; gap: 0; }
       }
 
       /* ═══════════════════════════════════
@@ -3753,9 +3761,8 @@
         .foot-name-display span {
           font-size: clamp(28px, 8vw, 56px);
         }
-        .form-row {
-          grid-template-columns: 1fr;
-        }
+
+
         .modal-card {
           padding: 28px 20px;
         }
@@ -6999,7 +7006,7 @@
           <div class="modal-left-eyebrow">Get In Touch</div>
           <div class="modal-left-title" id="modalTitle">
             Let's Build
-            <br><em>Together.</em>
+            <br><em>Together<span class="modal-title-dot">.</span></em>
           </div>
           <p class="modal-left-sub">
             Fill in your details — I'll reply within 24 hours.

@@ -1,0 +1,1327 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amazon Order Tracking Redesign — Case Study · Govarthanan S.</title>
+  <meta name="description" content="Redesigning clarity, trust, and usability in one of e-commerce's most critical post-purchase moments — through real user research and systematic UX thinking." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #1d1d1f;
+      --primary-hover: #000000;
+      --primary-faint: #f5f5f7;
+      --primary-tint: rgba(29, 29, 31, 0.08);
+      --primary-border: rgba(29, 29, 31, 0.18);
+
+      --ink:        #1d1d1f;
+      --ink-mid:    #1d1d1f;
+      --ink-muted:  #86868b;
+      --ink-faint:  #86868b;
+      --border:     rgba(29, 29, 31, 0.08);
+      --border-md:  rgba(29, 29, 31, 0.14);
+      --bg:         #ffffff;
+      --bg-2:       #f5f5f7;
+      --bg-3:       #f5f5f7;
+      --accent:     #1d1d1f;
+      --accent-lt:  #f5f5f7;
+      --accent-dk:  #1d1d1f;
+      
+      /* Amazon specific brand colors, but toned to fit premium portfolio theme */
+      --amazon-orange: #ff9900;
+      --amazon-blue: #0066c0;
+      --amazon-dark: #131921;
+      
+      --NAV-H:      56px;
+      --sh1: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
+      --sh2: 0 4px 20px rgba(0, 0, 0, 0.07), 0 12px 40px rgba(0, 0, 0, 0.05);
+      --sh3: 0 8px 40px rgba(0, 0, 0, 0.09), 0 24px 72px rgba(0, 0, 0, 0.06);
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.45;
+    }
+
+    /* Bootstrap Reset overrides */
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      color: inherit;
+    }
+    button:focus, a:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    /* ── PROGRESS BAR ── */
+    #prog {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 2px; background: var(--border); z-index: 400;
+    }
+    #prog-fill {
+      height: 100%; width: 0%; background: var(--ink);
+      transition: width .08s linear;
+    }
+
+    /* ── CURSOR DOT ── */
+    .cursor-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 2px; left: 0; right: 0;
+      height: var(--NAV-H); z-index: 300;
+      background: rgba(255,255,255,0.93);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 13px; font-weight: 500; color: var(--ink-mid);
+      text-decoration: none; padding: 6px 12px; border-radius: 7px;
+      border: 1px solid var(--border-md);
+      transition: background .15s;
+    }
+    .nav-back:hover { background: var(--bg-2); }
+    .nav-tag { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+    .nav-right { display: flex; gap: 8px; }
+    .nav-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-mid); padding: 5px 11px; border-radius: 6px;
+      border: 1px solid var(--border-md); text-decoration: none;
+      transition: background .15s;
+    }
+    .nav-pill:hover { background: var(--bg-2); }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      padding: calc(var(--NAV-H) + 64px) 0 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,.05) 0%, transparent 55%),
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,.03) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+    }
+
+    /* ── EYEBROW ── */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+      color: #ffffff; margin-bottom: 20px;
+    }
+    .eyebrow::before { content: ""; width: 20px; height: 1px; background: #ffffff; }
+
+    /* ── HERO H1 ── */
+    .hero h1 {
+      font-size: clamp(38px, 5.5vw, 68px);
+      font-weight: 800;
+      line-height: .96;
+      letter-spacing: -.04em;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-weight: 400;
+      color: #86868b;
+    }
+    .hero-sub {
+      font-size: clamp(15px, 1.6vw, 18px);
+      color: rgba(255,255,255,.55);
+      line-height: 1.6;
+      max-width: 58ch;
+      margin-bottom: 40px;
+    }
+
+    /* ── HERO METRICS ── */
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,.07);
+      border-radius: 14px 14px 0 0;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.07);
+      border-bottom: none;
+    }
+    .hm {
+      padding: 20px 22px 22px;
+      background: rgba(255,255,255,.03);
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .hm-val {
+      font-size: clamp(26px, 3vw, 34px);
+      font-weight: 800; letter-spacing: -.04em;
+      color: #fff; line-height: 1;
+    }
+    .hm-val span { color: #ffffff; }
+    .hm-label {
+      font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.35); line-height: 1.4;
+    }
+
+    /* ── HERO CTA BAR ── */
+    .hero-cta {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 22px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-top: none;
+      border-radius: 0 0 14px 14px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 12.5px; font-weight: 600; letter-spacing: -.01em;
+      background: #ffffff; color: #1d1d1f;
+      padding: 9px 18px; border-radius: 8px;
+      text-decoration: none; border: none;
+      transition: background .15s;
+    }
+    .btn-primary:hover { background: #f5f5f7; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12.5px; font-weight: 500;
+      color: rgba(255,255,255,.5); padding: 9px 14px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.1); text-decoration: none;
+      transition: background .15s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.75); }
+    .cta-sep { flex: 1; }
+    .cta-note {
+      font-size: 11px; color: rgba(255,255,255,.25);
+      letter-spacing: .05em; text-transform: uppercase;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-of-type { border-bottom: none; }
+    .section.alt { background: var(--bg-2); }
+
+    .s-label {
+      display: inline-flex; align-items: center; gap: 9px;
+      font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 12px;
+    }
+    .s-label::before { content: ""; width: 16px; height: 1px; background: var(--ink-faint); }
+
+    .section h2 {
+      font-size: clamp(22px, 2.8vw, 32px);
+      font-weight: 800; letter-spacing: -.035em;
+      color: var(--ink); line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .section h2 em {
+      font-style: italic; font-weight: 300;
+      color: var(--ink-muted);
+    }
+    .section p {
+      font-size: 15.5px; color: var(--ink-mid);
+      line-height: 1.78; letter-spacing: -.005em;
+      margin-bottom: 16px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+    .section strong { color: var(--ink); font-weight: 600; }
+
+    /* ── TOC ── */
+    .toc {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 32px;
+    }
+    .toc a {
+      font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--ink-faint); padding: 4px 10px; border-radius: 5px;
+      border: 1px solid var(--border);
+      text-decoration: none; transition: background .15s, color .15s;
+    }
+    .toc a:hover { background: var(--bg-2); color: var(--ink-mid); }
+
+    /* ── EXECUTIVE SNAPSHOT ── */
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .snap-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+    }
+    .snap-card.accent-card {
+      background: var(--bg-2);
+      border-color: var(--border-md);
+    }
+    .snap-card-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 10px;
+    }
+    .snap-card.accent-card .snap-card-label { color: var(--ink-muted); }
+    .snap-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 7px;
+      padding: 0; margin: 0;
+    }
+    .snap-list li {
+      font-size: 14px; color: var(--ink-mid); line-height: 1.5;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .snap-list li::before {
+      content: "→"; color: var(--ink-faint); flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* ── Q&A / INTERACTIVE REFLECTION PANEL ── */
+    .qa-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .qa-card {
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 12px;
+      padding: 20px 24px;
+      transition: all 0.25s ease;
+    }
+    .qa-card:hover {
+      border-color: var(--primary-border);
+      box-shadow: var(--sh1);
+    }
+    .qa-question {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .qa-question i {
+      color: var(--ink-muted);
+      font-size: 18px;
+      margin-top: 2px;
+    }
+    .qa-answer {
+      font-size: 14.5px;
+      color: var(--ink-muted);
+      line-height: 1.65;
+      padding-left: 28px;
+    }
+
+    /* ── BEFORE VS AFTER ── */
+    .problem-vs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      margin: 24px 0;
+    }
+    .problem-vs-col { padding: 22px 24px; }
+    .problem-vs-col:first-child {
+      background: var(--bg-2);
+      border-right: 1px solid var(--border);
+    }
+    .problem-vs-col:last-child { background: var(--bg); }
+    
+    .pvc-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .pvc-header.before { color: #d9534f; }
+    .pvc-header.after { color: #5cb85c; }
+    
+    .pvc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; }
+    .pvc-list li { font-size: 13.5px; color: var(--ink-mid); line-height: 1.5; padding-left: 18px; position: relative; }
+    .pvc-list li::before { position: absolute; left: 0; font-family: "remixicon"; }
+    .problem-vs-col:first-child .pvc-list li::before { content: "\f1bc"; color: #d9534f; } /* close-circle-fill */
+    .problem-vs-col:last-child .pvc-list li::before { content: "\eeb7"; color: #5cb85c; } /* checkbox-circle-fill */
+
+    /* ── USER STUDY SCORECARD ── */
+    .score-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin: 24px 0;
+      display: grid; grid-template-columns: 120px 1fr;
+      gap: 24px; align-items: start;
+    }
+    .score-big {
+      font-size: 60px; font-weight: 800; letter-spacing: -.05em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .score-big span { font-size: 24px; color: var(--ink-faint); }
+    .score-detail { display: flex; flex-direction: column; gap: 12px; }
+    .score-row { display: flex; align-items: center; gap: 10px; }
+    .score-row-label { font-size: 12px; font-weight: 600; color: var(--ink-mid); min-width: 180px; }
+    .score-bar-wrap { flex: 1; height: 6px; background: rgba(0,0,0,0.06); border-radius: 3px; }
+    .score-bar { height: 100%; border-radius: 3px; background: var(--accent); }
+    .score-num { font-size: 12px; font-weight: 700; color: var(--ink-mid); min-width: 36px; text-align: right; }
+
+    /* ── LIVE INTERACTIVE WIDGET DEMO ── */
+    .demo-container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 32px;
+      align-items: center;
+      margin: 40px 0;
+      background: var(--bg-2);
+      padding: 32px;
+      border-radius: 16px;
+      border: 1px solid var(--border-md);
+    }
+    
+    /* Redesigned Tracker Mockup UI */
+    .amazon-tracker-mockup {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: var(--sh3);
+      border: 1px solid rgba(0,0,0,0.08);
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .mock-header {
+      background: var(--amazon-dark);
+      padding: 14px 18px;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mock-logo {
+      height: 18px;
+      opacity: 0.95;
+    }
+    .mock-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #aaa;
+    }
+    .mock-body {
+      padding: 20px;
+    }
+    
+    /* Redesigned ETA Header */
+    .mock-eta-card {
+      margin-bottom: 20px;
+    }
+    .mock-eta-label {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .mock-eta-time {
+      font-size: 22px;
+      font-weight: 800;
+      color: #111;
+      letter-spacing: -0.02em;
+    }
+    
+    /* Redesigned Progress Tracker */
+    .mock-timeline {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 24px 0 32px;
+    }
+    .mock-timeline::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      height: 3px;
+      background: #e5e5e5;
+      z-index: 1;
+    }
+    .mock-timeline-fill {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 66%; /* Up to In Transit */
+      height: 3px;
+      background: var(--amazon-blue);
+      z-index: 2;
+      transition: width 0.4s ease;
+    }
+    .mock-node {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+    .mock-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #e5e5e5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+    }
+    .mock-dot i {
+      font-size: 11px;
+      color: #fff;
+      display: none;
+    }
+    .mock-node.active .mock-dot {
+      border-color: var(--amazon-blue);
+      background: var(--amazon-blue);
+      box-shadow: 0 0 0 4px rgba(0, 102, 192, 0.15);
+    }
+    .mock-node.active .mock-dot i {
+      display: block;
+    }
+    .mock-node.completed .mock-dot {
+      border-color: var(--amazon-blue);
+      background: var(--amazon-blue);
+    }
+    .mock-node.completed .mock-dot i {
+      display: block;
+    }
+    .mock-node-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #888;
+      margin-top: 8px;
+      white-space: nowrap;
+      transition: color 0.25s;
+    }
+    .mock-node.active .mock-node-label {
+      color: var(--amazon-blue);
+      font-weight: 700;
+    }
+    .mock-node.completed .mock-node-label {
+      color: #111;
+    }
+    
+    /* Redesigned Quick Actions Panel */
+    .mock-panel-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #888;
+      margin-bottom: 10px;
+    }
+    .mock-quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .mock-action-btn {
+      background: #f7f8f8;
+      border: 1px solid #d5d9d9;
+      border-radius: 8px;
+      padding: 12px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #111;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .mock-action-btn:hover {
+      background: #f0f2f2;
+      border-color: #a6b1b1;
+      transform: translateY(-1px);
+    }
+    .mock-action-btn i {
+      font-size: 16px;
+      color: #555;
+    }
+    
+    /* Above-the-fold Contact Support Button */
+    .mock-contact-btn {
+      display: block;
+      background: var(--amazon-orange);
+      border: 1px solid #f29a00;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #111;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(213, 120, 0, 0.15);
+    }
+    .mock-contact-btn:hover {
+      background: #f08f00;
+      box-shadow: 0 3px 8px rgba(213, 120, 0, 0.25);
+    }
+    
+    /* Interactive Controller */
+    .demo-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .demo-btn {
+      background: #ffffff;
+      border: 1px solid var(--border-md);
+      border-radius: 8px;
+      padding: 12px 16px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .demo-btn:hover {
+      border-color: var(--primary-border);
+      background: var(--bg);
+    }
+    .demo-btn.active {
+      border-color: var(--primary);
+      background: var(--bg);
+      font-weight: 700;
+    }
+
+    /* ── PROCESS TIMELINE ── */
+    .versions { display: flex; flex-direction: column; gap: 0; margin: 8px 0; }
+    .version {
+      display: grid; grid-template-columns: 120px 1fr;
+      gap: 0 20px; padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .version:last-child { border-bottom: none; }
+    .v-tag { padding-top: 2px; }
+    .v-badge {
+      font-size: 11px; font-weight: 800; letter-spacing: -.01em;
+      padding: 3px 10px; border-radius: 6px;
+      border: 1px solid var(--border-md);
+      background: var(--bg-2); color: var(--ink-muted);
+    }
+    .v-title {
+      font-size: 15px; font-weight: 700; letter-spacing: -.015em;
+      color: var(--ink); margin-bottom: 5px;
+    }
+    .v-body {
+      font-size: 13.5px; color: var(--ink-muted); line-height: 1.65;
+    }
+
+    /* ── PRODUCT THINKING / KEY INSIGHTS ── */
+    .product-thinking {
+      background: var(--ink);
+      border-radius: 16px;
+      padding: 32px 36px;
+      margin: 24px 0;
+    }
+    .pt-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,.35); margin-bottom: 20px;
+    }
+    .pt-grid { display: flex; flex-direction: column; gap: 20px; }
+    .pt-item { display: grid; grid-template-columns: 20px 1fr; gap: 14px; }
+    .pt-dot { width: 6px; height: 6px; border-radius: 50%; background: #ffffff; margin-top: 7px; opacity: 0.4; }
+    .pt-q { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 4px; }
+    .pt-a { font-size: 14.5px; font-weight: 500; color: rgba(255,255,255,.85); line-height: 1.6; letter-spacing: -.01em; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      padding: 56px 32px 40px;
+      text-align: center;
+    }
+    .footer-tag {
+      font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+      color: rgba(255,255,255,.25); margin-bottom: 10px;
+    }
+    .footer-title {
+      font-size: 20px; font-weight: 800; letter-spacing: -.03em;
+      color: #fff; margin-bottom: 6px;
+    }
+    .footer-sub {
+      font-size: 14px; color: rgba(255,255,255,.4); margin-bottom: 24px; max-width: 44ch; margin-left: auto; margin-right: auto;
+    }
+    .footer-links {
+      display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;
+    }
+    .f-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 12.5px; font-weight: 500;
+      padding: 9px 18px; border-radius: 8px; text-decoration: none;
+      transition: background .15s;
+    }
+    footer .f-btn.primary {
+      background: #ffffff; color: #1d1d1f;
+    }
+    footer .f-btn.primary:hover {
+      background: #f5f5f7;
+    }
+    .f-btn.ghost { background: rgba(255,255,255,.07); color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.1); }
+    .f-btn.ghost:hover { background: rgba(255,255,255,.12); }
+    .footer-copy { margin-top: 28px; font-size: 11px; color: rgba(255,255,255,.18); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 991px) {
+      .demo-container { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .nav-tag { display: none; }
+      .hero { padding: calc(var(--NAV-H) + 40px) 0 40px; }
+      .hero-metrics { grid-template-columns: 1fr 1fr; }
+      .snapshot-grid { grid-template-columns: 1fr; }
+      .problem-vs { grid-template-columns: 1fr; }
+      .problem-vs-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+      .version { grid-template-columns: 1fr; gap: 10px; }
+      .score-card { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.addEventListener("pageshow", function () {
+      window.scrollTo(0, 0);
+    });
+  </script>
+</head>
+<body>
+
+<div id="prog"><div id="prog-fill"></div></div>
+
+<!-- Custom Cursor Dot -->
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<nav>
+  <div class="container-fluid d-flex align-items-center justify-content-between h-100 px-4">
+    <a href="index.html" class="nav-back"><i class="ri-arrow-left-fill"></i> Back to Portfolio</a>
+    <span class="nav-tag">Case Study · Amazon Order Tracking Redesign</span>
+    <div class="nav-right">
+      <a href="#interactive-demo" class="nav-pill"><i class="ri-play-circle-fill"></i> Interactive Widget</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<header class="hero">
+  <div class="hero-inner container">
+    <div class="eyebrow">UX Research · Interface Redesign · E-Commerce</div>
+    <h1>Amazon Order Tracking<br><em>Redesign Case Study.</em></h1>
+    <p class="hero-sub">
+      Redesigning clarity, trust, and usability in one of e-commerce's most critical post-purchase moments — through real user research and systematic UX thinking.
+    </p>
+    <div class="hero-metrics">
+      <div class="hm">
+        <div class="hm-val">90<span>%</span></div>
+        <div class="hm-label">Success Rate<br>Found order status in &lt; 5s</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">70<span>%</span></div>
+        <div class="hm-label">Faster Support<br>Reach support in one click</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">4.5<span>/5</span></div>
+        <div class="hm-label">Satisfaction Score<br>Up from 3.1 previously</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">82<span>%</span></div>
+        <div class="hm-label">Visual Tracker Preference<br>Single most requested feature</div>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="#interactive-demo" class="btn-primary">
+        <i class="ri-play-circle-fill"></i> Live Widget Prototype
+      </a>
+      <a href="#qa-reflection" class="btn-ghost">
+        <i class="ri-chat-voice-fill"></i> Designer Q&amp;A
+      </a>
+      <div class="cta-sep"></div>
+      <span class="cta-note">Govarthanan S. · UX Researcher + UI Designer · 2025</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════ EXECUTIVE SNAPSHOT ══════════════ -->
+<section class="section" id="snapshot">
+  <div class="container">
+    <div class="s-label">Overview</div>
+    <h2>hiding in plain sight.<br><em>The Opportunity.</em></h2>
+    <p>
+      Amazon's order tracking page is visited millions of times daily — yet the experience felt cluttered, text-heavy, and visually unclear about actual delivery progress. The gap between user anxiety and design response was real. Grounded in real user insights rather than assumptions, this project redesigns the post-purchase moments to improve clarity, usability, and trust.
+    </p>
+    
+    <div class="snapshot-grid">
+      <div class="snap-card">
+        <div class="snap-card-label"><i class="ri-focus-3-fill"></i> The Goal</div>
+        <ul class="snap-list">
+          <li>Improve clarity, usability, and trust of the post-purchase tracking page.</li>
+          <li>Reduce user anxiety with a visual, high-contrast order progress layout.</li>
+          <li>Offer direct, frictionless access to support during critical moments.</li>
+        </ul>
+      </div>
+      <div class="snap-card accent-card">
+        <div class="snap-card-label"><i class="ri-flashlight-fill"></i> The Outcome</div>
+        <ul class="snap-list">
+          <li>A cleaner, highly visual redesign that honors Amazon's brand identity.</li>
+          <li>Support reached in one tap above the fold rather than hidden in submenus.</li>
+          <li>Color-coded active progress timeline reducing cognitive strain.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PROBLEM SPACE ══════════════ -->
+<section class="section alt" id="problem-space">
+  <div class="container">
+    <div class="s-label">Problem Space</div>
+    <h2>Why the existing experience<br><em>fails users.</em></h2>
+    <p>
+      Through survey-driven research and real usage observations, a consistent cluster of user pain points emerged. The original tracking dashboard prioritized dense administrative data over high-anxiety post-purchase clarity.
+    </p>
+
+    <div class="row g-4 mt-2">
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 p-4 border-0 shadow-sm" style="background:#ffffff; border-radius:12px;">
+          <div style="font-size:24px; font-weight:800; color:var(--ink-muted); margin-bottom:12px;">01</div>
+          <p style="font-size:14px; line-height:1.6; margin:0;">Users struggle to instantly identify their current order status — the visual hierarchy buries the most critical information.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 p-4 border-0 shadow-sm" style="background:#ffffff; border-radius:12px;">
+          <div style="font-size:24px; font-weight:800; color:var(--ink-muted); margin-bottom:12px;">02</div>
+          <p style="font-size:14px; line-height:1.6; margin:0;">ETA and delivery stage are not visually highlighted — users have to read through dense text to understand progress.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 p-4 border-0 shadow-sm" style="background:#ffffff; border-radius:12px;">
+          <div style="font-size:24px; font-weight:800; color:var(--ink-muted); margin-bottom:12px;">03</div>
+          <p style="font-size:14px; line-height:1.6; margin:0;">"Contact Support" is buried behind multiple clicks — creating friction at exactly the moment users need immediate help.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="card h-100 p-4 border-0 shadow-sm" style="background:#ffffff; border-radius:12px;">
+          <div style="font-size:24px; font-weight:800; color:var(--ink-muted); margin-bottom:12px;">04</div>
+          <p style="font-size:14px; line-height:1.6; margin:0;">The overall layout feels crowded and text-dominant — reducing visual clarity and increasing cognitive load during high-trust situations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ RESEARCH & INSIGHTS ══════════════ -->
+<section class="section" id="research">
+  <div class="container">
+    <div class="s-label">Research Method &amp; Survey</div>
+    <h2>What users actually told us.<br><em>Evidence over assumptions.</em></h2>
+    <p>
+      A survey distributed to 10+ users — students, designers, and IT professionals aged 20–35 — captured both quantitative ratings and qualitative behavioral insights.
+    </p>
+
+    <div class="score-card">
+      <div class="score-big">78%</div>
+      <div class="score-detail">
+        <div class="score-row">
+          <div class="score-row-label">Check status as primary action</div>
+          <div class="score-bar-wrap"><div class="score-bar" style="width: 78%;"></div></div>
+          <div class="score-num">78%</div>
+        </div>
+        <div class="score-row">
+          <div class="score-row-label">Rate current page as "unclear"</div>
+          <div class="score-bar-wrap"><div class="score-bar" style="width: 65%;"></div></div>
+          <div class="score-num">65%</div>
+        </div>
+        <div class="score-row">
+          <div class="score-row-label">Experienced confusing updates</div>
+          <div class="score-bar-wrap"><div class="score-bar" style="width: 70%;"></div></div>
+          <div class="score-num">70%</div>
+        </div>
+        <div class="score-row">
+          <div class="score-row-label">Rate support access as "difficult"</div>
+          <div class="score-bar-wrap"><div class="score-bar" style="width: 60%;"></div></div>
+          <div class="score-num">60%</div>
+        </div>
+        <div class="score-row">
+          <div class="score-row-label">Want visual progress tracker</div>
+          <div class="score-bar-wrap"><div class="score-bar" style="width: 82%;"></div></div>
+          <div class="score-num">82%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-thinking">
+      <div class="pt-label">Key Behavioral Insights</div>
+      <div class="pt-grid">
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Primary Behavior</div>
+            <div class="pt-a">Users visit the tracking page strictly to confirm delivery time and current status — not to explore or browse other products.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Biggest Frustration</div>
+            <div class="pt-a">Unclear status messaging during "Out for Delivery" states creates severe user anxiety, especially when the delivery window is wide.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Support Access Expectations</div>
+            <div class="pt-a">Users expected a direct support route visible immediately without scrolling; the multi-step path was the most heavily criticized element.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Visual Preference</div>
+            <div class="pt-a">A clear visual progress indicator (rather than static text blocks) was the single most-requested layout improvement across all participants.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ INTERACTIVE LIVE PROTOTYPE WIDGET ══════════════ -->
+<section class="section alt" id="interactive-demo">
+  <div class="container">
+    <div class="s-label">Interactive Prototype Mockup</div>
+    <h2>Experience the redesigned interface.<br><em>Try the interactive widget.</em></h2>
+    <p>
+      This interactive widget displays the redesigned elements. Use the controls on the left to toggle order states and witness how the progress tracker, ETA formatting, and Quick Actions adapt.
+    </p>
+
+    <div class="demo-container">
+      <div class="demo-controls">
+        <div class="demo-btn active" onclick="setWidgetState('transit')" id="ctrl-transit">
+          <strong><i class="ri-box-3-fill"></i> In Transit State (Active State)</strong>
+          <div style="font-size:12px; color:var(--ink-muted); margin-top:4px;">Color-coded blue progress bar. Contact Support remains fully accessible.</div>
+        </div>
+        <div class="demo-btn" onclick="setWidgetState('out')" id="ctrl-out">
+          <strong><i class="ri-truck-fill"></i> Out for Delivery State</strong>
+          <div style="font-size:12px; color:var(--ink-muted); margin-top:4px;">Highest anxiety phase. ETA prominently updates to a narrow delivery slot.</div>
+        </div>
+        <div class="demo-btn" onclick="setWidgetState('delivered')" id="ctrl-delivered">
+          <strong><i class="ri-checkbox-circle-fill"></i> Delivered State</strong>
+          <div style="font-size:12px; color:var(--ink-muted); margin-top:4px;">Green completion state. Actions shift emphasis to "Buy Again" and "Return/Replace".</div>
+        </div>
+      </div>
+
+      <!-- Live Mockup Card -->
+      <div class="amazon-tracker-mockup">
+        <div class="mock-header">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon Logo" class="mock-logo" style="filter: brightness(0) invert(1);" />
+          <div class="mock-title">Order #403-199281-22910</div>
+        </div>
+        <div class="mock-body">
+          <!-- ETA Header -->
+          <div class="mock-eta-card">
+            <div class="mock-eta-label" id="mock-eta-lbl">Estimated Arrival:</div>
+            <div class="mock-eta-time" id="mock-eta-val">Expected: Today, 2:00 PM – 4:00 PM</div>
+          </div>
+
+          <!-- Progress Tracker Redesign -->
+          <div class="mock-timeline">
+            <div class="mock-timeline-fill" id="mock-timeline-bar" style="width: 50%;"></div>
+            
+            <div class="mock-node completed" id="node-ordered">
+              <div class="mock-dot"><i class="ri-check-fill"></i></div>
+              <div class="mock-node-label">Ordered</div>
+            </div>
+            <div class="mock-node active" id="node-transit">
+              <div class="mock-dot"><i class="ri-loader-4-fill"></i></div>
+              <div class="mock-node-label">In Transit</div>
+            </div>
+            <div class="mock-node" id="node-out">
+              <div class="mock-dot"><i class="ri-truck-fill"></i></div>
+              <div class="mock-node-label">Out for Delivery</div>
+            </div>
+            <div class="mock-node" id="node-delivered">
+              <div class="mock-dot"><i class="ri-checkbox-circle-fill"></i></div>
+              <div class="mock-node-label">Delivered</div>
+            </div>
+          </div>
+
+          <!-- Quick Actions panel -->
+          <div class="mock-panel-label">Quick Actions</div>
+          <div class="mock-quick-actions">
+            <div class="mock-action-btn">
+              <i class="ri-pin-distance-fill"></i>
+              <span>Live Map Tracker</span>
+            </div>
+            <div class="mock-action-btn">
+              <i class="ri-edit-fill"></i>
+              <span>Update Address</span>
+            </div>
+            <div class="mock-action-btn">
+              <i class="ri-close-circle-fill"></i>
+              <span>Cancel Order</span>
+            </div>
+            <div class="mock-action-btn">
+              <i class="ri-refresh-fill"></i>
+              <span>Buy Again</span>
+            </div>
+          </div>
+
+          <!-- Prominent Contact Button above the fold -->
+          <div class="mock-contact-btn" id="mock-support-btn">
+            <i class="ri-customer-service-2-fill me-1"></i> Contact Support Instantly (One-Tap)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ BEFORE VS AFTER ══════════════ -->
+<section class="section" id="before-after">
+  <div class="container">
+    <div class="s-label">Comparison Matrix</div>
+    <h2>From cluttered to clear.<br><em>Before vs After Redesign.</em></h2>
+    <p>
+      By implementing a structured layout, we addressed the key user friction areas while maintaining the signature branding elements.
+    </p>
+
+    <div class="problem-vs">
+      <div class="problem-vs-col">
+        <div class="pvc-header before">
+          <i class="ri-close-circle-fill me-1"></i> Before — Existing Design
+        </div>
+        <ul class="pvc-list">
+          <li><strong>Dense paragraph-style text layouts:</strong> Critical details like status and ETA were buried inside dry blocks of content.</li>
+          <li><strong>Buried support interfaces:</strong> "Contact Support" required navigating complex submenus and multiple clicks.</li>
+          <li><strong>Low-contrast visual indicators:</strong> Progress lines were small and failed to communicate the current delivery stage quickly.</li>
+          <li><strong>Scattered key interactions:</strong> Buttons for cancelling, updating, and buying again were scattered randomly with no grouping.</li>
+        </ul>
+      </div>
+      <div class="problem-vs-col">
+        <div class="pvc-header after">
+          <i class="ri-checkbox-circle-fill me-1"></i> After — Redesigned Experience
+        </div>
+        <ul class="pvc-list">
+          <li><strong>Strong visual hierarchy:</strong> Delivery date and active delivery window act as the main lead elements.</li>
+          <li><strong>Above-the-fold support actions:</strong> Large, prominent, yellow CTA support button accessible in one click.</li>
+          <li><strong>Vibrant, color-coded tracker:</strong> Bold timeline states with dynamic color nodes emphasizing transit status.</li>
+          <li><strong>Unified Quick Actions panel:</strong> Grouped administrative actions organized into a clean, grid-based card layout.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ UX REFLECTIONS & QUESTIONS ══════════════ -->
+<section class="section alt" id="qa-reflection">
+  <div class="container">
+    <div class="s-label">Deep Dive &amp; Reflections</div>
+    <h2>UX Decisions Explained.<br><em>Answers to key product questions.</em></h2>
+    <p>
+      A deep look into the UX process behind the layout improvements, explaining the choices that prioritize usability over standard patterns.
+    </p>
+
+    <div class="qa-accordion">
+      <div class="qa-card">
+        <div class="qa-question">
+          <i class="ri-question-fill"></i>
+          <span>When you opened the real Amazon tracking page back then — what was the first thing that felt wrong to you personally?</span>
+        </div>
+        <div class="qa-answer">
+          As a frequent Prime user who orders regularly from Amazon, I personally struggled to find the order status and contact support links. The original system forced me to click through multiple layers just to perform basic tasks or get support, adding friction to an already anxious post-purchase stage.
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-question">
+          <i class="ri-question-fill"></i>
+          <span>Why did you decide to group the buttons into a Quick Actions panel? What problem were you solving?</span>
+        </div>
+        <div class="qa-answer">
+          Grouping the critical options into a dedicated Quick Actions panel keeps all relevant utilities in one central place. It simplifies access to primary tasks (like updating instructions or checking a tracking ID) without scattering options across different levels of the page layout.
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-question">
+          <i class="ri-question-fill"></i>
+          <span>Why did you make Contact Us a big prominent button? What were users doing before?</span>
+        </div>
+        <div class="qa-answer">
+          In moments of critical delivery issues, users need support immediately. On the live Amazon page, the "Contact Us" feature is buried at the bottom of the layout, making it difficult to find. Surfacing it as a large, bold, above-the-fold button reduces friction when help is needed most. Before this, users spent unnecessary time searching; during testing, users indicated that a quick-access button would make resolving delivery issues much easier.
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-question">
+          <i class="ri-question-fill"></i>
+          <span>The progress tracker — why did you redesign it? What was broken about the original?</span>
+        </div>
+        <div class="qa-answer">
+          The original tracker made it difficult to determine the exact delivery stage at a glance. We redesigned the order timeline to include clear labels, dynamic status highlights (like a dedicated blue for "In Transit" or yellow for "Out for Delivery"), and active progress markers, helping users understand their shipment's status instantly.
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="qa-question">
+          <i class="ri-question-fill"></i>
+          <span>Looking at your redesign now — what's the one thing you're most proud of and why?</span>
+        </div>
+        <div class="qa-answer">
+          I am most proud of creating a highly intuitive layout that ensures users do not have to search for key details. By prioritizing clear information hierarchy, the redesign helps users easily track packages and contact support during critical delivery phases.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PROCESS STEPS ══════════════ -->
+<section class="section" id="process">
+  <div class="container">
+    <div class="s-label">Design Process</div>
+    <h2>How the solution was structured.<br><em>A systematic UX workflow.</em></h2>
+    
+    <div class="versions">
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">Phase 01</span></div>
+        <div>
+          <div class="v-title">Research</div>
+          <div class="v-body">Distributed Google Form surveys, performed user behavioral observations, and extracted common layout pain points from active shoppers.</div>
+        </div>
+      </div>
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">Phase 02</span></div>
+        <div>
+          <div class="v-title">Define</div>
+          <div class="v-body">Organized user feedback into core themes, established critical problem statements, and analyzed competing tracking experiences.</div>
+        </div>
+      </div>
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">Phase 03</span></div>
+        <div>
+          <div class="v-title">Ideate</div>
+          <div class="v-body">Sketched low-fidelity layout wireframes and explored different hierarchies for primary Call-to-Action buttons.</div>
+        </div>
+      </div>
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">Phase 04</span></div>
+        <div>
+          <div class="v-title">Design</div>
+          <div class="v-body">Developed high-fidelity Figma components, maintaining Amazon's brand elements while stripping away layout clutter.</div>
+        </div>
+      </div>
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">Phase 05</span></div>
+        <div>
+          <div class="v-title">Validate</div>
+          <div class="v-body">Ran user feedback sessions to test informational clarity, path navigation efficiency, and overall task success rate.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ REFLECTION ══════════════ -->
+<section class="section alt" id="reflection">
+  <div class="container">
+    <div class="s-label">Reflection</div>
+    <h2>What this project taught me.<br><em>Key takeaways.</em></h2>
+    <p>
+      This case study reinforced a core design truth: <strong>the most impactful UX changes aren't always about adding more — they're about ruthless clarity and eliminating friction at the right moment.</strong>
+    </p>
+    <p>
+      The order tracking page represents a high-stakes emotional moment. A user tracking their package is already in a state of mild uncertainty. Every design decision should reduce that uncertainty, not add to it. The progress tracker, ETA prominence, and support visibility all serve a single goal: help the user feel in control.
+    </p>
+    <div class="row g-4 mt-3">
+      <div class="col-md-4">
+        <div class="p-3 border-0" style="background:#ffffff; border-radius:10px; box-shadow: var(--sh1);">
+          <h6><strong>Principle 01</strong></h6>
+          <div style="font-size:13px; color:var(--ink-muted); margin-top:6px;">Clarity reduces user anxiety — information hierarchy is emotional design.</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-3 border-0" style="background:#ffffff; border-radius:10px; box-shadow: var(--sh1);">
+          <h6><strong>Principle 02</strong></h6>
+          <div style="font-size:13px; color:var(--ink-muted); margin-top:6px;">Support access is a trust signal — hiding it destroys customer confidence.</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-3 border-0" style="background:#ffffff; border-radius:10px; box-shadow: var(--sh1);">
+          <h6><strong>Principle 03</strong></h6>
+          <div style="font-size:13px; color:var(--ink-muted); margin-top:6px;">Group related actions — cognitive load is a real UX cost.</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-5 p-4" style="background:rgba(255, 153, 0, 0.05); border-left: 3px solid var(--amazon-orange); border-radius: 0 12px 12px 0;">
+      <h6 style="color:#e07b00; font-weight:700;"><i class="ri-magic-fill"></i> Next Iteration Focus</h6>
+      <span style="font-size:14.5px;">Design layout states for complex delivery edge cases: delayed shipments, failed attempts, and address verification updates. The happy path is resolved; the anxious path needs design attention next.</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="footer-tag">Get in Touch</div>
+  <div class="footer-title">Let's build products users love.</div>
+  <div class="footer-sub">Interested in high-fidelity, research-driven design systems and front-end engineering? Let's connect.</div>
+  <div class="footer-links">
+    <a href="mailto:govarthanan@salkomdesignstudio.com" class="f-btn primary"><i class="ri-mail-fill"></i> Email Me</a>
+    <a href="https://www.behance.net/govarthananuxui" target="_blank" rel="noopener" class="f-btn ghost"><i class="ri-behance-fill"></i> Behance</a>
+    <a href="https://calendly.com/salkomdesignstudio" target="_blank" rel="noopener" class="f-btn ghost"><i class="ri-calendar-fill"></i> Calendly</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 Govarthanan Selvaganessane. Shipped with care.</div>
+</footer>
+
+<script>
+  // Page Progress Indicator
+  window.addEventListener('scroll', () => {
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (window.pageYOffset / totalHeight) * 100;
+    document.getElementById('prog-fill').style.width = progress + '%';
+  });
+
+  // Custom cursor movement
+  const cursorDot = document.getElementById('cursor-dot');
+  document.addEventListener('mousemove', (e) => {
+    cursorDot.style.left = e.clientX + 'px';
+    cursorDot.style.top = e.clientY + 'px';
+  });
+
+  // Highlight interactive element hover in cursor
+  const interactives = document.querySelectorAll('a, button, .demo-btn, .mock-action-btn, .mock-contact-btn');
+  interactives.forEach(el => {
+    el.addEventListener('mouseenter', () => cursorDot.style.transform = 'translate(-50%, -50%) scale(2.5)');
+    el.addEventListener('mouseleave', () => cursorDot.style.transform = 'translate(-50%, -50%) scale(1)');
+  });
+
+  // Live Widget Interaction Controller
+  function setWidgetState(state) {
+    // Reset control buttons
+    document.getElementById('ctrl-transit').classList.remove('active');
+    document.getElementById('ctrl-out').classList.remove('active');
+    document.getElementById('ctrl-delivered').classList.remove('active');
+    
+    // Reset timeline nodes
+    const nodeOrdered = document.getElementById('node-ordered');
+    const nodeTransit = document.getElementById('node-transit');
+    const nodeOut = document.getElementById('node-out');
+    const nodeDelivered = document.getElementById('node-delivered');
+    const timelineBar = document.getElementById('mock-timeline-bar');
+    
+    nodeOrdered.className = 'mock-node';
+    nodeTransit.className = 'mock-node';
+    nodeOut.className = 'mock-node';
+    nodeDelivered.className = 'mock-node';
+    
+    const etaVal = document.getElementById('mock-eta-val');
+    const etaLbl = document.getElementById('mock-eta-lbl');
+    const supportBtn = document.getElementById('mock-support-btn');
+
+    if (state === 'transit') {
+      document.getElementById('ctrl-transit').classList.add('active');
+      
+      nodeOrdered.classList.add('completed');
+      nodeTransit.classList.add('active');
+      timelineBar.style.width = '33%';
+      
+      etaLbl.textContent = 'Estimated Arrival:';
+      etaVal.textContent = 'Expected: Today, 2:00 PM – 4:00 PM';
+      supportBtn.style.background = 'var(--amazon-orange)';
+      supportBtn.style.borderColor = '#f29a00';
+      supportBtn.innerHTML = '<i class="ri-customer-service-2-fill me-1"></i> Contact Support Instantly (One-Tap)';
+    } 
+    else if (state === 'out') {
+      document.getElementById('ctrl-out').classList.add('active');
+      
+      nodeOrdered.classList.add('completed');
+      nodeTransit.classList.add('completed');
+      nodeOut.classList.add('active');
+      timelineBar.style.width = '66%';
+      
+      etaLbl.textContent = 'Expected Delivery Window:';
+      etaVal.textContent = 'Out for Delivery: Arriving in 15–30 mins';
+      supportBtn.style.background = 'var(--amazon-orange)';
+      supportBtn.style.borderColor = '#f29a00';
+      supportBtn.innerHTML = '<i class="ri-customer-service-2-fill me-1"></i> Contact Driver / Support Now';
+    } 
+    else if (state === 'delivered') {
+      document.getElementById('ctrl-delivered').classList.add('active');
+      
+      nodeOrdered.classList.add('completed');
+      nodeTransit.classList.add('completed');
+      nodeOut.classList.add('completed');
+      nodeDelivered.classList.add('completed');
+      nodeDelivered.classList.add('active');
+      timelineBar.style.width = '100%';
+      
+      etaLbl.textContent = 'Delivery Confirmed:';
+      etaVal.textContent = 'Delivered: Today at 1:45 PM';
+      supportBtn.style.background = '#f7f8f8';
+      supportBtn.style.borderColor = '#d5d9d9';
+      supportBtn.innerHTML = '<i class="ri-arrow-go-back-fill me-1"></i> Start a Return or Replacement';
+    }
+  }
+</script>
+</body>
+</html>

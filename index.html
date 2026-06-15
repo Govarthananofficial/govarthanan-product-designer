@@ -2759,6 +2759,74 @@
         display: block;
       }
 
+      /* Phone field: inline country code + divider */
+      .fl-phone-group .fl-label {
+        top: 9px;
+        transform: none;
+        font-size: 9px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        font-family: "DM Sans", sans-serif;
+      }
+      .fl-phone-box {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        height: 52px;
+        padding: 20px 14px 6px;
+        background: var(--bg-alt);
+        border: 1.5px solid var(--bd2);
+        border-radius: 10px;
+        transition:
+          border-color 0.18s,
+          box-shadow 0.18s,
+          background 0.18s;
+      }
+      .fl-phone-box:focus-within {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08);
+        background: #fff;
+      }
+      .fl-group.has-error .fl-phone-box {
+        border-color: #1d1d1f;
+        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08);
+      }
+      .fl-cc {
+        flex-shrink: 0;
+        max-width: 78px;
+        border: none;
+        background: transparent;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--t1);
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding: 0 4px 0 0;
+        cursor: pointer;
+      }
+      .fl-divider {
+        width: 1px;
+        height: 22px;
+        background: var(--bd2);
+        margin: 0 10px;
+        flex-shrink: 0;
+      }
+      .fl-phone-input {
+        flex: 1;
+        min-width: 0;
+        height: 100%;
+        border: none;
+        background: transparent;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--t1);
+        outline: none;
+        padding: 0;
+      }
+
       /* Honeypot */
       .hp-field {
         position: absolute;
@@ -6682,19 +6750,36 @@
             </div>
 
             <div class="form-row">
-              <div class="fl-group" id="fg-mobile">
-                <input
-                  class="fl-input"
-                  id="cf-mobile"
-                  name="mobile"
-                  type="tel"
-                  autocomplete="tel"
-                  aria-required="true"
-                  aria-describedby="fe-mobile"
-                />
+              <div class="fl-group has-val fl-phone-group" id="fg-mobile">
+                <div class="fl-phone-box">
+                  <select class="fl-cc" id="cf-mobile-cc" aria-label="Country code">
+                    <option value="+91" selected>🇮🇳 +91</option>
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+61">🇦🇺 +61</option>
+                    <option value="+971">🇦🇪 +971</option>
+                    <option value="+65">🇸🇬 +65</option>
+                    <option value="+49">🇩🇪 +49</option>
+                    <option value="+33">🇫🇷 +33</option>
+                    <option value="+81">🇯🇵 +81</option>
+                    <option value="+86">🇨🇳 +86</option>
+                  </select>
+                  <span class="fl-divider" aria-hidden="true"></span>
+                  <input
+                    class="fl-phone-input"
+                    id="cf-mobile"
+                    name="mobile"
+                    type="tel"
+                    inputmode="numeric"
+                    autocomplete="tel-national"
+                    maxlength="10"
+                    aria-required="true"
+                    aria-describedby="fe-mobile"
+                  />
+                </div>
                 <label class="fl-label" for="cf-mobile">Mobile Number *</label>
                 <span class="fl-error" id="fe-mobile"
-                  >Please enter a valid phone number.</span
+                  >Please enter a valid 10-digit mobile number.</span
                 >
               </div>
               <div class="fl-group" id="fg-company">
@@ -7495,6 +7580,22 @@
           sync();
         });
 
+        /* Phone field: digits-only input + focus styling for the cc/box combo */
+        {
+          const phoneEl = document.getElementById("cf-mobile");
+          const phoneGroup = document.getElementById("fg-mobile");
+          const phoneBox = phoneGroup.querySelector(".fl-phone-box");
+          phoneEl.addEventListener("input", () => {
+            phoneEl.value = phoneEl.value.replace(/\D/g, "").slice(0, 10);
+          });
+          phoneBox.addEventListener("focusin", () =>
+            phoneGroup.classList.add("focused"),
+          );
+          phoneBox.addEventListener("focusout", () =>
+            phoneGroup.classList.remove("focused"),
+          );
+        }
+
         /* Sanitize */
         function sanitize(str) {
           return str
@@ -7508,7 +7609,7 @@
           name: (v) => v.length >= 2 && v.length <= 120,
           email: (v) =>
             /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) && v.length <= 200,
-          mobile: (v) => /^[\d\s+\-().]{7,20}$/.test(v),
+          mobile: (v) => /^\d{10}$/.test(v),
           message: (v) => v.length >= 10 && v.length <= 2000,
         };
 
@@ -7638,7 +7739,7 @@
             timestamp: new Date().toISOString(),
             name: sanitize(document.getElementById("cf-name").value),
             email: sanitize(document.getElementById("cf-email").value),
-            mobile: sanitize(document.getElementById("cf-mobile").value),
+            mobile: `${document.getElementById("cf-mobile-cc").value} ${sanitize(document.getElementById("cf-mobile").value)}`,
             company: sanitize(document.getElementById("cf-company").value),
             message: sanitize(document.getElementById("cf-message").value),
             userAgent: navigator.userAgent,

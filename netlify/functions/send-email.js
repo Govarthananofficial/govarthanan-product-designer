@@ -47,7 +47,7 @@ exports.handler = async function (event) {
   const RESEND_URL = "https://api.resend.com/emails";
   const MY_EMAIL = "govarthanan@salkomdesignstudio.com";
   const FROM_EMAIL =
-    "Govarthanan | Portfolio <govarthanan@salkomdesignstudio.com>";
+    "Govarthanan Selvaganessane <govarthanan@salkomdesignstudio.com>";
 
   // ── 1. Confirmation email to the user ──────────────────────────────────────
   const userEmailHtml = `
@@ -86,6 +86,8 @@ exports.handler = async function (event) {
     .footer { padding: 28px 48px 40px; }
     .footer-text { font-size: 12px; color: #86868B; line-height: 1.7; text-align: center; margin: 0; }
     .footer-link { color: #1D1D1F; text-decoration: none; font-weight: 600; }
+    .footer-links { margin: 12px 0 0; font-size: 12px; text-align: center; }
+    .footer-dot { color: #86868B; margin: 0 8px; }
   </style>
 </head>
 <body>
@@ -128,8 +130,17 @@ exports.handler = async function (event) {
         <p class="footer-text">
           Govarthanan Selvaganessane · Puducherry, India<br />
           <a href="mailto:govarthanan@salkomdesignstudio.com" class="footer-link">govarthanan@salkomdesignstudio.com</a>
-          &nbsp;·&nbsp;
+        </p>
+        <p class="footer-links">
           <a href="https://www.linkedin.com/in/sgovarthanan/" class="footer-link">LinkedIn</a>
+          <span class="footer-dot">·</span>
+          <a href="https://www.behance.net/govarthananuxui" class="footer-link">Behance</a>
+          <span class="footer-dot">·</span>
+          <a href="https://github.com/salkomdesignstudio" class="footer-link">GitHub</a>
+          <span class="footer-dot">·</span>
+          <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge" class="footer-link">npm</a>
+          <span class="footer-dot">·</span>
+          <a href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf" class="footer-link">Figma</a>
         </p>
       </div>
     </div>
@@ -168,7 +179,11 @@ exports.handler = async function (event) {
     .message-label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #86868B; margin: 0 0 12px; }
     .message-box { background: #F5F5F7; border-left: 3px solid #1D1D1F; border-radius: 0 12px 12px 0; padding: 18px 22px; font-size: 14px; color: #1D1D1F; line-height: 1.75; white-space: pre-wrap; margin: 0 0 32px; }
     .cta-btn { display: inline-block; background: #1D1D1F; color: #ffffff !important; text-decoration: none; font-size: 14px; font-weight: 600; padding: 14px 30px; border-radius: 980px; letter-spacing: -0.01em; }
-    .footer-text { padding: 0 44px 32px; font-size: 11px; color: #86868B; text-align: center; margin: 0; }
+    .footer { padding: 0 44px 32px; }
+    .footer-text { font-size: 11px; color: #86868B; text-align: center; margin: 12px 0 0; }
+    .footer-link { color: #1D1D1F; text-decoration: none; font-weight: 600; }
+    .footer-links { margin: 0; font-size: 12px; text-align: center; }
+    .footer-dot { color: #86868B; margin: 0 8px; }
   </style>
 </head>
 <body>
@@ -197,7 +212,20 @@ exports.handler = async function (event) {
 
         <a href="mailto:${email}?subject=Re: Your message on govarthanan-product-engineer.netlify.app" class="cta-btn">Reply to ${name} →</a>
       </div>
-      <div class="footer-text">Sent automatically from your portfolio contact form</div>
+      <div class="footer">
+        <p class="footer-links">
+          <a href="https://www.linkedin.com/in/sgovarthanan/" class="footer-link">LinkedIn</a>
+          <span class="footer-dot">·</span>
+          <a href="https://www.behance.net/govarthananuxui" class="footer-link">Behance</a>
+          <span class="footer-dot">·</span>
+          <a href="https://github.com/salkomdesignstudio" class="footer-link">GitHub</a>
+          <span class="footer-dot">·</span>
+          <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge" class="footer-link">npm</a>
+          <span class="footer-dot">·</span>
+          <a href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf" class="footer-link">Figma</a>
+        </p>
+        <p class="footer-text">Sent automatically from your portfolio contact form</p>
+      </div>
     </div>
   </div>
 </body>

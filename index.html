@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -3612,29 +3612,29 @@
           display: none;
         }
         #hero {
-          height: 100svh;
-          height: 100vh;
+          height: auto;
           min-height: 100svh;
-          overflow: hidden; /* hard clip — nothing bleeds below fold */
+          min-height: 100vh;
+          overflow: visible;
         }
-        /* Push content to top so padding-top alone controls gap from nav */
+        /* Center content vertically and provide balanced padding */
         .ah-inner {
-          justify-content: flex-start;
-          padding-top: calc(var(--NAV-H) + 12px);
-          padding-bottom: 16px;
+          justify-content: center;
+          padding-top: calc(var(--NAV-H) + 24px);
+          padding-bottom: 32px;
         }
         .ah-meta {
           flex-direction: column;
           align-items: center;
           gap: 6px;
-          margin-bottom: 10px; /* was 40px — freed ~30px */
+          margin-bottom: 16px;
           text-align: center;
         }
         .ah-loc {
           text-align: center;
         }
         .ah-stage {
-          padding: 0; /* remove 36px top + 40px bottom = 76px freed */
+          padding: 0;
           text-align: center;
           align-items: center;
         }
@@ -3648,9 +3648,9 @@
         .ah-eyebrow::before {
           width: 20px;
         }
-        /* Name: two stacked centered lines on small screens */
+        /* Name: two stacked centered lines on small screens. Reduced minimum clamp to prevent horizontal overflow */
         .ah-h1 {
-          font-size: clamp(38px, 11vw, 60px);
+          font-size: clamp(28px, 10vw, 54px);
           letter-spacing: -0.045em;
           line-height: 1.03;
           margin-bottom: 12px;

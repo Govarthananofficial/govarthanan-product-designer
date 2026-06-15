@@ -7978,43 +7978,7 @@
         let longitude = "";
 
         async function loadLocation() {
-          // Attempt 1: ipwho.is (CORS friendly, HTTPS, very fast)
-          try {
-            const res = await fetch("https://ipwho.is/");
-            if (res.ok) {
-              const data = await res.json();
-              if (data.success) {
-                if (data.city && data.region && data.country) {
-                  exactLocation = `${data.city}, ${data.region}, ${data.country}`;
-                } else if (data.city && data.country) {
-                  exactLocation = `${data.city}, ${data.country}`;
-                }
-                if (data.latitude) latitude = String(data.latitude);
-                if (data.longitude) longitude = String(data.longitude);
-                return;
-              }
-            }
-          } catch (e) {
-            console.warn("Failed to fetch location from ipwho.is", e);
-          }
-          // Attempt 2: freeipapi.com
-          try {
-            const res = await fetch("https://freeipapi.com/api/json");
-            if (res.ok) {
-              const data = await res.json();
-              if (data.cityName && data.regionName && data.countryName) {
-                exactLocation = `${data.cityName}, ${data.regionName}, ${data.countryName}`;
-              } else if (data.cityName && data.countryName) {
-                exactLocation = `${data.cityName}, ${data.countryName}`;
-              }
-              if (data.latitude) latitude = String(data.latitude);
-              if (data.longitude) longitude = String(data.longitude);
-              return;
-            }
-          } catch (e) {
-            console.warn("Failed to fetch location from freeipapi", e);
-          }
-          // Attempt 3: ipapi.co
+          // Attempt 1: ipapi.co
           try {
             const res = await fetch("https://ipapi.co/json/");
             if (res.ok) {
@@ -8030,6 +7994,26 @@
             }
           } catch (e) {
             console.warn("Failed to fetch location from ipapi.co", e);
+          }
+          // Attempt 2: ipinfo.io
+          try {
+            const res = await fetch("https://ipinfo.io/json");
+            if (res.ok) {
+              const data = await res.json();
+              if (data.city && data.region && data.country) {
+                exactLocation = `${data.city}, ${data.region}, ${data.country}`;
+              } else if (data.city && data.country) {
+                exactLocation = `${data.city}, ${data.country}`;
+              }
+              if (data.loc) {
+                const [lat, lon] = data.loc.split(",");
+                if (lat) latitude = lat;
+                if (lon) longitude = lon;
+              }
+              return;
+            }
+          } catch (e) {
+            console.warn("Failed to fetch location from ipinfo.io", e);
           }
         }
         // Load silently in background

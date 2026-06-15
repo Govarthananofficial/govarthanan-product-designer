@@ -113,8 +113,10 @@ exports.handler = async function (event) {
     hour12: true,
   });
 
-  // ── Social links — icon image buttons (Gmail-safe: white color baked in via Iconify API) ─
-  // Iconify API supports ?color=white so no CSS filter is needed — works in Gmail/Outlook.
+  // ── Social links — self-hosted white SVG icons (served from Netlify, no CDN dependency) ─
+  // Icons are in /public/email-icons/ — deployed to govarthanan-product-engineer.netlify.app
+  // SVG src works in Gmail & Apple Mail; Outlook falls back to the alt text.
+  const BASE = "https://govarthanan-product-engineer.netlify.app/email-icons";
   const socialLinksHtml = `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
       <tr>
@@ -125,8 +127,8 @@ exports.handler = async function (event) {
                     border-radius:6px;padding:11px;width:40px;height:40px;
                     box-sizing:border-box;text-align:center;vertical-align:middle;"
              title="LinkedIn">
-            <img src="https://api.iconify.design/simple-icons:linkedin.svg?color=%23ffffff"
-                 alt="LinkedIn" width="18" height="18"
+            <img src="${BASE}/linkedin-white.svg"
+                 alt="in" width="18" height="18"
                  style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
@@ -137,8 +139,8 @@ exports.handler = async function (event) {
                     border-radius:6px;padding:11px;width:40px;height:40px;
                     box-sizing:border-box;text-align:center;vertical-align:middle;"
              title="Behance">
-            <img src="https://api.iconify.design/simple-icons:behance.svg?color=%23ffffff"
-                 alt="Behance" width="18" height="18"
+            <img src="${BASE}/behance-white.svg"
+                 alt="Be" width="18" height="18"
                  style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
@@ -149,8 +151,8 @@ exports.handler = async function (event) {
                     border-radius:6px;padding:11px;width:40px;height:40px;
                     box-sizing:border-box;text-align:center;vertical-align:middle;"
              title="GitHub">
-            <img src="https://api.iconify.design/simple-icons:github.svg?color=%23ffffff"
-                 alt="GitHub" width="18" height="18"
+            <img src="${BASE}/github-white.svg"
+                 alt="GH" width="18" height="18"
                  style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
@@ -161,7 +163,7 @@ exports.handler = async function (event) {
                     border-radius:6px;padding:11px;width:40px;height:40px;
                     box-sizing:border-box;text-align:center;vertical-align:middle;"
              title="npm">
-            <img src="https://api.iconify.design/simple-icons:npm.svg?color=%23ffffff"
+            <img src="${BASE}/npm-white.svg"
                  alt="npm" width="18" height="18"
                  style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
@@ -173,8 +175,8 @@ exports.handler = async function (event) {
                     border-radius:6px;padding:11px;width:40px;height:40px;
                     box-sizing:border-box;text-align:center;vertical-align:middle;"
              title="Figma">
-            <img src="https://api.iconify.design/simple-icons:figma.svg?color=%23ffffff"
-                 alt="Figma" width="18" height="18"
+            <img src="${BASE}/figma-white.svg"
+                 alt="Fig" width="18" height="18"
                  style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>

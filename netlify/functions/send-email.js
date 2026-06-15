@@ -116,64 +116,98 @@ exports.handler = async function (event) {
   <meta name="supported-color-schemes" content="light" />
   <title>Thanks for reaching out!</title>
   <style>
+    * { box-sizing: border-box; }
     body { margin: 0; padding: 0; background: #F5F5F7; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-    .bg { background: #F5F5F7; padding: 40px 16px; }
-    .wrapper { max-width: 600px; margin: 0 auto; background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 1px 2px rgba(29,29,31,0.04), 0 24px 64px -24px rgba(29,29,31,0.14); }
-    .content { padding: 40px; }
-    .header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 40px; flex-wrap: wrap; }
+    .bg { background: #F5F5F7; padding: 48px 16px; }
+    .wrapper { max-width: 600px; margin: 0 auto; background: #FFFFFF; border-radius: 28px; overflow: hidden; box-shadow: 0 2px 4px rgba(29,29,31,0.04), 0 32px 80px -24px rgba(29,29,31,0.16); }
+    .content { padding: 48px; }
+
+    /* HEADER */
+    .header { padding-bottom: 32px; margin-bottom: 40px; border-bottom: 1px solid rgba(29,29,31,0.06); }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
     .brand-id { display: flex; align-items: center; gap: 14px; }
-    .brand-mark { width: 44px; height: 44px; border-radius: 14px; background: #1D1D1F; text-align: center; line-height: 44px; flex-shrink: 0; }
-    .brand-mark span { color: #FFFFFF; font-size: 16px; font-weight: 800; letter-spacing: -0.02em; }
-    .brand-name { font-size: 15px; font-weight: 700; color: #1D1D1F; letter-spacing: -0.01em; }
-    .brand-role { font-size: 12px; color: #86868B; margin-top: 2px; }
-    .header-btn { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; font-weight: 700; color: #1D1D1F; text-decoration: none; background: #F5F5F7; padding: 12px 20px; border-radius: 999px; letter-spacing: -0.01em; flex-shrink: 0; white-space: nowrap; }
-    .hero { margin: 0 0 40px; }
-    .badge { background: #F5F5F7; color: #1D1D1F; padding: 8px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; margin: 0 0 24px; }
-    .heading-lg { font-size: 42px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: #1D1D1F; margin: 0 0 16px; }
-    .body-text { font-size: 15px; line-height: 1.8; color: #86868B; margin: 0; }
-    .body-text strong { color: #1D1D1F; font-weight: 600; }
-    .section { margin: 0 0 40px; }
-    .section:last-child { margin-bottom: 0; }
-    .section-heading { font-size: 20px; font-weight: 700; color: #1D1D1F; letter-spacing: -0.01em; margin: 0 0 16px; }
+    .brand-mark { width: 48px; height: 48px; border-radius: 16px; background: #1D1D1F; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .brand-mark span { color: #FFFFFF; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
+    .brand-name { font-size: 15px; font-weight: 700; color: #1D1D1F; letter-spacing: -0.01em; line-height: 1.3; }
+    .brand-role { font-size: 12px; color: #86868B; margin-top: 3px; line-height: 1.4; }
+    .header-btn { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: #1D1D1F !important; text-decoration: none; background: #F5F5F7; padding: 11px 20px; border-radius: 999px; letter-spacing: -0.01em; white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(29,29,31,0.06); }
+
+    /* HERO */
+    .hero { margin-bottom: 40px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: #F5F5F7; color: #1D1D1F; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; padding: 8px 16px; border-radius: 999px; margin-bottom: 20px; border: 1px solid rgba(29,29,31,0.06); }
+    .heading-xl { font-size: 40px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: #1D1D1F; margin: 0 0 18px; }
+    .lead { font-size: 16px; line-height: 1.75; color: #86868B; margin: 0; }
+    .lead strong { color: #1D1D1F; font-weight: 600; }
+
+    /* SECTIONS */
+    .section { margin-bottom: 40px; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #86868B; margin-bottom: 14px; }
+
+    /* CARDS */
     .card { background: #F5F5F7; border-radius: 20px; padding: 24px; border: 1px solid rgba(29,29,31,0.06); }
-    .card + .card { margin-top: 16px; }
-    .timeline-step { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; }
-    .timeline-step:not(:last-child) { border-bottom: 1px solid rgba(29,29,31,0.06); }
-    .step-icon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .step-icon.done { background: #1D1D1F; }
-    .step-icon.pending { background: #FFFFFF; }
-    .step-text { padding-top: 5px; }
+    .card + .card { margin-top: 12px; }
+
+    /* TIMELINE */
+    .step { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; }
+    .step:first-child { padding-top: 0; }
+    .step:last-child { padding-bottom: 0; }
+    .step + .step { border-top: 1px solid rgba(29,29,31,0.06); }
+    .step-dot { width: 34px; height: 34px; min-width: 34px; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
+    .step-dot.active { background: #1D1D1F; }
+    .step-dot.idle { background: #FFFFFF; }
+    .step-body { padding-top: 7px; }
     .step-title { font-size: 14px; font-weight: 600; color: #1D1D1F; line-height: 1.4; }
-    .step-sub { font-size: 12px; color: #86868B; margin-top: 2px; line-height: 1.5; }
-    .info-row { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; }
-    .info-row:not(:last-child) { border-bottom: 1px solid rgba(29,29,31,0.06); }
-    .info-icon { width: 32px; height: 32px; border-radius: 10px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .info-text { padding-top: 4px; min-width: 0; }
-    .info-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #86868B; margin: 0 0 4px; }
-    .info-val { font-size: 14px; font-weight: 600; color: #1D1D1F; word-break: break-word; }
-    .message-box { font-size: 15px; line-height: 1.8; color: #1D1D1F; white-space: pre-wrap; margin-top: 16px; }
-    .button-row { display: flex; gap: 16px; }
-    .btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; font-size: 14px; font-weight: 600; padding: 16px 24px; border-radius: 999px; letter-spacing: -0.01em; }
+    .step-desc { font-size: 12px; color: #86868B; margin-top: 3px; line-height: 1.5; }
+
+    /* INFO ROWS */
+    .info-row { display: flex; align-items: flex-start; gap: 14px; padding: 13px 0; }
+    .info-row:first-child { padding-top: 0; }
+    .info-row:last-child { padding-bottom: 0; }
+    .info-row + .info-row { border-top: 1px solid rgba(29,29,31,0.06); }
+    .info-icon { width: 34px; height: 34px; min-width: 34px; border-radius: 11px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; }
+    .info-body { padding-top: 5px; min-width: 0; }
+    .info-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #86868B; margin-bottom: 4px; }
+    .info-val { font-size: 14px; font-weight: 600; color: #1D1D1F; word-break: break-word; line-height: 1.5; }
+    .message-text { font-size: 15px; line-height: 1.8; color: #1D1D1F; white-space: pre-wrap; word-break: break-word; padding-top: 16px; border-top: 1px solid rgba(29,29,31,0.06); margin-top: 4px; }
+
+    /* ABOUT */
+    .about-text { font-size: 15px; line-height: 1.8; color: #86868B; margin: 0; }
+
+    /* BUTTONS — table layout for equal widths in all email clients */
+    .btn-wrap { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .btn-wrap td { width: 50%; vertical-align: top; }
+    .btn-wrap td.btn-left { padding-right: 8px; }
+    .btn-wrap td.btn-right { padding-left: 8px; }
+    .btn { display: block; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600; padding: 17px 16px; border-radius: 999px; letter-spacing: -0.01em; line-height: 1.2; }
     .btn-primary { background: #1D1D1F; color: #FFFFFF !important; }
-    .btn-secondary { background: #F5F5F7; color: #1D1D1F !important; border: 1px solid rgba(29,29,31,0.06); }
-    .divider { height: 1px; background: rgba(29,29,31,0.06); margin: 0 0 40px; }
-    .note { margin: 0; font-size: 13px; color: #86868B; line-height: 1.7; }
-    .footer { padding: 0 40px 40px; }
-    .footer-name { font-size: 14px; font-weight: 700; color: #1D1D1F; text-align: center; }
-    .footer-role { font-size: 12px; color: #86868B; text-align: center; margin-top: 4px; }
-    .footer-meta { font-size: 12px; color: #86868B; text-align: center; margin-top: 12px; line-height: 1.8; }
+    .btn-secondary { background: #F5F5F7; color: #1D1D1F !important; border: 1px solid rgba(29,29,31,0.08); }
+
+    /* DIVIDER & NOTE */
+    .divider { height: 1px; background: rgba(29,29,31,0.06); margin-bottom: 32px; }
+    .note { font-size: 13px; color: #86868B; line-height: 1.7; margin: 0; }
+
+    /* FOOTER */
+    .footer { padding: 32px 48px 40px; border-top: 1px solid rgba(29,29,31,0.06); text-align: center; }
+    .footer-name { font-size: 14px; font-weight: 700; color: #1D1D1F; margin-bottom: 4px; }
+    .footer-role { font-size: 12px; color: #86868B; margin-bottom: 20px; }
+    .footer-meta { font-size: 12px; color: #86868B; line-height: 2; margin-bottom: 24px; }
     .footer-meta a { color: #1D1D1F; text-decoration: none; font-weight: 600; }
-    .social-row { text-align: center; margin-top: 24px; }
-    .social-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: #1D1D1F; color: #FFFFFF !important; text-decoration: none; margin: 0 4px; vertical-align: middle; }
-    @media (max-width: 480px) {
-      .bg { padding: 24px 12px; }
-      .content { padding: 24px; }
-      .footer { padding: 0 24px 24px; }
-      .heading-lg { font-size: 30px; }
-      .card { padding: 20px; }
-      .button-row { flex-direction: column; gap: 12px; }
-      .btn { width: 100%; }
-      .header-btn { width: 100%; }
+    .social-row { }
+    .social-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: #1D1D1F; text-decoration: none; margin: 0 4px; vertical-align: middle; }
+
+    @media only screen and (max-width: 520px) {
+      .bg { padding: 20px 12px !important; }
+      .content { padding: 28px 20px !important; }
+      .footer { padding: 28px 20px 32px !important; }
+      .heading-xl { font-size: 28px !important; }
+      .card { padding: 20px !important; }
+      .header-btn { width: 100%; text-align: center; justify-content: center; }
+      .btn-wrap { display: block !important; }
+      .btn-wrap tr { display: block !important; }
+      .btn-wrap td { display: block !important; width: 100% !important; padding: 0 0 10px !important; }
+      .btn-wrap td.btn-right { padding: 0 !important; }
+      .btn { padding: 17px 16px !important; }
+      .social-btn { width: 40px !important; height: 40px !important; margin: 0 3px !important; }
     }
   </style>
 </head>
@@ -182,111 +216,126 @@ exports.handler = async function (event) {
     <div class="wrapper">
       <div class="content">
 
+        <!-- HEADER -->
         <div class="header">
-          <div class="brand-id">
-            <div class="brand-mark"><span>GS</span></div>
-            <div>
-              <div class="brand-name">Govarthanan Selvaganessane</div>
-              <div class="brand-role">Product Designer &amp; Frontend Engineer</div>
+          <div class="header-inner">
+            <div class="brand-id">
+              <div class="brand-mark"><span>GS</span></div>
+              <div>
+                <div class="brand-name">Govarthanan Selvaganessane</div>
+                <div class="brand-role">Product Designer &amp; Frontend Engineer</div>
+              </div>
             </div>
+            <a href="https://govarthanan-product-engineer.netlify.app/" class="header-btn">${ic.arrowUp("#1D1D1F")} Visit Website</a>
           </div>
-          <a href="https://govarthanan-product-engineer.netlify.app/" class="header-btn">${ic.arrowUp("#1D1D1F")}Visit Website</a>
         </div>
 
+        <!-- HERO -->
         <div class="hero">
           <div class="badge">${ic.check("#1D1D1F")} Message Received</div>
-          <div class="heading-lg">Thanks for reaching out, ${name}</div>
-          <p class="body-text">I've got your message and I'll get back to you with a <strong>personal response within 24 hours</strong>. Here's a quick look at what happens next, plus a copy of what you sent.</p>
+          <div class="heading-xl">Thanks for reaching out, ${name}</div>
+          <p class="lead">I've got your message and will get back to you with a <strong>personal response within 24 hours</strong>. Here's what happens next and a copy of what you sent.</p>
         </div>
 
+        <!-- TIMELINE -->
         <div class="section">
-          <div class="section-heading">What Happens Next</div>
+          <div class="section-label">What Happens Next</div>
           <div class="card">
-            <div class="timeline-step">
-              <div class="step-icon done">${ic.check("#FFFFFF")}</div>
-              <div class="step-text">
+            <div class="step">
+              <div class="step-dot active">${ic.check("#FFFFFF")}</div>
+              <div class="step-body">
                 <div class="step-title">Message Received</div>
-                <div class="step-sub">Your enquiry has landed safely in my inbox.</div>
+                <div class="step-desc">Your enquiry has landed safely in my inbox.</div>
               </div>
             </div>
-            <div class="timeline-step">
-              <div class="step-icon pending">${ic.clock("#1D1D1F")}</div>
-              <div class="step-text">
+            <div class="step">
+              <div class="step-dot idle">${ic.clock("#1D1D1F")}</div>
+              <div class="step-body">
                 <div class="step-title">Reviewing Requirements</div>
-                <div class="step-sub">I'm going through the details of your project.</div>
+                <div class="step-desc">I'm going through the details of your project.</div>
               </div>
             </div>
-            <div class="timeline-step">
-              <div class="step-icon pending">${ic.send("#1D1D1F")}</div>
-              <div class="step-text">
+            <div class="step">
+              <div class="step-dot idle">${ic.send("#1D1D1F")}</div>
+              <div class="step-body">
                 <div class="step-title">Personal Response Within 24 Hours</div>
-                <div class="step-sub">You'll hear back from me directly — no auto-replies.</div>
+                <div class="step-desc">You'll hear back from me directly — no auto-replies.</div>
               </div>
             </div>
-            <div class="timeline-step">
-              <div class="step-icon pending">${ic.rocket("#1D1D1F", "#F5F5F7")}</div>
-              <div class="step-text">
+            <div class="step">
+              <div class="step-dot idle">${ic.rocket("#1D1D1F", "#F5F5F7")}</div>
+              <div class="step-body">
                 <div class="step-title">Project Discussion</div>
-                <div class="step-sub">We'll align on scope, timeline &amp; next steps.</div>
+                <div class="step-desc">We'll align on scope, timeline &amp; next steps.</div>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- CONTACT INFO CARD -->
         <div class="section">
-          <div class="section-heading">Your Submission</div>
+          <div class="section-label">Contact Information</div>
           <div class="card">
             <div class="info-row">
               <div class="info-icon">${ic.mail("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-text">
+              <div class="info-body">
                 <div class="info-label">Email</div>
                 <div class="info-val">${email}</div>
               </div>
             </div>
             ${mobile ? `<div class="info-row">
               <div class="info-icon">${ic.phone("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-text">
+              <div class="info-body">
                 <div class="info-label">Mobile</div>
                 <div class="info-val">${mobile}</div>
               </div>
             </div>` : ""}
             ${company ? `<div class="info-row">
               <div class="info-icon">${ic.building("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-text">
+              <div class="info-body">
                 <div class="info-label">Company</div>
                 <div class="info-val">${company}</div>
               </div>
             </div>` : ""}
           </div>
+        </div>
+
+        <!-- MESSAGE CARD -->
+        <div class="section">
+          <div class="section-label">Your Message</div>
           <div class="card">
-            <div class="info-row">
+            <div class="info-row" style="padding-bottom: 0;">
               <div class="info-icon">${ic.chat("#1D1D1F")}</div>
-              <div class="info-text">
+              <div class="info-body">
                 <div class="info-label">Message</div>
               </div>
             </div>
-            <div class="message-box">${message.slice(0, 160)}${message.length > 160 ? "…" : ""}</div>
+            <div class="message-text">${message.slice(0, 160)}${message.length > 160 ? "…" : ""}</div>
           </div>
         </div>
 
+        <!-- ABOUT -->
         <div class="section">
-          <p class="body-text">
+          <p class="about-text">
             I'm a Product Designer &amp; Frontend Engineer with 2+ years shipping 30+ production
             products across fintech, retail &amp; SaaS — founder of Salkom Design Studio.
             While you wait, take a look at some recent work.
           </p>
         </div>
 
+        <!-- BUTTONS -->
         <div class="section">
-          <div class="button-row">
-            <a href="https://govarthanan-product-engineer.netlify.app/" class="btn btn-primary">${ic.star("#FFFFFF")}View Full Portfolio</a>
-            <a href="https://govarthanan-product-engineer.netlify.app/#projects" class="btn btn-secondary">${ic.briefcase("#1D1D1F")}Explore Case Studies</a>
-          </div>
+          <table class="btn-wrap" role="presentation" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="btn-left"><a href="https://govarthanan-product-engineer.netlify.app/" class="btn btn-primary">View Full Portfolio</a></td>
+              <td class="btn-right"><a href="https://govarthanan-product-engineer.netlify.app/#projects" class="btn btn-secondary">Explore Case Studies</a></td>
+            </tr>
+          </table>
         </div>
 
         <div class="divider"></div>
-
         <p class="note">Need to add something? Just reply to this email — it goes straight to my inbox.</p>
+
       </div>
       <div class="footer">
         <div class="footer-name">Govarthanan Selvaganessane</div>
@@ -311,44 +360,74 @@ exports.handler = async function (event) {
   <meta name="supported-color-schemes" content="light" />
   <title>New Portfolio Contact</title>
   <style>
+    * { box-sizing: border-box; }
     body { margin: 0; padding: 0; background: #F5F5F7; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-    .bg { background: #F5F5F7; padding: 40px 16px; }
-    .wrapper { max-width: 580px; margin: 0 auto; background: #FFFFFF; border-radius: 24px; overflow: hidden; box-shadow: 0 1px 2px rgba(29,29,31,0.04), 0 24px 64px -24px rgba(29,29,31,0.14); }
-    .content { padding: 40px; }
-    .top-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 24px; flex-wrap: wrap; }
-    .badge-dark { display: inline-flex; align-items: center; gap: 8px; background: #1D1D1F; color: #FFFFFF; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 8px 14px; border-radius: 999px; }
+    .bg { background: #F5F5F7; padding: 48px 16px; }
+    .wrapper { max-width: 580px; margin: 0 auto; background: #FFFFFF; border-radius: 28px; overflow: hidden; box-shadow: 0 2px 4px rgba(29,29,31,0.04), 0 32px 80px -24px rgba(29,29,31,0.16); }
+    .content { padding: 48px; }
+
+    /* TOP ROW */
+    .top-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+    .badge-dark { display: inline-flex; align-items: center; gap: 8px; background: #1D1D1F; color: #FFFFFF; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 16px; border-radius: 999px; }
     .timestamp { font-size: 12px; color: #86868B; }
-    .section { margin: 0 0 40px; }
-    .section:last-child { margin-bottom: 0; }
-    .section-heading { font-size: 20px; font-weight: 700; color: #1D1D1F; letter-spacing: -0.01em; margin: 0 0 16px; }
-    .heading-lg { font-size: 42px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: #1D1D1F; margin: 0 0 8px; }
-    .body-text { font-size: 15px; line-height: 1.8; color: #86868B; margin: 0; }
+
+    /* HERO */
+    .hero { padding-bottom: 36px; margin-bottom: 40px; border-bottom: 1px solid rgba(29,29,31,0.06); }
+    .heading-xl { font-size: 40px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: #1D1D1F; margin: 0 0 10px; }
+    .hero-sub { font-size: 16px; color: #86868B; line-height: 1.6; margin: 0; }
+
+    /* SECTIONS */
+    .section { margin-bottom: 40px; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #86868B; margin-bottom: 14px; }
+
+    /* CARDS */
     .card { background: #F5F5F7; border-radius: 20px; padding: 24px; border: 1px solid rgba(29,29,31,0.06); }
-    .info-row { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; }
-    .info-row:not(:last-child) { border-bottom: 1px solid rgba(29,29,31,0.06); }
-    .info-icon { width: 32px; height: 32px; border-radius: 10px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .info-text { padding-top: 4px; min-width: 0; }
-    .info-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #86868B; margin: 0 0 4px; }
-    .info-val { font-size: 14px; font-weight: 600; color: #1D1D1F; word-break: break-word; }
+    .message-card { background: #F5F5F7; border-radius: 20px; padding: 24px; border: 1px solid rgba(29,29,31,0.06); border-left: 4px solid #1D1D1F; }
+
+    /* INFO ROWS */
+    .info-row { display: flex; align-items: flex-start; gap: 14px; padding: 13px 0; }
+    .info-row:first-child { padding-top: 0; }
+    .info-row:last-child { padding-bottom: 0; }
+    .info-row + .info-row { border-top: 1px solid rgba(29,29,31,0.06); }
+    .info-icon { width: 34px; height: 34px; min-width: 34px; border-radius: 11px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; }
+    .info-body { padding-top: 5px; min-width: 0; }
+    .info-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #86868B; margin-bottom: 4px; }
+    .info-val { font-size: 14px; font-weight: 600; color: #1D1D1F; word-break: break-word; line-height: 1.5; }
     .info-val a { color: #1D1D1F; text-decoration: underline; }
-    .message-card { background: #F5F5F7; border-radius: 20px; padding: 24px; border: 1px solid rgba(29,29,31,0.06); border-left: 3px solid #1D1D1F; }
-    .message-box { font-size: 15px; line-height: 1.8; color: #1D1D1F; white-space: pre-wrap; margin-top: 16px; }
-    .button-row { display: flex; gap: 16px; }
-    .btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; font-size: 14px; font-weight: 600; padding: 16px 24px; border-radius: 999px; letter-spacing: -0.01em; }
+
+    /* MESSAGE */
+    .msg-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .msg-icon { width: 34px; height: 34px; min-width: 34px; border-radius: 11px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; }
+    .msg-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #86868B; }
+    .message-text { font-size: 15px; line-height: 1.8; color: #1D1D1F; white-space: pre-wrap; word-break: break-word; margin: 0; }
+
+    /* BUTTONS — table layout for equal widths in all email clients */
+    .btn-wrap { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .btn-wrap td { width: 50%; vertical-align: top; }
+    .btn-wrap td.btn-left { padding-right: 8px; }
+    .btn-wrap td.btn-right { padding-left: 8px; }
+    .btn { display: block; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600; padding: 17px 16px; border-radius: 999px; letter-spacing: -0.01em; line-height: 1.2; }
     .btn-primary { background: #1D1D1F; color: #FFFFFF !important; }
-    .btn-secondary { background: #F5F5F7; color: #1D1D1F !important; border: 1px solid rgba(29,29,31,0.06); }
-    .footer { padding: 0 40px 40px; }
-    .footer-text { font-size: 12px; color: #86868B; text-align: center; margin: 0; }
-    .social-row { text-align: center; margin-top: 24px; }
-    .social-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: #1D1D1F; color: #FFFFFF !important; text-decoration: none; margin: 0 4px; vertical-align: middle; }
-    @media (max-width: 480px) {
-      .bg { padding: 24px 12px; }
-      .content { padding: 24px; }
-      .footer { padding: 0 24px 24px; }
-      .heading-lg { font-size: 30px; }
-      .card, .message-card { padding: 20px; }
-      .button-row { flex-direction: column; gap: 12px; }
-      .btn { width: 100%; }
+    .btn-secondary { background: #F5F5F7; color: #1D1D1F !important; border: 1px solid rgba(29,29,31,0.08); }
+
+    /* FOOTER */
+    .footer { padding: 32px 48px 40px; border-top: 1px solid rgba(29,29,31,0.06); text-align: center; }
+    .footer-text { font-size: 12px; color: #86868B; margin: 20px 0 0; }
+    .social-row { }
+    .social-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: #1D1D1F; text-decoration: none; margin: 0 4px; vertical-align: middle; }
+
+    @media only screen and (max-width: 520px) {
+      .bg { padding: 20px 12px !important; }
+      .content { padding: 28px 20px !important; }
+      .footer { padding: 28px 20px 32px !important; }
+      .heading-xl { font-size: 28px !important; }
+      .card, .message-card { padding: 20px !important; }
+      .btn-wrap { display: block !important; }
+      .btn-wrap tr { display: block !important; }
+      .btn-wrap td { display: block !important; width: 100% !important; padding: 0 0 10px !important; }
+      .btn-wrap td.btn-right { padding: 0 !important; }
+      .btn { padding: 17px 16px !important; }
+      .social-btn { width: 40px !important; height: 40px !important; margin: 0 3px !important; }
     }
   </style>
 </head>
@@ -357,43 +436,46 @@ exports.handler = async function (event) {
     <div class="wrapper">
       <div class="content">
 
+        <!-- TOP ROW -->
         <div class="top-row">
           <span class="badge-dark">${ic.fire("#FFFFFF")} New Lead</span>
           <span class="timestamp">${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })} IST</span>
         </div>
 
-        <div class="section">
-          <div class="heading-lg">${name}</div>
-          <p class="body-text">just reached out through your portfolio contact form.</p>
+        <!-- HERO -->
+        <div class="hero">
+          <div class="heading-xl">${name}</div>
+          <p class="hero-sub">just reached out through your portfolio contact form.</p>
         </div>
 
+        <!-- CONTACT CARD -->
         <div class="section">
-          <div class="section-heading">Contact Information</div>
+          <div class="section-label">Contact Information</div>
           <div class="card">
             <div class="info-row">
               <div class="info-icon">${ic.user("#1D1D1F")}</div>
-              <div class="info-text">
+              <div class="info-body">
                 <div class="info-label">Name</div>
                 <div class="info-val">${name}</div>
               </div>
             </div>
             <div class="info-row">
               <div class="info-icon">${ic.mail("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-text">
+              <div class="info-body">
                 <div class="info-label">Email</div>
                 <div class="info-val"><a href="mailto:${email}">${email}</a></div>
               </div>
             </div>
             ${mobile ? `<div class="info-row">
               <div class="info-icon">${ic.phone("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-text">
+              <div class="info-body">
                 <div class="info-label">Mobile</div>
                 <div class="info-val">${mobile}</div>
               </div>
             </div>` : ""}
             ${company ? `<div class="info-row">
               <div class="info-icon">${ic.building("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-text">
+              <div class="info-body">
                 <div class="info-label">Company</div>
                 <div class="info-val">${company}</div>
               </div>
@@ -401,29 +483,32 @@ exports.handler = async function (event) {
           </div>
         </div>
 
+        <!-- MESSAGE CARD -->
         <div class="section">
-          <div class="section-heading">Message</div>
+          <div class="section-label">Message</div>
           <div class="message-card">
-            <div class="info-row" style="border-bottom: none; padding-top: 0;">
-              <div class="info-icon">${ic.chat("#1D1D1F")}</div>
-              <div class="info-text">
-                <div class="info-label">Full Message</div>
-              </div>
+            <div class="msg-header">
+              <div class="msg-icon">${ic.chat("#1D1D1F")}</div>
+              <div class="msg-label">Full Message</div>
             </div>
-            <div class="message-box">${message}</div>
+            <p class="message-text">${message}</p>
           </div>
         </div>
 
-        <div class="section">
-          <div class="button-row">
-            <a href="mailto:${email}?subject=Re: Your message on govarthanan-product-engineer.netlify.app" class="btn btn-primary">${ic.send("#FFFFFF")}Reply to Lead</a>
-            <a href="https://govarthanan-product-engineer.netlify.app/" class="btn btn-secondary">${ic.external("#1D1D1F")}Open Portfolio</a>
-          </div>
+        <!-- BUTTONS -->
+        <div class="section" style="margin-bottom: 0;">
+          <table class="btn-wrap" role="presentation" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="btn-left"><a href="mailto:${email}?subject=Re: Your message on govarthanan-product-engineer.netlify.app" class="btn btn-primary">Reply to Lead</a></td>
+              <td class="btn-right"><a href="https://govarthanan-product-engineer.netlify.app/" class="btn btn-secondary">Open Portfolio</a></td>
+            </tr>
+          </table>
         </div>
+
       </div>
       <div class="footer">
         ${socialRow}
-        <p class="footer-text" style="margin-top: 24px;">Sent automatically from your portfolio contact form</p>
+        <p class="footer-text">Sent automatically from your portfolio contact form</p>
       </div>
     </div>
   </div>

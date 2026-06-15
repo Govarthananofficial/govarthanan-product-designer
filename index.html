@@ -2540,329 +2540,218 @@
       }
 
       /* ═══════════════════════════════════
-   CONTACT MODAL
+   CONTACT MODAL — v2 Two-Column Dark
 ═══════════════════════════════════ */
-      /* ═══════════════════════════════════════════════════════════
-   CONTACT MODAL — FIXED SPACING & HIERARCHY OVERRIDE
-   Paste this entire block inside your <style> tag,
-   AFTER the existing modal CSS (after .form-success.show{})
-   ═══════════════════════════════════════════════════════════ */
 
-      /* ── 1. Card: tighter outer padding on mobile ── */
-      .modal-card {
-        padding: 0; /* remove the 44px 48px 48px — handled per zone */
-        border-radius: 16px;
-      }
-
-      /* ── 2. New header zone — dark band for clear visual entry ── */
-      .modal-header-zone {
-        background: #1d1d1f;
-        padding: 28px 28px 24px;
-        border-radius: 16px 16px 0 0;
-      }
-
-      .modal-label {
-        font-size: 9px;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: #5a5a52;
-        margin-bottom: 8px;
-      }
-
-      .modal-title {
-        font-family: "DM Serif Display", serif;
-        font-weight: 400;
-        font-style: italic;
-        font-size: 26px;
-        letter-spacing: -0.01em;
-        color: #f5f5f3;
-        margin-bottom: 6px;
-        line-height: 1.18;
-      }
-
-      .modal-sub {
-        font-size: 12.5px;
-        color: #7a7a70;
-        line-height: 1.6;
-        margin-bottom: 0; /* no bottom margin — handled by body zone */
-      }
-
-      /* ── 3. Body zone ── */
-      .modal-body-zone {
-        padding: 20px 24px 24px;
-      }
-
-      /* ── 4. Section dividers ── */
-      .modal-section-label {
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: #aeaea6;
-        margin: 0 0 10px 0;
-      }
-
-      .modal-section-divider {
-        height: 1px;
-        background: #eaeae4;
-        margin: 6px 0 16px;
-      }
-
-      /* ── 5. Form rows — always 2-col, stack only below 400px ── */
-      .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-bottom: 10px;
-      }
-
-      /* ── 6. Field groups: fixed label ABOVE input (not floating) ── */
-      .fl-group {
-        position: static; /* cancel relative — no more floating label */
-        margin-bottom: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      /* Fixed label */
-      .fl-label {
-        position: static; /* override: was absolute */
-        top: auto;
-        transform: none;
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: #8a8a80;
-        pointer-events: none;
-        transition: none;
-        white-space: nowrap;
-        line-height: 1;
-      }
-
-      /* Suppress all floating-label motion — label is fixed above */
-      .fl-group.focused .fl-label,
-      .fl-group.has-val .fl-label,
-      .fl-group.is-textarea .fl-label,
-      .fl-group.is-textarea.focused .fl-label,
-      .fl-group.is-textarea.has-val .fl-label {
-        top: auto;
-        transform: none;
-        font-size: 9px;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        font-family: "DM Sans", sans-serif;
-        color: #8a8a80;
-      }
-
-      .fl-group.focused .fl-label {
-        color: #1d1d1f;
-      }
-
-      /* ── 7. Inputs — no top padding offset needed ── */
-      .fl-input,
-      .fl-textarea {
-        padding: 10px 12px; /* uniform — no extra top for floating label */
-        height: 40px;
-        border-radius: 6px;
-        font-size: 13px;
-        border: 1.5px solid rgba(29, 29, 31, 0.14);
-        background: #fff;
-      }
-
-      .fl-textarea {
-        height: auto;
-        min-height: 90px;
-        padding-top: 10px;
-        resize: none;
-      }
-
-      .fl-input:focus,
-      .fl-textarea:focus {
-        border-color: #1d1d1f;
-        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.07);
-        background: #fff;
-      }
-
-      /* ── 8. Phone group — label above, box below ── */
-      .fl-phone-group .fl-label {
-        position: static;
-        top: auto;
-        font-size: 9px;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: #8a8a80;
-      }
-
-      .fl-phone-box {
-        height: 40px;
-        padding: 0; /* remove old 20px top / 6px bottom */
-        border-radius: 6px;
-        border: 1.5px solid rgba(29, 29, 31, 0.14);
-        background: #fff;
-        display: flex;
-        align-items: stretch;
-      }
-
-      .fl-phone-box:focus-within {
-        border-color: #1d1d1f;
-        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.07);
-      }
-
-      .fl-cc {
-        max-width: 76px;
-        padding: 0 6px 0 10px;
-        font-size: 12px;
-        font-weight: 600;
-        background: #f5f5f7
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2386868B' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
-          right 8px center no-repeat;
-        background-size: 8px 5px;
-        padding-right: 22px;
-        border-right: 1px solid rgba(29, 29, 31, 0.12);
-        border-radius: 0;
-      }
-
-      .fl-divider {
-        display: none; /* hidden — border-right on .fl-cc replaces it */
-      }
-
-      .fl-phone-input {
-        font-size: 13px;
-        padding: 0 10px;
-      }
-
-      /* ── 9. Textarea section ── */
-      .fl-group.is-textarea {
-        margin-bottom: 0;
-      }
-
-      /* ── 10. Submit button ── */
-      .form-submit-btn {
-        margin-top: 16px;
-        border-radius: 6px;
-        font-size: 12px;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        padding: 14px;
-        box-shadow: none;
-      }
-
-      /* ── 11. Footer note below button ── */
-      .modal-footer-note {
-        text-align: center;
-        font-size: 10px;
-        color: #aeaea6;
-        margin-top: 10px;
-        letter-spacing: 0.02em;
-      }
-
-      /* ── 12. Error banner ── */
-      .form-error-banner {
-        border-radius: 6px;
-        margin-bottom: 14px;
-      }
-
-      /* ── 13. Close button position for new card ── */
-      .modal-close {
-        top: 14px;
-        right: 14px;
-        background: rgba(255, 255, 255, 0.12);
-        border-color: rgba(255, 255, 255, 0.18);
-        color: rgba(255, 255, 255, 0.7);
-      }
-      .modal-close:hover {
-        background: rgba(255, 255, 255, 0.2);
-        color: #fff;
-        border-color: rgba(255, 255, 255, 0.3);
-      }
-
-      /* ── 14. Success state ── */
-      .form-success {
-        padding: 48px 28px 36px;
-      }
-
-      /* ── 15. Mobile: keep 2-col at 375px, stack only tiny screens ── */
-      @media (max-width: 399px) {
-        .form-row {
-          grid-template-columns: 1fr;
-          gap: 8px;
-        }
-      }
-
-      @media (max-width: 640px) {
-        .modal-card {
-          border-radius: 14px;
-          max-height: 88vh;
-        }
-        .modal-header-zone {
-          padding: 22px 20px 18px;
-          border-radius: 14px 14px 0 0;
-        }
-        .modal-body-zone {
-          padding: 16px 20px 20px;
-        }
-        .modal-title {
-          font-size: 22px;
-        }
-        .form-row {
-          gap: 8px;
-          margin-bottom: 8px;
-        }
-        .fl-input,
-        .fl-phone-box {
-          height: 38px;
-        }
-      }
-
+      /* ── Overlay ── */
       .modal-overlay {
         position: fixed;
         inset: 0;
         z-index: 9999;
-        background: rgba(29, 29, 31, 0.5);
-        -webkit-backdrop-filter: blur(14px);
-        backdrop-filter: blur(14px);
+        background: rgba(10, 10, 12, 0.72);
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        backdrop-filter: blur(18px) saturate(160%);
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 20px;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.22s;
+        transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .modal-overlay.open {
         opacity: 1;
         pointer-events: all;
       }
 
+      /* ── Two-column card ── */
       .modal-card {
-        background: #fff;
-        border-radius: 22px;
-        padding: 44px 48px 48px;
+        display: grid;
+        grid-template-columns: 330px 1fr;
         width: 100%;
-        max-width: 580px;
+        max-width: 860px;
+        max-height: 92vh;
+        border-radius: 24px;
+        overflow: hidden;
         position: relative;
         box-shadow:
-          0 32px 96px rgba(0, 0, 0, 0.18),
-          0 8px 28px rgba(0, 0, 0, 0.1);
-        max-height: 90vh;
-        overflow-y: auto;
-        scrollbar-width: none;
+          0 40px 100px rgba(0, 0, 0, 0.45),
+          0 8px 32px rgba(0, 0, 0, 0.25);
+        transform: translateY(24px) scale(0.97);
+        transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      .modal-card::-webkit-scrollbar {
-        display: none;
+      .modal-overlay.open .modal-card {
+        transform: translateY(0) scale(1);
       }
 
+      /* ── Left panel (dark brand) ── */
+      .modal-panel-left {
+        background: #0f0f11;
+        padding: 44px 36px 44px;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: relative;
+        overflow: hidden;
+      }
+      .modal-panel-left::before {
+        content: '';
+        position: absolute;
+        top: -80px;
+        left: -80px;
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 65%);
+        pointer-events: none;
+      }
+      .modal-panel-left::after {
+        content: '';
+        position: absolute;
+        bottom: -60px;
+        right: -60px;
+        width: 260px;
+        height: 260px;
+        background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 65%);
+        pointer-events: none;
+      }
+      .modal-left-eyebrow {
+        font-size: 9px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.4);
+        font-weight: 600;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .modal-left-eyebrow::before {
+        content: '';
+        display: block;
+        width: 16px;
+        height: 1px;
+        background: rgba(255,255,255,0.3);
+        flex-shrink: 0;
+      }
+      .modal-left-title {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 800;
+        font-size: clamp(22px, 2.4vw, 30px);
+        letter-spacing: -0.04em;
+        color: #ffffff;
+        line-height: 1.08;
+        margin-bottom: 12px;
+      }
+      .modal-left-title em {
+        font-family: "DM Serif Display", serif;
+        font-style: italic;
+        font-weight: 400;
+        color: rgba(255,255,255,0.5);
+        letter-spacing: -0.02em;
+      }
+      .modal-left-sub {
+        font-size: 13px;
+        line-height: 1.65;
+        color: rgba(255,255,255,0.45);
+        margin-bottom: 36px;
+      }
+      .modal-left-divider {
+        height: 1px;
+        background: rgba(255,255,255,0.08);
+        margin-bottom: 28px;
+      }
+      .modal-left-links {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-top: auto;
+      }
+      .modal-left-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: rgba(255,255,255,0.55);
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        transition: color 0.18s;
+      }
+      .modal-left-link:hover {
+        color: #ffffff;
+      }
+      .modal-left-link i {
+        font-size: 15px;
+        color: rgba(255,255,255,0.3);
+        flex-shrink: 0;
+        transition: color 0.18s;
+      }
+      .modal-left-link:hover i {
+        color: rgba(255,255,255,0.75);
+      }
+      .modal-left-spacer {
+        flex: 1;
+      }
+      .modal-left-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 100px;
+        padding: 6px 12px 6px 9px;
+        margin-bottom: 28px;
+      }
+      .modal-left-badge-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #4ade80;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .modal-left-badge-dot::after {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        border-radius: 50%;
+        border: 1px solid #4ade80;
+        opacity: 0;
+        animation: modalPulse 2.4s ease-out infinite;
+      }
+      @keyframes modalPulse {
+        0%  { transform: scale(1); opacity: 0.5; }
+        70% { transform: scale(2.4); opacity: 0; }
+        100%{ opacity: 0; }
+      }
+      .modal-left-badge span {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.55);
+      }
+
+      /* ── Right panel (form) ── */
+      .modal-panel-right {
+        background: #ffffff;
+        padding: 44px 44px 44px;
+        overflow-y: auto;
+        scrollbar-width: none;
+        position: relative;
+      }
+      .modal-panel-right::-webkit-scrollbar { display: none; }
+
+      /* Close button — card level (floats over dark panel on mobile) */
       .modal-close {
         position: absolute;
-        top: 16px;
-        right: 16px;
+        top: 18px;
+        right: 18px;
         width: 34px;
         height: 34px;
         border-radius: 9px;
-        border: 1px solid var(--bd2);
-        background: none;
+        border: 1.5px solid var(--bd2);
+        background: rgba(255,255,255,0.9);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -2873,6 +2762,7 @@
           background 0.16s,
           color 0.16s,
           border-color 0.16s;
+        z-index: 10;
       }
       .modal-close:hover {
         background: var(--bg-sub);
@@ -2880,38 +2770,24 @@
         border-color: var(--bd3);
       }
 
-      .modal-label {
-        font-family: "DM Sans", sans-serif;
+      /* Section label inside right panel */
+      .modal-section-label {
         font-size: 9px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: var(--primary);
-        margin-bottom: 7px;
-      }
-      .modal-title {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
-        font-size: 26px;
-        letter-spacing: -0.04em;
-        color: var(--t1);
-        margin-bottom: 7px;
-        line-height: 1.1;
-      }
-      .modal-sub {
-        font-size: 13px;
-        color: var(--t4);
-        line-height: 1.6;
-        margin-bottom: 24px;
+        color: var(--t3);
+        font-weight: 600;
+        margin-bottom: 20px;
       }
 
       /* Error banner */
       .form-error-banner {
-        background: #f5f5f7;
-        border: 1px solid rgba(29, 29, 31, 0.22);
-        border-radius: 8px;
+        background: #fff5f5;
+        border: 1.5px solid rgba(220, 38, 38, 0.2);
+        border-radius: 10px;
         padding: 10px 14px;
         font-size: 12.5px;
-        color: #1d1d1f;
+        color: #dc2626;
         margin-bottom: 16px;
         line-height: 1.5;
       }
@@ -2946,7 +2822,6 @@
           transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
           font-size 0.18s,
           letter-spacing 0.18s,
-          font-family 0.18s,
           color 0.18s;
         line-height: 1;
         white-space: nowrap;
@@ -2962,7 +2837,6 @@
         font-size: 9px;
         letter-spacing: 0.13em;
         text-transform: uppercase;
-        font-family: "DM Sans", sans-serif;
       }
       .fl-group.is-textarea.focused .fl-label,
       .fl-group.is-textarea.has-val .fl-label {
@@ -2970,14 +2844,14 @@
         transform: none;
       }
       .fl-group.focused .fl-label {
-        color: var(--primary);
+        color: #1d1d1f;
       }
       .fl-group.has-val:not(.focused) .fl-label {
         color: var(--t3);
       }
       .fl-group.focused.has-error .fl-label,
       .fl-group.has-val.has-error .fl-label {
-        color: #1d1d1f;
+        color: #dc2626;
       }
 
       .fl-opt {
@@ -2993,11 +2867,11 @@
         font-family: "DM Sans", sans-serif;
         font-size: 14px;
         color: var(--t1);
-        background: var(--bg-alt);
-        border: 1.5px solid var(--bd2);
-        border-radius: 10px;
+        background: #f8f8fa;
+        border: 1.5px solid rgba(29,29,31,0.1);
+        border-radius: 12px;
         padding: 22px 14px 8px;
-        height: 52px;
+        height: 54px;
         outline: none;
         transition:
           border-color 0.18s,
@@ -3006,25 +2880,25 @@
       }
       .fl-textarea {
         height: unset;
-        min-height: 114px;
+        min-height: 108px;
         resize: vertical;
         padding-top: 26px;
         line-height: 1.55;
       }
       .fl-input:focus,
       .fl-textarea:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08);
+        border-color: #1d1d1f;
+        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.07);
         background: #fff;
       }
       .fl-group.has-error .fl-input,
       .fl-group.has-error .fl-textarea {
-        border-color: #1d1d1f;
-        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08);
+        border-color: #dc2626;
+        box-shadow: 0 0 0 3px rgba(220,38,38,0.08);
       }
       .fl-error {
         font-size: 11px;
-        color: #1d1d1f;
+        color: #dc2626;
         margin-top: 5px;
         display: none;
         line-height: 1.4;
@@ -3033,14 +2907,13 @@
         display: block;
       }
 
-      /* Phone field: inline country code + divider */
+      /* Phone field */
       .fl-phone-group .fl-label {
         top: 9px;
         transform: none;
         font-size: 9px;
         letter-spacing: 0.13em;
         text-transform: uppercase;
-        font-family: "DM Sans", sans-serif;
       }
       .fl-phone-box {
         display: flex;
@@ -3048,24 +2921,24 @@
         gap: 12px;
         width: 100%;
         box-sizing: border-box;
-        height: 52px;
+        height: 54px;
         padding: 20px 14px 6px;
-        background: var(--bg-alt);
-        border: 1.5px solid var(--bd2);
-        border-radius: 10px;
+        background: #f8f8fa;
+        border: 1.5px solid rgba(29,29,31,0.1);
+        border-radius: 12px;
         transition:
           border-color 0.18s,
           box-shadow 0.18s,
           background 0.18s;
       }
       .fl-phone-box:focus-within {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08);
+        border-color: #1d1d1f;
+        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.07);
         background: #fff;
       }
       .fl-group.has-error .fl-phone-box {
-        border-color: #1d1d1f;
-        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08);
+        border-color: #dc2626;
+        box-shadow: 0 0 0 3px rgba(220,38,38,0.08);
       }
       .fl-cc {
         flex: 0 0 auto;
@@ -3090,7 +2963,7 @@
       .fl-divider {
         width: 1px;
         height: 24px;
-        background: var(--bd2);
+        background: rgba(29,29,31,0.12);
         flex-shrink: 0;
       }
       .fl-phone-input {
@@ -3121,16 +2994,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 9px;
         width: 100%;
-        background: var(--primary);
+        background: #0f0f11;
         color: #fff;
         font-family: "DM Sans", sans-serif;
         font-weight: 700;
         font-size: 14px;
         letter-spacing: -0.01em;
-        padding: 15px;
-        border-radius: 10px;
+        padding: 16px;
+        border-radius: 12px;
         border: none;
         cursor: pointer;
         margin-top: 20px;
@@ -3138,20 +3011,27 @@
           background 0.2s,
           transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
           box-shadow 0.2s;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.16);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
         position: relative;
         overflow: hidden;
       }
+      .form-submit-btn::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 60%);
+        pointer-events: none;
+      }
       .form-submit-btn:hover:not(:disabled) {
-        background: var(--primary-hover);
+        background: #000000;
         transform: translateY(-2px);
-        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
       }
       .form-submit-btn:active:not(:disabled) {
         transform: translateY(0);
       }
       .form-submit-btn:disabled {
-        opacity: 0.6;
+        opacity: 0.55;
         cursor: not-allowed;
         transform: none !important;
       }
@@ -3166,55 +3046,195 @@
         will-change: transform;
         display: none;
       }
-      .form-submit-btn.loading .btn-text {
-        display: none;
-      }
-      .form-submit-btn.loading .btn-spinner {
-        display: block;
-      }
+      .form-submit-btn.loading .btn-text { display: none; }
+      .form-submit-btn.loading .btn-spinner { display: block; }
+
       @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
+        to { transform: rotate(360deg); }
       }
 
-      /* Success state */
+      /* Success state — shown inside right panel */
       .form-success {
         display: none;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        padding: 32px 0 16px;
+        padding: 48px 0 24px;
       }
-      .form-success.show {
-        display: flex;
-      }
+      .form-success.show { display: flex; }
       .form-success-icon {
-        width: 60px;
-        height: 60px;
+        width: 64px;
+        height: 64px;
         border-radius: 50%;
-        background: #f5f5f7;
-        border: 1.5px solid rgba(29, 29, 31, 0.22);
+        background: #0f0f11;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 26px;
-        color: #1d1d1f;
-        margin-bottom: 18px;
+        color: #ffffff;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.18);
       }
       .form-success-title {
         font-family: "DM Sans", sans-serif;
-        font-weight: 700;
-        font-size: 21px;
-        letter-spacing: -0.03em;
+        font-weight: 800;
+        font-size: 22px;
+        letter-spacing: -0.04em;
         color: var(--t1);
         margin-bottom: 8px;
       }
       .form-success-sub {
-        font-size: 13px;
-        color: var(--t4);
-        line-height: 1.6;
-        max-width: 320px;
+        font-size: 13.5px;
+        color: var(--t3);
+        line-height: 1.65;
+        max-width: 300px;
+      }
+
+      /* ── Tablet (769px – 1024px): narrower two-column ── */
+      @media (max-width: 1024px) and (min-width: 769px) {
+        .modal-overlay {
+          padding: 16px;
+          align-items: flex-end;
+        }
+        .modal-card {
+          grid-template-columns: 240px 1fr;
+          max-width: 100%;
+          max-height: 94vh;
+          border-radius: 20px 20px 0 0;
+          transform: translateY(32px) scale(0.99);
+        }
+        .modal-overlay.open .modal-card {
+          transform: translateY(0) scale(1);
+        }
+        .modal-panel-left {
+          padding: 36px 28px 36px;
+        }
+        .modal-left-title {
+          font-size: 22px;
+        }
+        .modal-panel-right {
+          padding: 36px 32px 40px;
+        }
+      }
+
+      /* ── Mobile (≤ 768px): stacked dark-top / white-bottom ── */
+      @media (max-width: 768px) {
+        .modal-overlay {
+          padding: 0;
+          align-items: flex-end;
+          background: rgba(10, 10, 12, 0.78);
+        }
+        .modal-card {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+          width: 100%;
+          max-width: 100%;
+          max-height: 96dvh;
+          border-radius: 24px 24px 0 0;
+          transform: translateY(100%);
+          transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+          box-shadow:
+            0 -20px 60px rgba(0, 0, 0, 0.5),
+            0 -4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .modal-overlay.open .modal-card {
+          transform: translateY(0);
+        }
+
+        /* Dark top panel — compact on mobile */
+        .modal-panel-left {
+          padding: 28px 24px 24px;
+          border-radius: 24px 24px 0 0;
+          min-height: unset;
+        }
+        .modal-panel-left::before,
+        .modal-panel-left::after {
+          display: none;
+        }
+        .modal-left-badge {
+          margin-bottom: 18px;
+        }
+        .modal-left-eyebrow {
+          margin-bottom: 10px;
+        }
+        .modal-left-title {
+          font-size: 26px;
+          margin-bottom: 8px;
+        }
+        .modal-left-sub {
+          font-size: 12.5px;
+          margin-bottom: 20px;
+        }
+        .modal-left-divider {
+          margin-bottom: 18px;
+        }
+        /* Links row — horizontal scrollable strip */
+        .modal-left-links {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          gap: 10px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          margin-top: 0;
+          padding-bottom: 4px;
+        }
+        .modal-left-links::-webkit-scrollbar { display: none; }
+        .modal-left-link {
+          flex-shrink: 0;
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 100px;
+          padding: 6px 14px 6px 10px;
+          font-size: 11.5px;
+          gap: 7px;
+          white-space: nowrap;
+        }
+        .modal-left-link i {
+          font-size: 13px;
+        }
+        .modal-left-spacer { display: none; }
+
+        /* White form panel */
+        .modal-panel-right {
+          padding: 24px 20px 36px;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          border-radius: 0;
+          max-height: unset;
+        }
+        /* Close button — dark glass on mobile, sits top-right of card */
+        .modal-close {
+          top: 16px;
+          right: 16px;
+          background: rgba(255,255,255,0.12);
+          -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+          border-color: rgba(255,255,255,0.18);
+          color: rgba(255,255,255,0.85);
+        }
+        .modal-close:hover {
+          background: rgba(255,255,255,0.2);
+          border-color: rgba(255,255,255,0.3);
+          color: #fff;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .modal-section-label {
+          margin-bottom: 14px;
+        }
+        .fl-group { margin-bottom: 10px; }
+        .form-submit-btn { margin-top: 16px; padding: 15px; }
+      }
+
+      /* ── Extra small (≤ 390px) ── */
+      @media (max-width: 390px) {
+        .modal-left-title { font-size: 23px; }
+        .modal-panel-left { padding: 24px 18px 20px; }
+        .modal-panel-right { padding: 20px 16px 32px; }
       }
 
       /* ═══════════════════════════════════
@@ -5587,7 +5607,7 @@
                 <button
                   type="button"
                   class="sys-btn white d-inline-flex align-items-center gap-2 w-100 justify-content-center impact-cta-btn"
-                  style="border: none; cursor: pointer"
+                  style="border:none;cursor:pointer;"
                 >
                   Get in Touch <i class="ri-arrow-right-line"></i>
                 </button>
@@ -6958,7 +6978,7 @@
       </div>
     </div>
 
-    <!-- ═══ CONTACT MODAL ═══ -->
+    <!-- ═══ CONTACT MODAL v2 ═══ -->
     <div
       class="modal-overlay"
       id="contactModal"
@@ -6967,6 +6987,8 @@
       aria-labelledby="modalTitle"
     >
       <div class="modal-card">
+
+        <!-- Close button — card level, floats top-right always -->
         <button
           class="modal-close"
           type="button"
@@ -6976,140 +6998,179 @@
           <i class="ri-close-line"></i>
         </button>
 
-        <div id="modalFormWrap">
-          <div class="modal-label">Get In Touch</div>
-          <div class="modal-title" id="modalTitle">Let's Build Together</div>
-          <p class="modal-sub">
-            Fill in the details below — I'll get back to you within 24 hours.
+        <!-- ── Left: Brand Panel ── -->
+        <div class="modal-panel-left">
+          <div class="modal-left-badge">
+            <span class="modal-left-badge-dot"></span>
+            <span>Open to Work</span>
+          </div>
+
+          <div class="modal-left-eyebrow">Get In Touch</div>
+          <div class="modal-left-title" id="modalTitle">
+            Let's Build
+            <br><em>Together.</em>
+          </div>
+          <p class="modal-left-sub">
+            Fill in your details — I'll reply within 24 hours.
           </p>
 
-          <div class="form-error-banner" id="formErrorBanner" hidden></div>
+          <div class="modal-left-divider"></div>
 
-          <form id="contactForm" novalidate>
-            <!-- Honeypot anti-spam -->
-            <input
-              class="hp-field"
-              type="text"
-              name="website"
-              tabindex="-1"
-              autocomplete="off"
-              aria-hidden="true"
-            />
+          <div class="modal-left-links">
+            <a href="mailto:govarthanan@salkomdesignstudio.com" class="modal-left-link">
+              <i class="ri-mail-line"></i>
+              govarthanan@salkomdesignstudio.com
+            </a>
+            <a href="tel:+919344081006" class="modal-left-link">
+              <i class="ri-phone-line"></i>
+              +91 9344081006
+            </a>
+            <a href="https://calendly.com/salkomdesignstudio" target="_blank" rel="noopener noreferrer" class="modal-left-link">
+              <i class="ri-calendar-line"></i>
+              Book a call on Calendly
+            </a>
+            <a href="https://www.linkedin.com/in/sgovarthanan/" target="_blank" rel="noopener noreferrer" class="modal-left-link">
+              <i class="ri-linkedin-box-line"></i>
+              linkedin.com/in/sgovarthanan
+            </a>
+          </div>
 
-            <div class="form-row">
-              <div class="fl-group" id="fg-name">
-                <input
-                  class="fl-input"
-                  id="cf-name"
-                  name="name"
-                  type="text"
-                  autocomplete="name"
-                  aria-required="true"
-                  aria-describedby="fe-name"
-                />
-                <label class="fl-label" for="cf-name">Full Name *</label>
-                <span class="fl-error" id="fe-name"
-                  >Please enter your full name (min. 2 characters).</span
-                >
-              </div>
-              <div class="fl-group" id="fg-email">
-                <input
-                  class="fl-input"
-                  id="cf-email"
-                  name="email"
-                  type="email"
-                  autocomplete="email"
-                  aria-required="true"
-                  aria-describedby="fe-email"
-                />
-                <label class="fl-label" for="cf-email">Email Address *</label>
-                <span class="fl-error" id="fe-email"
-                  >Please enter a valid email address.</span
-                >
-              </div>
-            </div>
+          <div class="modal-left-spacer"></div>
+        </div>
 
-            <div class="form-row">
-              <div class="fl-group has-val fl-phone-group" id="fg-mobile">
-                <div class="fl-phone-box">
-                  <select
-                    class="fl-cc"
-                    id="cf-mobile-cc"
-                    aria-label="Country code"
-                  >
-                    <option value="+91" selected>🇮🇳 +91</option>
-                    <option value="+1">🇺🇸 +1</option>
-                    <option value="+44">🇬🇧 +44</option>
-                    <option value="+61">🇦🇺 +61</option>
-                    <option value="+971">🇦🇪 +971</option>
-                    <option value="+65">🇸🇬 +65</option>
-                    <option value="+49">🇩🇪 +49</option>
-                    <option value="+33">🇫🇷 +33</option>
-                    <option value="+81">🇯🇵 +81</option>
-                    <option value="+86">🇨🇳 +86</option>
-                  </select>
-                  <span class="fl-divider" aria-hidden="true"></span>
+        <!-- ── Right: Form Panel ── -->
+        <div class="modal-panel-right">
+
+          <div id="modalFormWrap">
+            <div class="modal-section-label">Your Details</div>
+
+            <div class="form-error-banner" id="formErrorBanner" hidden></div>
+
+            <form id="contactForm" novalidate>
+              <!-- Honeypot anti-spam -->
+              <input
+                class="hp-field"
+                type="text"
+                name="website"
+                tabindex="-1"
+                autocomplete="off"
+                aria-hidden="true"
+              />
+
+              <div class="form-row">
+                <div class="fl-group" id="fg-name">
                   <input
-                    class="fl-phone-input"
-                    id="cf-mobile"
-                    name="mobile"
-                    type="tel"
-                    inputmode="numeric"
-                    autocomplete="tel-national"
-                    maxlength="10"
+                    class="fl-input"
+                    id="cf-name"
+                    name="name"
+                    type="text"
+                    autocomplete="name"
                     aria-required="true"
-                    aria-describedby="fe-mobile"
+                    aria-describedby="fe-name"
                   />
+                  <label class="fl-label" for="cf-name">Full Name *</label>
+                  <span class="fl-error" id="fe-name"
+                    >Please enter your full name (min. 2 characters).</span
+                  >
                 </div>
-                <label class="fl-label" for="cf-mobile">Mobile Number *</label>
-                <span class="fl-error" id="fe-mobile"
-                  >Please enter a valid 10-digit mobile number.</span
+                <div class="fl-group" id="fg-email">
+                  <input
+                    class="fl-input"
+                    id="cf-email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    aria-required="true"
+                    aria-describedby="fe-email"
+                  />
+                  <label class="fl-label" for="cf-email">Email *</label>
+                  <span class="fl-error" id="fe-email"
+                    >Please enter a valid email address.</span
+                  >
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="fl-group has-val fl-phone-group" id="fg-mobile">
+                  <div class="fl-phone-box">
+                    <select class="fl-cc" id="cf-mobile-cc" aria-label="Country code">
+                      <option value="+91" selected>🇮🇳 +91</option>
+                      <option value="+1">🇺🇸 +1</option>
+                      <option value="+44">🇬🇧 +44</option>
+                      <option value="+61">🇦🇺 +61</option>
+                      <option value="+971">🇦🇪 +971</option>
+                      <option value="+65">🇸🇬 +65</option>
+                      <option value="+49">🇩🇪 +49</option>
+                      <option value="+33">🇫🇷 +33</option>
+                      <option value="+81">🇯🇵 +81</option>
+                      <option value="+86">🇨🇳 +86</option>
+                    </select>
+                    <span class="fl-divider" aria-hidden="true"></span>
+                    <input
+                      class="fl-phone-input"
+                      id="cf-mobile"
+                      name="mobile"
+                      type="tel"
+                      inputmode="numeric"
+                      autocomplete="tel-national"
+                      maxlength="10"
+                      aria-required="true"
+                      aria-describedby="fe-mobile"
+                    />
+                  </div>
+                  <label class="fl-label" for="cf-mobile">Mobile *</label>
+                  <span class="fl-error" id="fe-mobile"
+                    >Please enter a valid 10-digit mobile number.</span
+                  >
+                </div>
+                <div class="fl-group" id="fg-company">
+                  <input
+                    class="fl-input"
+                    id="cf-company"
+                    name="company"
+                    type="text"
+                    autocomplete="organization"
+                  />
+                  <label class="fl-label" for="cf-company"
+                    >Company <span class="fl-opt">(optional)</span></label
+                  >
+                </div>
+              </div>
+
+              <div class="modal-section-label" style="margin-top:8px;">Your Message</div>
+
+              <div class="fl-group is-textarea" id="fg-message">
+                <textarea
+                  class="fl-textarea"
+                  id="cf-message"
+                  name="message"
+                  aria-required="true"
+                  aria-describedby="fe-message"
+                  placeholder="Tell me about your project — what you're building and how I can help..."
+                ></textarea>
+                <span class="fl-error" id="fe-message"
+                  >Please write a message (min. 10 characters).</span
                 >
               </div>
-              <div class="fl-group" id="fg-company">
-                <input
-                  class="fl-input"
-                  id="cf-company"
-                  name="company"
-                  type="text"
-                  autocomplete="organization"
-                />
-                <label class="fl-label" for="cf-company"
-                  >Company <span class="fl-opt">(optional)</span></label
+
+              <button class="form-submit-btn" type="submit" id="cfSubmitBtn">
+                <span class="btn-text"
+                  ><i class="ri-send-plane-line"></i>&nbsp; Send Message</span
                 >
-              </div>
-            </div>
+                <span class="btn-spinner"></span>
+              </button>
+            </form>
+          </div>
 
-            <div class="fl-group is-textarea" id="fg-message">
-              <textarea
-                class="fl-textarea"
-                id="cf-message"
-                name="message"
-                aria-required="true"
-                aria-describedby="fe-message"
-              ></textarea>
-              <label class="fl-label" for="cf-message">Message *</label>
-              <span class="fl-error" id="fe-message"
-                >Please write a message (min. 10 characters).</span
-              >
-            </div>
-
-            <button class="form-submit-btn" type="submit" id="cfSubmitBtn">
-              <span class="btn-text"
-                ><i class="ri-send-plane-line"></i>&nbsp; Send Message</span
-              >
-              <span class="btn-spinner"></span>
-            </button>
-          </form>
+          <div class="form-success" id="formSuccess" aria-live="polite">
+            <div class="form-success-icon"><i class="ri-check-line"></i></div>
+            <div class="form-success-title">Message Sent!</div>
+            <p class="form-success-sub">
+              Thanks for reaching out. I'll reply within 24 hours.
+            </p>
+          </div>
         </div>
 
-        <div class="form-success" id="formSuccess" aria-live="polite">
-          <div class="form-success-icon"><i class="ri-check-line"></i></div>
-          <div class="form-success-title">Message Sent!</div>
-          <p class="form-success-sub">
-            Thanks for reaching out. I'll get back to you within 24 hours.
-          </p>
-        </div>
       </div>
     </div>
 
@@ -7738,7 +7799,7 @@
 
         const overlay = document.getElementById("contactModal");
         const openBtns = document.querySelectorAll(
-          "#openContactModal, .nav-cta, .mob-foot-cta, .mob-link[href='#contact'], .impact-cta-btn",
+          "#openContactModal, .nav-cta, .mob-foot-cta, .mob-link[href='#contact'], .impact-cta-btn"
         );
         const closeBtn = document.getElementById("closeContactModal");
         const form = document.getElementById("contactForm");
@@ -8000,7 +8061,7 @@
           // Run Google Sheets save + Resend emails in parallel
           const [sheetsOk] = await Promise.all([
             postToSheets(payload),
-            sendEmails(payload), // best-effort — won't block success state
+            sendEmails(payload),   // best-effort — won't block success state
           ]);
 
           if (!sheetsOk) {

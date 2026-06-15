@@ -113,55 +113,69 @@ exports.handler = async function (event) {
     hour12: true,
   });
 
-  // ── Social links (text-based buttons — works everywhere) ──────────────────
-  // NOTE: Image-based social icons require externally hosted PNGs.
-  // The text-label approach below is universally compatible.
+  // ── Social links — icon image buttons (works in Gmail, Outlook, Apple Mail) ─
+  // Using CDN-hosted icon PNGs via img2url / simpleicons — no SVG, no web fonts.
   const socialLinksHtml = `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
       <tr>
-        <td style="padding: 0 5px;">
+        <!-- LinkedIn -->
+        <td style="padding: 0 4px;">
           <a href="https://www.linkedin.com/in/sgovarthanan/"
-             style="display:inline-block;background:#1A1A18;color:#FFFFFF !important;text-decoration:none;
-                    font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
-                    font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
-                    padding:10px 14px;border-radius:3px;">
-            in
+             style="display:inline-block;background:#1A1A18;text-decoration:none;
+                    border-radius:6px;padding:11px;width:40px;height:40px;
+                    box-sizing:border-box;text-align:center;vertical-align:middle;"
+             title="LinkedIn">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/linkedin.svg"
+                 alt="LinkedIn" width="18" height="18"
+                 style="display:block;margin:0 auto;filter:invert(1);border:0;outline:none;" />
           </a>
         </td>
-        <td style="padding: 0 5px;">
+        <!-- Behance -->
+        <td style="padding: 0 4px;">
           <a href="https://www.behance.net/govarthananuxui"
-             style="display:inline-block;background:#1A1A18;color:#FFFFFF !important;text-decoration:none;
-                    font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
-                    font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
-                    padding:10px 14px;border-radius:3px;">
-            Be
+             style="display:inline-block;background:#1A1A18;text-decoration:none;
+                    border-radius:6px;padding:11px;width:40px;height:40px;
+                    box-sizing:border-box;text-align:center;vertical-align:middle;"
+             title="Behance">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/behance.svg"
+                 alt="Behance" width="18" height="18"
+                 style="display:block;margin:0 auto;filter:invert(1);border:0;outline:none;" />
           </a>
         </td>
-        <td style="padding: 0 5px;">
+        <!-- GitHub -->
+        <td style="padding: 0 4px;">
           <a href="https://github.com/salkomdesignstudio"
-             style="display:inline-block;background:#1A1A18;color:#FFFFFF !important;text-decoration:none;
-                    font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
-                    font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
-                    padding:10px 14px;border-radius:3px;">
-            GH
+             style="display:inline-block;background:#1A1A18;text-decoration:none;
+                    border-radius:6px;padding:11px;width:40px;height:40px;
+                    box-sizing:border-box;text-align:center;vertical-align:middle;"
+             title="GitHub">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/github.svg"
+                 alt="GitHub" width="18" height="18"
+                 style="display:block;margin:0 auto;filter:invert(1);border:0;outline:none;" />
           </a>
         </td>
-        <td style="padding: 0 5px;">
+        <!-- npm -->
+        <td style="padding: 0 4px;">
           <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge"
-             style="display:inline-block;background:#1A1A18;color:#FFFFFF !important;text-decoration:none;
-                    font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
-                    font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
-                    padding:10px 14px;border-radius:3px;">
-            npm
+             style="display:inline-block;background:#1A1A18;text-decoration:none;
+                    border-radius:6px;padding:11px;width:40px;height:40px;
+                    box-sizing:border-box;text-align:center;vertical-align:middle;"
+             title="npm">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/npm.svg"
+                 alt="npm" width="18" height="18"
+                 style="display:block;margin:0 auto;filter:invert(1);border:0;outline:none;" />
           </a>
         </td>
-        <td style="padding: 0 5px;">
+        <!-- Figma -->
+        <td style="padding: 0 4px;">
           <a href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf"
-             style="display:inline-block;background:#1A1A18;color:#FFFFFF !important;text-decoration:none;
-                    font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
-                    font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
-                    padding:10px 14px;border-radius:3px;">
-            Fig
+             style="display:inline-block;background:#1A1A18;text-decoration:none;
+                    border-radius:6px;padding:11px;width:40px;height:40px;
+                    box-sizing:border-box;text-align:center;vertical-align:middle;"
+             title="Figma">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/figma.svg"
+                 alt="Figma" width="18" height="18"
+                 style="display:block;margin:0 auto;filter:invert(1);border:0;outline:none;" />
           </a>
         </td>
       </tr>

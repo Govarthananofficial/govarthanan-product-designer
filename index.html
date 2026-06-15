@@ -3150,12 +3150,15 @@
           letter-spacing: 0.22em;
         }
 
-        /* Main title: "Let's Build Together." */
+        /* Main title: "Let's Build Together." — single line on mobile */
         .modal-left-title {
-          font-size: 28px;
-          line-height: 1.1;
+          font-size: 26px;
+          line-height: 1.15;
           margin-bottom: 10px;
+          white-space: nowrap;
         }
+        /* Hide the <br> that splits "Build" / "Together" */
+        .modal-left-title br { display: none; }
 
         /* Subtitle */
         .modal-left-sub {

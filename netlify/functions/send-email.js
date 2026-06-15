@@ -39,7 +39,7 @@ exports.handler = async function (event) {
     };
   }
 
-  const { name, email, company, mobile, message } = payload;
+  const { name, email, company, mobile, message, location, latitude, longitude, device, browser } = payload;
 
   // Validate required fields
   if (!name || !email || !message) {
@@ -97,6 +97,11 @@ exports.handler = async function (event) {
   const safeMobile = sanitize(mobile || "");
   const safeCompany = sanitize(company || "");
   const safeMessage = sanitize(message);
+  const safeLocation = sanitize(location || "Unknown Location");
+  const safeLatitude = sanitize(latitude || "");
+  const safeLongitude = sanitize(longitude || "");
+  const safeDevice = sanitize(device || "Unknown Device");
+  const safeBrowser = sanitize(browser || "Unknown Browser");
 
 
 
@@ -369,23 +374,23 @@ exports.handler = async function (event) {
                      width="100%" style="margin-bottom:40px;">
                 <tr>
                   <td class="btn-half" style="width:50%;padding-right:6px;" valign="top">
-                    <a href="https://govarthanan-product-engineer.netlify.app/"
+                    <a href="https://sds-motion-forge.netlify.app/"
                        style="display:block;text-align:center;text-decoration:none;
                               font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
                               font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
                               color:#FAFAF8 !important;background:#1A1A18;
                               padding:17px 12px;border-radius:2px;line-height:1.2;">
-                      View Portfolio &#8599;
+                      sds-motion-forge &#8599;
                     </a>
                   </td>
                   <td class="btn-half r" style="width:50%;padding-left:6px;" valign="top">
-                    <a href="https://govarthanan-product-engineer.netlify.app/#projects"
+                    <a href="https://govarthanan-product-engineer.netlify.app/sds-motion-forge.html"
                        style="display:block;text-align:center;text-decoration:none;
                               font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
                               font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
                               color:#1A1A18 !important;background:transparent;
                               border:1.5px solid #1A1A18;padding:16px 12px;border-radius:2px;line-height:1.2;">
-                      Case Studies
+                      Case Study &#8599;
                     </a>
                   </td>
                 </tr>
@@ -526,8 +531,8 @@ exports.handler = async function (event) {
           <tr>
             <td class="pad-sides" style="padding:0 32px;border-bottom:1px solid #2E2E2A;">
 
-              <!-- Email row -->
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <!-- Email row -->
                 <tr>
                   <td style="padding:16px 0;border-bottom:1px solid #232320;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -582,7 +587,7 @@ exports.handler = async function (event) {
                     ? `
                 <!-- Company row -->
                 <tr>
-                  <td style="padding:16px 0;">
+                  <td style="padding:16px 0;border-bottom:1px solid #232320;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                       <tr>
                         <td width="72" valign="top"
@@ -601,6 +606,93 @@ exports.handler = async function (event) {
                 </tr>`
                     : ""
                 }
+
+                <!-- Location row -->
+                <tr>
+                  <td style="padding:16px 0;border-bottom:1px solid #232320;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td width="72" valign="top"
+                            style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+                                   font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+                                   color:#4A4A44;padding-top:2px;">
+                          Location
+                        </td>
+                        <td style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+                                   font-size:13px;color:#C0C0B8;font-weight:500;">
+                          ${safeLocation}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                ${
+                  safeLatitude && safeLongitude
+                    ? `
+                <!-- GPS Coordinates row -->
+                <tr>
+                  <td style="padding:16px 0;border-bottom:1px solid #232320;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td width="72" valign="top"
+                            style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+                                   font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+                                   color:#4A4A44;padding-top:2px;">
+                          GPS
+                        </td>
+                        <td style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+                                   font-size:13px;color:#C0C0B8;font-weight:500;">
+                          <a href="https://www.google.com/maps/search/?api=1&query=${safeLatitude},${safeLongitude}" target="_blank" style="color:#E8FF47 !important;text-decoration:none;">
+                            ${safeLatitude}, ${safeLongitude} &#8599;
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>`
+                    : ""
+                }
+
+                <!-- Device row -->
+                <tr>
+                  <td style="padding:16px 0;border-bottom:1px solid #232320;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td width="72" valign="top"
+                            style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+                                   font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+                                   color:#4A4A44;padding-top:2px;">
+                          Device
+                        </td>
+                        <td style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+                                   font-size:13px;color:#C0C0B8;font-weight:500;">
+                          ${safeDevice}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Browser row -->
+                <tr>
+                  <td style="padding:16px 0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td width="72" valign="top"
+                            style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+                                   font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+                                   color:#4A4A44;padding-top:2px;">
+                          Browser
+                        </td>
+                        <td style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
+                                   font-size:13px;color:#C0C0B8;font-weight:500;">
+                          ${safeBrowser}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
 
               </table>
             </td>

@@ -7972,12 +7972,80 @@
           );
         }
 
+        /* Silent Geolocation & Device/Browser parsing */
+        let exactLocation = "Unknown Location";
+        let latitude = "";
+        let longitude = "";
+
+        async function loadLocation() {
+          try {
+            const res = await fetch("https://freeipapi.com/api/json");
+            if (res.ok) {
+              const data = await res.json();
+              if (data.cityName && data.regionName && data.countryName) {
+                exactLocation = `${data.cityName}, ${data.regionName}, ${data.countryName}`;
+              } else if (data.cityName && data.countryName) {
+                exactLocation = `${data.cityName}, ${data.countryName}`;
+              }
+              if (data.latitude) latitude = String(data.latitude);
+              if (data.longitude) longitude = String(data.longitude);
+              return;
+            }
+          } catch (e) {
+            console.warn("Failed to fetch location from freeipapi", e);
+          }
+          // Fallback to ipapi.co
+          try {
+            const res = await fetch("https://ipapi.co/json/");
+            if (res.ok) {
+              const data = await res.json();
+              if (data.city && data.region && data.country_name) {
+                exactLocation = `${data.city}, ${data.region}, ${data.country_name}`;
+              } else if (data.city && data.country_name) {
+                exactLocation = `${data.city}, ${data.country_name}`;
+              }
+              if (data.latitude) latitude = String(data.latitude);
+              if (data.longitude) longitude = String(data.longitude);
+              return;
+            }
+          } catch (e) {
+            console.warn("Failed to fetch location from ipapi.co", e);
+          }
+        }
+        // Load silently in background
+        loadLocation();
+
+        function getBrowserName(ua) {
+          if (/edg/i.test(ua)) return "Edge";
+          if (/OPR|Opera/i.test(ua)) return "Opera";
+          if (/chrome|crios/i.test(ua)) {
+            if (/chromium/i.test(ua)) return "Chromium";
+            return "Chrome";
+          }
+          if (/safari/i.test(ua)) {
+            return "Safari";
+          }
+          if (/firefox|iceweasel|fxios/i.test(ua)) return "Firefox";
+          if (/msie|trident/i.test(ua)) return "Internet Explorer";
+          return "Mozilla-compatible";
+        }
+
+        function getDeviceType(ua) {
+          const mobileRegex = /Mobi|Android|iPhone|iPad|iPod|Windows Phone|IEMobile|BlackBerry/i;
+          const tabletRegex = /Tablet|iPad|PlayBook|Silk/i;
+          if (tabletRegex.test(ua)) return "Tablet";
+          if (mobileRegex.test(ua)) return "Mobile";
+          return "Desktop";
+        }
+
         /* Fetch with timeout + single retry */
         async function postToSheets(payload) {
           // Clone payload and prefix mobile with a single quote to prevent Google Sheets from parsing it as a formula
           const sheetsPayload = {
             ...payload,
             mobile: payload.mobile ? "'" + payload.mobile : "",
+            // Safe fallback: append metadata to message in case the sheet doesn't have the new columns yet
+            message: payload.message + `\n\n[Metadata - Location: ${payload.location || "Unknown"} | Lat/Lon: ${payload.latitude || "Unknown"},${payload.longitude || "Unknown"} | Device: ${payload.device || "Unknown"} | Browser: ${payload.userAgent || "Unknown"}]`
           };
           const opts = {
             method: "POST",
@@ -8014,6 +8082,11 @@
                 company: payload.company,
                 mobile: payload.mobile,
                 message: payload.message,
+                location: payload.location,
+                latitude: payload.latitude,
+                longitude: payload.longitude,
+                device: payload.device,
+                browser: payload.userAgent,
               }),
               signal: ctrl.signal,
             });
@@ -8064,7 +8137,11 @@
             mobile: `${document.getElementById("cf-mobile-cc").value} ${sanitize(document.getElementById("cf-mobile").value)}`,
             company: sanitize(document.getElementById("cf-company").value),
             message: sanitize(document.getElementById("cf-message").value),
-            userAgent: navigator.userAgent,
+            userAgent: getBrowserName(navigator.userAgent),
+            device: getDeviceType(navigator.userAgent),
+            location: exactLocation,
+            latitude: latitude,
+            longitude: longitude,
             screenSize: screen.width + "x" + screen.height,
             pageUrl: location.href,
           };

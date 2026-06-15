@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -36,9 +36,9 @@
       --accent-dk:  #1d1d1f;
       
       /* Amazon specific brand colors, but toned to fit premium portfolio theme */
-      --amazon-orange: #ff9900;
-      --amazon-blue: #0066c0;
-      --amazon-dark: #131921;
+      --amazon-orange: var(--ink);
+      --amazon-blue: var(--ink);
+      --amazon-dark: var(--ink);
       
       --NAV-H:      56px;
       --sh1: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
@@ -287,6 +287,7 @@
     .toc a:hover { background: var(--bg-2); color: var(--ink-mid); }
 
     /* ── EXECUTIVE SNAPSHOT ── */
+    /* ── EXECUTIVE SNAPSHOT ── */
     .snapshot-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -296,122 +297,344 @@
     .snap-card {
       background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px 24px;
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.25s ease;
+    }
+    .snap-card:hover {
+      border-color: var(--border-md);
+      box-shadow: var(--sh1);
+      transform: translateY(-2px);
     }
     .snap-card.accent-card {
-      background: var(--bg-2);
+      background: var(--bg);
       border-color: var(--border-md);
+      box-shadow: var(--sh1);
+    }
+    .snap-card.accent-card:hover {
+      box-shadow: var(--sh2);
     }
     .snap-card-label {
-      font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
-      color: var(--ink-faint); margin-bottom: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .snap-card.accent-card .snap-card-label { color: var(--ink-muted); }
+    .snap-card-label i {
+      font-size: 16px;
+      color: var(--ink);
+    }
     .snap-list {
       list-style: none;
-      display: flex; flex-direction: column; gap: 7px;
+      display: flex; flex-direction: column; gap: 10px;
       padding: 0; margin: 0;
     }
     .snap-list li {
       font-size: 14px; color: var(--ink-mid); line-height: 1.5;
       display: flex; align-items: flex-start; gap: 8px;
     }
-    .snap-list li::before {
-      content: "→"; color: var(--ink-faint); flex-shrink: 0; margin-top: 1px;
+    .snap-list li i {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+    .snap-card.accent-card .snap-list li i {
+      color: var(--ink);
     }
 
-    /* ── Q&A / INTERACTIVE REFLECTION PANEL ── */
-    .qa-accordion {
+    /* ── CHAT DASHBOARD FOR Q&A ── */
+    .qa-chat-dashboard {
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      margin: 24px 0;
+      gap: 28px;
+      margin: 32px 0;
     }
-    .qa-card {
-      background: var(--bg);
+    .chat-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 85%;
+    }
+    .chat-row.interviewer-row {
+      align-self: flex-start;
+    }
+    .chat-row.designer-row {
+      align-self: flex-start;
+      border-left: 3px solid var(--ink);
+      padding-left: 20px;
+      margin-left: 10px;
+    }
+    .chat-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .chat-meta i {
+      font-size: 13px;
+      color: var(--ink);
+    }
+    .chat-bubble {
+      background: var(--bg-2);
       border: 1px solid var(--border-md);
-      border-radius: 12px;
-      padding: 20px 24px;
-      transition: all 0.25s ease;
+      border-radius: 16px;
+      padding: 18px 22px;
+      font-size: 14.5px;
+      color: var(--ink);
+      line-height: 1.6;
     }
-    .qa-card:hover {
-      border-color: var(--primary-border);
+    .chat-row.designer-row .chat-bubble {
+      background: var(--bg);
+      border-color: var(--border-md);
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink-mid);
       box-shadow: var(--sh1);
     }
-    .qa-question {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 10px;
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-    }
-    .qa-question i {
-      color: var(--ink-muted);
-      font-size: 18px;
-      margin-top: 2px;
-    }
-    .qa-answer {
-      font-size: 14.5px;
-      color: var(--ink-muted);
-      line-height: 1.65;
-      padding-left: 28px;
-    }
 
-    /* ── BEFORE VS AFTER ── */
+    /* ── PROBLEM COMPARISON MATRIX ── */
     .problem-vs {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-      border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
-      margin: 24px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      border: none;
+      background: transparent;
+      margin: 32px 0;
     }
-    .problem-vs-col { padding: 22px 24px; }
+    .problem-vs-col {
+      padding: 28px;
+      border-radius: 20px;
+      transition: all 0.25s ease;
+      box-shadow: var(--sh1);
+    }
     .problem-vs-col:first-child {
       background: var(--bg-2);
-      border-right: 1px solid var(--border);
+      border: 1px solid var(--border-md);
     }
-    .problem-vs-col:last-child { background: var(--bg); }
-    
+    .problem-vs-col:first-child:hover {
+      border-color: var(--border-md);
+      box-shadow: var(--sh2);
+    }
+    .problem-vs-col:last-child {
+      background: var(--bg);
+      border: 1px solid var(--ink);
+    }
+    .problem-vs-col:last-child:hover {
+      box-shadow: var(--sh2);
+    }
     .pvc-header {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
-      margin-bottom: 16px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
     }
-    .pvc-header.before { color: #d9534f; }
-    .pvc-header.after { color: #5cb85c; }
-    
-    .pvc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; }
-    .pvc-list li { font-size: 13.5px; color: var(--ink-mid); line-height: 1.5; padding-left: 18px; position: relative; }
-    .pvc-list li::before { position: absolute; left: 0; font-family: "remixicon"; }
-    .problem-vs-col:first-child .pvc-list li::before { content: "\f1bc"; color: #d9534f; } /* close-circle-fill */
-    .problem-vs-col:last-child .pvc-list li::before { content: "\eeb7"; color: #5cb85c; } /* checkbox-circle-fill */
+    .pvc-header.before { color: var(--ink-muted); }
+    .pvc-header.after { color: var(--ink); }
+    .pvc-header i { font-size: 18px; }
+    .pvc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0;
+      margin: 0;
+    }
+    .pvc-list li {
+      font-size: 14px;
+      color: var(--ink-mid);
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .pvc-list li i {
+      font-size: 16px;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+    .problem-vs-col:first-child .pvc-list li i { color: var(--ink-muted); }
+    .problem-vs-col:last-child .pvc-list li i { color: var(--ink); }
 
-    /* ── USER STUDY SCORECARD ── */
-    .score-card {
-      background: var(--bg-2);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px 32px;
-      margin: 24px 0;
-      display: grid; grid-template-columns: 120px 1fr;
-      gap: 24px; align-items: start;
+    /* ── PROBLEM SPACE CARDS ── */
+    .problem-space-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 24px;
     }
-    .score-big {
-      font-size: 60px; font-weight: 800; letter-spacing: -.05em;
-      line-height: 1;
+    .problem-space-card {
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: var(--sh1);
+      transition: all 0.25s ease;
+    }
+    .problem-space-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--ink);
+    }
+    .problem-space-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+    }
+    .problem-space-num {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--border-md);
+    }
+    .problem-space-card:hover .problem-space-num {
+      color: var(--ink-muted);
+    }
+    .problem-space-icon {
+      font-size: 20px;
       color: var(--ink);
     }
-    .score-big span { font-size: 24px; color: var(--ink-faint); }
-    .score-detail { display: flex; flex-direction: column; gap: 12px; }
-    .score-row { display: flex; align-items: center; gap: 10px; }
-    .score-row-label { font-size: 12px; font-weight: 600; color: var(--ink-mid); min-width: 180px; }
-    .score-bar-wrap { flex: 1; height: 6px; background: rgba(0,0,0,0.06); border-radius: 3px; }
-    .score-bar { height: 100%; border-radius: 3px; background: var(--accent); }
-    .score-num { font-size: 12px; font-weight: 700; color: var(--ink-mid); min-width: 36px; text-align: right; }
+    .problem-space-text {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--ink-muted);
+      margin: 0;
+      z-index: 2;
+    }
+    .problem-space-card:hover .problem-space-text {
+      color: var(--ink);
+    }
+
+    /* ── REFLECTION PRINCIPLES ── */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .principle-card {
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--sh1);
+      transition: all 0.25s ease;
+      min-height: 160px;
+    }
+    .principle-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--ink);
+    }
+    .principle-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      z-index: 2;
+      margin: 0;
+    }
+    .principle-desc {
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin: 0;
+      z-index: 2;
+    }
+    .principle-num {
+      position: absolute;
+      bottom: -15px;
+      right: 10px;
+      font-size: 90px;
+      font-weight: 900;
+      color: var(--ink);
+      opacity: 0.04;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── SURVEY DASHBOARD ── */
+    .survey-dashboard {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin: 28px 0;
+    }
+    .survey-metric-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+    .survey-metric-card:hover {
+      border-color: var(--border-md);
+      box-shadow: var(--sh1);
+      transform: translateY(-2px);
+    }
+    .survey-gauge-wrap {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+    .survey-gauge {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .survey-gauge-track {
+      fill: none;
+      stroke: rgba(0, 0, 0, 0.04);
+      stroke-width: 6;
+    }
+    .survey-gauge-fill {
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 251.327;
+    }
+    .survey-gauge-value {
+      position: absolute;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .survey-metric-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink-mid);
+      line-height: 1.4;
+    }
 
     /* ── LIVE INTERACTIVE WIDGET DEMO ── */
     .demo-container {
@@ -528,7 +751,7 @@
     .mock-node.active .mock-dot {
       border-color: var(--amazon-blue);
       background: var(--amazon-blue);
-      box-shadow: 0 0 0 4px rgba(0, 102, 192, 0.15);
+      box-shadow: 0 0 0 4px rgba(29, 29, 31, 0.15);
     }
     .mock-node.active .mock-dot i {
       display: block;
@@ -598,24 +821,82 @@
       color: #555;
     }
     
+    /* ── MAP VIEWPORT ── */
+    .mock-map-viewport {
+      margin-bottom: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-md);
+      position: relative;
+      background: var(--bg-2);
+      transition: all 0.3s ease;
+    }
+    .mock-map-header {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+    .mock-map-status {
+      background: var(--ink);
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .mock-map-status i {
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.3; }
+      50% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+    .mock-map-distance {
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--ink);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .mock-map-img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(100%) brightness(0.95) contrast(1.05); /* Strict monochrome! */
+    }
+    
     /* Above-the-fold Contact Support Button */
     .mock-contact-btn {
       display: block;
-      background: var(--amazon-orange);
-      border: 1px solid #f29a00;
+      background: var(--ink);
+      border: 1px solid var(--ink);
       border-radius: 8px;
       padding: 14px;
       font-size: 13.5px;
       font-weight: 700;
-      color: #111;
+      color: #ffffff;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 5px rgba(213, 120, 0, 0.15);
+      box-shadow: 0 2px 5px rgba(29, 29, 31, 0.1);
     }
     .mock-contact-btn:hover {
-      background: #f08f00;
-      box-shadow: 0 3px 8px rgba(213, 120, 0, 0.25);
+      background: var(--primary-hover);
+      box-shadow: 0 3px 8px rgba(29, 29, 31, 0.2);
     }
     
     /* Interactive Controller */
@@ -644,26 +925,85 @@
     }
 
     /* ── PROCESS TIMELINE ── */
-    .versions { display: flex; flex-direction: column; gap: 0; margin: 8px 0; }
-    .version {
-      display: grid; grid-template-columns: 120px 1fr;
-      gap: 0 20px; padding: 20px 0;
-      border-bottom: 1px solid var(--border);
+    .versions {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 24px;
+      position: relative;
     }
-    .version:last-child { border-bottom: none; }
-    .v-tag { padding-top: 2px; }
+    .versions::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 36px;
+      width: 1px;
+      background: var(--border-md);
+      z-index: 1;
+    }
+    .version {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 24px;
+      padding: 0;
+      border-bottom: none;
+      position: relative;
+      z-index: 2;
+    }
+    .v-tag {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 4px;
+    }
     .v-badge {
-      font-size: 11px; font-weight: 800; letter-spacing: -.01em;
-      padding: 3px 10px; border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 68px;
+      height: 28px;
+      font-size: 10px;
+      font-weight: 800;
+      border-radius: 8px;
       border: 1px solid var(--border-md);
-      background: var(--bg-2); color: var(--ink-muted);
+      background: var(--bg);
+      color: var(--ink);
+      box-shadow: var(--sh1);
+    }
+    .v-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--sh1);
+      transition: all 0.25s ease;
+      flex: 1;
+    }
+    .v-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--border-md);
     }
     .v-title {
-      font-size: 15px; font-weight: 700; letter-spacing: -.015em;
-      color: var(--ink); margin-bottom: 5px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -.015em;
+      color: var(--ink);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .v-title i {
+      font-size: 18px;
+      color: var(--ink-muted);
     }
     .v-body {
-      font-size: 13.5px; color: var(--ink-muted); line-height: 1.65;
+      font-size: 14px;
+      color: var(--ink-muted);
+      line-height: 1.65;
+      margin-bottom: 0;
     }
 
     /* ── PRODUCT THINKING / KEY INSIGHTS ── */
@@ -731,7 +1071,7 @@
       .problem-vs { grid-template-columns: 1fr; }
       .problem-vs-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
       .version { grid-template-columns: 1fr; gap: 10px; }
-      .score-card { grid-template-columns: 1fr; }
+      .survey-dashboard { grid-template-columns: 1fr; }
     }
   </style>
   <script>
@@ -812,17 +1152,17 @@
       <div class="snap-card">
         <div class="snap-card-label"><i class="ri-focus-3-fill"></i> The Goal</div>
         <ul class="snap-list">
-          <li>Improve clarity, usability, and trust of the post-purchase tracking page.</li>
-          <li>Reduce user anxiety with a visual, high-contrast order progress layout.</li>
-          <li>Offer direct, frictionless access to support during critical moments.</li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Improve clarity, usability, and trust of the post-purchase tracking page.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Reduce user anxiety with a visual, high-contrast order progress layout.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Offer direct, frictionless access to support during critical moments.</span></li>
         </ul>
       </div>
       <div class="snap-card accent-card">
         <div class="snap-card-label"><i class="ri-flashlight-fill"></i> The Outcome</div>
         <ul class="snap-list">
-          <li>A cleaner, highly visual redesign that honors Amazon's brand identity.</li>
-          <li>Support reached in one tap above the fold rather than hidden in submenus.</li>
-          <li>Color-coded active progress timeline reducing cognitive strain.</li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>A cleaner, highly visual redesign that honors Amazon's brand identity.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Support reached in one tap above the fold rather than hidden in submenus.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>High-contrast active progress timeline reducing cognitive strain.</span></li>
         </ul>
       </div>
     </div>
@@ -838,30 +1178,34 @@
       Through survey-driven research and real usage observations, a consistent cluster of user pain points emerged. The original tracking dashboard prioritized dense administrative data over high-anxiety post-purchase clarity.
     </p>
 
-    <div class="row g-4 mt-2">
-      <div class="col-md-6 col-lg-3">
-        <div class="card h-100 p-4 border-0 shadow-sm" style="background:#ffffff; border-radius:12px;">
-          <div style="font-size:24px; font-weight:800; color:var(--ink-muted); margin-bottom:12px;">01</div>
-          <p style="font-size:14px; line-height:1.6; margin:0;">Users struggle to instantly identify their current order status — the visual hierarchy buries the most critical information.</p>
+    <div class="problem-space-grid">
+      <div class="problem-space-card">
+        <div class="problem-space-header">
+          <span class="problem-space-num">01</span>
+          <i class="ri-eye-off-fill problem-space-icon"></i>
         </div>
+        <p class="problem-space-text">Users struggle to instantly identify their current order status — the visual hierarchy buries the most critical information.</p>
       </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="card h-100 p-4 border-0 shadow-sm" style="background:#ffffff; border-radius:12px;">
-          <div style="font-size:24px; font-weight:800; color:var(--ink-muted); margin-bottom:12px;">02</div>
-          <p style="font-size:14px; line-height:1.6; margin:0;">ETA and delivery stage are not visually highlighted — users have to read through dense text to understand progress.</p>
+      <div class="problem-space-card">
+        <div class="problem-space-header">
+          <span class="problem-space-num">02</span>
+          <i class="ri-road-map-fill problem-space-icon"></i>
         </div>
+        <p class="problem-space-text">ETA and delivery stage are not visually highlighted — users have to read through dense text to understand progress.</p>
       </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="card h-100 p-4 border-0 shadow-sm" style="background:#ffffff; border-radius:12px;">
-          <div style="font-size:24px; font-weight:800; color:var(--ink-muted); margin-bottom:12px;">03</div>
-          <p style="font-size:14px; line-height:1.6; margin:0;">"Contact Support" is buried behind multiple clicks — creating friction at exactly the moment users need immediate help.</p>
+      <div class="problem-space-card">
+        <div class="problem-space-header">
+          <span class="problem-space-num">03</span>
+          <i class="ri-customer-service-2-fill problem-space-icon"></i>
         </div>
+        <p class="problem-space-text">"Contact Support" is buried behind multiple clicks — creating friction at exactly the moment users need immediate help.</p>
       </div>
-      <div class="col-md-6 col-lg-3">
-        <div class="card h-100 p-4 border-0 shadow-sm" style="background:#ffffff; border-radius:12px;">
-          <div style="font-size:24px; font-weight:800; color:var(--ink-muted); margin-bottom:12px;">04</div>
-          <p style="font-size:14px; line-height:1.6; margin:0;">The overall layout feels crowded and text-dominant — reducing visual clarity and increasing cognitive load during high-trust situations.</p>
+      <div class="problem-space-card">
+        <div class="problem-space-header">
+          <span class="problem-space-num">04</span>
+          <i class="ri-layout-grid-fill problem-space-icon"></i>
         </div>
+        <p class="problem-space-text">The overall layout feels crowded and text-dominant — reducing visual clarity and increasing cognitive load during high-trust situations.</p>
       </div>
     </div>
   </div>
@@ -876,34 +1220,56 @@
       A survey distributed to 10+ users — students, designers, and IT professionals aged 20–35 — captured both quantitative ratings and qualitative behavioral insights.
     </p>
 
-    <div class="score-card">
-      <div class="score-big">78%</div>
-      <div class="score-detail">
-        <div class="score-row">
-          <div class="score-row-label">Check status as primary action</div>
-          <div class="score-bar-wrap"><div class="score-bar" style="width: 78%;"></div></div>
-          <div class="score-num">78%</div>
+    <div class="survey-dashboard">
+      <div class="survey-metric-card">
+        <div class="survey-gauge-wrap">
+          <svg class="survey-gauge" viewBox="0 0 100 100">
+            <circle class="survey-gauge-track" cx="50" cy="50" r="40"></circle>
+            <circle class="survey-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 55.29;"></circle>
+          </svg>
+          <span class="survey-gauge-value">78%</span>
         </div>
-        <div class="score-row">
-          <div class="score-row-label">Rate current page as "unclear"</div>
-          <div class="score-bar-wrap"><div class="score-bar" style="width: 65%;"></div></div>
-          <div class="score-num">65%</div>
+        <span class="survey-metric-label">Check status as primary action</span>
+      </div>
+      <div class="survey-metric-card">
+        <div class="survey-gauge-wrap">
+          <svg class="survey-gauge" viewBox="0 0 100 100">
+            <circle class="survey-gauge-track" cx="50" cy="50" r="40"></circle>
+            <circle class="survey-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 87.96;"></circle>
+          </svg>
+          <span class="survey-gauge-value">65%</span>
         </div>
-        <div class="score-row">
-          <div class="score-row-label">Experienced confusing updates</div>
-          <div class="score-bar-wrap"><div class="score-bar" style="width: 70%;"></div></div>
-          <div class="score-num">70%</div>
+        <span class="survey-metric-label">Rate current page as "unclear"</span>
+      </div>
+      <div class="survey-metric-card">
+        <div class="survey-gauge-wrap">
+          <svg class="survey-gauge" viewBox="0 0 100 100">
+            <circle class="survey-gauge-track" cx="50" cy="50" r="40"></circle>
+            <circle class="survey-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 75.40;"></circle>
+          </svg>
+          <span class="survey-gauge-value">70%</span>
         </div>
-        <div class="score-row">
-          <div class="score-row-label">Rate support access as "difficult"</div>
-          <div class="score-bar-wrap"><div class="score-bar" style="width: 60%;"></div></div>
-          <div class="score-num">60%</div>
+        <span class="survey-metric-label">Experienced confusing updates</span>
+      </div>
+      <div class="survey-metric-card">
+        <div class="survey-gauge-wrap">
+          <svg class="survey-gauge" viewBox="0 0 100 100">
+            <circle class="survey-gauge-track" cx="50" cy="50" r="40"></circle>
+            <circle class="survey-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 100.53;"></circle>
+          </svg>
+          <span class="survey-gauge-value">60%</span>
         </div>
-        <div class="score-row">
-          <div class="score-row-label">Want visual progress tracker</div>
-          <div class="score-bar-wrap"><div class="score-bar" style="width: 82%;"></div></div>
-          <div class="score-num">82%</div>
+        <span class="survey-metric-label">Rate support access as "difficult"</span>
+      </div>
+      <div class="survey-metric-card">
+        <div class="survey-gauge-wrap">
+          <svg class="survey-gauge" viewBox="0 0 100 100">
+            <circle class="survey-gauge-track" cx="50" cy="50" r="40"></circle>
+            <circle class="survey-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 45.24;"></circle>
+          </svg>
+          <span class="survey-gauge-value">82%</span>
         </div>
+        <span class="survey-metric-label">Want visual progress tracker</span>
       </div>
     </div>
 
@@ -956,7 +1322,7 @@
       <div class="demo-controls">
         <div class="demo-btn active" onclick="setWidgetState('transit')" id="ctrl-transit">
           <strong><i class="ri-box-3-fill"></i> In Transit State (Active State)</strong>
-          <div style="font-size:12px; color:var(--ink-muted); margin-top:4px;">Color-coded blue progress bar. Contact Support remains fully accessible.</div>
+          <div style="font-size:12px; color:var(--ink-muted); margin-top:4px;">Monochrome progress bar. Contact Support remains fully accessible.</div>
         </div>
         <div class="demo-btn" onclick="setWidgetState('out')" id="ctrl-out">
           <strong><i class="ri-truck-fill"></i> Out for Delivery State</strong>
@@ -964,7 +1330,7 @@
         </div>
         <div class="demo-btn" onclick="setWidgetState('delivered')" id="ctrl-delivered">
           <strong><i class="ri-checkbox-circle-fill"></i> Delivered State</strong>
-          <div style="font-size:12px; color:var(--ink-muted); margin-top:4px;">Green completion state. Actions shift emphasis to "Buy Again" and "Return/Replace".</div>
+          <div style="font-size:12px; color:var(--ink-muted); margin-top:4px;">Monochrome completion state. Actions shift emphasis to "Buy Again" and "Return/Replace".</div>
         </div>
       </div>
 
@@ -981,9 +1347,18 @@
             <div class="mock-eta-time" id="mock-eta-val">Expected: Today, 2:00 PM – 4:00 PM</div>
           </div>
 
+          <!-- Dynamic Map Viewport (Hidden by default) -->
+          <div class="mock-map-viewport" id="mock-map" style="display: none;">
+            <div class="mock-map-header">
+              <span class="mock-map-status"><i class="ri-radar-fill"></i> Live Tracking</span>
+              <span class="mock-map-distance">0.4 miles away</span>
+            </div>
+            <img src="delivery_map_tracker.png" class="mock-map-img" alt="Live Map" />
+          </div>
+
           <!-- Progress Tracker Redesign -->
           <div class="mock-timeline">
-            <div class="mock-timeline-fill" id="mock-timeline-bar" style="width: 50%;"></div>
+            <div class="mock-timeline-fill" id="mock-timeline-bar" style="width: 33%;"></div>
             
             <div class="mock-node completed" id="node-ordered">
               <div class="mock-dot"><i class="ri-check-fill"></i></div>
@@ -1006,7 +1381,7 @@
           <!-- Quick Actions panel -->
           <div class="mock-panel-label">Quick Actions</div>
           <div class="mock-quick-actions">
-            <div class="mock-action-btn">
+            <div class="mock-action-btn" onclick="toggleMockMap()">
               <i class="ri-pin-distance-fill"></i>
               <span>Live Map Tracker</span>
             </div>
@@ -1046,24 +1421,24 @@
     <div class="problem-vs">
       <div class="problem-vs-col">
         <div class="pvc-header before">
-          <i class="ri-close-circle-fill me-1"></i> Before — Existing Design
+          <i class="ri-close-circle-fill"></i> Before — Existing Design
         </div>
         <ul class="pvc-list">
-          <li><strong>Dense paragraph-style text layouts:</strong> Critical details like status and ETA were buried inside dry blocks of content.</li>
-          <li><strong>Buried support interfaces:</strong> "Contact Support" required navigating complex submenus and multiple clicks.</li>
-          <li><strong>Low-contrast visual indicators:</strong> Progress lines were small and failed to communicate the current delivery stage quickly.</li>
-          <li><strong>Scattered key interactions:</strong> Buttons for cancelling, updating, and buying again were scattered randomly with no grouping.</li>
+          <li><i class="ri-close-circle-fill"></i> <span><strong>Dense paragraph-style text layouts:</strong> Critical details like status and ETA were buried inside dry blocks of content.</span></li>
+          <li><i class="ri-close-circle-fill"></i> <span><strong>Buried support interfaces:</strong> "Contact Support" required navigating complex submenus and multiple clicks.</span></li>
+          <li><i class="ri-close-circle-fill"></i> <span><strong>Low-contrast visual indicators:</strong> Progress lines were small and failed to communicate the current delivery stage quickly.</span></li>
+          <li><i class="ri-close-circle-fill"></i> <span><strong>Scattered key interactions:</strong> Buttons for cancelling, updating, and buying again were scattered randomly with no grouping.</span></li>
         </ul>
       </div>
       <div class="problem-vs-col">
         <div class="pvc-header after">
-          <i class="ri-checkbox-circle-fill me-1"></i> After — Redesigned Experience
+          <i class="ri-checkbox-circle-fill"></i> After — Redesigned Experience
         </div>
         <ul class="pvc-list">
-          <li><strong>Strong visual hierarchy:</strong> Delivery date and active delivery window act as the main lead elements.</li>
-          <li><strong>Above-the-fold support actions:</strong> Large, prominent, yellow CTA support button accessible in one click.</li>
-          <li><strong>Vibrant, color-coded tracker:</strong> Bold timeline states with dynamic color nodes emphasizing transit status.</li>
-          <li><strong>Unified Quick Actions panel:</strong> Grouped administrative actions organized into a clean, grid-based card layout.</li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span><strong>Strong visual hierarchy:</strong> Delivery date and active delivery window act as the main lead elements.</span></li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span><strong>Above-the-fold support actions:</strong> Large, prominent, high-contrast CTA support button accessible in one click.</span></li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span><strong>High-contrast tracker:</strong> Bold timeline states with dynamic visual nodes emphasizing transit status.</span></li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span><strong>Unified Quick Actions panel:</strong> Grouped administrative actions organized into a clean, grid-based card layout.</span></li>
         </ul>
       </div>
     </div>
@@ -1079,55 +1454,55 @@
       A deep look into the UX process behind the layout improvements, explaining the choices that prioritize usability over standard patterns.
     </p>
 
-    <div class="qa-accordion">
-      <div class="qa-card">
-        <div class="qa-question">
-          <i class="ri-question-fill"></i>
-          <span>When you opened the real Amazon tracking page back then — what was the first thing that felt wrong to you personally?</span>
-        </div>
-        <div class="qa-answer">
-          As a frequent Prime user who orders regularly from Amazon, I personally struggled to find the order status and contact support links. The original system forced me to click through multiple layers just to perform basic tasks or get support, adding friction to an already anxious post-purchase stage.
-        </div>
+    <div class="qa-chat-dashboard">
+      <!-- Chat Turn 1 -->
+      <div class="chat-row interviewer-row">
+        <span class="chat-meta"><i class="ri-chat-voice-fill"></i> Interviewer</span>
+        <div class="chat-bubble">When you opened the real Amazon tracking page back then — what was the first thing that felt wrong to you personally?</div>
+      </div>
+      <div class="chat-row designer-row">
+        <span class="chat-meta"><i class="ri-user-fill"></i> Govarthanan S. (UX Designer)</span>
+        <div class="chat-bubble">As a frequent Prime user who orders regularly from Amazon, I personally struggled to find the order status and contact support links. The original system forced me to click through multiple layers just to perform basic tasks or get support, adding friction to an already anxious post-purchase stage.</div>
       </div>
 
-      <div class="qa-card">
-        <div class="qa-question">
-          <i class="ri-question-fill"></i>
-          <span>Why did you decide to group the buttons into a Quick Actions panel? What problem were you solving?</span>
-        </div>
-        <div class="qa-answer">
-          Grouping the critical options into a dedicated Quick Actions panel keeps all relevant utilities in one central place. It simplifies access to primary tasks (like updating instructions or checking a tracking ID) without scattering options across different levels of the page layout.
-        </div>
+      <!-- Chat Turn 2 -->
+      <div class="chat-row interviewer-row">
+        <span class="chat-meta"><i class="ri-chat-voice-fill"></i> Interviewer</span>
+        <div class="chat-bubble">Why did you decide to group the buttons into a Quick Actions panel? What problem were you solving?</div>
+      </div>
+      <div class="chat-row designer-row">
+        <span class="chat-meta"><i class="ri-user-fill"></i> Govarthanan S. (UX Designer)</span>
+        <div class="chat-bubble">Grouping the critical options into a dedicated Quick Actions panel keeps all relevant utilities in one central place. It simplifies access to primary tasks (like updating instructions or checking a tracking ID) without scattering options across different levels of the page layout.</div>
       </div>
 
-      <div class="qa-card">
-        <div class="qa-question">
-          <i class="ri-question-fill"></i>
-          <span>Why did you make Contact Us a big prominent button? What were users doing before?</span>
-        </div>
-        <div class="qa-answer">
-          In moments of critical delivery issues, users need support immediately. On the live Amazon page, the "Contact Us" feature is buried at the bottom of the layout, making it difficult to find. Surfacing it as a large, bold, above-the-fold button reduces friction when help is needed most. Before this, users spent unnecessary time searching; during testing, users indicated that a quick-access button would make resolving delivery issues much easier.
-        </div>
+      <!-- Chat Turn 3 -->
+      <div class="chat-row interviewer-row">
+        <span class="chat-meta"><i class="ri-chat-voice-fill"></i> Interviewer</span>
+        <div class="chat-bubble">Why did you make Contact Us a big prominent button? What were users doing before?</div>
+      </div>
+      <div class="chat-row designer-row">
+        <span class="chat-meta"><i class="ri-user-fill"></i> Govarthanan S. (UX Designer)</span>
+        <div class="chat-bubble">In moments of critical delivery issues, users need support immediately. On the live Amazon page, the "Contact Us" feature is buried at the bottom of the layout, making it difficult to find. Surfacing it as a large, bold, above-the-fold button reduces friction when help is needed most. Before this, users spent unnecessary time searching; during testing, users indicated that a quick-access button would make resolving delivery issues much easier.</div>
       </div>
 
-      <div class="qa-card">
-        <div class="qa-question">
-          <i class="ri-question-fill"></i>
-          <span>The progress tracker — why did you redesign it? What was broken about the original?</span>
-        </div>
-        <div class="qa-answer">
-          The original tracker made it difficult to determine the exact delivery stage at a glance. We redesigned the order timeline to include clear labels, dynamic status highlights (like a dedicated blue for "In Transit" or yellow for "Out for Delivery"), and active progress markers, helping users understand their shipment's status instantly.
-        </div>
+      <!-- Chat Turn 4 -->
+      <div class="chat-row interviewer-row">
+        <span class="chat-meta"><i class="ri-chat-voice-fill"></i> Interviewer</span>
+        <div class="chat-bubble">The progress tracker — why did you redesign it? What was broken about the original?</div>
+      </div>
+      <div class="chat-row designer-row">
+        <span class="chat-meta"><i class="ri-user-fill"></i> Govarthanan S. (UX Designer)</span>
+        <div class="chat-bubble">The original tracker made it difficult to determine the exact delivery stage at a glance. We redesigned the order timeline to include clear labels, dynamic active status highlights, and active progress markers, helping users understand their shipment's status instantly.</div>
       </div>
 
-      <div class="qa-card">
-        <div class="qa-question">
-          <i class="ri-question-fill"></i>
-          <span>Looking at your redesign now — what's the one thing you're most proud of and why?</span>
-        </div>
-        <div class="qa-answer">
-          I am most proud of creating a highly intuitive layout that ensures users do not have to search for key details. By prioritizing clear information hierarchy, the redesign helps users easily track packages and contact support during critical delivery phases.
-        </div>
+      <!-- Chat Turn 5 -->
+      <div class="chat-row interviewer-row">
+        <span class="chat-meta"><i class="ri-chat-voice-fill"></i> Interviewer</span>
+        <div class="chat-bubble">Looking at your redesign now — what's the one thing you're most proud of and why?</div>
+      </div>
+      <div class="chat-row designer-row">
+        <span class="chat-meta"><i class="ri-user-fill"></i> Govarthanan S. (UX Designer)</span>
+        <div class="chat-bubble">I am most proud of creating a highly intuitive layout that ensures users do not have to search for key details. By prioritizing clear information hierarchy, the redesign helps users easily track packages and contact support during critical delivery phases.</div>
       </div>
     </div>
   </div>
@@ -1142,36 +1517,36 @@
     <div class="versions">
       <div class="version">
         <div class="v-tag"><span class="v-badge">Phase 01</span></div>
-        <div>
-          <div class="v-title">Research</div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-search-2-fill"></i> Research</div>
           <div class="v-body">Distributed Google Form surveys, performed user behavioral observations, and extracted common layout pain points from active shoppers.</div>
         </div>
       </div>
       <div class="version">
         <div class="v-tag"><span class="v-badge">Phase 02</span></div>
-        <div>
-          <div class="v-title">Define</div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-focus-2-fill"></i> Define</div>
           <div class="v-body">Organized user feedback into core themes, established critical problem statements, and analyzed competing tracking experiences.</div>
         </div>
       </div>
       <div class="version">
         <div class="v-tag"><span class="v-badge">Phase 03</span></div>
-        <div>
-          <div class="v-title">Ideate</div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-lightbulb-fill"></i> Ideate</div>
           <div class="v-body">Sketched low-fidelity layout wireframes and explored different hierarchies for primary Call-to-Action buttons.</div>
         </div>
       </div>
       <div class="version">
         <div class="v-tag"><span class="v-badge">Phase 04</span></div>
-        <div>
-          <div class="v-title">Design</div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-palette-fill"></i> Design</div>
           <div class="v-body">Developed high-fidelity Figma components, maintaining Amazon's brand elements while stripping away layout clutter.</div>
         </div>
       </div>
       <div class="version">
         <div class="v-tag"><span class="v-badge">Phase 05</span></div>
-        <div>
-          <div class="v-title">Validate</div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-shield-check-fill"></i> Validate</div>
           <div class="v-body">Ran user feedback sessions to test informational clarity, path navigation efficiency, and overall task success rate.</div>
         </div>
       </div>
@@ -1190,29 +1565,26 @@
     <p>
       The order tracking page represents a high-stakes emotional moment. A user tracking their package is already in a state of mild uncertainty. Every design decision should reduce that uncertainty, not add to it. The progress tracker, ETA prominence, and support visibility all serve a single goal: help the user feel in control.
     </p>
-    <div class="row g-4 mt-3">
-      <div class="col-md-4">
-        <div class="p-3 border-0" style="background:#ffffff; border-radius:10px; box-shadow: var(--sh1);">
-          <h6><strong>Principle 01</strong></h6>
-          <div style="font-size:13px; color:var(--ink-muted); margin-top:6px;">Clarity reduces user anxiety — information hierarchy is emotional design.</div>
-        </div>
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-num">01</div>
+        <h6 class="principle-title">Principle 01</h6>
+        <p class="principle-desc">Clarity reduces user anxiety — information hierarchy is emotional design.</p>
       </div>
-      <div class="col-md-4">
-        <div class="p-3 border-0" style="background:#ffffff; border-radius:10px; box-shadow: var(--sh1);">
-          <h6><strong>Principle 02</strong></h6>
-          <div style="font-size:13px; color:var(--ink-muted); margin-top:6px;">Support access is a trust signal — hiding it destroys customer confidence.</div>
-        </div>
+      <div class="principle-card">
+        <div class="principle-num">02</div>
+        <h6 class="principle-title">Principle 02</h6>
+        <p class="principle-desc">Support access is a trust signal — hiding it destroys customer confidence.</p>
       </div>
-      <div class="col-md-4">
-        <div class="p-3 border-0" style="background:#ffffff; border-radius:10px; box-shadow: var(--sh1);">
-          <h6><strong>Principle 03</strong></h6>
-          <div style="font-size:13px; color:var(--ink-muted); margin-top:6px;">Group related actions — cognitive load is a real UX cost.</div>
-        </div>
+      <div class="principle-card">
+        <div class="principle-num">03</div>
+        <h6 class="principle-title">Principle 03</h6>
+        <p class="principle-desc">Group related actions — cognitive load is a real UX cost.</p>
       </div>
     </div>
     
-    <div class="mt-5 p-4" style="background:rgba(255, 153, 0, 0.05); border-left: 3px solid var(--amazon-orange); border-radius: 0 12px 12px 0;">
-      <h6 style="color:#e07b00; font-weight:700;"><i class="ri-magic-fill"></i> Next Iteration Focus</h6>
+    <div class="mt-5 p-4" style="background: var(--bg-2); border-left: 3px solid var(--ink); border-radius: 0 12px 12px 0;">
+      <h6 style="color: var(--ink); font-weight: 700;"><i class="ri-magic-fill"></i> Next Iteration Focus</h6>
       <span style="font-size:14.5px;">Design layout states for complex delivery edge cases: delayed shipments, failed attempts, and address verification updates. The happy path is resolved; the anxious path needs design attention next.</span>
     </div>
   </div>
@@ -1277,18 +1649,21 @@
     const etaVal = document.getElementById('mock-eta-val');
     const etaLbl = document.getElementById('mock-eta-lbl');
     const supportBtn = document.getElementById('mock-support-btn');
-
+    const mapEl = document.getElementById('mock-map');
+ 
     if (state === 'transit') {
       document.getElementById('ctrl-transit').classList.add('active');
       
       nodeOrdered.classList.add('completed');
       nodeTransit.classList.add('active');
       timelineBar.style.width = '33%';
+      mapEl.style.display = 'none';
       
       etaLbl.textContent = 'Estimated Arrival:';
       etaVal.textContent = 'Expected: Today, 2:00 PM – 4:00 PM';
-      supportBtn.style.background = 'var(--amazon-orange)';
-      supportBtn.style.borderColor = '#f29a00';
+      supportBtn.style.background = 'var(--ink)';
+      supportBtn.style.borderColor = 'var(--ink)';
+      supportBtn.style.color = '#ffffff';
       supportBtn.innerHTML = '<i class="ri-customer-service-2-fill me-1"></i> Contact Support Instantly (One-Tap)';
     } 
     else if (state === 'out') {
@@ -1298,11 +1673,13 @@
       nodeTransit.classList.add('completed');
       nodeOut.classList.add('active');
       timelineBar.style.width = '66%';
+      mapEl.style.display = 'block';
       
       etaLbl.textContent = 'Expected Delivery Window:';
       etaVal.textContent = 'Out for Delivery: Arriving in 15–30 mins';
-      supportBtn.style.background = 'var(--amazon-orange)';
-      supportBtn.style.borderColor = '#f29a00';
+      supportBtn.style.background = 'var(--ink)';
+      supportBtn.style.borderColor = 'var(--ink)';
+      supportBtn.style.color = '#ffffff';
       supportBtn.innerHTML = '<i class="ri-customer-service-2-fill me-1"></i> Contact Driver / Support Now';
     } 
     else if (state === 'delivered') {
@@ -1314,13 +1691,23 @@
       nodeDelivered.classList.add('completed');
       nodeDelivered.classList.add('active');
       timelineBar.style.width = '100%';
+      mapEl.style.display = 'none';
       
       etaLbl.textContent = 'Delivery Confirmed:';
       etaVal.textContent = 'Delivered: Today at 1:45 PM';
-      supportBtn.style.background = '#f7f8f8';
-      supportBtn.style.borderColor = '#d5d9d9';
+      supportBtn.style.background = 'var(--bg-2)';
+      supportBtn.style.borderColor = 'var(--border-md)';
+      supportBtn.style.color = 'var(--ink)';
       supportBtn.innerHTML = '<i class="ri-arrow-go-back-fill me-1"></i> Start a Return or Replacement';
     }
+  }
+
+  function toggleMockMap() {
+    const mapEl = document.getElementById('mock-map');
+    if (mapEl.style.display === 'none') {
+      mapEl.style.display = 'block';
+    } else {
+      mapEl.style.display = 'none';
   }
 </script>
 </body>

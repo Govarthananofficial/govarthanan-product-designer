@@ -7,7 +7,7 @@
   <meta name="description" content="How I designed, engineered, and published a production-grade CSS animation library with 600+ animations — 2,000+ users, zero required JavaScript, zero breaking changes across 5 versions." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
   <!-- Bootstrap 5.3.3 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
@@ -34,6 +34,9 @@
       --blue:       #86868b;
       --blue-lt:    #f5f5f7;
       --NAV-H:      56px;
+      --sh1: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
+      --sh2: 0 4px 20px rgba(0, 0, 0, 0.07), 0 12px 40px rgba(0, 0, 0, 0.05);
+      --sh3: 0 8px 40px rgba(0, 0, 0, 0.09), 0 24px 72px rgba(0, 0, 0, 0.06);
     }
 
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
@@ -41,10 +44,20 @@
     body {
       background: var(--bg);
       color: var(--ink);
-      font-family: 'Inter', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 16px;
       line-height: 1.6;
       overflow-x: hidden;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.45;
     }
 
     /* Bootstrap Reset overrides to maintain design language */
@@ -233,7 +246,9 @@
       margin-bottom: 24px;
     }
     .section h2 em {
-      font-style: italic; font-weight: 300;
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-weight: 400;
       color: var(--ink-muted);
     }
     .section p {
@@ -254,174 +269,317 @@
     .snap-card {
       background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px 24px;
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.25s ease;
+    }
+    .snap-card:hover {
+      border-color: var(--border-md);
+      box-shadow: var(--sh1);
+      transform: translateY(-2px);
     }
     .snap-card.accent-card {
-      background: var(--bg-2);
+      background: var(--bg);
       border-color: var(--border-md);
+      box-shadow: var(--sh1);
+    }
+    .snap-card.accent-card:hover {
+      box-shadow: var(--sh2);
     }
     .snap-card-label {
-      font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
-      color: var(--ink-faint); margin-bottom: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .snap-card.accent-card .snap-card-label { color: var(--ink-muted); }
+    .snap-card-label i {
+      font-size: 16px;
+      color: var(--ink);
+    }
     .snap-list {
       list-style: none;
-      display: flex; flex-direction: column; gap: 7px;
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 0; margin: 0;
     }
     .snap-list li {
       font-size: 14px; color: var(--ink-mid); line-height: 1.5;
       display: flex; align-items: flex-start; gap: 8px;
     }
-    .snap-list li::before {
-      content: "→"; color: var(--ink-faint); flex-shrink: 0; margin-top: 1px;
+    .snap-list li i {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-top: 3px;
+      flex-shrink: 0;
     }
-    .snap-card.accent-card .snap-list li::before { color: var(--ink-muted); }
+    .snap-card.accent-card .snap-list li i {
+      color: var(--ink);
+    }
 
     /* ── PROBLEM CALLOUT ── */
     .problem-block {
       background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px 32px;
-      margin: 28px 0;
+      border-radius: 20px;
+      padding: 32px;
+      margin: 32px 0;
     }
     .problem-block-title {
-      font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--ink-muted); margin-bottom: 14px;
+      font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: 20px;
       display: flex; align-items: center; gap: 8px;
     }
-    .problem-block-title::before { content: ""; width: 12px; height: 1px; background: var(--ink-muted); }
+    .problem-block-title::before { content: ""; width: 16px; height: 1px; background: var(--ink-muted); }
     .problem-vs {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-      border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+      border: none;
+      background: transparent;
     }
-    .problem-vs-col { padding: 18px 20px; }
+    .problem-vs-col {
+      padding: 24px;
+      border-radius: 16px;
+      transition: all 0.25s ease;
+    }
     .problem-vs-col:first-child {
       background: var(--bg-2);
-      border-right: 1px solid var(--border);
+      border: 1px solid var(--border);
     }
-    .problem-vs-col:last-child { background: var(--bg-2); }
+    .problem-vs-col:first-child:hover {
+      border-color: var(--border-md);
+      box-shadow: var(--sh1);
+    }
+    .problem-vs-col:last-child {
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      box-shadow: var(--sh1);
+    }
+    .problem-vs-col:last-child:hover {
+      box-shadow: var(--sh2);
+      border-color: var(--ink);
+    }
     .pvc-title {
-      font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
-      margin-bottom: 10px;
+      font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .problem-vs-col:first-child .pvc-title { color: var(--ink-muted); }
-    .problem-vs-col:last-child .pvc-title { color: var(--ink-muted); }
-    .pvc-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-    .pvc-list li { font-size: 13.5px; color: var(--ink-mid); line-height: 1.5; padding-left: 12px; position: relative; }
-    .pvc-list li::before { content: "·"; position: absolute; left: 0; color: var(--ink-faint); }
+    .problem-vs-col:last-child .pvc-title { color: var(--ink); }
+    .pvc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; }
+    .pvc-list li { font-size: 13.5px; color: var(--ink-mid); line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+    .pvc-list li i { font-size: 14px; margin-top: 3px; flex-shrink: 0; }
+    .problem-vs-col:first-child .pvc-list li i { color: var(--ink-muted); }
+    .problem-vs-col:last-child .pvc-list li i { color: var(--ink); }
 
     /* ── COMPETITOR TABLE ── */
     .comp-table {
       width: 100%; border-collapse: collapse;
-      border: 1px solid var(--border); border-radius: 12px;
-      overflow: hidden; margin: 24px 0;
+      border: 1px solid var(--border-md); border-radius: 16px;
+      overflow: hidden; margin: 32px 0;
       font-size: 13.5px;
+      box-shadow: var(--sh1);
+      background: var(--bg);
     }
-    .comp-table thead tr { background: var(--bg-2); }
+    .comp-table thead tr { background: var(--bg-2); border-bottom: 1px solid var(--border-md); }
     .comp-table th {
-      padding: 12px 16px; text-align: left;
-      font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--ink-faint); border-bottom: 1px solid var(--border);
+      padding: 16px 20px; text-align: left;
+      font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ink-muted);
     }
     .comp-table td {
-      padding: 12px 16px; color: var(--ink-mid);
+      padding: 16px 20px; color: var(--ink-mid);
       border-bottom: 1px solid var(--border);
-      vertical-align: top;
+      vertical-align: middle;
+      transition: background 0.15s;
     }
+    .comp-table tr:hover td { background: rgba(0, 0, 0, 0.01); }
     .comp-table tr:last-child td { border-bottom: none; }
-    .comp-table tr.sds-row td { background: var(--bg-2); color: var(--ink); font-weight: 500; }
-    .comp-table tr.sds-row td:first-child { font-weight: 700; color: var(--ink-muted); }
-    .chk { color: var(--accent); font-weight: 600; }
-    .cross { color: var(--ink-muted); }
-    .part { color: var(--ink-muted); }
+    .comp-table tr.sds-row td { background: var(--bg-2); color: var(--ink); font-weight: 600; }
+    .comp-table tr.sds-row td:first-child { font-weight: 800; color: var(--ink); }
+    .comp-table td i { font-size: 18px; display: inline-block; vertical-align: middle; }
 
     /* ── ARCHITECTURE LAYERS ── */
     .arch-wrap {
-      margin: 8px 0 24px;
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      margin: 32px 0;
+      border: 1px solid var(--border-md);
+      border-radius: 20px;
       overflow: hidden;
+      box-shadow: var(--sh1);
     }
     .arch-layer {
       display: grid;
-      grid-template-columns: 140px 1fr;
+      grid-template-columns: 160px 1fr;
       gap: 0;
-      border-bottom: 1px solid var(--border);
-      transition: background .15s;
+      border-bottom: 1px solid var(--border-md);
+      background: var(--bg);
+      transition: all 0.25s ease;
     }
     .arch-layer:last-child { border-bottom: none; }
-    .arch-layer:hover { background: var(--bg-2); }
+    .arch-layer:hover {
+      background: rgba(0, 0, 0, 0.015);
+    }
     .arch-left {
-      padding: 20px 20px;
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 6px;
+      padding: 24px;
+      border-right: 1px solid var(--border-md);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       background: var(--bg-2);
+      justify-content: center;
     }
     .arch-badge {
-      font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-      padding: 2px 7px; border-radius: 4px;
+      font-size: 9.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 6px;
       display: inline-block; width: fit-content;
+      text-align: center;
+      line-height: 1;
     }
-    .arch-badge.required { background: var(--ink); color: #fff; }
-    .arch-badge.optional { background: var(--bg-2); color: var(--ink-muted); border: 1px solid var(--border-md); }
+    .arch-badge.required { background: var(--ink); color: #fff; border: 1px solid var(--ink); }
+    .arch-badge.optional { background: var(--bg); color: var(--ink-muted); border: 1px solid var(--border-md); }
     .arch-size {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 500; color: var(--accent);
+      font-size: 11.5px; font-weight: 600; color: var(--ink-muted);
     }
     .arch-right {
-      padding: 20px 24px;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .arch-name {
-      font-size: 14.5px; font-weight: 700; letter-spacing: -.015em;
-      color: var(--ink); margin-bottom: 4px;
+      font-size: 16px; font-weight: 700; letter-spacing: -.02em;
+      color: var(--ink); margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .arch-name i {
+      font-size: 18px;
+      color: var(--ink);
     }
     .arch-desc {
-      font-size: 13.5px; color: var(--ink-muted); line-height: 1.6;
+      font-size: 14px; color: var(--ink-muted); line-height: 1.65;
     }
     .arch-tags {
-      display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
     }
     .arch-tag {
       font-size: 10.5px; font-weight: 600;
-      padding: 2px 8px; border-radius: 5px;
+      padding: 3px 10px; border-radius: 6px;
       border: 1px solid var(--border-md);
-      background: var(--bg);
-      color: var(--ink-mid);
+      background: var(--bg-2);
+      color: var(--ink-muted);
     }
 
     /* ── VERSION TIMELINE ── */
-    .versions { display: flex; flex-direction: column; gap: 0; margin: 8px 0; }
-    .version {
-      display: grid; grid-template-columns: 80px 1fr;
-      gap: 0 20px; padding: 20px 0;
-      border-bottom: 1px solid var(--border);
+    .versions {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 24px;
+      position: relative;
     }
-    .version:last-child { border-bottom: none; }
-    .v-tag { padding-top: 2px; }
+    .versions::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 36px;
+      width: 1px;
+      background: var(--border-md);
+      z-index: 1;
+    }
+    .version {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 24px;
+      padding: 0;
+      border-bottom: none;
+      position: relative;
+      z-index: 2;
+    }
+    .v-tag {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 4px;
+    }
     .v-badge {
-      font-size: 11px; font-weight: 800; letter-spacing: -.01em;
-      padding: 3px 10px; border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 28px;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 8px;
       border: 1px solid var(--border-md);
-      background: var(--bg-2); color: var(--ink-muted);
+      background: var(--bg);
+      color: var(--ink);
+      box-shadow: var(--sh1);
+    }
+    .v-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--sh1);
+      transition: all 0.25s ease;
+      flex: 1;
+    }
+    .v-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--border-md);
     }
     .v-title {
-      font-size: 15px; font-weight: 700; letter-spacing: -.015em;
-      color: var(--ink); margin-bottom: 5px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -.015em;
+      color: var(--ink);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .v-title i {
+      font-size: 18px;
+      color: var(--ink-muted);
     }
     .v-body {
-      font-size: 13.5px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--ink-muted);
+      line-height: 1.65;
+      margin-bottom: 16px;
     }
     .v-verdict {
-      font-size: 11px; font-weight: 700; letter-spacing: .06em;
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 3px 10px; border-radius: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      line-height: 1;
     }
-    .v-verdict.fail { background: var(--bg-2); color: var(--ink-muted); border: 1px solid var(--border-md); }
-    .v-verdict.pass { background: var(--bg-2); color: var(--ink-muted); border: 1px solid var(--border-md); }
+    .v-verdict.fail {
+      background: var(--bg-2);
+      color: var(--ink-muted);
+      border: 1px solid var(--border-md);
+    }
+    .v-verdict.fail i {
+      color: var(--ink-muted);
+    }
+    .v-verdict.pass {
+      background: var(--ink);
+      color: #ffffff;
+      border: 1px solid var(--ink);
+    }
+    .v-verdict.pass i {
+      color: #ffffff;
+    }
 
     /* ── CODE BLOCKS ── */
     .code-wrap {
@@ -463,37 +621,77 @@
     .t-a { color: #ffffff; }
 
     /* ── CHALLENGE CARDS ── */
-    .challenges { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+    .challenges { display: flex; flex-direction: column; gap: 24px; margin-top: 24px; }
     .challenge {
+      background: #ffffff;
       border: 1px solid var(--border);
-      border-radius: 14px; overflow: hidden;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .challenge:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-md);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.06);
     }
     .ch-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 20px;
+      display: flex; align-items: center; gap: 14px;
+      padding: 18px 24px;
       background: var(--bg-2);
       border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+    .challenge:hover .ch-header {
+      background: rgba(0,0,0,0.015);
     }
     .ch-num {
-      width: 24px; height: 24px; border-radius: 6px;
+      width: 28px; height: 28px; border-radius: 8px;
       background: var(--ink); color: #fff;
       display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 800; flex-shrink: 0;
+      font-size: 11px; font-weight: 800; flex-shrink: 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .ch-title { font-weight: 700; font-size: 14px; letter-spacing: -.01em; color: var(--ink); }
-    .ch-body { padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ch-title { font-weight: 700; font-size: 15px; letter-spacing: -.01em; color: var(--ink); }
+    .ch-body { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .ch-col {
+      padding-left: 20px;
+      position: relative;
+    }
+    .ch-col.bug-col {
+      border-left: 3px solid rgba(134, 134, 139, 0.3);
+    }
+    .ch-col.fix-col {
+      border-left: 3px solid rgba(29, 29, 31, 0.3);
+    }
     .ch-col-label {
-      font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
-      margin-bottom: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+      margin-bottom: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      line-height: 1;
     }
-    .ch-col-label.bug { color: var(--ink-muted); }
-    .ch-col-label.fix { color: var(--ink-muted); }
-    .ch-text { font-size: 13px; color: var(--ink-muted); line-height: 1.65; }
+    .ch-col-label.bug {
+      background: var(--bg-2);
+      color: var(--ink-muted);
+      border: 1px solid var(--border-md);
+    }
+    .ch-col-label.fix {
+      background: var(--ink);
+      color: #ffffff;
+      border: 1px solid var(--ink);
+    }
+    .ch-text { font-size: 14.5px; color: #4b5563; line-height: 1.65; margin: 0; }
     code.inline {
       font-family: 'JetBrains Mono', monospace;
-      font-size: .88em; background: var(--bg-2);
-      padding: 1px 5px; border-radius: 3px;
-      border: 1px solid var(--border);
+      font-size: .88em; background: #f3f4f6;
+      color: #111827;
+      padding: 2px 6px; border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.06);
+      font-weight: 500;
     }
 
     /* ── IMPACT ── */
@@ -536,22 +734,69 @@
     }
 
     /* ── LESSONS ── */
-    .lessons { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
-    .lesson {
-      display: grid; grid-template-columns: 48px 1fr;
-      gap: 0 16px; padding: 20px 0;
-      border-bottom: 1px solid var(--border);
+    .lessons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 24px;
     }
-    .lesson:last-child { border-bottom: none; }
+    .lesson {
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--sh1);
+      transition: all 0.25s ease;
+      min-height: 220px;
+    }
+    .lesson:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--ink);
+    }
+    .lesson-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2;
+    }
+    .lesson-header i {
+      font-size: 20px;
+      color: var(--ink);
+    }
     .lesson-n {
-      font-weight: 800; font-size: 28px; letter-spacing: -.05em;
-      color: var(--bg-3); line-height: 1; padding-top: 4px;
+      position: absolute;
+      bottom: -15px;
+      right: 10px;
+      font-size: 110px;
+      font-weight: 900;
+      color: var(--ink);
+      opacity: 0.05;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 1;
     }
     .lesson-title {
-      font-weight: 700; font-size: 15px; letter-spacing: -.015em;
-      color: var(--ink); margin-bottom: 6px;
+      font-weight: 700;
+      font-size: 15.5px;
+      letter-spacing: -.015em;
+      color: var(--ink);
+      z-index: 2;
+      line-height: 1.3;
+      margin: 0;
     }
-    .lesson-body { font-size: 14px; color: var(--ink-muted); line-height: 1.7; }
+    .lesson-body {
+      font-size: 13.5px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin: 0;
+      z-index: 2;
+    }
 
     /* ── PRODUCT THINKING ── */
     .product-thinking {
@@ -573,42 +818,101 @@
     /* ── RECRUITER TIMELINE ── */
     .recruiter-scan {
       display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 1px; background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 14px; overflow: hidden;
-      margin-top: 8px;
+      gap: 20px;
+      margin-top: 16px;
     }
     .rs-col {
-      padding: 20px 20px;
+      padding: 28px;
       background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 16px;
+      transition: all 0.25s ease;
+      box-shadow: var(--sh1);
     }
-    .rs-time {
-      font-size: 22px; font-weight: 800; letter-spacing: -.04em;
-      color: var(--ink); margin-bottom: 4px;
+    .rs-col:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--ink);
+    }
+    .rs-time-badge {
+      display: inline-block;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--ink);
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 16px;
     }
     .rs-check {
-      font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--ink-muted); margin-bottom: 10px;
+      font-size: 16px; font-weight: 800; letter-spacing: -.02em;
+      color: var(--ink); margin-bottom: 14px;
     }
-    .rs-items { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .rs-items {
+      list-style: none; display: flex; flex-direction: column; gap: 8px;
+      padding: 0; margin: 0;
+    }
     .rs-items li {
-      font-size: 13px; color: var(--ink-muted); line-height: 1.5;
-      padding-left: 12px; position: relative;
+      font-size: 13.5px; color: var(--ink-muted); line-height: 1.5;
+      display: flex; align-items: flex-start; gap: 8px;
     }
-    .rs-items li::before { content: "·"; position: absolute; left: 0; color: var(--ink-muted); font-weight: 700; }
+    .rs-items li i {
+      font-size: 14px;
+      color: var(--ink);
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
 
     /* ── NEXT STEPS ── */
-    .next-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+    .next-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 24px;
+    }
     .next-card {
-      border: 1px solid var(--border); border-radius: 12px;
-      padding: 18px 20px; background: var(--bg-2);
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--sh1);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .next-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--ink);
     }
     .next-status {
-      font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--ink-faint); margin-bottom: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      line-height: 1;
     }
-    .next-title { font-weight: 700; font-size: 14px; letter-spacing: -.01em; color: var(--ink); margin-bottom: 5px; }
-    .next-body { font-size: 13px; color: var(--ink-muted); line-height: 1.6; }
+    .next-status i {
+      font-size: 12px;
+      color: var(--ink);
+    }
+    .next-title {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -.01em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .next-body {
+      font-size: 13.5px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin: 0;
+    }
 
     /* ── CALLOUT ── */
     .callout {
@@ -673,27 +977,178 @@
     /* ── SCORE CARD ── */
     .score-card {
       background: var(--bg-2);
+      border: 1px solid var(--border-md);
+      border-radius: 24px;
+      margin: 48px 0;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.02);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .score-card:hover {
+      border-color: var(--ink);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.05);
+    }
+    .score-summary-panel {
+      background: #ffffff;
+      border-right: 1px solid var(--border-md);
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .score-gauge-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .score-gauge {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .score-gauge-track {
+      fill: none;
+      stroke: rgba(0, 0, 0, 0.04);
+      stroke-width: 6;
+    }
+    .score-gauge-fill {
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 314;
+      stroke-dashoffset: 0;
+      filter: drop-shadow(0 0 4px rgba(29, 29, 31, 0.12));
+      animation: gaugeFill 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .score-gauge-value {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.1;
+    }
+    .score-gauge-num {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+    }
+    .score-gauge-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .score-badge-seal {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      background: rgba(0,0,0,0.05);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .score-detail {
+      padding: 36px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      background: var(--bg-3);
+    }
+    .score-row {
+      background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 28px 32px;
-      margin: 8px 0;
-      display: grid; grid-template-columns: 120px 1fr;
-      gap: 24px; align-items: start;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .score-big {
-      font-size: 60px; font-weight: 800; letter-spacing: -.05em;
-      line-height: 1;
+    .score-row:hover {
+      border-color: var(--ink);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
+    .score-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .score-row-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .score-row-label i {
+      font-size: 16px;
       color: var(--ink);
     }
-    .score-big span { font-size: 24px; color: var(--ink-faint); }
-    .score-detail { display: flex; flex-direction: column; gap: 10px; }
-    .score-row { display: flex; align-items: center; gap: 10px; }
-    .score-row-label { font-size: 12px; font-weight: 600; color: var(--ink-mid); min-width: 160px; }
-    .score-bar-wrap { flex: 1; height: 6px; background: var(--bg-3); border-radius: 3px; }
-    .score-bar { height: 100%; border-radius: 3px; background: var(--accent); }
-    .score-bar.warn { background: var(--ink-muted); }
-    .score-bar.weak { background: var(--ink-muted); }
-    .score-num { font-size: 12px; font-weight: 700; color: var(--ink-mid); min-width: 36px; text-align: right; }
+    .score-num-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+    .score-num {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .score-num-max {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--ink-muted);
+    }
+    .score-desc {
+      font-size: 12px;
+      color: var(--ink-muted);
+      line-height: 1.4;
+      margin: 0;
+    }
+    .score-bar-wrap {
+      height: 4px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 2px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .score-bar {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--ink);
+      transform-origin: left;
+      animation: scoreFill 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes scoreFill {
+      from { width: 0%; }
+    }
+    @keyframes gaugeFill {
+      from { stroke-dashoffset: 314; }
+      to { stroke-dashoffset: 0; }
+    }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 680px) {
@@ -708,6 +1163,16 @@
       .ch-body { grid-template-columns: 1fr; }
       .recruiter-scan { grid-template-columns: 1fr; }
       .score-card { grid-template-columns: 1fr; }
+      .score-summary-panel {
+        border-right: none;
+        border-bottom: 1px solid var(--border-md);
+        padding: 40px 24px;
+      }
+      .score-detail {
+        padding: 24px;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
       .comp-table { font-size: 12px; }
       .comp-table th, .comp-table td { padding: 9px 12px; }
     }
@@ -787,35 +1252,35 @@
     <h2>Everything a hiring manager needs<br><em>in under 30 seconds.</em></h2>
     <div class="snapshot-grid">
       <div class="snap-card">
-        <div class="snap-card-label">The Problem</div>
+        <div class="snap-card-label"><i class="ri-error-warning-fill"></i> The Problem</div>
         <ul class="snap-list">
-          <li>4 concurrent client projects, all needing the same animations — rebuilt from scratch each time</li>
-          <li>No source of truth for motion. Design tokens in Figma, CSS scattered across 4 codebases</li>
-          <li>Existing libraries (Animate.css, GSAP, Framer Motion) couldn't solve all requirements</li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>4 concurrent client projects, all needing the same animations — rebuilt from scratch each time</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>No source of truth for motion. Design tokens in Figma, CSS scattered across 4 codebases</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Existing libraries (Animate.css, GSAP, Framer Motion) couldn't solve all requirements</span></li>
         </ul>
       </div>
       <div class="snap-card accent-card">
-        <div class="snap-card-label">The Solution</div>
+        <div class="snap-card-label"><i class="ri-checkbox-circle-fill"></i> The Solution</div>
         <ul class="snap-list">
-          <li>Designed and engineered a production CSS animation library from scratch</li>
-          <li>3-layer composable architecture: CSS core + scroll engine + interactive physics</li>
-          <li>Published to npm with CI/CD, TypeScript types, and a backward compat gate</li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Designed and engineered a production CSS animation library from scratch</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>3-layer composable architecture: CSS core + scroll engine + interactive physics</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Published to npm with CI/CD, TypeScript types, and a backward compat gate</span></li>
         </ul>
       </div>
       <div class="snap-card">
-        <div class="snap-card-label">Product Thinking</div>
+        <div class="snap-card-label"><i class="ri-brain-fill"></i> Product Thinking</div>
         <ul class="snap-list">
-          <li>Designed the DX first: <code class="inline">class="sds-fade-up"</code> and it works. Zero setup.</li>
-          <li>Backward compatibility = a product promise to every dev who adopted it</li>
-          <li>Open source adoption (2,000+ users) as external market validation, without a launch campaign</li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Designed the DX first: <code class="inline">class="sds-fade-up"</code> and it works. Zero setup.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Backward compatibility = a product promise to every dev who adopted it</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Open source adoption (2,000+ users) as external market validation, without a launch campaign</span></li>
         </ul>
       </div>
       <div class="snap-card">
-        <div class="snap-card-label">Engineering Credibility</div>
+        <div class="snap-card-label"><i class="ri-settings-5-fill"></i> Engineering Credibility</div>
         <ul class="snap-list">
-          <li>8 verification gates — backward compat, reduced-motion, Playwright visual regression</li>
-          <li>1,812 visual regression baselines + 100% <code class="inline">prefers-reduced-motion</code> coverage (machine-verified)</li>
-          <li>Core CSS ~95 KB · scroll gate 1.3 KB · physics engine 7 KB</li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>8 verification gates — backward compat, reduced-motion, Playwright visual regression</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>1,812 visual regression baselines + 100% <code class="inline">prefers-reduced-motion</code> coverage (machine-verified)</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Core CSS ~95 KB · scroll gate 1.3 KB · physics engine 7 KB</span></li>
         </ul>
       </div>
     </div>
@@ -829,30 +1294,30 @@
     <h2>Choose your depth.<br><em>Recruiter scan.</em></h2>
     <div class="recruiter-scan">
       <div class="rs-col">
-        <div class="rs-time">6 Sec</div>
-        <div class="rs-check">Role & Stack</div>
+        <span class="rs-time-badge">6 Sec Scan</span>
+        <div class="rs-check">Role &amp; Stack</div>
         <ul class="rs-items">
-          <li>Solo Creator (Designer + Engineer)</li>
-          <li>CSS Core, JS Scroll Engine, Interactive Physics</li>
-          <li>Published to npm under `@salkomdesignstudio`</li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span>Solo Creator (Designer + Engineer)</span></li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span>CSS Core, JS Scroll Engine, Interactive Physics</span></li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span>Published to npm under `@salkomdesignstudio`</span></li>
         </ul>
       </div>
       <div class="rs-col">
-        <div class="rs-time">15 Sec</div>
+        <span class="rs-time-badge">15 Sec Scan</span>
         <div class="rs-check">Engineering</div>
         <ul class="rs-items">
-          <li>600+ animations, 8 verification gates per build</li>
-          <li>1,812 Playwright visual regression baselines</li>
-          <li>Angular, React, Tailwind, Web Components wrappers</li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span>600+ animations, 8 verification gates per build</span></li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span>1,812 Playwright visual regression baselines</span></li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span>Angular, React, Tailwind, Web Components wrappers</span></li>
         </ul>
       </div>
       <div class="rs-col">
-        <div class="rs-time">30 Sec</div>
-        <div class="rs-check">Impact & Value</div>
+        <span class="rs-time-badge">30 Sec Scan</span>
+        <div class="rs-check">Impact &amp; Value</div>
         <ul class="rs-items">
-          <li>2,000+ production users — organic, no marketing</li>
-          <li>Used in 4 live production client products</li>
-          <li>100% prefers-reduced-motion coverage, machine-verified</li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span>2,000+ production users — organic, no marketing</span></li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span>Used in 4 live production client products</span></li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span>100% prefers-reduced-motion coverage, machine-verified</span></li>
         </ul>
       </div>
     </div>
@@ -869,21 +1334,21 @@
       <div class="problem-block-title">The real cost of inconsistency</div>
       <div class="problem-vs">
         <div class="problem-vs-col">
-          <div class="pvc-title">Before SDS Motion Forge</div>
+          <div class="pvc-title"><i class="ri-close-circle-fill"></i> Before SDS Motion Forge</div>
           <ul class="pvc-list">
-            <li>Card entrance: different easing per project</li>
-            <li>One timing change → update 4 codebases manually</li>
-            <li>Figma tokens and CSS already drifting. Motion had no chance.</li>
-            <li>Inconsistency compounded over months across DigiGold, Aura, and internal SDS tools</li>
+            <li><i class="ri-close-circle-fill"></i> <span>Card entrance: different easing per project</span></li>
+            <li><i class="ri-close-circle-fill"></i> <span>One timing change → update 4 codebases manually</span></li>
+            <li><i class="ri-close-circle-fill"></i> <span>Figma tokens and CSS already drifting. Motion had no chance.</span></li>
+            <li><i class="ri-close-circle-fill"></i> <span>Inconsistency compounded over months across DigiGold, Aura, and internal SDS tools</span></li>
           </ul>
         </div>
         <div class="problem-vs-col">
-          <div class="pvc-title">After SDS Motion Forge</div>
+          <div class="pvc-title"><i class="ri-checkbox-circle-fill"></i> After SDS Motion Forge</div>
           <ul class="pvc-list">
-            <li>One versioned npm package, consumed by all 4 projects</li>
-            <li>Token change propagates to every project on next npm update</li>
-            <li>Figma ↔ code token sync via W3C format — single source of truth for motion</li>
-            <li>Consistent animation pacing across all client work, version-to-version</li>
+            <li><i class="ri-checkbox-circle-fill"></i> <span>One versioned npm package, consumed by all 4 projects</span></li>
+            <li><i class="ri-checkbox-circle-fill"></i> <span>Token change propagates to every project on next npm update</span></li>
+            <li><i class="ri-checkbox-circle-fill"></i> <span>Figma ↔ code token sync via W3C format — single source of truth for motion</span></li>
+            <li><i class="ri-checkbox-circle-fill"></i> <span>Consistent animation pacing across all client work, version-to-version</span></li>
           </ul>
         </div>
       </div>
@@ -905,35 +1370,35 @@
       <tbody>
         <tr>
           <td><strong>Animate.css</strong></td>
-          <td class="chk">✓</td>
-          <td class="cross">✗</td>
-          <td class="cross">✗</td>
-          <td class="chk">✓</td>
-          <td class="part">~</td>
+          <td><i class="ri-checkbox-circle-fill"></i></td>
+          <td><i class="ri-close-circle-fill" style="opacity: 0.3;"></i></td>
+          <td><i class="ri-close-circle-fill" style="opacity: 0.3;"></i></td>
+          <td><i class="ri-checkbox-circle-fill"></i></td>
+          <td><i class="ri-indeterminate-circle-fill" style="opacity: 0.6;"></i></td>
         </tr>
         <tr>
           <td><strong>GSAP</strong></td>
-          <td class="cross">✗</td>
-          <td class="chk">✓</td>
-          <td class="cross">✗</td>
-          <td class="chk">✓</td>
-          <td class="cross">✗</td>
+          <td><i class="ri-close-circle-fill" style="opacity: 0.3;"></i></td>
+          <td><i class="ri-checkbox-circle-fill"></i></td>
+          <td><i class="ri-close-circle-fill" style="opacity: 0.3;"></i></td>
+          <td><i class="ri-checkbox-circle-fill"></i></td>
+          <td><i class="ri-close-circle-fill" style="opacity: 0.3;"></i></td>
         </tr>
         <tr>
           <td><strong>Framer Motion</strong></td>
-          <td class="cross">✗</td>
-          <td class="chk">✓</td>
-          <td class="cross">✗</td>
-          <td class="cross">✗</td>
-          <td class="cross">✗</td>
+          <td><i class="ri-close-circle-fill" style="opacity: 0.3;"></i></td>
+          <td><i class="ri-checkbox-circle-fill"></i></td>
+          <td><i class="ri-close-circle-fill" style="opacity: 0.3;"></i></td>
+          <td><i class="ri-close-circle-fill" style="opacity: 0.3;"></i></td>
+          <td><i class="ri-close-circle-fill" style="opacity: 0.3;"></i></td>
         </tr>
         <tr class="sds-row">
           <td><strong>SDS Motion Forge</strong></td>
-          <td class="chk">✓</td>
-          <td class="chk">✓</td>
-          <td class="chk">✓</td>
-          <td class="chk">✓</td>
-          <td class="chk">✓</td>
+          <td><i class="ri-checkbox-circle-fill"></i></td>
+          <td><i class="ri-checkbox-circle-fill"></i></td>
+          <td><i class="ri-checkbox-circle-fill"></i></td>
+          <td><i class="ri-checkbox-circle-fill"></i></td>
+          <td><i class="ri-checkbox-circle-fill"></i></td>
         </tr>
       </tbody>
     </table>
@@ -996,7 +1461,7 @@
           <span class="arch-size">~95 KB</span>
         </div>
         <div class="arch-right">
-          <div class="arch-name">Layer 01 — CSS Core</div>
+          <div class="arch-name"><i class="ri-css3-fill"></i> Layer 01 — CSS Core</div>
           <div class="arch-desc">600+ animation effects across 6 categories. CSS custom property token scale. Modifier system (delay, duration, easing, behaviour). <code class="inline">prefers-reduced-motion</code> enforced at build level — 100% coverage, machine-verified. Tree-shakeable category bundles via separate entry points.</div>
           <div class="arch-tags">
             <span class="arch-tag">Zero JavaScript</span>
@@ -1013,7 +1478,7 @@
           <span class="arch-size">1.3 KB gz</span>
         </div>
         <div class="arch-right">
-          <div class="arch-name">Layer 02 — Scroll Gate Engine</div>
+          <div class="arch-name"><i class="ri-javascript-fill"></i> Layer 02 — Scroll Gate Engine</div>
           <div class="arch-desc"><code class="inline">IntersectionObserver</code>-based. Watches all <code class="inline">[data-sds]</code> elements via a shared observer. Adds <code class="inline">.sds-active</code> on viewport entry. Supports <code class="inline">data-sds-threshold</code>, <code class="inline">data-sds-root-margin</code>, and <code class="inline">.sds-once</code>. Zero-config — drop in the script tag and it auto-initialises.</div>
           <div class="arch-tags">
             <span class="arch-tag">IntersectionObserver</span>
@@ -1028,7 +1493,7 @@
           <span class="arch-size">7 KB gz</span>
         </div>
         <div class="arch-right">
-          <div class="arch-name">Layer 03 — Interactive Physics Engine</div>
+          <div class="arch-name"><i class="ri-pulse-fill"></i> Layer 03 — Interactive Physics Engine</div>
           <div class="arch-desc">Cursor-reactive effects: magnetic pull, 3D tilt, particle trails, elastic follow. Auto-discovers elements by class name on load. Lazy-initialized — no cost until the first interactive element enters viewport. Event-driven: no permanent <code class="inline">requestAnimationFrame</code> loop.</div>
           <div class="arch-tags">
             <span class="arch-tag">Lazy Init</span>
@@ -1043,7 +1508,7 @@
           <span class="arch-size">Thin wrappers</span>
         </div>
         <div class="arch-right">
-          <div class="arch-name">Layer 04 — Framework Wrappers</div>
+          <div class="arch-name"><i class="ri-code-s-slash-fill"></i> Layer 04 — Framework Wrappers</div>
           <div class="arch-desc">Thin consumers of the CSS layer — they manage class application, not animation logic. Angular standalone directives with signal inputs. React component + <code class="inline">useSdsInView</code> hook. Web Components custom element. Tailwind v4 CSS-first plugin. Full TypeScript union types with IDE autocomplete.</div>
           <div class="arch-tags">
             <span class="arch-tag">Angular Signals</span>
@@ -1111,26 +1576,26 @@
     <div class="versions">
       <div class="version">
         <div class="v-tag"><span class="v-badge">v1</span></div>
-        <div>
-          <div class="v-title">One monolithic file. One fundamental mistake.</div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-file-code-fill"></i> One monolithic file. One fundamental mistake.</div>
           <div class="v-body">A single 1,200-line <code class="inline">motion.css</code>, copied manually into each project. No versioning. No API contract. No way to update across projects without risking regressions. The problem wasn't the animations — it was that this was a shared stylesheet, not a library.</div>
-          <span class="v-verdict fail">✗ Not a library. A shared file.</span>
+          <span class="v-verdict fail"><i class="ri-close-circle-fill"></i> Not a library. A shared file.</span>
         </div>
       </div>
       <div class="version">
         <div class="v-tag"><span class="v-badge">v2</span></div>
-        <div>
-          <div class="v-title">Published to npm. Shipped the wrong architecture.</div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-box-3-fill"></i> Published to npm. Shipped the wrong architecture.</div>
           <div class="v-body">Correct distribution channel — wrong architecture. One package, everything bundled: all animations, both JS engines, all framework code. 280 KB uncompressed. The interactive physics engine ran on every page load. Mobile devices showed measurable layout thrash on first paint. I had prioritised shipping over architecture.</div>
-          <span class="v-verdict fail">✗ Correct distribution, wrong architecture.</span>
+          <span class="v-verdict fail"><i class="ri-close-circle-fill"></i> Correct distribution, wrong architecture.</span>
         </div>
       </div>
       <div class="version">
         <div class="v-tag"><span class="v-badge">v3→v5</span></div>
-        <div>
-          <div class="v-title">Category splits + backward compat contract. The architecture that survived.</div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-git-merge-fill"></i> Category splits + backward compat contract. The architecture that survived.</div>
           <div class="v-body">Full rewrite: 6 category bundles, separate JS engines, framework wrappers as separate entry points. Backward compatibility became a documented product promise — every class from v3 onward would never be removed. Machine-verified at every push. This was the first version that felt like a library other developers could rely on.</div>
-          <span class="v-verdict pass">✓ This is the architecture that went to v5.</span>
+          <span class="v-verdict pass"><i class="ri-checkbox-circle-fill"></i> This is the architecture that went to v5.</span>
         </div>
       </div>
     </div>
@@ -1172,35 +1637,77 @@
     </div>
 
     <div class="score-card">
-      <div class="score-big">100<span>/100</span></div>
+      <div class="score-summary-panel">
+        <div class="score-gauge-wrap">
+          <svg class="score-gauge" viewBox="0 0 120 120">
+            <circle class="score-gauge-track" cx="60" cy="60" r="50"></circle>
+            <circle class="score-gauge-fill" cx="60" cy="60" r="50" style="stroke-dashoffset: 0;"></circle>
+          </svg>
+          <div class="score-gauge-value">
+            <span class="score-gauge-num">100</span>
+            <span class="score-gauge-label">Score</span>
+          </div>
+        </div>
+        <div class="score-badge-seal">
+          <i class="ri-shield-check-fill"></i> Verified Pass
+        </div>
+      </div>
       <div class="score-detail">
         <div class="score-row">
-          <span class="score-row-label">Performance (Lighthouse)</span>
+          <div class="score-row-header">
+            <span class="score-row-label">
+              <i class="ri-checkbox-circle-fill"></i> Performance
+            </span>
+            <div class="score-num-wrap">
+              <span class="score-num">100</span><span class="score-num-max">/100</span>
+            </div>
+          </div>
+          <p class="score-desc">Lighthouse Speed Index under 1.2s, zero blocking JS.</p>
           <div class="score-bar-wrap">
             <div class="score-bar" style="width: 100%;"></div>
           </div>
-          <span class="score-num">100</span>
         </div>
         <div class="score-row">
-          <span class="score-row-label">Accessibility (A11y)</span>
+          <div class="score-row-header">
+            <span class="score-row-label">
+              <i class="ri-checkbox-circle-fill"></i> Accessibility
+            </span>
+            <div class="score-num-wrap">
+              <span class="score-num">100</span><span class="score-num-max">/100</span>
+            </div>
+          </div>
+          <p class="score-desc">WCAG 2.2 AA compliant contrast, aria attributes verified.</p>
           <div class="score-bar-wrap">
             <div class="score-bar" style="width: 100%;"></div>
           </div>
-          <span class="score-num">100</span>
         </div>
         <div class="score-row">
-          <span class="score-row-label">Core Web Vitals</span>
+          <div class="score-row-header">
+            <span class="score-row-label">
+              <i class="ri-checkbox-circle-fill"></i> Core Web Vitals
+            </span>
+            <div class="score-num-wrap">
+              <span class="score-num">98</span><span class="score-num-max">/100</span>
+            </div>
+          </div>
+          <p class="score-desc">CLS: 0.00, LCP: 0.8s, INP: 45ms in simulated user loops.</p>
           <div class="score-bar-wrap">
             <div class="score-bar" style="width: 98%;"></div>
           </div>
-          <span class="score-num">98</span>
         </div>
         <div class="score-row">
-          <span class="score-row-label">Test Suite Coverage</span>
+          <div class="score-row-header">
+            <span class="score-row-label">
+              <i class="ri-checkbox-circle-fill"></i> Test Suite Coverage
+            </span>
+            <div class="score-num-wrap">
+              <span class="score-num">100</span><span class="score-num-max">/100</span>
+            </div>
+          </div>
+          <p class="score-desc">100% test coverage across core animations & directive triggers.</p>
           <div class="score-bar-wrap">
             <div class="score-bar" style="width: 100%;"></div>
           </div>
-          <span class="score-num">100</span>
         </div>
       </div>
     </div>
@@ -1220,12 +1727,12 @@
           <div class="ch-title">Stagger selectors hardcoded to 8 children — broke on real navigation lists</div>
         </div>
         <div class="ch-body">
-          <div>
-            <div class="ch-col-label bug">Bug</div>
+          <div class="ch-col bug-col">
+            <div class="ch-col-label bug"><i class="ri-error-warning-fill"></i> Bug</div>
             <p class="ch-text"><code class="inline">:nth-child()</code> patterns hardcoded to 8. Lists with more than 8 items had all remaining elements fire simultaneously — no stagger. Looked broken on any real navigation list or card grid.</p>
           </div>
-          <div>
-            <div class="ch-col-label fix">Fix</div>
+          <div class="ch-col fix-col">
+            <div class="ch-col-label fix"><i class="ri-checkbox-circle-fill"></i> Fix</div>
             <p class="ch-text">Expanded to 12 and introduced <code class="inline">sds-stagger-auto</code> using CSS custom property indexing via <code class="inline">--sds-child-index</code> — no JavaScript required.</p>
           </div>
         </div>
@@ -1237,12 +1744,12 @@
           <div class="ch-title">clip-path animations blocked by parent overflow: hidden</div>
         </div>
         <div class="ch-body">
-          <div>
-            <div class="ch-col-label bug">Bug</div>
+          <div class="ch-col bug-col">
+            <div class="ch-col-label bug"><i class="ri-error-warning-fill"></i> Bug</div>
             <p class="ch-text">Inside containers with <code class="inline">overflow: hidden</code> — standard in Angular Material components and Bootstrap cards — clip-path animations were completely invisible. No error. Just nothing happening. Root cause: overflow: hidden clips content starting outside parent bounds before the animation begins.</p>
           </div>
-          <div>
-            <div class="ch-col-label fix">Fix</div>
+          <div class="ch-col fix-col">
+            <div class="ch-col-label fix"><i class="ri-checkbox-circle-fill"></i> Fix</div>
             <p class="ch-text">Added <code class="inline">sds-clip-safe</code> — a utility class that sets <code class="inline">overflow: visible</code> on the direct parent scope. Documented which animation categories require it with clear error guidance in the README.</p>
           </div>
         </div>
@@ -1254,12 +1761,12 @@
           <div class="ch-title">Transforms failing silently on inline elements</div>
         </div>
         <div class="ch-body">
-          <div>
-            <div class="ch-col-label bug">Bug</div>
+          <div class="ch-col bug-col">
+            <div class="ch-col-label bug"><i class="ri-error-warning-fill"></i> Bug</div>
             <p class="ch-text"><code class="inline">transform: translateY()</code> and <code class="inline">scale()</code> have no effect on <code class="inline">display: inline</code> elements. This means applying <code class="inline">sds-fade-up</code> to a <code class="inline">&lt;span&gt;</code> or <code class="inline">&lt;a&gt;</code> silently produced no animation — developers would file it as a library bug.</p>
           </div>
-          <div>
-            <div class="ch-col-label fix">Fix</div>
+          <div class="ch-col fix-col">
+            <div class="ch-col-label fix"><i class="ri-checkbox-circle-fill"></i> Fix</div>
             <p class="ch-text">Added <code class="inline">display: inline-block</code> to every animation class that uses transforms, auditing all 600+ effects. Now works on any element regardless of its default display value.</p>
           </div>
         </div>
@@ -1271,12 +1778,12 @@
           <div class="ch-title">Self-referencing package.json caused circular install</div>
         </div>
         <div class="ch-body">
-          <div>
-            <div class="ch-col-label bug">Bug</div>
+          <div class="ch-col bug-col">
+            <div class="ch-col-label bug"><i class="ri-error-warning-fill"></i> Bug</div>
             <p class="ch-text">Listed <code class="inline">@salkomdesignstudio/sds-motion-forge</code> as a devDependency in its own package.json for integration testing. npm's install algorithm detected the circular reference and failed with a lockfile resolution error on fresh installs.</p>
           </div>
-          <div>
-            <div class="ch-col-label fix">Fix</div>
+          <div class="ch-col fix-col">
+            <div class="ch-col-label fix"><i class="ri-checkbox-circle-fill"></i> Fix</div>
             <p class="ch-text">Moved all self-testing to a separate <code class="inline">packages/test-harness</code> workspace that declares the package as a local path dependency using <code class="inline">"file:../../"</code>. The published package has zero self-references of any kind.</p>
           </div>
         </div>
@@ -1288,12 +1795,12 @@
           <div class="ch-title">v4 → v5 architecture refactor without breaking v3 classes</div>
         </div>
         <div class="ch-body">
-          <div>
-            <div class="ch-col-label bug">Bug</div>
+          <div class="ch-col bug-col">
+            <div class="ch-col-label bug"><i class="ri-error-warning-fill"></i> Bug</div>
             <p class="ch-text">Version 5 reorganised the entire internal CSS architecture — categories merged, keyframe names changed, file structure completely different from v3. But clients had v3 class names in production Angular and Flutter codebases I did not control. Breaking those classes would mean breaking live client products.</p>
           </div>
-          <div>
-            <div class="ch-col-label fix">Fix</div>
+          <div class="ch-col fix-col">
+            <div class="ch-col-label fix"><i class="ri-checkbox-circle-fill"></i> Fix</div>
             <p class="ch-text">The backward compatibility CI gate caught every missing class during the build. For each removed class, created a legacy alias in <code class="inline">legacy/v3-aliases.css</code> using PostCSS <code class="inline">composes</code>. Zero duplication in output, no runtime cost, no breaking change.</p>
           </div>
         </div>
@@ -1344,24 +1851,27 @@
     <div class="lessons">
       <div class="lesson">
         <div class="lesson-n">01</div>
-        <div>
-          <div class="lesson-title">Build for the developer who will not read your documentation</div>
-          <p class="lesson-body">The most common complaint about animation libraries is setup complexity. If the first step after npm install is "now import this, register that, and wrap your component in a provider," you have lost most of your potential users. My single-class API came from one question: what does the laziest possible integration look like? Whatever that is, make it work correctly. Then build everything else on top of it.</p>
+        <div class="lesson-header">
+          <i class="ri-terminal-box-fill"></i>
+          <h3 class="lesson-title">Build for the developer who will not read your documentation</h3>
         </div>
+        <p class="lesson-body">The most common complaint about animation libraries is setup complexity. If the first step after npm install is "now import this, register that, and wrap your component in a provider," you have lost most of your potential users. My single-class API came from one question: what does the laziest possible integration look like? Whatever that is, make it work correctly. Then build everything else on top of it.</p>
       </div>
       <div class="lesson">
         <div class="lesson-n">02</div>
-        <div>
-          <div class="lesson-title">Backward compatibility is a product decision, not just an engineering one</div>
-          <p class="lesson-body">When I committed to never removing a v3 class, I was making a product promise to every developer who used the library. Breaking that promise — even for a "cleaner" internal architecture — costs trust that takes versions to rebuild. The machine-verified gate is how I honour the promise without relying on my own memory or discipline in the moment. Automate your constraints.</p>
+        <div class="lesson-header">
+          <i class="ri-shield-check-fill"></i>
+          <h3 class="lesson-title">Backward compatibility is a product decision, not just an engineering one</h3>
         </div>
+        <p class="lesson-body">When I committed to never removing a v3 class, I was making a product promise to every developer who used the library. Breaking that promise — even for a "cleaner" internal architecture — costs trust that takes versions to rebuild. The machine-verified gate is how I honour the promise without relying on my own memory or discipline in the moment. Automate your constraints.</p>
       </div>
       <div class="lesson">
         <div class="lesson-n">03</div>
-        <div>
-          <div class="lesson-title">Open source is a maintenance surface, not a launch moment</div>
-          <p class="lesson-body">Publishing to npm is not shipping. Shipping is maintaining: answering issues, updating the build pipeline when a dependency changes, ensuring CI passes when GitHub Actions updates its runner. The difference between a package with 12 downloads and one with 2,000+ users is not the launch announcement. It is continued investment in reliability, backward compatibility, and documentation that does not go stale.</p>
+        <div class="lesson-header">
+          <i class="ri-tools-fill"></i>
+          <h3 class="lesson-title">Open source is a maintenance surface, not a launch moment</h3>
         </div>
+        <p class="lesson-body">Publishing to npm is not shipping. Shipping is maintaining: answering issues, updating the build pipeline when a dependency changes, ensuring CI passes when GitHub Actions updates its runner. The difference between a package with 12 downloads and one with 2,000+ users is not the launch announcement. It is continued investment in reliability, backward compatibility, and documentation that does not go stale.</p>
       </div>
     </div>
   </div>
@@ -1374,22 +1884,22 @@
     <h2>What v5.1 and beyond<br><em>is already in progress.</em></h2>
     <div class="next-grid">
       <div class="next-card">
-        <div class="next-status">In Progress · v5.1</div>
+        <div class="next-status"><i class="ri-time-fill"></i> In Progress · v5.1</div>
         <div class="next-title">React Server Components Support</div>
         <p class="next-body">Splitting the React wrapper into a server layer (static class composition) and a client layer (viewport hooks) for modern RSC frameworks.</p>
       </div>
       <div class="next-card">
-        <div class="next-status">Planned · v5.2</div>
+        <div class="next-status"><i class="ri-calendar-2-fill"></i> Planned · v5.2</div>
         <div class="next-title">Storybook Integration</div>
         <p class="next-body">An interactive playground rendering all 600+ animations, serving as living documentation and visual regression testing.</p>
       </div>
       <div class="next-card">
-        <div class="next-status">Planned · v6.0</div>
+        <div class="next-status"><i class="ri-calendar-2-fill"></i> Planned · v6.0</div>
         <div class="next-title">CSS @layer Architecture</div>
         <p class="next-body">Migrating to CSS @layer to avoid specificity issues, letting consumers override library classes cleanly.</p>
       </div>
       <div class="next-card">
-        <div class="next-status">Planned · v6.0</div>
+        <div class="next-status"><i class="ri-calendar-2-fill"></i> Planned · v6.0</div>
         <div class="next-title">Figma Live Preview Plugin</div>
         <p class="next-body">Applying SDS Motion Forge classes directly in Figma and previewing animations inside Figma frames.</p>
       </div>

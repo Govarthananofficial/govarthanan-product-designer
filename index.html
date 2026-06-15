@@ -7791,7 +7791,7 @@
       /* ─── CONTACT MODAL ─── */
       {
         const SHEETS_URL =
-          "https://script.google.com/macros/s/AKfycbzorA1sAmJG_XCcB24cAEbEmXpgqJXus97YnywYi2Izx3KIF-6-FvtUSqPIgB-UO-k_xw/exec";
+          "https://script.google.com/macros/s/AKfycbxg-lKCqmBlzQEaDJfabpJVHcnWmhtY4_Oo1E9FUuGGScUxrn5x0pilVsrrtxiK0rGIqg/exec";
         const SUBMIT_COOLDOWN = 30000;
         const FETCH_TIMEOUT = 8000;
 
@@ -8058,14 +8058,33 @@
           return "Desktop";
         }
 
+        function getDeviceName(ua) {
+          if (/windows phone/i.test(ua)) return "Windows Phone";
+          if (/iphone/i.test(ua)) return "iPhone";
+          if (/ipad/i.test(ua)) return "iPad";
+          if (/android/i.test(ua)) {
+            const modelMatch = ua.match(/Linux;\s+Android\s+[^;]+;\s+([^)]+)/i);
+            if (modelMatch && modelMatch[1]) {
+              return "Android (" + modelMatch[1].trim() + ")";
+            }
+            return "Android Device";
+          }
+          if (/macintosh/i.test(ua) || /mac os x/i.test(ua)) {
+            if (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) return "iPad (macOS Mode)";
+            return "Macintosh";
+          }
+          if (/windows/i.test(ua)) return "Windows PC";
+          if (/linux/i.test(ua)) return "Linux PC";
+          if (/cros/i.test(ua)) return "ChromeOS Device";
+          return "Generic Device";
+        }
+
         /* Fetch with timeout + single retry */
         async function postToSheets(payload) {
           // Clone payload and prefix mobile with a single quote to prevent Google Sheets from parsing it as a formula
           const sheetsPayload = {
             ...payload,
             mobile: payload.mobile ? "'" + payload.mobile : "",
-            // Safe fallback: append metadata to message in case the sheet doesn't have the new columns yet
-            message: payload.message + `\n\n[Metadata - Location: ${payload.location || "Unknown"} | Lat/Lon: ${payload.latitude || "Unknown"},${payload.longitude || "Unknown"} | Device: ${payload.device || "Unknown"} | Browser: ${payload.userAgent || "Unknown"}]`
           };
           const opts = {
             method: "POST",
@@ -8106,6 +8125,7 @@
                 latitude: payload.latitude,
                 longitude: payload.longitude,
                 device: payload.device,
+                deviceName: payload.deviceName,
                 browser: payload.userAgent,
               }),
               signal: ctrl.signal,
@@ -8159,6 +8179,7 @@
             message: sanitize(document.getElementById("cf-message").value),
             userAgent: getBrowserName(navigator.userAgent),
             device: getDeviceType(navigator.userAgent),
+            deviceName: getDeviceName(navigator.userAgent),
             location: exactLocation,
             latitude: latitude,
             longitude: longitude,

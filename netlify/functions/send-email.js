@@ -64,11 +64,13 @@ exports.handler = async function (event) {
     .bg { background: #f5f5f7; padding: 48px 20px; }
     .wrapper { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 24px 64px -24px rgba(0,0,0,0.12); }
     .content { padding: 48px; }
-    .brand-row { display: flex; align-items: center; gap: 12px; margin: 0 0 40px; }
-    .brand-mark { width: 36px; height: 36px; border-radius: 10px; background: #1D1D1F; text-align: center; line-height: 36px; }
-    .brand-mark span { color: #ffffff; font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
+    .brand-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 40px; padding-bottom: 28px; border-bottom: 1px solid #F5F5F7; }
+    .brand-id { display: flex; align-items: center; gap: 14px; }
+    .brand-mark { width: 40px; height: 40px; border-radius: 12px; background: #1D1D1F; text-align: center; line-height: 40px; flex-shrink: 0; }
+    .brand-mark span { color: #ffffff; font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
     .brand-name { font-size: 14px; font-weight: 700; color: #1D1D1F; letter-spacing: -0.01em; }
-    .brand-role { font-size: 12px; color: #86868B; margin-top: 1px; }
+    .brand-role { font-size: 12px; color: #86868B; margin-top: 2px; }
+    .brand-link { font-size: 12px; font-weight: 700; color: #1D1D1F; text-decoration: none; background: #F5F5F7; padding: 9px 18px; border-radius: 980px; letter-spacing: -0.01em; flex-shrink: 0; white-space: nowrap; }
     .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #86868B; margin: 0 0 12px; }
     .greeting { font-size: 30px; font-weight: 700; color: #1D1D1F; letter-spacing: -0.03em; line-height: 1.25; margin: 0 0 16px; }
     .lead { font-size: 16px; color: #86868B; line-height: 1.65; margin: 0 0 32px; }
@@ -84,10 +86,10 @@ exports.handler = async function (event) {
     .divider { height: 1px; background: #F5F5F7; margin: 36px 0; }
     .note { margin: 0; font-size: 13px; color: #86868B; line-height: 1.6; }
     .footer { padding: 28px 48px 40px; }
-    .footer-text { font-size: 12px; color: #86868B; line-height: 1.7; text-align: center; margin: 0; }
+    .footer-text { font-size: 12px; color: #86868B; line-height: 1.7; text-align: center; margin: 16px 0 0; }
     .footer-link { color: #1D1D1F; text-decoration: none; font-weight: 600; }
-    .footer-links { margin: 12px 0 0; font-size: 12px; text-align: center; }
-    .footer-dot { color: #86868B; margin: 0 8px; }
+    .social-row { text-align: center; }
+    .social-btn { display: inline-block; min-width: 38px; height: 38px; line-height: 38px; text-align: center; padding: 0 11px; border-radius: 12px; background: #1D1D1F; color: #ffffff !important; text-decoration: none; font-size: 12px; font-weight: 700; letter-spacing: -0.01em; margin: 0 4px; }
   </style>
 </head>
 <body>
@@ -95,15 +97,18 @@ exports.handler = async function (event) {
     <div class="wrapper">
       <div class="content">
         <div class="brand-row">
-          <div class="brand-mark"><span>GS</span></div>
-          <div>
-            <div class="brand-name">Govarthanan Selvaganessane</div>
-            <div class="brand-role">Product Designer &amp; Frontend Engineer</div>
+          <div class="brand-id">
+            <div class="brand-mark"><span>GS</span></div>
+            <div>
+              <div class="brand-name">Govarthanan Selvaganessane</div>
+              <div class="brand-role">Product Designer &amp; Frontend Engineer</div>
+            </div>
           </div>
+          <a href="https://govarthanan-product-engineer.netlify.app/" class="brand-link">Portfolio →</a>
         </div>
 
         <div class="eyebrow">Message received</div>
-        <div class="greeting">Thanks for reaching out, ${name} 👋</div>
+        <div class="greeting">Thanks for reaching out, ${name}</div>
         <p class="lead">I've got your message and will reply within <strong>24 hours</strong>. Here's a copy of what you sent:</p>
 
         <div class="card">
@@ -127,20 +132,16 @@ exports.handler = async function (event) {
         <p class="note">Need to add something? Just reply to this email — it goes straight to my inbox.</p>
       </div>
       <div class="footer">
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/sgovarthanan/" class="social-btn" title="LinkedIn">in</a>
+          <a href="https://www.behance.net/govarthananuxui" class="social-btn" title="Behance">Bē</a>
+          <a href="https://github.com/salkomdesignstudio" class="social-btn" title="GitHub">Gh</a>
+          <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge" class="social-btn" title="npm">npm</a>
+          <a href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf" class="social-btn" title="Figma">Fg</a>
+        </div>
         <p class="footer-text">
           Govarthanan Selvaganessane · Puducherry, India<br />
           <a href="mailto:govarthanan@salkomdesignstudio.com" class="footer-link">govarthanan@salkomdesignstudio.com</a>
-        </p>
-        <p class="footer-links">
-          <a href="https://www.linkedin.com/in/sgovarthanan/" class="footer-link">LinkedIn</a>
-          <span class="footer-dot">·</span>
-          <a href="https://www.behance.net/govarthananuxui" class="footer-link">Behance</a>
-          <span class="footer-dot">·</span>
-          <a href="https://github.com/salkomdesignstudio" class="footer-link">GitHub</a>
-          <span class="footer-dot">·</span>
-          <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge" class="footer-link">npm</a>
-          <span class="footer-dot">·</span>
-          <a href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf" class="footer-link">Figma</a>
         </p>
       </div>
     </div>
@@ -180,10 +181,9 @@ exports.handler = async function (event) {
     .message-box { background: #F5F5F7; border-left: 3px solid #1D1D1F; border-radius: 0 12px 12px 0; padding: 18px 22px; font-size: 14px; color: #1D1D1F; line-height: 1.75; white-space: pre-wrap; margin: 0 0 32px; }
     .cta-btn { display: inline-block; background: #1D1D1F; color: #ffffff !important; text-decoration: none; font-size: 14px; font-weight: 600; padding: 14px 30px; border-radius: 980px; letter-spacing: -0.01em; }
     .footer { padding: 0 44px 32px; }
-    .footer-text { font-size: 11px; color: #86868B; text-align: center; margin: 12px 0 0; }
-    .footer-link { color: #1D1D1F; text-decoration: none; font-weight: 600; }
-    .footer-links { margin: 0; font-size: 12px; text-align: center; }
-    .footer-dot { color: #86868B; margin: 0 8px; }
+    .footer-text { font-size: 11px; color: #86868B; text-align: center; margin: 16px 0 0; }
+    .social-row { text-align: center; }
+    .social-btn { display: inline-block; min-width: 38px; height: 38px; line-height: 38px; text-align: center; padding: 0 11px; border-radius: 12px; background: #1D1D1F; color: #ffffff !important; text-decoration: none; font-size: 12px; font-weight: 700; letter-spacing: -0.01em; margin: 0 4px; }
   </style>
 </head>
 <body>
@@ -213,17 +213,13 @@ exports.handler = async function (event) {
         <a href="mailto:${email}?subject=Re: Your message on govarthanan-product-engineer.netlify.app" class="cta-btn">Reply to ${name} →</a>
       </div>
       <div class="footer">
-        <p class="footer-links">
-          <a href="https://www.linkedin.com/in/sgovarthanan/" class="footer-link">LinkedIn</a>
-          <span class="footer-dot">·</span>
-          <a href="https://www.behance.net/govarthananuxui" class="footer-link">Behance</a>
-          <span class="footer-dot">·</span>
-          <a href="https://github.com/salkomdesignstudio" class="footer-link">GitHub</a>
-          <span class="footer-dot">·</span>
-          <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge" class="footer-link">npm</a>
-          <span class="footer-dot">·</span>
-          <a href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf" class="footer-link">Figma</a>
-        </p>
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/sgovarthanan/" class="social-btn" title="LinkedIn">in</a>
+          <a href="https://www.behance.net/govarthananuxui" class="social-btn" title="Behance">Bē</a>
+          <a href="https://github.com/salkomdesignstudio" class="social-btn" title="GitHub">Gh</a>
+          <a href="https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge" class="social-btn" title="npm">npm</a>
+          <a href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf" class="social-btn" title="Figma">Fg</a>
+        </div>
         <p class="footer-text">Sent automatically from your portfolio contact form</p>
       </div>
     </div>
@@ -244,7 +240,7 @@ exports.handler = async function (event) {
         body: JSON.stringify({
           from: FROM_EMAIL,
           to: [email],
-          subject: `Hey ${name}, I got your message! 👋`,
+          subject: `Hey ${name}, I got your message`,
           html: userEmailHtml,
         }),
       }),
@@ -258,7 +254,7 @@ exports.handler = async function (event) {
           from: FROM_EMAIL,
           to: [MY_EMAIL],
           reply_to: email,
-          subject: `📬 New Portfolio Contact: ${name}${company ? ` (${company})` : ""}`,
+          subject: `New Portfolio Contact: ${name}${company ? ` (${company})` : ""}`,
           html: notifyEmailHtml,
         }),
       }),

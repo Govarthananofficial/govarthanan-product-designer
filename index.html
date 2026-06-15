@@ -2771,6 +2771,7 @@
       .fl-phone-box {
         display: flex;
         align-items: center;
+        gap: 12px;
         width: 100%;
         box-sizing: border-box;
         height: 52px;
@@ -2793,25 +2794,29 @@
         box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.08);
       }
       .fl-cc {
-        flex-shrink: 0;
-        max-width: 78px;
+        flex: 0 0 auto;
+        width: auto;
+        max-width: 84px;
         border: none;
-        background: transparent;
+        background: transparent
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2386868B' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+          right center no-repeat;
+        background-size: 9px 6px;
         font-family: "DM Sans", sans-serif;
         font-size: 14px;
+        font-weight: 600;
         color: var(--t1);
         outline: none;
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
-        padding: 0 4px 0 0;
+        padding: 0 16px 0 0;
         cursor: pointer;
       }
       .fl-divider {
         width: 1px;
-        height: 22px;
+        height: 24px;
         background: var(--bd2);
-        margin: 0 10px;
         flex-shrink: 0;
       }
       .fl-phone-input {
@@ -2825,6 +2830,7 @@
         color: var(--t1);
         outline: none;
         padding: 0;
+        letter-spacing: 0.02em;
       }
 
       /* Honeypot */

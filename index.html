@@ -7487,49 +7487,15 @@
           isOpen = true;
           overlay.classList.add("open");
           document.body.style.overflow = "hidden";
-          gsap.fromTo(
-            ".modal-card",
-            { scale: 0.93, y: 22, opacity: 0 },
-            {
-              scale: 1,
-              y: 0,
-              opacity: 1,
-              duration: 0.44,
-              ease: "power3.out",
-              onComplete() {
-                gsap.fromTo(
-                  "#modalFormWrap .fl-group, #modalFormWrap .form-row",
-                  { opacity: 0, y: 8 },
-                  {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.28,
-                    stagger: 0.055,
-                    ease: "power2.out",
-                    clearProps: "all",
-                  },
-                );
-                const first = getFocusables()[0];
-                if (first) first.focus();
-              },
-            },
-          );
+          const first = getFocusables()[0];
+          if (first) first.focus();
         }
 
         /* Close */
         function closeModal() {
           isOpen = false;
-          gsap.to(".modal-card", {
-            scale: 0.93,
-            y: 14,
-            opacity: 0,
-            duration: 0.24,
-            ease: "power2.in",
-            onComplete() {
-              overlay.classList.remove("open");
-              document.body.style.overflow = "";
-            },
-          });
+          overlay.classList.remove("open");
+          document.body.style.overflow = "";
         }
 
         openBtns.forEach((btn) => {

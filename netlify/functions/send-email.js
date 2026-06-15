@@ -95,7 +95,7 @@ exports.handler = async function (event) {
       `<svg width="20" height="20" viewBox="0 0 24 24" fill="${c}" xmlns="http://www.w3.org/2000/svg"><text x="12" y="16" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="800" text-anchor="middle" letter-spacing="0.5">npm</text></svg>`,
   };
 
-  // Shared social-links footer markup (used in both emails)
+  // Shared social-links footer markup (used in confirmation email footer)
   const socialRow = `
         <div class="social-row">
           <a href="https://www.linkedin.com/in/sgovarthanan/" class="social-btn" title="LinkedIn">${social.linkedin("#FFFFFF")}</a>
@@ -114,235 +114,216 @@ exports.handler = async function (event) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light" />
   <meta name="supported-color-schemes" content="light" />
-  <title>Thanks for reaching out!</title>
+  <title>Message received — Govarthanan</title>
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; padding: 0; background: #F5F5F7; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-    .bg { background: #F5F5F7; padding: 48px 16px; }
-    .wrapper { max-width: 600px; margin: 0 auto; background: #FFFFFF; border-radius: 28px; overflow: hidden; box-shadow: 0 2px 4px rgba(29,29,31,0.04), 0 32px 80px -24px rgba(29,29,31,0.16); }
-    .content { padding: 48px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #EFEFED; font-family: Georgia, 'Times New Roman', Times, serif; -webkit-font-smoothing: antialiased; }
 
-    /* HEADER */
-    .header { padding-bottom: 32px; margin-bottom: 40px; border-bottom: 1px solid rgba(29,29,31,0.06); }
-    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .brand-id { display: flex; align-items: center; gap: 14px; }
-    .brand-mark { width: 48px; height: 48px; border-radius: 16px; background: #1D1D1F; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .brand-mark span { color: #FFFFFF; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
-    .brand-name { font-size: 15px; font-weight: 700; color: #1D1D1F; letter-spacing: -0.01em; line-height: 1.3; }
-    .brand-role { font-size: 12px; color: #86868B; margin-top: 3px; line-height: 1.4; }
-    .header-btn { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: #1D1D1F !important; text-decoration: none; background: #F5F5F7; padding: 11px 20px; border-radius: 999px; letter-spacing: -0.01em; white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(29,29,31,0.06); }
+    /* ── SHELL ── */
+    .shell { background: #EFEFED; padding: 40px 16px 56px; }
+    .card-outer { max-width: 600px; margin: 0 auto; background: #FAFAF8; border-radius: 4px; overflow: hidden; border: 1px solid #D8D8D4; }
 
-    /* HERO */
-    .hero { margin-bottom: 40px; }
-    .badge { display: inline-flex; align-items: center; gap: 8px; background: #F5F5F7; color: #1D1D1F; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; padding: 8px 16px; border-radius: 999px; margin-bottom: 20px; border: 1px solid rgba(29,29,31,0.06); }
-    .heading-xl { font-size: 40px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: #1D1D1F; margin: 0 0 18px; }
-    .lead { font-size: 16px; line-height: 1.75; color: #86868B; margin: 0; }
-    .lead strong { color: #1D1D1F; font-weight: 600; }
+    /* ── MASTHEAD ── */
+    .masthead { padding: 28px 40px 24px; border-bottom: 1px solid #D8D8D4; display: table; width: 100%; }
+    .mast-left { display: table-cell; vertical-align: middle; }
+    .mast-right { display: table-cell; vertical-align: middle; text-align: right; white-space: nowrap; }
+    .wordmark { font-family: Georgia, serif; font-size: 13px; font-weight: normal; color: #1A1A18; letter-spacing: 0.18em; text-transform: uppercase; }
+    .wordmark-dot { color: #8A8A80; }
+    .mast-link { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #1A1A18 !important; text-decoration: none; border-bottom: 1px solid #1A1A18; padding-bottom: 1px; }
 
-    /* SECTIONS */
-    .section { margin-bottom: 40px; }
-    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #86868B; margin-bottom: 14px; }
+    /* ── HERO BANNER ── */
+    .hero-band { background: #1A1A18; padding: 48px 40px 44px; }
+    .received-label { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #8A8A80; margin-bottom: 18px; }
+    .hero-heading { font-family: Georgia, serif; font-size: 38px; font-weight: normal; line-height: 1.15; letter-spacing: -0.02em; color: #FAFAF8; margin-bottom: 20px; }
+    .hero-heading em { font-style: italic; color: #C8C8BE; }
+    .hero-body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.8; color: #9A9A90; max-width: 420px; }
+    .hero-body strong { color: #FAFAF8; font-weight: 600; }
 
-    /* CARDS */
-    .card { background: #F5F5F7; border-radius: 20px; padding: 24px; border: 1px solid rgba(29,29,31,0.06); }
-    .card + .card { margin-top: 12px; }
+    /* ── CONTENT AREA ── */
+    .content { padding: 40px 40px 0; }
 
-    /* TIMELINE */
-    .step { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; }
-    .step:first-child { padding-top: 0; }
-    .step:last-child { padding-bottom: 0; }
-    .step + .step { border-top: 1px solid rgba(29,29,31,0.06); }
-    .step-dot { width: 34px; height: 34px; min-width: 34px; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
-    .step-dot.active { background: #1D1D1F; }
-    .step-dot.idle { background: #FFFFFF; }
-    .step-body { padding-top: 7px; }
-    .step-title { font-size: 14px; font-weight: 600; color: #1D1D1F; line-height: 1.4; }
-    .step-desc { font-size: 12px; color: #86868B; margin-top: 3px; line-height: 1.5; }
+    /* ── SECTION HEADERS ── */
+    .eyebrow { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #8A8A80; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #D8D8D4; }
 
-    /* INFO ROWS */
-    .info-row { display: flex; align-items: flex-start; gap: 14px; padding: 13px 0; }
-    .info-row:first-child { padding-top: 0; }
-    .info-row:last-child { padding-bottom: 0; }
-    .info-row + .info-row { border-top: 1px solid rgba(29,29,31,0.06); }
-    .info-icon { width: 34px; height: 34px; min-width: 34px; border-radius: 11px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; }
-    .info-body { padding-top: 5px; min-width: 0; }
-    .info-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #86868B; margin-bottom: 4px; }
-    .info-val { font-size: 14px; font-weight: 600; color: #1D1D1F; word-break: break-word; line-height: 1.5; }
-    .message-text { font-size: 15px; line-height: 1.8; color: #1D1D1F; white-space: pre-wrap; word-break: break-word; padding-top: 16px; border-top: 1px solid rgba(29,29,31,0.06); margin-top: 4px; }
+    /* ── TIMELINE ── */
+    .timeline { margin-bottom: 36px; }
+    .t-step { display: table; width: 100%; padding: 14px 0; border-bottom: 1px solid #EAEAE6; }
+    .t-step:last-child { border-bottom: none; }
+    .t-num { display: table-cell; vertical-align: top; width: 32px; padding-top: 2px; }
+    .t-num-inner { width: 22px; height: 22px; border-radius: 50%; background: #1A1A18; text-align: center; line-height: 22px; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 10px; font-weight: 700; color: #FAFAF8; }
+    .t-num-inner.done { background: #1A1A18; }
+    .t-num-inner.pending { background: transparent; border: 1.5px solid #C8C8BE; color: #8A8A80; line-height: 19px; }
+    .t-body { display: table-cell; vertical-align: top; padding-left: 12px; }
+    .t-title { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 600; color: #1A1A18; line-height: 1.4; margin-bottom: 3px; }
+    .t-title.done { color: #1A1A18; }
+    .t-title.pending { color: #6A6A62; }
+    .t-desc { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; color: #8A8A80; line-height: 1.55; }
 
-    /* ABOUT */
-    .about-text { font-size: 15px; line-height: 1.8; color: #86868B; margin: 0; }
+    /* ── INFO TABLE ── */
+    .info-block { margin-bottom: 36px; }
+    .info-row-t { display: table; width: 100%; border-bottom: 1px solid #EAEAE6; }
+    .info-row-t:first-child { border-top: none; }
+    .info-lbl { display: table-cell; vertical-align: top; width: 88px; padding: 13px 16px 13px 0; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8A8A80; }
+    .info-val { display: table-cell; vertical-align: top; padding: 13px 0; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; color: #1A1A18; font-weight: 500; line-height: 1.5; word-break: break-word; }
+    .info-val a { color: #1A1A18 !important; }
 
-    /* BUTTONS — table layout for equal widths in all email clients */
-    .btn-wrap { width: 100%; border-collapse: separate; border-spacing: 0; }
-    .btn-wrap td { width: 50%; vertical-align: top; }
-    .btn-wrap td.btn-left { padding-right: 8px; }
-    .btn-wrap td.btn-right { padding-left: 8px; }
-    .btn { display: block; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600; padding: 17px 16px; border-radius: 999px; letter-spacing: -0.01em; line-height: 1.2; }
-    .btn-primary { background: #1D1D1F; color: #FFFFFF !important; }
-    .btn-secondary { background: #F5F5F7; color: #1D1D1F !important; border: 1px solid rgba(29,29,31,0.08); }
+    /* ── MESSAGE BOX ── */
+    .msg-block { margin-bottom: 40px; }
+    .msg-quote { background: #F2F2EE; border-left: 3px solid #1A1A18; padding: 20px 24px; border-radius: 0 3px 3px 0; }
+    .msg-text { font-family: Georgia, serif; font-size: 15px; line-height: 1.85; color: #2A2A26; font-style: italic; white-space: pre-wrap; word-break: break-word; }
+    .msg-text::before { content: '\\201C'; font-size: 28px; color: #C8C8BE; line-height: 0; vertical-align: -12px; margin-right: 3px; }
+    .msg-text::after { content: '\\201D'; font-size: 28px; color: #C8C8BE; line-height: 0; vertical-align: -12px; margin-left: 3px; }
 
-    /* DIVIDER & NOTE */
-    .divider { height: 1px; background: rgba(29,29,31,0.06); margin-bottom: 32px; }
-    .note { font-size: 13px; color: #86868B; line-height: 1.7; margin: 0; }
+    /* ── ABOUT ROW ── */
+    .about-row { padding: 28px 0; border-top: 1px solid #D8D8D4; margin-bottom: 36px; }
+    .about-copy { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.8; color: #6A6A62; }
+    .about-copy strong { color: #1A1A18; font-weight: 600; }
 
-    /* FOOTER */
-    .footer { padding: 32px 48px 40px; border-top: 1px solid rgba(29,29,31,0.06); text-align: center; }
-    .footer-name { font-size: 14px; font-weight: 700; color: #1D1D1F; margin-bottom: 4px; }
-    .footer-role { font-size: 12px; color: #86868B; margin-bottom: 20px; }
-    .footer-meta { font-size: 12px; color: #86868B; line-height: 2; margin-bottom: 24px; }
-    .footer-meta a { color: #1D1D1F; text-decoration: none; font-weight: 600; }
-    .social-row { }
-    .social-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: #1D1D1F; text-decoration: none; margin: 0 4px; vertical-align: middle; }
+    /* ── BUTTONS ── */
+    .btn-row { margin-bottom: 40px; }
+    .btn-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .btn-table td { width: 50%; vertical-align: top; }
+    .btn-table td.left { padding-right: 6px; }
+    .btn-table td.right { padding-left: 6px; }
+    .btn-a { display: block; text-align: center; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 16px 12px; border-radius: 2px; line-height: 1.2; }
+    .btn-dark { background: #1A1A18; color: #FAFAF8 !important; }
+    .btn-light { background: transparent; color: #1A1A18 !important; border: 1.5px solid #1A1A18; }
+
+    /* ── FOOTER ── */
+    .footer { padding: 28px 40px 36px; border-top: 1px solid #D8D8D4; text-align: center; background: #FAFAF8; }
+    .footer-sig { font-family: Georgia, serif; font-size: 15px; color: #1A1A18; margin-bottom: 4px; font-style: italic; }
+    .footer-role { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8A8A80; margin-bottom: 4px; }
+    .footer-loc { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11px; color: #A0A098; margin-bottom: 22px; }
+    .footer-loc a { color: #1A1A18 !important; text-decoration: none; border-bottom: 1px solid #C8C8BE; padding-bottom: 1px; }
+    .social-row { margin-bottom: 0; }
+    .social-btn { display: inline-block; width: 36px; height: 36px; border-radius: 2px; background: #1A1A18; text-decoration: none; margin: 0 3px; vertical-align: middle; text-align: center; line-height: 36px; }
 
     @media only screen and (max-width: 520px) {
-      .bg { padding: 20px 12px !important; }
-      .content { padding: 28px 20px !important; }
-      .footer { padding: 28px 20px 32px !important; }
-      .heading-xl { font-size: 28px !important; }
-      .card { padding: 20px !important; }
-      .header-btn { width: 100%; text-align: center; justify-content: center; }
-      .btn-wrap { display: block !important; }
-      .btn-wrap tr { display: block !important; }
-      .btn-wrap td { display: block !important; width: 100% !important; padding: 0 0 10px !important; }
-      .btn-wrap td.btn-right { padding: 0 !important; }
-      .btn { padding: 17px 16px !important; }
-      .social-btn { width: 40px !important; height: 40px !important; margin: 0 3px !important; }
+      .shell { padding: 0 0 40px !important; }
+      .card-outer { border-radius: 0 !important; border-left: none !important; border-right: none !important; }
+      .masthead, .content, .footer { padding-left: 24px !important; padding-right: 24px !important; }
+      .hero-band { padding: 36px 24px 32px !important; }
+      .hero-heading { font-size: 28px !important; }
+      .btn-table { display: block !important; }
+      .btn-table tr, .btn-table td { display: block !important; width: 100% !important; padding: 0 0 8px !important; }
+      .btn-table td.right { padding-left: 0 !important; }
     }
   </style>
 </head>
 <body>
-  <div class="bg">
-    <div class="wrapper">
+  <div class="shell">
+    <div class="card-outer">
+
+      <!-- MASTHEAD -->
+      <div class="masthead">
+        <div class="mast-left">
+          <span class="wordmark">Govarthanan<span class="wordmark-dot"> · </span>GS</span>
+        </div>
+        <div class="mast-right">
+          <a href="https://govarthanan-product-engineer.netlify.app/" class="mast-link">Visit Portfolio</a>
+        </div>
+      </div>
+
+      <!-- HERO BAND -->
+      <div class="hero-band">
+        <div class="received-label">✦ Message received</div>
+        <div class="hero-heading">Thanks for reaching out,<br><em>${name}</em></div>
+        <p class="hero-body">Your message is in my inbox. I'll send a <strong>personal reply within 24 hours</strong> — no templates, no assistants. Here's a copy of what you sent.</p>
+      </div>
+
+      <!-- CONTENT -->
       <div class="content">
 
-        <!-- HEADER -->
-        <div class="header">
-          <div class="header-inner">
-            <div class="brand-id">
-              <div class="brand-mark"><span>GS</span></div>
-              <div>
-                <div class="brand-name">Govarthanan Selvaganessane</div>
-                <div class="brand-role">Product Designer &amp; Frontend Engineer</div>
-              </div>
+        <!-- WHAT HAPPENS NEXT -->
+        <div class="timeline">
+          <div class="eyebrow">What happens next</div>
+          <div class="t-step">
+            <div class="t-num"><div class="t-num-inner done">✓</div></div>
+            <div class="t-body">
+              <div class="t-title done">Message received</div>
+              <div class="t-desc">Your enquiry has landed safely in my inbox.</div>
             </div>
-            <a href="https://govarthanan-product-engineer.netlify.app/" class="header-btn">${ic.arrowUp("#1D1D1F")} Visit Website</a>
           </div>
-        </div>
-
-        <!-- HERO -->
-        <div class="hero">
-          <div class="badge">${ic.check("#1D1D1F")} Message Received</div>
-          <div class="heading-xl">Thanks for reaching out, ${name}</div>
-          <p class="lead">I've got your message and will get back to you with a <strong>personal response within 24 hours</strong>. Here's what happens next and a copy of what you sent.</p>
-        </div>
-
-        <!-- TIMELINE -->
-        <div class="section">
-          <div class="section-label">What Happens Next</div>
-          <div class="card">
-            <div class="step">
-              <div class="step-dot active">${ic.check("#FFFFFF")}</div>
-              <div class="step-body">
-                <div class="step-title">Message Received</div>
-                <div class="step-desc">Your enquiry has landed safely in my inbox.</div>
-              </div>
+          <div class="t-step">
+            <div class="t-num"><div class="t-num-inner pending">2</div></div>
+            <div class="t-body">
+              <div class="t-title pending">Reviewing your brief</div>
+              <div class="t-desc">I go through every project detail carefully before responding.</div>
             </div>
-            <div class="step">
-              <div class="step-dot idle">${ic.clock("#1D1D1F")}</div>
-              <div class="step-body">
-                <div class="step-title">Reviewing Requirements</div>
-                <div class="step-desc">I'm going through the details of your project.</div>
-              </div>
+          </div>
+          <div class="t-step">
+            <div class="t-num"><div class="t-num-inner pending">3</div></div>
+            <div class="t-body">
+              <div class="t-title pending">Personal reply — within 24 hrs</div>
+              <div class="t-desc">You hear from me directly. No auto-replies. No handoffs.</div>
             </div>
-            <div class="step">
-              <div class="step-dot idle">${ic.send("#1D1D1F")}</div>
-              <div class="step-body">
-                <div class="step-title">Personal Response Within 24 Hours</div>
-                <div class="step-desc">You'll hear back from me directly — no auto-replies.</div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-dot idle">${ic.rocket("#1D1D1F", "#F5F5F7")}</div>
-              <div class="step-body">
-                <div class="step-title">Project Discussion</div>
-                <div class="step-desc">We'll align on scope, timeline &amp; next steps.</div>
-              </div>
+          </div>
+          <div class="t-step">
+            <div class="t-num"><div class="t-num-inner pending">4</div></div>
+            <div class="t-body">
+              <div class="t-title pending">Project kick-off</div>
+              <div class="t-desc">We align on scope, timeline &amp; deliverables.</div>
             </div>
           </div>
         </div>
 
-        <!-- CONTACT INFO CARD -->
-        <div class="section">
-          <div class="section-label">Contact Information</div>
-          <div class="card">
-            <div class="info-row">
-              <div class="info-icon">${ic.mail("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-body">
-                <div class="info-label">Email</div>
-                <div class="info-val">${email}</div>
-              </div>
-            </div>
-            ${mobile ? `<div class="info-row">
-              <div class="info-icon">${ic.phone("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-body">
-                <div class="info-label">Mobile</div>
-                <div class="info-val">${mobile}</div>
-              </div>
-            </div>` : ""}
-            ${company ? `<div class="info-row">
-              <div class="info-icon">${ic.building("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-body">
-                <div class="info-label">Company</div>
-                <div class="info-val">${company}</div>
-              </div>
-            </div>` : ""}
+        <!-- YOUR DETAILS -->
+        <div class="info-block">
+          <div class="eyebrow">Your details</div>
+          <div class="info-row-t">
+            <div class="info-lbl">Email</div>
+            <div class="info-val">${email}</div>
+          </div>
+          ${
+            mobile
+              ? `<div class="info-row-t">
+            <div class="info-lbl">Mobile</div>
+            <div class="info-val">${mobile}</div>
+          </div>`
+              : ""
+          }
+          ${
+            company
+              ? `<div class="info-row-t">
+            <div class="info-lbl">Company</div>
+            <div class="info-val">${company}</div>
+          </div>`
+              : ""
+          }
+        </div>
+
+        <!-- MESSAGE -->
+        <div class="msg-block">
+          <div class="eyebrow">Your message</div>
+          <div class="msg-quote">
+            <span class="msg-text">${message.slice(0, 200)}${message.length > 200 ? "…" : ""}</span>
           </div>
         </div>
 
-        <!-- MESSAGE CARD -->
-        <div class="section">
-          <div class="section-label">Your Message</div>
-          <div class="card">
-            <div class="info-row" style="padding-bottom: 0;">
-              <div class="info-icon">${ic.chat("#1D1D1F")}</div>
-              <div class="info-body">
-                <div class="info-label">Message</div>
-              </div>
-            </div>
-            <div class="message-text">${message.slice(0, 160)}${message.length > 160 ? "…" : ""}</div>
-          </div>
+        <!-- ABOUT + BUTTONS -->
+        <div class="about-row">
+          <p class="about-copy">I'm a <strong>Product Designer &amp; Frontend Engineer</strong> with 2+ years building production apps across fintech, retail &amp; SaaS — including Pothys DigiGold, GRT &amp; Lalitha Jewellery. While you wait, explore the work.</p>
         </div>
 
-        <!-- ABOUT -->
-        <div class="section">
-          <p class="about-text">
-            I'm a Product Designer &amp; Frontend Engineer with 2+ years shipping 30+ production
-            products across fintech, retail &amp; SaaS — founder of Salkom Design Studio.
-            While you wait, take a look at some recent work.
-          </p>
-        </div>
-
-        <!-- BUTTONS -->
-        <div class="section">
-          <table class="btn-wrap" role="presentation" border="0" cellpadding="0" cellspacing="0">
+        <div class="btn-row">
+          <table class="btn-table" role="presentation" border="0" cellpadding="0" cellspacing="0">
             <tr>
-              <td class="btn-left"><a href="https://govarthanan-product-engineer.netlify.app/" class="btn btn-primary">View Full Portfolio</a></td>
-              <td class="btn-right"><a href="https://govarthanan-product-engineer.netlify.app/#projects" class="btn btn-secondary">Explore Case Studies</a></td>
+              <td class="left"><a href="https://govarthanan-product-engineer.netlify.app/" class="btn-a btn-dark">View Portfolio</a></td>
+              <td class="right"><a href="https://govarthanan-product-engineer.netlify.app/#projects" class="btn-a btn-light">Case Studies</a></td>
             </tr>
           </table>
         </div>
 
-        <div class="divider"></div>
-        <p class="note">Need to add something? Just reply to this email — it goes straight to my inbox.</p>
-
       </div>
+
+      <!-- FOOTER -->
       <div class="footer">
-        <div class="footer-name">Govarthanan Selvaganessane</div>
+        <div class="footer-sig">Govarthanan Selvaganessane</div>
         <div class="footer-role">Product Designer &amp; Frontend Engineer</div>
-        <div class="footer-meta">📍 Puducherry, India &nbsp;·&nbsp; 📧 <a href="mailto:govarthanan@salkomdesignstudio.com">govarthanan@salkomdesignstudio.com</a></div>
+        <div class="footer-loc">Puducherry, India &nbsp;&middot;&nbsp; <a href="mailto:govarthanan@salkomdesignstudio.com">govarthanan@salkomdesignstudio.com</a></div>
         ${socialRow}
       </div>
+
     </div>
   </div>
 </body>
@@ -358,158 +339,133 @@ exports.handler = async function (event) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light" />
   <meta name="supported-color-schemes" content="light" />
-  <title>New Portfolio Contact</title>
+  <title>New lead — Portfolio</title>
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; padding: 0; background: #F5F5F7; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-    .bg { background: #F5F5F7; padding: 48px 16px; }
-    .wrapper { max-width: 580px; margin: 0 auto; background: #FFFFFF; border-radius: 28px; overflow: hidden; box-shadow: 0 2px 4px rgba(29,29,31,0.04), 0 32px 80px -24px rgba(29,29,31,0.16); }
-    .content { padding: 48px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0E0E0C; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
 
-    /* TOP ROW */
-    .top-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
-    .badge-dark { display: inline-flex; align-items: center; gap: 8px; background: #1D1D1F; color: #FFFFFF; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 16px; border-radius: 999px; }
-    .timestamp { font-size: 12px; color: #86868B; }
+    /* ── SHELL ── */
+    .shell { background: #0E0E0C; padding: 32px 16px 48px; }
+    .card-outer { max-width: 580px; margin: 0 auto; background: #1A1A18; border-radius: 4px; overflow: hidden; border: 1px solid #2E2E2A; }
 
-    /* HERO */
-    .hero { padding-bottom: 36px; margin-bottom: 40px; border-bottom: 1px solid rgba(29,29,31,0.06); }
-    .heading-xl { font-size: 40px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: #1D1D1F; margin: 0 0 10px; }
-    .hero-sub { font-size: 16px; color: #86868B; line-height: 1.6; margin: 0; }
+    /* ── TOP BAR ── */
+    .top-bar { padding: 18px 32px; border-bottom: 1px solid #2E2E2A; display: table; width: 100%; }
+    .top-bar-left { display: table-cell; vertical-align: middle; }
+    .top-bar-right { display: table-cell; vertical-align: middle; text-align: right; }
+    .lead-badge { display: inline-block; background: #E8FF47; color: #0E0E0C; font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; padding: 5px 12px; border-radius: 2px; }
+    .ts { font-size: 11px; color: #5A5A52; letter-spacing: 0.04em; }
 
-    /* SECTIONS */
-    .section { margin-bottom: 40px; }
-    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #86868B; margin-bottom: 14px; }
+    /* ── HERO ── */
+    .hero { padding: 36px 32px 32px; border-bottom: 1px solid #2E2E2A; }
+    .from-label { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #5A5A52; margin-bottom: 10px; }
+    .from-name { font-family: Georgia, 'Times New Roman', Times, serif; font-size: 36px; font-weight: normal; color: #F0F0E8; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .from-sub { font-size: 13px; color: #6A6A62; line-height: 1.6; }
+    .from-sub a { color: #9A9A90 !important; text-decoration: none; border-bottom: 1px solid #3E3E3A; padding-bottom: 1px; }
 
-    /* CARDS */
-    .card { background: #F5F5F7; border-radius: 20px; padding: 24px; border: 1px solid rgba(29,29,31,0.06); }
-    .message-card { background: #F5F5F7; border-radius: 20px; padding: 24px; border: 1px solid rgba(29,29,31,0.06); border-left: 4px solid #1D1D1F; }
+    /* ── DATA GRID ── */
+    .data-grid { padding: 0 32px; border-bottom: 1px solid #2E2E2A; }
+    .data-row { display: table; width: 100%; border-bottom: 1px solid #232320; }
+    .data-row:last-child { border-bottom: none; }
+    .data-key { display: table-cell; vertical-align: top; width: 80px; padding: 14px 16px 14px 0; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #5A5A52; }
+    .data-val { display: table-cell; vertical-align: top; padding: 14px 0; font-size: 13px; color: #C0C0B8; font-weight: 500; word-break: break-word; line-height: 1.5; }
+    .data-val a { color: #E8FF47 !important; text-decoration: none; }
 
-    /* INFO ROWS */
-    .info-row { display: flex; align-items: flex-start; gap: 14px; padding: 13px 0; }
-    .info-row:first-child { padding-top: 0; }
-    .info-row:last-child { padding-bottom: 0; }
-    .info-row + .info-row { border-top: 1px solid rgba(29,29,31,0.06); }
-    .info-icon { width: 34px; height: 34px; min-width: 34px; border-radius: 11px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; }
-    .info-body { padding-top: 5px; min-width: 0; }
-    .info-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #86868B; margin-bottom: 4px; }
-    .info-val { font-size: 14px; font-weight: 600; color: #1D1D1F; word-break: break-word; line-height: 1.5; }
-    .info-val a { color: #1D1D1F; text-decoration: underline; }
+    /* ── MESSAGE ── */
+    .msg-section { padding: 28px 32px; border-bottom: 1px solid #2E2E2A; }
+    .msg-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #5A5A52; margin-bottom: 16px; }
+    .msg-body { font-family: Georgia, serif; font-size: 15px; line-height: 1.85; color: #A0A098; white-space: pre-wrap; word-break: break-word; font-style: italic; }
 
-    /* MESSAGE */
-    .msg-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
-    .msg-icon { width: 34px; height: 34px; min-width: 34px; border-radius: 11px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; }
-    .msg-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #86868B; }
-    .message-text { font-size: 15px; line-height: 1.8; color: #1D1D1F; white-space: pre-wrap; word-break: break-word; margin: 0; }
+    /* ── CTA ── */
+    .cta-section { padding: 28px 32px; }
+    .cta-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .cta-table td { width: 50%; vertical-align: top; }
+    .cta-table td.left { padding-right: 6px; }
+    .cta-table td.right { padding-left: 6px; }
+    .cta-btn { display: block; text-align: center; text-decoration: none; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 16px 12px; border-radius: 2px; line-height: 1.2; }
+    .cta-primary { background: #E8FF47; color: #0E0E0C !important; }
+    .cta-secondary { background: transparent; color: #6A6A62 !important; border: 1.5px solid #3E3E3A; }
 
-    /* BUTTONS — table layout for equal widths in all email clients */
-    .btn-wrap { width: 100%; border-collapse: separate; border-spacing: 0; }
-    .btn-wrap td { width: 50%; vertical-align: top; }
-    .btn-wrap td.btn-left { padding-right: 8px; }
-    .btn-wrap td.btn-right { padding-left: 8px; }
-    .btn { display: block; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600; padding: 17px 16px; border-radius: 999px; letter-spacing: -0.01em; line-height: 1.2; }
-    .btn-primary { background: #1D1D1F; color: #FFFFFF !important; }
-    .btn-secondary { background: #F5F5F7; color: #1D1D1F !important; border: 1px solid rgba(29,29,31,0.08); }
-
-    /* FOOTER */
-    .footer { padding: 32px 48px 40px; border-top: 1px solid rgba(29,29,31,0.06); text-align: center; }
-    .footer-text { font-size: 12px; color: #86868B; margin: 20px 0 0; }
-    .social-row { }
-    .social-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: #1D1D1F; text-decoration: none; margin: 0 4px; vertical-align: middle; }
+    /* ── SYSTEM NOTE ── */
+    .sys-note { padding: 16px 32px 20px; text-align: center; }
+    .sys-note p { font-size: 11px; color: #3E3E3A; letter-spacing: 0.03em; }
 
     @media only screen and (max-width: 520px) {
-      .bg { padding: 20px 12px !important; }
-      .content { padding: 28px 20px !important; }
-      .footer { padding: 28px 20px 32px !important; }
-      .heading-xl { font-size: 28px !important; }
-      .card, .message-card { padding: 20px !important; }
-      .btn-wrap { display: block !important; }
-      .btn-wrap tr { display: block !important; }
-      .btn-wrap td { display: block !important; width: 100% !important; padding: 0 0 10px !important; }
-      .btn-wrap td.btn-right { padding: 0 !important; }
-      .btn { padding: 17px 16px !important; }
-      .social-btn { width: 40px !important; height: 40px !important; margin: 0 3px !important; }
+      .shell { padding: 0 0 32px !important; }
+      .card-outer { border-radius: 0 !important; border-left: none !important; border-right: none !important; }
+      .top-bar, .hero, .data-grid, .msg-section, .cta-section, .sys-note { padding-left: 20px !important; padding-right: 20px !important; }
+      .from-name { font-size: 26px !important; }
+      .cta-table { display: block !important; }
+      .cta-table tr, .cta-table td { display: block !important; width: 100% !important; padding: 0 0 8px !important; }
+      .cta-table td.right { padding-left: 0 !important; }
     }
   </style>
 </head>
 <body>
-  <div class="bg">
-    <div class="wrapper">
-      <div class="content">
+  <div class="shell">
+    <div class="card-outer">
 
-        <!-- TOP ROW -->
-        <div class="top-row">
-          <span class="badge-dark">${ic.fire("#FFFFFF")} New Lead</span>
-          <span class="timestamp">${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })} IST</span>
+      <!-- TOP BAR -->
+      <div class="top-bar">
+        <div class="top-bar-left">
+          <span class="lead-badge">⚡ New Lead</span>
         </div>
-
-        <!-- HERO -->
-        <div class="hero">
-          <div class="heading-xl">${name}</div>
-          <p class="hero-sub">just reached out through your portfolio contact form.</p>
+        <div class="top-bar-right">
+          <span class="ts">${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })} IST</span>
         </div>
-
-        <!-- CONTACT CARD -->
-        <div class="section">
-          <div class="section-label">Contact Information</div>
-          <div class="card">
-            <div class="info-row">
-              <div class="info-icon">${ic.user("#1D1D1F")}</div>
-              <div class="info-body">
-                <div class="info-label">Name</div>
-                <div class="info-val">${name}</div>
-              </div>
-            </div>
-            <div class="info-row">
-              <div class="info-icon">${ic.mail("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-body">
-                <div class="info-label">Email</div>
-                <div class="info-val"><a href="mailto:${email}">${email}</a></div>
-              </div>
-            </div>
-            ${mobile ? `<div class="info-row">
-              <div class="info-icon">${ic.phone("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-body">
-                <div class="info-label">Mobile</div>
-                <div class="info-val">${mobile}</div>
-              </div>
-            </div>` : ""}
-            ${company ? `<div class="info-row">
-              <div class="info-icon">${ic.building("#1D1D1F", "#F5F5F7")}</div>
-              <div class="info-body">
-                <div class="info-label">Company</div>
-                <div class="info-val">${company}</div>
-              </div>
-            </div>` : ""}
-          </div>
-        </div>
-
-        <!-- MESSAGE CARD -->
-        <div class="section">
-          <div class="section-label">Message</div>
-          <div class="message-card">
-            <div class="msg-header">
-              <div class="msg-icon">${ic.chat("#1D1D1F")}</div>
-              <div class="msg-label">Full Message</div>
-            </div>
-            <p class="message-text">${message}</p>
-          </div>
-        </div>
-
-        <!-- BUTTONS -->
-        <div class="section" style="margin-bottom: 0;">
-          <table class="btn-wrap" role="presentation" border="0" cellpadding="0" cellspacing="0">
-            <tr>
-              <td class="btn-left"><a href="mailto:${email}?subject=Re: Your message on govarthanan-product-engineer.netlify.app" class="btn btn-primary">Reply to Lead</a></td>
-              <td class="btn-right"><a href="https://govarthanan-product-engineer.netlify.app/" class="btn btn-secondary">Open Portfolio</a></td>
-            </tr>
-          </table>
-        </div>
-
       </div>
-      <div class="footer">
-        ${socialRow}
-        <p class="footer-text">Sent automatically from your portfolio contact form</p>
+
+      <!-- HERO -->
+      <div class="hero">
+        <div class="from-label">From</div>
+        <div class="from-name">${name}</div>
+        <p class="from-sub">Reached out via your portfolio contact form${company ? ` &middot; <strong style="color:#8A8A80;">${company}</strong>` : ""}</p>
       </div>
+
+      <!-- DATA GRID -->
+      <div class="data-grid">
+        <div class="data-row">
+          <div class="data-key">Email</div>
+          <div class="data-val"><a href="mailto:${email}">${email}</a></div>
+        </div>
+        ${
+          mobile
+            ? `<div class="data-row">
+          <div class="data-key">Mobile</div>
+          <div class="data-val"><a href="tel:${mobile}">${mobile}</a></div>
+        </div>`
+            : ""
+        }
+        ${
+          company
+            ? `<div class="data-row">
+          <div class="data-key">Company</div>
+          <div class="data-val" style="color:#8A8A80;">${company}</div>
+        </div>`
+            : ""
+        }
+      </div>
+
+      <!-- MESSAGE -->
+      <div class="msg-section">
+        <div class="msg-eyebrow">Their message</div>
+        <p class="msg-body">${message}</p>
+      </div>
+
+      <!-- CTA BUTTONS -->
+      <div class="cta-section">
+        <table class="cta-table" role="presentation" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="left"><a href="mailto:${email}?subject=Re%3A%20Your%20message%20on%20govarthanan-product-engineer.netlify.app&body=Hi%20${encodeURIComponent(name)}%2C%0A%0A" class="cta-btn cta-primary">↳ Reply Now</a></td>
+            <td class="right"><a href="https://govarthanan-product-engineer.netlify.app/" class="cta-btn cta-secondary">Portfolio</a></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- SYSTEM NOTE -->
+      <div class="sys-note">
+        <p>Auto-sent from portfolio contact form &nbsp;·&nbsp; govarthanan-product-engineer.netlify.app</p>
+      </div>
+
     </div>
   </div>
 </body>

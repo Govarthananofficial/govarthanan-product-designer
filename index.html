@@ -7978,6 +7978,26 @@
         let longitude = "";
 
         async function loadLocation() {
+          // Attempt 1: ipwho.is (CORS friendly, HTTPS, very fast)
+          try {
+            const res = await fetch("https://ipwho.is/");
+            if (res.ok) {
+              const data = await res.json();
+              if (data.success) {
+                if (data.city && data.region && data.country) {
+                  exactLocation = `${data.city}, ${data.region}, ${data.country}`;
+                } else if (data.city && data.country) {
+                  exactLocation = `${data.city}, ${data.country}`;
+                }
+                if (data.latitude) latitude = String(data.latitude);
+                if (data.longitude) longitude = String(data.longitude);
+                return;
+              }
+            }
+          } catch (e) {
+            console.warn("Failed to fetch location from ipwho.is", e);
+          }
+          // Attempt 2: freeipapi.com
           try {
             const res = await fetch("https://freeipapi.com/api/json");
             if (res.ok) {
@@ -7994,7 +8014,7 @@
           } catch (e) {
             console.warn("Failed to fetch location from freeipapi", e);
           }
-          // Fallback to ipapi.co
+          // Attempt 3: ipapi.co
           try {
             const res = await fetch("https://ipapi.co/json/");
             if (res.ok) {

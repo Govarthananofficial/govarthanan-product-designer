@@ -113,8 +113,8 @@ exports.handler = async function (event) {
     hour12: true,
   });
 
-  // ── Social links — icon image buttons (works in Gmail, Outlook, Apple Mail) ─
-  // Using CDN-hosted icon PNGs via img2url / simpleicons — no SVG, no web fonts.
+  // ── Social links — icon image buttons (Gmail-safe: white color baked in via Iconify API) ─
+  // Iconify API supports ?color=white so no CSS filter is needed — works in Gmail/Outlook.
   const socialLinksHtml = `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
       <tr>
@@ -125,9 +125,9 @@ exports.handler = async function (event) {
                     border-radius:6px;padding:11px;width:40px;height:40px;
                     box-sizing:border-box;text-align:center;vertical-align:middle;"
              title="LinkedIn">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/linkedin.svg"
+            <img src="https://api.iconify.design/simple-icons:linkedin.svg?color=%23ffffff"
                  alt="LinkedIn" width="18" height="18"
-                 style="display:block;margin:0 auto;filter:invert(1);border:0;outline:none;" />
+                 style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
         <!-- Behance -->
@@ -137,9 +137,9 @@ exports.handler = async function (event) {
                     border-radius:6px;padding:11px;width:40px;height:40px;
                     box-sizing:border-box;text-align:center;vertical-align:middle;"
              title="Behance">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/behance.svg"
+            <img src="https://api.iconify.design/simple-icons:behance.svg?color=%23ffffff"
                  alt="Behance" width="18" height="18"
-                 style="display:block;margin:0 auto;filter:invert(1);border:0;outline:none;" />
+                 style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
         <!-- GitHub -->
@@ -149,9 +149,9 @@ exports.handler = async function (event) {
                     border-radius:6px;padding:11px;width:40px;height:40px;
                     box-sizing:border-box;text-align:center;vertical-align:middle;"
              title="GitHub">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/github.svg"
+            <img src="https://api.iconify.design/simple-icons:github.svg?color=%23ffffff"
                  alt="GitHub" width="18" height="18"
-                 style="display:block;margin:0 auto;filter:invert(1);border:0;outline:none;" />
+                 style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
         <!-- npm -->
@@ -161,9 +161,9 @@ exports.handler = async function (event) {
                     border-radius:6px;padding:11px;width:40px;height:40px;
                     box-sizing:border-box;text-align:center;vertical-align:middle;"
              title="npm">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/npm.svg"
+            <img src="https://api.iconify.design/simple-icons:npm.svg?color=%23ffffff"
                  alt="npm" width="18" height="18"
-                 style="display:block;margin:0 auto;filter:invert(1);border:0;outline:none;" />
+                 style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
         <!-- Figma -->
@@ -173,9 +173,9 @@ exports.handler = async function (event) {
                     border-radius:6px;padding:11px;width:40px;height:40px;
                     box-sizing:border-box;text-align:center;vertical-align:middle;"
              title="Figma">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/figma.svg"
+            <img src="https://api.iconify.design/simple-icons:figma.svg?color=%23ffffff"
                  alt="Figma" width="18" height="18"
-                 style="display:block;margin:0 auto;filter:invert(1);border:0;outline:none;" />
+                 style="display:block;margin:0 auto;border:0;outline:none;" />
           </a>
         </td>
       </tr>

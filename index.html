@@ -162,6 +162,7 @@
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
     <script>
       // Always start at the top on refresh — don't restore scroll position
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -229,7 +230,23 @@
 
       /* ─── BASE ─── */
       html {
-        scroll-behavior: smooth;
+        scroll-behavior: auto;
+      }
+      html.lenis,
+      html.lenis body {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+      .lenis.lenis-scrolling iframe {
+        pointer-events: none;
       }
 
       body {
@@ -269,17 +286,65 @@
 
       /* ─── CURSOR ─── */
       .cursor-dot {
-        width: 6px;
-        height: 6px;
+        width: 8px;
+        height: 8px;
         background: var(--primary);
         border-radius: 50%;
         position: fixed;
+        left: 0;
+        top: 0;
         pointer-events: none;
         z-index: 10000;
         transform: translate(-50%, -50%);
         transition:
-          opacity 0.2s,
-          transform 0.1s;
+          opacity 0.3s,
+          width 0.2s,
+          height 0.2s,
+          background-color 0.2s;
+        will-change: transform;
+      }
+      .cursor-follower {
+        width: 32px;
+        height: 32px;
+        border: 1.2px solid var(--primary);
+        border-radius: 50%;
+        position: fixed;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition:
+          opacity 0.3s,
+          width 0.3s,
+          height 0.3s,
+          background-color 0.3s,
+          border-color 0.3s;
+        will-change: transform;
+      }
+      .cursor-dot.hover {
+        width: 14px;
+        height: 14px;
+        background: rgba(29, 29, 31, 0.1);
+      }
+      .cursor-follower.hover {
+        width: 46px;
+        height: 46px;
+        border-color: transparent;
+        background: rgba(29, 29, 31, 0.05);
+      }
+
+      /* ─── SPLIT TEXT MASKING ─── */
+      .split-word {
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: bottom;
+        white-space: nowrap;
+      }
+      .split-char {
+        display: inline-block;
+        transform: translateY(110%);
+        will-change: transform;
       }
 
       /* ─── LAYOUT ─── */
@@ -422,7 +487,6 @@
       .nav-cta:hover {
         background: var(--primary-hover) !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
-        transform: translateY(-1px);
       }
 
       /* ═══════════════════════════════════
@@ -788,8 +852,8 @@
           background 0.2s;
       }
       .ah-btn-dark:hover {
-        background: #000000;
-        transform: translateY(-2px);
+        background: #ffffff;
+        color: #000000 !important;
         box-shadow: 0 12px 32px rgba(29, 29, 31, 0.18);
       }
       .ah-btn-dark i {
@@ -1075,7 +1139,6 @@
         margin-top: 0;
       }
       .cap-item:hover {
-        transform: translateY(-4px);
         border-color: var(--primary-border);
         box-shadow: var(--sh1);
       }
@@ -1184,7 +1247,6 @@
       }
       .p-card:hover {
         box-shadow: var(--sh3);
-        transform: translateY(-4px);
         border-color: var(--primary-border);
       }
       .p-card:hover::before {
@@ -1357,10 +1419,8 @@
         border-color: var(--primary);
         color: #ffffff;
         box-shadow: 0 4px 12px rgba(29, 29, 31, 0.08);
-        transform: translateY(-1.5px);
       }
       .p-link-btn:active {
-        transform: translateY(-0.5px);
         box-shadow: 0 2px 6px rgba(29, 29, 31, 0.06);
       }
       .p-link-btn i {
@@ -1476,7 +1536,6 @@
       .brand-card:hover {
         box-shadow: var(--sh2);
         border-color: var(--primary-border);
-        transform: translateY(-2px);
       }
       .brand-letter {
         font-family: "DM Sans", sans-serif;
@@ -1636,7 +1695,6 @@
           border-color 0.22s ease;
       }
       .sys-stat:hover {
-        transform: translateY(-2px);
         background: #f5f5f7;
         border-color: rgba(29, 29, 31, 0.18);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -1713,7 +1771,6 @@
       .sys-card:hover {
         border-color: rgba(29, 29, 31, 0.18);
         background: #f5f5f7;
-        transform: translateY(-5px);
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
       }
 
@@ -1897,9 +1954,9 @@
         border: 1px solid #1d1d1f;
       }
       .sys-btn.primary:hover {
-        background: #000000;
-        color: #ffffff !important;
-        transform: translateY(-1px);
+        background: #ffffff;
+        color: #000000 !important;
+        border-color: #ffffff;
         box-shadow: 0 4px 12px rgba(29, 29, 31, 0.25);
       }
       .sys-btn.secondary {
@@ -1911,7 +1968,6 @@
         background: rgba(29, 29, 31, 0.05);
         border-color: rgba(29, 29, 31, 0.3);
         color: #1d1d1f !important;
-        transform: translateY(-1px);
       }
       a.sys-card:hover .sys-card-arr i {
         transform: translate(2px, -2px);
@@ -2389,7 +2445,6 @@
       }
       .contact-cta-btn:hover {
         background: #000000;
-        transform: translateY(-3px);
         box-shadow:
           0 4px 16px rgba(0, 0, 0, 0.18),
           0 14px 44px rgba(0, 0, 0, 0.24);
@@ -2503,7 +2558,9 @@
         justify-content: center;
         font-size: 18px;
         flex-shrink: 0;
-        transition: background 0.24s, transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+        transition:
+          background 0.24s,
+          transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .contact-row:hover .contact-row-icon {
         background: var(--primary);
@@ -3064,12 +3121,11 @@
         pointer-events: none;
       }
       .form-submit-btn:hover:not(:disabled) {
-        background: #000000;
-        transform: translateY(-2px);
+        background: #ffffff;
+        color: #000000 !important;
         box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
       }
       .form-submit-btn:active:not(:disabled) {
-        transform: translateY(0);
       }
       .form-submit-btn:disabled {
         opacity: 0.55;
@@ -4093,10 +4149,8 @@
         border-color: var(--primary);
         color: #ffffff;
         box-shadow: 0 4px 12px rgba(29, 29, 31, 0.08);
-        transform: translateY(-1.5px);
       }
       .client-view-btn:active {
-        transform: translateY(-0.5px);
         box-shadow: 0 2px 6px rgba(29, 29, 31, 0.06);
       }
       .client-view-btn i {
@@ -4640,14 +4694,10 @@
         color: var(--primary);
         border-color: var(--primary-border);
         background: var(--primary-faint);
-        transform: translateY(-1px);
       }
       .resume-dl-btn i {
         font-size: 16px;
         transition: transform 0.24s;
-      }
-      .resume-dl-btn:hover i {
-        transform: translateY(-2px);
       }
       .hero-resume-btn {
         background: #ffffff;
@@ -4998,7 +5048,6 @@
         background: #f5f5f7;
         color: #1d1d1f !important;
         border-color: #f5f5f7;
-        transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(255, 255, 255, 0.25);
       }
 
@@ -5049,8 +5098,8 @@
           <li><a href="#experience">Experience</a></li>
           <li>
             <a
-              href="Govarthanan_Resume.pdf"
-              download="Govarthanan_Resume.pdf"
+              href="Govarthanan Selvaganessane Product Designer Resume.pdf"
+              download="Govarthanan Selvaganessane Product Designer Resume.pdf"
               class="nav-resume-btn"
             >
               <i class="ri-download-2-fill"></i> Resume
@@ -5130,8 +5179,8 @@
       </div>
       <div class="mob-foot">
         <a
-          href="Govarthanan_Resume.pdf"
-          download="Govarthanan_Resume.pdf"
+          href="Govarthanan Selvaganessane Product Designer Resume.pdf"
+          download="Govarthanan Selvaganessane Product Designer Resume.pdf"
           class="resume-dl-btn resume-dl-btn--full"
         >
           <i class="ri-download-2-fill"></i> Download Resume
@@ -5184,9 +5233,7 @@
               <span class="ah-ml">Products Shipped</span>
             </div>
             <div class="ah-metric">
-              <span class="ah-mv" data-count="1857" data-suffix=""
-                >1,857</span
-              >
+              <span class="ah-mv" data-count="1857" data-suffix="">1,857</span>
               <span class="ah-ml">Total npm Downloads</span>
             </div>
             <div class="ah-metric">
@@ -5220,8 +5267,8 @@
                 <i class="ri-arrow-right-fill"></i>
               </a>
               <a
-                href="Govarthanan_Resume.pdf"
-                download="Govarthanan_Resume.pdf"
+                href="Govarthanan Selvaganessane Product Designer Resume.pdf"
+                download="Govarthanan Selvaganessane Product Designer Resume.pdf"
                 class="ah-btn-ghost"
               >
                 <i class="ri-download-2-fill"></i>
@@ -5663,8 +5710,9 @@
               <div class="impact-label">Total organic downloads</div>
               <div class="impact-context">
                 Open-source developer tools, utilities, and motion UI libraries
-                published to npm, achieved entirely through organic discoverability,
-                developer discovery, search indexing, and SEO optimization.
+                published to npm, achieved entirely through organic
+                discoverability, developer discovery, search indexing, and SEO
+                optimization.
               </div>
             </div>
           </div>
@@ -5999,10 +6047,16 @@
             </div>
             <div class="p-name">Amazon Order Tracking</div>
             <div class="p-sub">
-              Redesigning clarity, trust, and usability in post-purchase tracking.
+              Redesigning clarity, trust, and usability in post-purchase
+              tracking.
             </div>
             <p class="p-desc">
-              Redesigned Amazon's order tracking page to solve key friction points for users. Surveyed 10+ active Prime users, introduced an intuitive, color-coded visual progress timeline, elevated support access above the fold, and grouped utility options in a Quick Actions panel. Measurably increased information clarity and decreased cognitive load.
+              Redesigned Amazon's order tracking page to solve key friction
+              points for users. Surveyed 10+ active Prime users, introduced an
+              intuitive, color-coded visual progress timeline, elevated support
+              access above the fold, and grouped utility options in a Quick
+              Actions panel. Measurably increased information clarity and
+              decreased cognitive load.
             </p>
             <div class="p-metrics">
               <div class="p-met">
@@ -6656,8 +6710,8 @@
             </p>
             <div class="exp-sidebar-resume reveal">
               <a
-                href="Govarthanan_Resume.pdf"
-                download="Govarthanan_Resume.pdf"
+                href="Govarthanan Selvaganessane Product Designer Resume.pdf"
+                download="Govarthanan Selvaganessane Product Designer Resume.pdf"
                 class="resume-dl-btn"
               >
                 <i class="ri-download-2-fill"></i>
@@ -7004,7 +7058,9 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-icon"><i class="ri-mail-fill"></i></div>
+                  <div class="contact-row-icon">
+                    <i class="ri-mail-fill"></i>
+                  </div>
                   <div class="contact-left-texts">
                     <div class="contact-row-name">Email</div>
                     <div class="contact-row-val">
@@ -7018,7 +7074,9 @@
               </a>
               <a href="tel:+919344081006" class="contact-row">
                 <div class="contact-left">
-                  <div class="contact-row-icon"><i class="ri-phone-fill"></i></div>
+                  <div class="contact-row-icon">
+                    <i class="ri-phone-fill"></i>
+                  </div>
                   <div class="contact-left-texts">
                     <div class="contact-row-name">Phone</div>
                     <div class="contact-row-val">+91 9344081006</div>
@@ -7039,7 +7097,9 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-icon"><i class="ri-linkedin-fill"></i></div>
+                  <div class="contact-row-icon">
+                    <i class="ri-linkedin-fill"></i>
+                  </div>
                   <div class="contact-left-texts">
                     <div class="contact-row-name">LinkedIn</div>
                     <div class="contact-row-val">sgovarthanan</div>
@@ -7056,7 +7116,9 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-icon"><i class="ri-github-fill"></i></div>
+                  <div class="contact-row-icon">
+                    <i class="ri-github-fill"></i>
+                  </div>
                   <div class="contact-left-texts">
                     <div class="contact-row-name">GitHub</div>
                     <div class="contact-row-val">salkomdesignstudio</div>
@@ -7073,7 +7135,9 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-icon"><i class="ri-behance-fill"></i></div>
+                  <div class="contact-row-icon">
+                    <i class="ri-behance-fill"></i>
+                  </div>
                   <div class="contact-left-texts">
                     <div class="contact-row-name">Behance</div>
                     <div class="contact-row-val">govarthananuxui</div>
@@ -7090,7 +7154,9 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-icon"><i class="ri-npmjs-fill"></i></div>
+                  <div class="contact-row-icon">
+                    <i class="ri-npmjs-fill"></i>
+                  </div>
                   <div class="contact-left-texts">
                     <div class="contact-row-name">npm Package</div>
                     <div class="contact-row-val">
@@ -7109,7 +7175,9 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-icon"><i class="ri-instagram-fill"></i></div>
+                  <div class="contact-row-icon">
+                    <i class="ri-instagram-fill"></i>
+                  </div>
                   <div class="contact-left-texts">
                     <div class="contact-row-name">Instagram</div>
                     <div class="contact-row-val">Govarthananofficial</div>
@@ -7481,20 +7549,89 @@
     </footer>
 
     <script>
-      /* CURSOR */
-      const dot = document.getElementById("cursorDot");
-      document.addEventListener("mousemove", (e) => {
-        dot.style.left = e.clientX + "px";
-        dot.style.top = e.clientY + "px";
-      });
-      document.documentElement.addEventListener(
-        "mouseleave",
-        () => (dot.style.opacity = "0"),
-      );
-      document.documentElement.addEventListener(
-        "mouseenter",
-        () => (dot.style.opacity = "1"),
-      );
+      /* ─── upgraded INTERACTIVE CURSOR ─── */
+      (function () {
+        const dot = document.getElementById("cursorDot");
+        if (!dot) return;
+
+        // Create the follower circle
+        const follower = document.createElement("div");
+        follower.className = "cursor-follower";
+        follower.id = "cursorFollower";
+        document.body.appendChild(follower);
+
+        let mouseX = 0,
+          mouseY = 0;
+        let followerX = 0,
+          followerY = 0;
+        let dotX = 0,
+          dotY = 0;
+        let lastFollowerX = 0,
+          lastFollowerY = 0;
+
+        document.addEventListener("mousemove", (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        });
+
+        // Loop for smooth lag & movement response with warping
+        function updateCursor() {
+          dotX += (mouseX - dotX) * 0.35;
+          dotY += (mouseY - dotY) * 0.35;
+
+          followerX += (mouseX - followerX) * 0.12;
+          followerY += (mouseY - followerY) * 0.12;
+
+          // Calculate displacement speed for stretching/warping
+          const dx = followerX - lastFollowerX;
+          const dy = followerY - lastFollowerY;
+          const speed = Math.sqrt(dx * dx + dy * dy);
+          const warp = Math.min(speed / 120, 0.45); // Limit warp to 45% stretch
+          const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+          lastFollowerX = followerX;
+          lastFollowerY = followerY;
+
+          // Set transforms
+          dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+
+          // Follower stretches dynamically in the direction of movement
+          const scaleX = 1 + warp;
+          const scaleY = 1 - warp;
+          follower.style.transform = `translate3d(${followerX}px, ${followerY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scale(${scaleX}, ${scaleY})`;
+
+          requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+
+        // Mouse visibility states
+        document.documentElement.addEventListener("mouseleave", () => {
+          gsap.to([dot, follower], { opacity: 0, duration: 0.3 });
+        });
+        document.documentElement.addEventListener("mouseenter", () => {
+          gsap.to([dot, follower], { opacity: 1, duration: 0.3 });
+        });
+
+        // Hover states over buttons, links & interactive containers
+        function refreshCursorHover() {
+          const hoverTargets = document.querySelectorAll(
+            "a, button, [role='button'], .p-card, .cap-item, .testi-card-h, .sys-card, .hiw-step, .resume-dl-btn",
+          );
+          hoverTargets.forEach((el) => {
+            el.addEventListener("mouseenter", () => {
+              dot.classList.add("hover");
+              follower.classList.add("hover");
+            });
+            el.addEventListener("mouseleave", () => {
+              dot.classList.remove("hover");
+              follower.classList.remove("hover");
+            });
+          });
+        }
+
+        refreshCursorHover();
+        window.addEventListener("refreshCursor", refreshCursorHover);
+      })();
 
       /* NAV */
       const nav = document.getElementById("mainNav");
@@ -7510,15 +7647,76 @@
       try {
         gsap.registerPlugin(ScrollTrigger);
 
-        gsap.utils.toArray(".reveal").forEach((el) => {
+        // 1. Lenis Smooth Scroll (Butter Smooth Physics)
+        const lenis = new Lenis({
+          lerp: 0.05,
+          wheelMultiplier: 0.85,
+          smoothWheel: true,
+          syncTouch: true,
+        });
+
+        lenis.on("scroll", ScrollTrigger.update);
+
+        gsap.ticker.add((time) => {
+          lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+
+        // 2. Custom SplitText Character Rise Animation
+        initSplitText();
+
+        // 3. Scroll Skew/Distortion Effect
+        initScrollDistortion();
+
+        // 4. Process Steps Active Highlighting
+        initProcessHighlighting();
+
+        // Non-split elements animate with a beautiful staggered fade-up batch reveal
+        const batchRevealElements = gsap.utils.toArray(".reveal").filter(el => 
+          !el.querySelector(".split-char") && 
+          !el.classList.contains("split-char") && 
+          !el.classList.contains("about-h") && 
+          !el.classList.contains("sys-h") && 
+          !el.classList.contains("tech-h") && 
+          !el.classList.contains("contact-h") && 
+          el.tagName !== "H2"
+        );
+        
+        ScrollTrigger.batch(batchRevealElements, {
+          onEnter: (batch) => {
+            gsap.set(batch, { opacity: 0, y: 28 });
+            gsap.to(batch, {
+              opacity: 1,
+              y: 0,
+              stagger: 0.12,
+              duration: 0.8,
+              ease: "power2.out",
+              overwrite: "auto"
+            });
+          },
+          start: "top 88%",
+          once: true
+        });
+
+        // Split elements (headings) animate container opacity with no shift (letters slide up inside)
+        const splitHeadingContainers = gsap.utils.toArray(".reveal").filter(el => 
+          el.querySelector(".split-char") || 
+          el.tagName === "H2" || 
+          el.classList.contains("about-h") || 
+          el.classList.contains("sys-h") || 
+          el.classList.contains("tech-h") || 
+          el.classList.contains("contact-h")
+        );
+        
+        splitHeadingContainers.forEach((el) => {
           gsap.fromTo(
             el,
-            { opacity: 0, y: 28 },
+            { opacity: 0, y: 0 },
             {
               opacity: 1,
               y: 0,
-              duration: 0.85,
-              ease: "power3.out",
+              duration: 0.6,
+              ease: "power2.out",
               scrollTrigger: {
                 trigger: el,
                 start: "top 88%",
@@ -7527,6 +7725,149 @@
             },
           );
         });
+
+        // Helper animation functions
+        function initSplitText() {
+          const textElements = document.querySelectorAll(
+            "h2.reveal, .reveal h2, .sec-head h2, .about-h, .hiw-left h2, .sys-h, .tech-h, .contact-h"
+          );
+          textElements.forEach((el) => {
+            if (el.querySelector(".split-word")) return;
+
+            // Helper function to split a text node or element node recursively
+            function splitNode(node) {
+              // 1. For text nodes, split into words and characters
+              if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent;
+                // If it is just whitespace, preserve it as a text node
+                if (!text.trim()) {
+                  return document.createTextNode(text);
+                }
+
+                const fragment = document.createDocumentFragment();
+                // Split by spaces and capture them
+                const parts = text.split(/(\s+)/);
+
+                parts.forEach((part) => {
+                  if (!part) return;
+                  if (/\s+/.test(part)) {
+                    fragment.appendChild(document.createTextNode(part));
+                  } else {
+                    const wordSpan = document.createElement("span");
+                    wordSpan.className = "split-word";
+
+                    const letters = Array.from(part);
+                    letters.forEach((char) => {
+                      const charSpan = document.createElement("span");
+                      charSpan.className = "split-char";
+                      charSpan.textContent = char;
+                      wordSpan.appendChild(charSpan);
+                    });
+                    fragment.appendChild(wordSpan);
+                  }
+                });
+                return fragment;
+              }
+              // 2. For elements (like <br /> or <em>), clone and recursively split children
+              else if (node.nodeType === Node.ELEMENT_NODE) {
+                // shallow clone (retains attributes, styles, tag name)
+                const clone = node.cloneNode(false);
+
+                // Recursively split each child node
+                const childNodes = Array.from(node.childNodes);
+                childNodes.forEach((child) => {
+                  const processedChild = splitNode(child);
+                  if (processedChild) {
+                    clone.appendChild(processedChild);
+                  }
+                });
+                return clone;
+              }
+              return null;
+            }
+
+            // Generate the split DOM fragment from all child nodes
+            const originalChildren = Array.from(el.childNodes);
+            const fragment = document.createDocumentFragment();
+
+            originalChildren.forEach((child) => {
+              const processed = splitNode(child);
+              if (processed) {
+                fragment.appendChild(processed);
+              }
+            });
+
+            // Replace the original content with the new processed structure
+            el.innerHTML = "";
+            el.appendChild(fragment);
+
+            // Animate only the split characters
+            gsap.to(el.querySelectorAll(".split-char"), {
+              y: "0%",
+              duration: 0.85,
+              stagger: 0.015,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
+            });
+          });
+        }
+
+        function initScrollDistortion() {
+          const cards = gsap.utils.toArray(
+            ".p-card, .cap-item, .testi-card-h, .sys-card",
+          );
+          const setters = cards.map((el) => ({
+            el: el,
+            set: gsap.quickSetter(el, "skewY", "deg"),
+          }));
+
+          let currentSkew = 0;
+          const clamp = gsap.utils.clamp(-4, 4);
+
+          // Use GSAP ticker for a buttery, lerped render loop
+          gsap.ticker.add(() => {
+            const velocity = ScrollTrigger.getVelocity();
+            const targetSkew = clamp(velocity / -500);
+
+            currentSkew += (targetSkew - currentSkew) * 0.12;
+            const activeSkew = Math.abs(currentSkew) < 0.01 ? 0 : currentSkew;
+
+            setters.forEach((item) => {
+              if (activeSkew !== 0 && ScrollTrigger.isInViewport(item.el)) {
+                item.set(activeSkew);
+              } else {
+                item.set(0);
+              }
+            });
+          });
+        }
+
+
+
+        function initProcessHighlighting() {
+          const steps = document.querySelectorAll(".hiw-step");
+          steps.forEach((step) => {
+            gsap.fromTo(
+              step,
+              { opacity: 0.35, y: 15 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                scrollTrigger: {
+                  trigger: step,
+                  start: "top 70%",
+                  end: "bottom 30%",
+                  toggleActions: "play reverse play reverse",
+                },
+              },
+            );
+          });
+        }
 
         /* ─── Testimonials Horizontal Scroll ─── */
         (function () {

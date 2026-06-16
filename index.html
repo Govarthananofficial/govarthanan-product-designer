@@ -8487,7 +8487,25 @@
         let longitude = "";
 
         async function loadLocation() {
-          // Attempt 1: ipapi.co
+          // Attempt 1: BigDataCloud Reverse Geocode (free, keyless, CORS-enabled, HTTPS support)
+          try {
+            const res = await fetch("https://api.bigdatacloud.net/data/reverse-geocode-client");
+            if (res.ok) {
+              const data = await res.json();
+              if (data.city && data.principalSubdivision && data.countryName) {
+                exactLocation = `${data.city}, ${data.principalSubdivision}, ${data.countryName}`;
+              } else if (data.city && data.countryName) {
+                exactLocation = `${data.city}, ${data.countryName}`;
+              }
+              if (data.latitude) latitude = String(data.latitude);
+              if (data.longitude) longitude = String(data.longitude);
+              return;
+            }
+          } catch (e) {
+            // Silently fail, proceed to fallback
+          }
+
+          // Attempt 2: ipapi.co (as fallback)
           try {
             const res = await fetch("https://ipapi.co/json/");
             if (res.ok) {
@@ -8502,9 +8520,10 @@
               return;
             }
           } catch (e) {
-            console.warn("Failed to fetch location from ipapi.co", e);
+            // Silently fail, proceed to fallback
           }
-          // Attempt 2: ipinfo.io
+
+          // Attempt 3: ipinfo.io (as fallback)
           try {
             const res = await fetch("https://ipinfo.io/json");
             if (res.ok) {
@@ -8522,7 +8541,7 @@
               return;
             }
           } catch (e) {
-            console.warn("Failed to fetch location from ipinfo.io", e);
+            // Silently fail
           }
         }
         // Load silently in background

@@ -7828,9 +7828,12 @@
           let currentSkew = 0;
           const clamp = gsap.utils.clamp(-4, 4);
 
+          // Create ScrollTrigger instance to track scroll velocity
+          const velocityTracker = ScrollTrigger.create({});
+
           // Use GSAP ticker for a buttery, lerped render loop
           gsap.ticker.add(() => {
-            const velocity = ScrollTrigger.getVelocity();
+            const velocity = velocityTracker.getVelocity();
             const targetSkew = clamp(velocity / -500);
 
             currentSkew += (targetSkew - currentSkew) * 0.12;

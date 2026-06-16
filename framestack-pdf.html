@@ -1,0 +1,1523 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FrameStack PDF — Case Study · Govarthanan S.</title>
+  <meta name="description" content="A Figma Plugin Case Study: Solo Designer + Engineer building FrameStack PDF." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #1d1d1f;
+      --ink-mid:    #1d1d1f;
+      --ink-muted:  #86868b;
+      --ink-faint:  #86868b;
+      --border:     rgba(29, 29, 31, 0.08);
+      --border-md:  rgba(29, 29, 31, 0.14);
+      --bg:         #ffffff;
+      --bg-2:       #f5f5f7;
+      --bg-3:       #f5f5f7;
+      --accent:     #1d1d1f;
+      --accent-lt:  #f5f5f7;
+      --accent-dk:  #1d1d1f;
+      --warn:       #86868b;
+      --warn-lt:    #f5f5f7;
+      --red:        #86868b;
+      --red-lt:     #f5f5f7;
+      --blue:       #86868b;
+      --blue-lt:    #f5f5f7;
+      --NAV-H:      56px;
+      --sh1: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
+      --sh2: 0 4px 20px rgba(0, 0, 0, 0.07), 0 12px 40px rgba(0, 0, 0, 0.05);
+      --sh3: 0 8px 40px rgba(0, 0, 0, 0.09), 0 24px 72px rgba(0, 0, 0, 0.06);
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.45;
+    }
+
+    /* Bootstrap Reset overrides to maintain design language */
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      color: inherit;
+    }
+    button:focus, a:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    /* ── PROGRESS ── */
+    #prog {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 2px; background: var(--border); z-index: 400;
+    }
+    #prog-fill {
+      height: 100%; width: 0%; background: var(--accent);
+      transition: width .08s linear;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 2px; left: 0; right: 0;
+      height: var(--NAV-H); z-index: 300;
+      background: rgba(255,255,255,0.93);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 13px; font-weight: 500; color: var(--ink-mid);
+      text-decoration: none; padding: 6px 12px; border-radius: 7px;
+      border: 1px solid var(--border-md);
+      transition: background .15s;
+    }
+    .nav-back:hover { background: var(--bg-2); }
+    .nav-tag { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+    .nav-right { display: flex; gap: 8px; }
+    .nav-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-mid); padding: 5px 11px; border-radius: 6px;
+      border: 1px solid var(--border-md); text-decoration: none;
+      transition: background .15s;
+    }
+    .nav-pill:hover { background: var(--bg-2); }
+
+    /* ── LAYOUT ── */
+    /* .w layout class removed in favor of Bootstrap .container */
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      padding: calc(var(--NAV-H) + 64px) 0 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,.05) 0%, transparent 55%),
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,.03) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+    }
+
+    /* ── EYEBROW ── */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 20px;
+    }
+    .eyebrow::before { content: ""; width: 20px; height: 1px; background: var(--accent); }
+    .hero .eyebrow { color: #ffffff; }
+    .hero .eyebrow::before { background: #ffffff; }
+
+    /* ── HERO H1 ── */
+    .hero h1 {
+      font-size: clamp(40px, 5.5vw, 68px);
+      font-weight: 800;
+      line-height: .96;
+      letter-spacing: -.04em;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .hero-sub {
+      font-size: clamp(15px, 1.6vw, 18px);
+      color: rgba(255,255,255,.55);
+      line-height: 1.6;
+      max-width: 54ch;
+      margin-bottom: 40px;
+    }
+
+    /* ── HERO METRICS ── */
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,.07);
+      border-radius: 14px 14px 0 0;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.07);
+      border-bottom: none;
+    }
+    .hm {
+      padding: 20px 22px 22px;
+      background: rgba(255,255,255,.03);
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .hm-val {
+      font-size: clamp(26px, 3vw, 34px);
+      font-weight: 800; letter-spacing: -.04em;
+      color: #fff; line-height: 1;
+    }
+    .hm-val span { color: #ffffff; }
+    .hm-label {
+      font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.35); line-height: 1.4;
+    }
+
+    /* ── HERO CTA BAR ── */
+    .hero-cta {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 22px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-top: none;
+      border-radius: 0 0 14px 14px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 12.5px; font-weight: 600; letter-spacing: -.01em;
+      background: var(--accent); color: #fff;
+      padding: 9px 18px; border-radius: 8px;
+      text-decoration: none; border: none;
+      transition: background .15s;
+    }
+    .btn-primary:hover { background: var(--accent-dk); }
+    .hero .btn-primary {
+      background: #ffffff; color: #1d1d1f;
+    }
+    .hero .btn-primary:hover { background: #f5f5f7; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12.5px; font-weight: 500;
+      color: rgba(255,255,255,.5); padding: 9px 14px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.1); text-decoration: none;
+      transition: background .15s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.75); }
+    .cta-sep { flex: 1; }
+    .cta-note {
+      font-size: 11px; color: rgba(255,255,255,.25);
+      letter-spacing: .05em; text-transform: uppercase;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-of-type { border-bottom: none; }
+    .section.alt { background: var(--bg-2); }
+
+    .s-label {
+      display: inline-flex; align-items: center; gap: 9px;
+      font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 12px;
+    }
+    .s-label::before { content: ""; width: 16px; height: 1px; background: var(--ink-faint); }
+
+    .section h2 {
+      font-size: clamp(22px, 2.8vw, 32px);
+      font-weight: 800; letter-spacing: -.035em;
+      color: var(--ink); line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .section h2 em {
+      font-family: "Instrument Serif", serif;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--ink-muted);
+    }
+    .section p {
+      font-size: 15.5px; color: var(--ink-mid);
+      line-height: 1.78; letter-spacing: -.005em;
+      margin-bottom: 16px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+    .section strong { color: var(--ink); font-weight: 600; }
+
+    /* ── SNAPSHOT (2-column overview) ── */
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .snap-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.25s ease;
+    }
+    .snap-card:hover {
+      border-color: var(--border-md);
+      box-shadow: var(--sh1);
+      transform: translateY(-2px);
+    }
+    .snap-card.accent-card {
+      background: var(--bg);
+      border-color: var(--border-md);
+      box-shadow: var(--sh1);
+    }
+    .snap-card.accent-card:hover {
+      box-shadow: var(--sh2);
+    }
+    .snap-card-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .snap-card-label i {
+      font-size: 16px;
+      color: var(--ink);
+    }
+    .snap-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 0; margin: 0;
+    }
+    .snap-list li {
+      font-size: 14px; color: var(--ink-mid); line-height: 1.5;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .snap-list li i {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+    .snap-card.accent-card .snap-list li i {
+      color: var(--ink);
+    }
+
+    /* ── PROBLEM CALLOUT ── */
+    .problem-block {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin: 32px 0;
+    }
+    .problem-block-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .problem-block-title::before { content: ""; width: 16px; height: 1px; background: var(--ink-muted); }
+    .problem-vs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+      border: none;
+      background: transparent;
+    }
+    .problem-vs-col {
+      padding: 24px;
+      border-radius: 16px;
+      transition: all 0.25s ease;
+    }
+    .problem-vs-col:first-child {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+    }
+    .problem-vs-col:first-child:hover {
+      border-color: var(--border-md);
+      box-shadow: var(--sh1);
+    }
+    .problem-vs-col:last-child {
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      box-shadow: var(--sh1);
+    }
+    .problem-vs-col:last-child:hover {
+      box-shadow: var(--sh2);
+      border-color: var(--ink);
+    }
+    .pvc-title {
+      font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .problem-vs-col:first-child .pvc-title { color: var(--ink-muted); }
+    .problem-vs-col:last-child .pvc-title { color: var(--ink); }
+    .pvc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; }
+    .pvc-list li { font-size: 13.5px; color: var(--ink-mid); line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+    .pvc-list li i { font-size: 14px; margin-top: 3px; flex-shrink: 0; }
+    .problem-vs-col:first-child .pvc-list li i { color: var(--ink-muted); }
+    .problem-vs-col:last-child .pvc-list li i { color: var(--ink); }
+
+    /* ── COMPETITOR TABLE ── */
+    .comp-table {
+      width: 100%; border-collapse: collapse;
+      border: 1px solid var(--border-md); border-radius: 16px;
+      overflow: hidden; margin: 32px 0;
+      font-size: 13.5px;
+      box-shadow: var(--sh1);
+      background: var(--bg);
+    }
+    .comp-table thead tr { background: var(--bg-2); border-bottom: 1px solid var(--border-md); }
+    .comp-table th {
+      padding: 16px 20px; text-align: left;
+      font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .comp-table td {
+      padding: 16px 20px; color: var(--ink-mid);
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      transition: background 0.15s;
+    }
+    .comp-table tr:hover td { background: rgba(0, 0, 0, 0.01); }
+    .comp-table tr:last-child td { border-bottom: none; }
+    .comp-table tr.sds-row td { background: var(--bg-2); color: var(--ink); font-weight: 600; }
+    .comp-table tr.sds-row td:first-child { font-weight: 800; color: var(--ink); }
+    .comp-table td i { font-size: 18px; display: inline-block; vertical-align: middle; }
+
+    /* ── ARCHITECTURE LAYERS ── */
+    .arch-wrap {
+      margin: 32px 0;
+      border: 1px solid var(--border-md);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--sh1);
+    }
+    .arch-layer {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border-md);
+      background: var(--bg);
+      transition: all 0.25s ease;
+    }
+    .arch-layer:last-child { border-bottom: none; }
+    .arch-layer:hover {
+      background: rgba(0, 0, 0, 0.015);
+    }
+    .arch-left {
+      padding: 24px;
+      border-right: 1px solid var(--border-md);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--bg-2);
+      justify-content: center;
+    }
+    .arch-badge {
+      font-size: 9.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 6px;
+      display: inline-block; width: fit-content;
+      text-align: center;
+      line-height: 1;
+    }
+    .arch-badge.required { background: var(--ink); color: #fff; border: 1px solid var(--ink); }
+    .arch-badge.optional { background: var(--bg); color: var(--ink-muted); border: 1px solid var(--border-md); }
+    .arch-size {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; font-weight: 600; color: var(--ink-muted);
+    }
+    .arch-right {
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .arch-name {
+      font-size: 16px; font-weight: 700; letter-spacing: -.02em;
+      color: var(--ink); margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .arch-name i {
+      font-size: 18px;
+      color: var(--ink);
+    }
+    .arch-desc {
+      font-size: 14px; color: var(--ink-muted); line-height: 1.65;
+    }
+    .arch-tags {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
+    }
+    .arch-tag {
+      font-size: 10.5px; font-weight: 600;
+      padding: 3px 10px; border-radius: 6px;
+      border: 1px solid var(--border-md);
+      background: var(--bg-2);
+      color: var(--ink-muted);
+    }
+
+    /* ── VERSION TIMELINE ── */
+    .versions {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 24px;
+      position: relative;
+    }
+    .versions::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 36px;
+      width: 1px;
+      background: var(--border-md);
+      z-index: 1;
+    }
+    .version {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 24px;
+      padding: 0;
+      border-bottom: none;
+      position: relative;
+      z-index: 2;
+    }
+    .v-tag {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 4px;
+    }
+    .v-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 28px;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 8px;
+      border: 1px solid var(--border-md);
+      background: var(--bg);
+      color: var(--ink);
+      box-shadow: var(--sh1);
+    }
+    .v-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--sh1);
+      transition: all 0.25s ease;
+      flex: 1;
+    }
+    .v-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--border-md);
+    }
+    .v-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -.015em;
+      color: var(--ink);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .v-title i {
+      font-size: 18px;
+      color: var(--ink-muted);
+    }
+    .v-body {
+      font-size: 14px;
+      color: var(--ink-muted);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+    .v-verdict {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      line-height: 1;
+    }
+    .v-verdict.fail {
+      background: var(--bg-2);
+      color: var(--ink-muted);
+      border: 1px solid var(--border-md);
+    }
+    .v-verdict.fail i {
+      color: var(--ink-muted);
+    }
+    .v-verdict.pass {
+      background: var(--ink);
+      color: #ffffff;
+      border: 1px solid var(--ink);
+    }
+    .v-verdict.pass i {
+      color: #ffffff;
+    }
+
+    /* ── CODE BLOCKS ── */
+    .code-wrap {
+      background: #1d1d1f;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .code-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 14px;
+      background: rgba(255,255,255,.03);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .code-dots { display: flex; gap: 5px; }
+    .code-dots span { width: 9px; height: 9px; border-radius: 50%; }
+    .code-dots span:nth-child(1) { background: rgba(255,255,255,0.15); }
+    .code-dots span:nth-child(2) { background: rgba(255,255,255,0.25); }
+    .code-dots span:nth-child(3) { background: rgba(255,255,255,0.35); }
+    .code-file {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: rgba(255,255,255,.3); letter-spacing: .04em;
+    }
+    .code-wrap pre { padding: 18px 20px; overflow-x: auto; margin: 0; }
+    .code-wrap code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px; line-height: 1.8;
+      color: rgba(255,255,255,.85);
+      white-space: pre;
+    }
+    .t-c { color: #86868b; }
+    .t-k { color: #ffffff; font-weight: 500; }
+    .t-s { color: #86868b; }
+    .t-p { color: #ffffff; }
+    .t-n { color: #ffffff; }
+    .t-f { color: #ffffff; }
+    .t-g { color: #86868b; }
+    .t-a { color: #ffffff; }
+
+    /* ── CHALLENGE CARDS ── */
+    .challenges { display: flex; flex-direction: column; gap: 24px; margin-top: 24px; }
+    .challenge {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .challenge:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-md);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+    }
+    .ch-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 18px 24px;
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+    .challenge:hover .ch-header {
+      background: rgba(0,0,0,0.015);
+    }
+    .ch-num {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: var(--ink); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; flex-shrink: 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .ch-title { font-weight: 700; font-size: 15px; letter-spacing: -.01em; color: var(--ink); }
+    .ch-body { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .ch-col {
+      padding-left: 20px;
+      position: relative;
+    }
+    .ch-col.bug-col {
+      border-left: 3px solid rgba(134, 134, 139, 0.3);
+    }
+    .ch-col.fix-col {
+      border-left: 3px solid rgba(29, 29, 31, 0.3);
+    }
+    .ch-col-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+      margin-bottom: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .ch-col-label.bug {
+      background: var(--bg-2);
+      color: var(--ink-muted);
+      border: 1px solid var(--border-md);
+    }
+    .ch-col-label.fix {
+      background: var(--ink);
+      color: #ffffff;
+      border: 1px solid var(--ink);
+    }
+    .ch-text { font-size: 14.5px; color: #4b5563; line-height: 1.65; margin: 0; }
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .88em; background: #f3f4f6;
+      color: #111827;
+      padding: 2px 6px; border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.06);
+      font-weight: 500;
+    }
+
+    /* ── IMPACT ── */
+    .impact-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-top: 8px;
+    }
+    .impact-card {
+      padding: 24px 26px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+    .impact-card::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent);
+    }
+    .impact-card.warn::before { background: var(--ink-muted); }
+    .impact-card.blue::before { background: var(--ink-muted); }
+    .impact-card.neutral::before { background: var(--ink-muted); }
+    .impact-val {
+      font-size: 36px; font-weight: 800; letter-spacing: -.05em;
+      color: var(--ink); line-height: 1; margin-bottom: 4px;
+    }
+    .impact-val sub { font-size: 16px; font-weight: 600; letter-spacing: -.02em; }
+    .impact-label {
+      font-size: 12px; font-weight: 600; letter-spacing: -.01em; color: var(--ink-mid);
+      margin-bottom: 10px;
+    }
+    .impact-desc {
+      font-size: 13px; color: var(--ink-muted); line-height: 1.6;
+    }
+    .impact-proof {
+      margin-top: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    /* ── LESSONS ── */
+    .lessons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .lesson {
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--sh1);
+      transition: all 0.25s ease;
+      min-height: 220px;
+    }
+    .lesson:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--ink);
+    }
+    .lesson-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2;
+    }
+    .lesson-header i {
+      font-size: 20px;
+      color: var(--ink);
+    }
+    .lesson-n {
+      position: absolute;
+      bottom: -15px;
+      right: 10px;
+      font-size: 110px;
+      font-weight: 900;
+      color: var(--ink);
+      opacity: 0.05;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .lesson-title {
+      font-weight: 700;
+      font-size: 15.5px;
+      letter-spacing: -.015em;
+      color: var(--ink);
+      z-index: 2;
+      line-height: 1.3;
+      margin: 0;
+    }
+    .lesson-body {
+      font-size: 13.5px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin: 0;
+      z-index: 2;
+    }
+
+    /* ── PRODUCT THINKING ── */
+    .product-thinking {
+      background: var(--ink);
+      border-radius: 16px;
+      padding: 32px 36px;
+      margin: 8px 0;
+    }
+    .pt-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,.35); margin-bottom: 20px;
+    }
+    .pt-grid { display: flex; flex-direction: column; gap: 20px; }
+    .pt-item { display: grid; grid-template-columns: 20px 1fr; gap: 14px; }
+    .pt-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bg-2); margin-top: 7px; }
+    .pt-q { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 4px; }
+    .pt-a { font-size: 14.5px; font-weight: 500; color: rgba(255,255,255,.85); line-height: 1.6; letter-spacing: -.01em; }
+
+    /* ── RECRUITER TIMELINE ── */
+    .recruiter-scan {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 16px;
+    }
+    .rs-col {
+      padding: 28px;
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 16px;
+      transition: all 0.25s ease;
+      box-shadow: var(--sh1);
+    }
+    .rs-col:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--ink);
+    }
+    .rs-time-badge {
+      display: inline-block;
+      font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--ink);
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+    .rs-check {
+      font-size: 16px; font-weight: 800; letter-spacing: -.02em;
+      color: var(--ink); margin-bottom: 14px;
+    }
+    .rs-items {
+      list-style: none; display: flex; flex-direction: column; gap: 8px;
+      padding: 0; margin: 0;
+    }
+    .rs-items li {
+      font-size: 13.5px; color: var(--ink-muted); line-height: 1.5;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .rs-items li i {
+      font-size: 14px;
+      color: var(--ink);
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ── NEXT STEPS ── */
+    .next-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .next-card {
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--sh1);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .next-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+      border-color: var(--ink);
+    }
+    .next-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      line-height: 1;
+    }
+    .next-status i {
+      font-size: 12px;
+      color: var(--ink);
+    }
+    .next-title {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -.01em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .next-body {
+      font-size: 13.5px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--bg-2);
+      border: 1px solid var(--border-md);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 14.5px; color: var(--ink-mid); line-height: 1.7;
+    }
+    .callout strong { color: var(--ink); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      padding: 56px 32px 40px;
+      text-align: center;
+    }
+    .footer-tag {
+      font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+      color: rgba(255,255,255,.25); margin-bottom: 10px;
+    }
+    .footer-title {
+      font-size: 20px; font-weight: 800; letter-spacing: -.03em;
+      color: #fff; margin-bottom: 6px;
+    }
+    .footer-sub {
+      font-size: 14px; color: rgba(255,255,255,.4); margin-bottom: 24px; max-width: 44ch; margin-left: auto; margin-right: auto;
+    }
+    .footer-links {
+      display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;
+    }
+    .f-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 12.5px; font-weight: 500;
+      padding: 9px 18px; border-radius: 8px; text-decoration: none;
+      transition: background .15s;
+    }
+    footer .f-btn.primary {
+      background: #ffffff; color: #1d1d1f;
+    }
+    footer .f-btn.primary:hover {
+      background: #f5f5f7;
+    }
+    .f-btn.ghost { background: rgba(255,255,255,.07); color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.1); }
+    .f-btn.ghost:hover { background: rgba(255,255,255,.12); }
+    .footer-copy { margin-top: 28px; font-size: 11px; color: rgba(255,255,255,.18); }
+
+    /* ── SECTION TOC ── */
+    .toc {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 32px;
+    }
+    .toc a {
+      font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--ink-faint); padding: 4px 10px; border-radius: 5px;
+      border: 1px solid var(--border);
+      text-decoration: none; transition: background .15s, color .15s;
+    }
+    .toc a:hover { background: var(--bg-2); color: var(--ink-mid); }
+
+    /* ── SCORE CARD ── */
+    .score-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border-md);
+      border-radius: 24px;
+      margin: 48px 0;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.02);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .score-card:hover {
+      border-color: var(--ink);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.05);
+    }
+    .score-summary-panel {
+      background: #ffffff;
+      border-right: 1px solid var(--border-md);
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .score-gauge-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .score-gauge {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .score-gauge-track {
+      fill: none;
+      stroke: rgba(0, 0, 0, 0.04);
+      stroke-width: 6;
+    }
+    .score-gauge-fill {
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 314;
+      stroke-dashoffset: 0;
+      filter: drop-shadow(0 0 4px rgba(29, 29, 31, 0.12));
+      animation: gaugeFill 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .score-gauge-value {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.1;
+    }
+    .score-gauge-num {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+    }
+    .score-gauge-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .score-badge-seal {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      background: rgba(0,0,0,0.05);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    .score-detail {
+      padding: 36px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      background: var(--bg-3);
+    }
+    .score-row {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .score-row:hover {
+      border-color: var(--ink);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
+    .score-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .score-row-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .score-row-label i {
+      font-size: 16px;
+      color: var(--ink);
+    }
+    .score-num-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+    .score-num {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .score-num-max {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--ink-muted);
+    }
+    .score-desc {
+      font-size: 12px;
+      color: var(--ink-muted);
+      line-height: 1.4;
+      margin: 0;
+    }
+    .score-bar-wrap {
+      height: 4px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 2px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .score-bar {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--ink);
+      transform-origin: left;
+      animation: scoreFill 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes scoreFill {
+      from { width: 0%; }
+    }
+    @keyframes gaugeFill {
+      from { stroke-dashoffset: 314; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .nav-tag { display: none; }
+      .hero { padding: calc(var(--NAV-H) + 40px) 0 0; }
+      .hero-metrics { grid-template-columns: 1fr 1fr; }
+      .snapshot-grid, .impact-grid, .next-grid { grid-template-columns: 1fr; }
+      .problem-vs { grid-template-columns: 1fr; }
+      .problem-vs-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+      .arch-layer { grid-template-columns: 1fr; }
+      .arch-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .ch-body { grid-template-columns: 1fr; }
+      .recruiter-scan { grid-template-columns: 1fr; }
+      .score-card { grid-template-columns: 1fr; }
+      .score-summary-panel {
+        border-right: none;
+        border-bottom: 1px solid var(--border-md);
+        padding: 40px 24px;
+      }
+      .score-detail {
+        padding: 24px;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .comp-table { font-size: 12px; }
+      .comp-table th, .comp-table td { padding: 9px 12px; }
+    }
+  </style>
+  <script>
+    // Always start at the top on refresh — don't restore scroll position
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.addEventListener("pageshow", function () {
+      window.scrollTo(0, 0);
+    });
+  </script>
+</head>
+<body>
+
+<div id="prog"><div id="prog-fill"></div></div>
+
+<nav>
+  <div class="container-fluid d-flex align-items-center justify-content-between h-100 px-4">
+    <a href="index.html" class="nav-back"><i class="ri-arrow-left-fill"></i> Back to Portfolio</a>
+    <span class="nav-tag">Case Study · FrameStack PDF</span>
+    <div class="nav-right">
+      <a href="https://figma.com/community/plugin/1638543298157640831" target="_blank" rel="noopener" class="nav-pill"><i class="ri-external-link-fill"></i> Figma Community</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<header class="hero">
+  <div class="hero-inner container">
+    <div class="eyebrow">Product Design · Frontend Engineering · Figma API</div>
+    <h1>The Figma PDF export<br>we all needed.</h1>
+    <p class="hero-sub">
+      FrameStack PDF — A Figma plugin built to solve the frustration of exporting multiple frames into a single PDF. From zero to v3.1, designed and engineered solo.
+    </p>
+    <div class="hero-metrics">
+      <div class="hm">
+        <div class="hm-val"><span>Solo</span></div>
+        <div class="hm-label">Role<br>Designer & Engineer</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val"><span>4</span></div>
+        <div class="hm-label">Versions<br>Shipped in 28 days</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">34<span>%</span></div>
+        <div class="hm-label">Feature Discovery<br>After redesigning UX</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">15<span>s</span></div>
+        <div class="hm-label">Export Time<br>Optimized performance</div>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="https://figma.com/community/plugin/1638543298157640831" target="_blank" rel="noopener" class="btn-primary">
+        <i class="ri-external-link-fill"></i> View on Figma Community
+      </a>
+      <div class="cta-sep"></div>
+      <span class="cta-note">Ongoing · v1.0 through v3.1</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════ SNAPSHOT ══════════════ -->
+<section class="section" id="snapshot">
+  <div class="container">
+    <div class="s-label">The Problem & Solution</div>
+    <h2>The problem nobody talked about<br><em>(but everyone had).</em></h2>
+    
+    <div class="problem-block">
+      <div class="problem-block-title">The Export Nightmare</div>
+      <div class="problem-vs">
+        <div class="problem-vs-col">
+          <div class="pvc-title"><i class="ri-close-circle-fill"></i> Before FrameStack</div>
+          <ul class="pvc-list">
+            <li><i class="ri-close-circle-fill"></i> <span>Export gives 12 separate PDF files — one per frame.</span></li>
+            <li><i class="ri-close-circle-fill"></i> <span>Drag files to a sketchy online merger tool or Adobe Acrobat.</span></li>
+            <li><i class="ri-close-circle-fill"></i> <span>Manually reorder them, hoping it's correct.</span></li>
+            <li><i class="ri-close-circle-fill"></i> <span>Start over completely if the client asks for one revision.</span></li>
+          </ul>
+        </div>
+        <div class="problem-vs-col">
+          <div class="pvc-title"><i class="ri-checkbox-circle-fill"></i> With FrameStack PDF</div>
+          <ul class="pvc-list">
+            <li><i class="ri-checkbox-circle-fill"></i> <span>Select frames and get one combined PDF instantly.</span></li>
+            <li><i class="ri-checkbox-circle-fill"></i> <span>Outcome-based presets (e.g. "Client Deck", "Email Ready").</span></li>
+            <li><i class="ri-checkbox-circle-fill"></i> <span>Export history with 1-click recovery without re-running export.</span></li>
+            <li><i class="ri-checkbox-circle-fill"></i> <span>Settings persist across sessions automatically.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="snapshot-grid mt-4">
+      <div class="snap-card">
+        <div class="snap-card-label"><i class="ri-user-search-fill"></i> Who Has This Problem?</div>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i> <span><strong>Freelancers:</strong> Needs professional presentation, small file size.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span><strong>In-House Designers:</strong> Needs exact pixel dimensions, lossless quality.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span><strong>Design Students:</strong> Needs beautiful A4 output for portfolios.</span></li>
+        </ul>
+      </div>
+      <div class="snap-card accent-card">
+        <div class="snap-card-label"><i class="ri-lightbulb-flash-fill"></i> Core Insight</div>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Users don't think in settings. They think in outcomes.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Replaced configuration hurdles with 1-tap presets.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>One tap for common cases, one more tap for everything else.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ v1 AND ARCHITECTURE ══════════════ -->
+<section class="section alt" id="v1-architecture">
+  <div class="container">
+    <div class="s-label">Building v1</div>
+    <h2>Getting the core right<br><em>before adding features.</em></h2>
+    <p>The first version did one thing: combined frames into a single PDF. No presets, no cover page, no history. The goal was to validate the core pipeline worked so a non-technical designer could export in under 30 seconds.</p>
+
+    <div class="arch-wrap mt-4">
+      <div class="arch-layer">
+        <div class="arch-left">
+          <span class="arch-badge required">Constraint</span>
+        </div>
+        <div class="arch-right">
+          <div class="arch-name"><i class="ri-window-line"></i> Context Isolation</div>
+          <div class="arch-desc">Figma plugins run in two isolated contexts: the sandbox (<code>code.js</code>) and the UI (<code>ui.html</code>). They communicate exclusively via <code>postMessage</code>. Every frame image had to be exported as PNG bytes, serialized as a binary string, passed to the UI, and assembled into PDF pages by jsPDF.</div>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-left">
+          <span class="arch-badge required">Solution</span>
+        </div>
+        <div class="arch-right">
+          <div class="arch-name"><i class="ri-cpu-line"></i> Memory Safety at Scale</div>
+          <div class="arch-desc">Exporting 20 large frames simultaneously would crash the sandbox. Solution: Sequential export threshold. Below 8 frames: export in parallel. Above 8 frames: export one at a time. Binary string encoding uses chunked 16KB slices, the documented upper bound for safe <code>apply()</code> calls in QuickJS.</div>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-left">
+          <span class="arch-badge required">Architecture</span>
+        </div>
+        <div class="arch-right">
+          <div class="arch-name"><i class="ri-message-3-line"></i> Message Contract & Persistence</div>
+          <div class="arch-desc">Every message is typed via a <code>MSG</code> constants object to prevent mystery messages. Preferences are saved via typed round-trip patterns to <code>figma.clientStorage</code>. Every export is logged with its PDF bytes stored separately so previous exports can be re-downloaded instantly without re-running the pipeline.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ REDESIGN PHILOSOPHY ══════════════ -->
+<section class="section" id="redesign">
+  <div class="container">
+    <div class="s-label">UX Iteration</div>
+    <h2>What the first users taught me.<br><em>Redesigning for outcomes.</em></h2>
+    
+    <p>Feedback wasn't about bugs, it was about UX failures. "Why is the quality slider grayed out?" "How do I add a cover page?" The plugin had no opinion about the common case, settings were labeled like engineering docs, and features were hidden behind tabs.</p>
+
+    <div class="product-thinking mt-4">
+      <div class="pt-label">The Redesign Philosophy</div>
+      <div class="pt-grid">
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Outcome-based presets</div>
+            <div class="pt-a">Introduced "Client Deck", "Email Ready", etc. One tap configures page size + compression + padding. The language describes the artifact, not the technical operation.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Reorder to match mental models</div>
+            <div class="pt-a">Frames first, presets second, settings third. "What am I exporting? → What kind of PDF do I need? → Export."</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Make cover pages discoverable</div>
+            <div class="pt-a">Moved cover page toggle from a separate tab to inline under "More Options". Discovery rate skyrocketed from &lt;8% to 34%.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Persist settings between sessions</div>
+            <div class="pt-a">Settings persist via <code>figma.clientStorage</code>. On return, the plugin opens exactly where the user left off.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ BUGS & CHALLENGES ══════════════ -->
+<section class="section alt" id="bugs">
+  <div class="container">
+    <div class="s-label">Engineering Challenges</div>
+    <h2>Three bugs that taught me<br><em>more than the features did.</em></h2>
+
+    <div class="challenges">
+      <div class="challenge">
+        <div class="ch-header">
+          <div class="ch-num">01</div>
+          <div class="ch-title">Optional Chaining Broke the Entire Plugin</div>
+        </div>
+        <div class="ch-body">
+          <div class="ch-col bug-col">
+            <div class="ch-col-label bug"><i class="ri-error-warning-fill"></i> Bug</div>
+            <p class="ch-text">After a refactor, the plugin failed to load. The console showed a syntax error on <code>user?.name</code>. Figma's sandbox runs QuickJS, which lacked optional chaining support at the time. My local environment and Figma's sandbox were not the same.</p>
+          </div>
+          <div class="ch-col fix-col">
+            <div class="ch-col-label fix"><i class="ri-checkbox-circle-fill"></i> Fix & Lesson</div>
+            <p class="ch-text">Replaced with standard ternary checks. Lesson: Explicit failure surfaces problems; silent failure buries them. Using typed constants ensured the plugin failed loudly.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <div class="ch-header">
+          <div class="ch-num">02</div>
+          <div class="ch-title">"More Options" Was Expanding Into Nothing</div>
+        </div>
+        <div class="ch-body">
+          <div class="ch-col bug-col">
+            <div class="ch-col-label bug"><i class="ri-error-warning-fill"></i> Bug</div>
+            <p class="ch-text">Clicking the accordion toggle rotated the chevron, but no settings appeared. The parent panel was set to <code>overflow: hidden</code>, clipping the expanded content.</p>
+          </div>
+          <div class="ch-col fix-col">
+            <div class="ch-col-label fix"><i class="ri-checkbox-circle-fill"></i> Fix & Lesson</div>
+            <p class="ch-text">Allowed panel scrolling and defined minimum heights. Lesson: Panel layout must be tested at extremes—max content, min content, and all expandable sections open simultaneously.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <div class="ch-header">
+          <div class="ch-num">03</div>
+          <div class="ch-title">"PDF Saved" Was a Lie</div>
+        </div>
+        <div class="ch-body">
+          <div class="ch-col bug-col">
+            <div class="ch-col-label bug"><i class="ri-error-warning-fill"></i> Bug</div>
+            <p class="ch-text">Users reported missing files after seeing the "PDF saved" toast. They had clicked Cancel on the OS Save dialog. The plugin had no visibility outside its execution context.</p>
+          </div>
+          <div class="ch-col fix-col">
+            <div class="ch-col-label fix"><i class="ri-checkbox-circle-fill"></i> Fix & Lesson</div>
+            <p class="ch-text">Changed semantics to "PDF generated — find it anytime in History." Positioned the History tab as a recovery mechanism since bytes are stored before the download dialog opens.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ ACCESSIBILITY & DESIGN SYSTEM ══════════════ -->
+<section class="section" id="a11y-design">
+  <div class="container">
+    <div class="s-label">Design Execution</div>
+    <h2>Accessibility & Visual System<br><em>in a constrained space.</em></h2>
+    
+    <div class="snapshot-grid mt-4">
+      <div class="snap-card">
+        <div class="snap-card-label"><i class="ri-wheelchair-fill"></i> Accessibility Retrofits</div>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i> <span><strong>Keyboard Nav:</strong> Changed divs to <code>&lt;button role="checkbox"&gt;</code> with ARIA states.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span><strong>Focus Traps:</strong> Escape key cancellation and focus containment for modals.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span><strong>ARIA Regions:</strong> Added <code>aria-live</code> for frame selection counts and toast notifications.</span></li>
+        </ul>
+      </div>
+      <div class="snap-card accent-card">
+        <div class="snap-card-label"><i class="ri-palette-fill"></i> Visual System</div>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i> <span><strong>Brand Restraint:</strong> Brand color <code>#0014D1</code> reserved strictly for action/selection.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span><strong>Semantic Tokens:</strong> Built a two-tier token system supporting seamless Dark Mode.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span><strong>Typography:</strong> Inter with strict scale (min 10px labels) for high-density legibility.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ IMPACT & RESULTS ══════════════ -->
+<section class="section alt" id="impact">
+  <div class="container">
+    <div class="s-label">The Results</div>
+    <h2>Four versions in 28 days.<br><em>What I learned as a Product Engineer.</em></h2>
+    
+    <div class="impact-grid mt-4">
+      <div class="impact-card blue">
+        <div class="impact-val">4</div>
+        <div class="impact-label">Production Versions</div>
+        <p class="impact-desc">Shipped sequentially across 28 days based on real user signal, not staging assumptions.</p>
+      </div>
+      <div class="impact-card warn">
+        <div class="impact-val">34<sub>%</sub></div>
+        <div class="impact-label">Cover Page Usage</div>
+        <p class="impact-desc">Up from 8%. A 4x lift from a single layout change moving it into the primary user flow.</p>
+      </div>
+      <div class="impact-card neutral">
+        <div class="impact-val">0</div>
+        <div class="impact-label">Regression Bugs</div>
+        <p class="impact-desc">In the core PDF export pipeline across all four versions due to disciplined architectural constraints.</p>
+      </div>
+    </div>
+
+    <div class="callout mt-5">
+      <strong>The Real Lesson:</strong> FrameStack PDF is where I stopped thinking of myself as a designer who could code and started thinking of myself as a product engineer. The hard problems lived at the intersection: a UX problem (failed exports) solved by engineering (chunk size limit); an engineering architecture (tabbed layout) that caused a UX failure (undiscoverable features). Holding both sides of the problem simultaneously is the real skill.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-tag">FrameStack PDF · Figma Plugin</div>
+    <div class="footer-title">FrameStack PDF</div>
+    <p class="footer-sub">The plugin that makes exporting multi-frame Figma presentations effortless.</p>
+    <div class="footer-links">
+      <a href="index.html" class="f-btn ghost">
+        <i class="ri-arrow-left-fill"></i> Back to Portfolio
+      </a>
+      <a href="https://figma.com/community/plugin/1638543298157640831" target="_blank" rel="noopener" class="f-btn primary">
+        <i class="ri-external-link-fill"></i> Figma Community
+      </a>
+    </div>
+    <p class="footer-copy">© 2026 Govarthanan Selvaganessane</p>
+  </div>
+</footer>
+
+<script>
+  // ── Progress bar ──────────────────────────────────
+  const fill = document.getElementById('prog-fill');
+  window.addEventListener('scroll', () => {
+    const el  = document.documentElement;
+    const pct = el.scrollTop / (el.scrollHeight - el.clientHeight) * 100;
+    fill.style.width = Math.min(pct, 100) + '%';
+  }, { passive: true });
+</script>
+
+</body>
+</html>

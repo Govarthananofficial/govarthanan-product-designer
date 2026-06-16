@@ -2488,6 +2488,29 @@
 
       .contact-left {
         display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 14px;
+      }
+      .contact-row-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        background: #1d1d1f;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+        transition: background 0.24s, transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .contact-row:hover .contact-row-icon {
+        background: var(--primary);
+        transform: scale(1.05);
+      }
+      .contact-left-texts {
+        display: flex;
         flex-direction: column;
         gap: 3px;
       }
@@ -5932,6 +5955,9 @@
               </div>
             </div>
             <div class="p-links">
+              <a href="framestack-pdf.html" class="p-link-btn">
+                <i class="ri-file-text-fill"></i> Case Study
+              </a>
               <a
                 href="https://www.figma.com/community/plugin/1638543298157640831/framestack-pdf"
                 target="_blank"
@@ -6969,9 +6995,12 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-name">Email</div>
-                  <div class="contact-row-val">
-                    govarthanan@salkomdesignstudio.com
+                  <div class="contact-row-icon"><i class="ri-mail-fill"></i></div>
+                  <div class="contact-left-texts">
+                    <div class="contact-row-name">Email</div>
+                    <div class="contact-row-val">
+                      govarthanan@salkomdesignstudio.com
+                    </div>
                   </div>
                 </div>
                 <div class="contact-row-arrow">
@@ -6980,8 +7009,11 @@
               </a>
               <a href="tel:+919344081006" class="contact-row">
                 <div class="contact-left">
-                  <div class="contact-row-name">Phone</div>
-                  <div class="contact-row-val">+91 9344081006</div>
+                  <div class="contact-row-icon"><i class="ri-phone-fill"></i></div>
+                  <div class="contact-left-texts">
+                    <div class="contact-row-name">Phone</div>
+                    <div class="contact-row-val">+91 9344081006</div>
+                  </div>
                 </div>
                 <div class="contact-row-arrow">
                   <i class="ri-arrow-right-up-fill"></i>
@@ -6998,8 +7030,11 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-name">LinkedIn</div>
-                  <div class="contact-row-val">sgovarthanan</div>
+                  <div class="contact-row-icon"><i class="ri-linkedin-fill"></i></div>
+                  <div class="contact-left-texts">
+                    <div class="contact-row-name">LinkedIn</div>
+                    <div class="contact-row-val">sgovarthanan</div>
+                  </div>
                 </div>
                 <div class="contact-row-arrow">
                   <i class="ri-arrow-right-up-fill"></i>
@@ -7012,8 +7047,11 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-name">GitHub</div>
-                  <div class="contact-row-val">salkomdesignstudio</div>
+                  <div class="contact-row-icon"><i class="ri-github-fill"></i></div>
+                  <div class="contact-left-texts">
+                    <div class="contact-row-name">GitHub</div>
+                    <div class="contact-row-val">salkomdesignstudio</div>
+                  </div>
                 </div>
                 <div class="contact-row-arrow">
                   <i class="ri-arrow-right-up-fill"></i>
@@ -7026,8 +7064,11 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-name">Behance</div>
-                  <div class="contact-row-val">govarthananuxui</div>
+                  <div class="contact-row-icon"><i class="ri-behance-fill"></i></div>
+                  <div class="contact-left-texts">
+                    <div class="contact-row-name">Behance</div>
+                    <div class="contact-row-val">govarthananuxui</div>
+                  </div>
                 </div>
                 <div class="contact-row-arrow">
                   <i class="ri-arrow-right-up-fill"></i>
@@ -7040,9 +7081,12 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-name">npm Package</div>
-                  <div class="contact-row-val">
-                    @salkomdesignstudio/sds-motion-forge
+                  <div class="contact-row-icon"><i class="ri-npmjs-fill"></i></div>
+                  <div class="contact-left-texts">
+                    <div class="contact-row-name">npm Package</div>
+                    <div class="contact-row-val">
+                      @salkomdesignstudio/sds-motion-forge
+                    </div>
                   </div>
                 </div>
                 <div class="contact-row-arrow">
@@ -7056,8 +7100,11 @@
                 class="contact-row"
               >
                 <div class="contact-left">
-                  <div class="contact-row-name">Instagram</div>
-                  <div class="contact-row-val">Govarthananofficial</div>
+                  <div class="contact-row-icon"><i class="ri-instagram-fill"></i></div>
+                  <div class="contact-left-texts">
+                    <div class="contact-row-name">Instagram</div>
+                    <div class="contact-row-val">Govarthananofficial</div>
+                  </div>
                 </div>
                 <div class="contact-row-arrow">
                   <i class="ri-arrow-right-up-fill"></i>

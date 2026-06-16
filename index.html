@@ -3643,14 +3643,21 @@
         /* Center content vertically and provide balanced padding */
         .ah-inner {
           justify-content: center;
-          padding-top: calc(var(--NAV-H) + 24px);
-          padding-bottom: 32px;
+          padding-top: calc(var(--NAV-H) + 32px);
+          padding-bottom: 40px;
+          display: flex;
+          flex-direction: column;
+          gap: 32px; /* gap between meta pill and center content */
+          width: 100% !important;
+          max-width: none !important;
+          padding-left: var(--PAGE-PAD, 20px) !important;
+          padding-right: var(--PAGE-PAD, 20px) !important;
         }
         .ah-meta {
           flex-direction: column;
           align-items: center;
-          gap: 6px;
-          margin-bottom: 16px;
+          gap: 8px;
+          margin-bottom: 0;
           text-align: center;
         }
         .ah-loc {
@@ -3660,13 +3667,16 @@
           padding: 0;
           text-align: center;
           align-items: center;
+          display: flex;
+          flex-direction: column;
+          gap: 28px; /* gap between every element inside the stage */
         }
         .ah-eyebrow {
           font-size: 9px;
           letter-spacing: 0.13em;
           flex-wrap: wrap;
           gap: 8px;
-          margin-bottom: 8px;
+          margin-bottom: 0;
         }
         .ah-eyebrow::before {
           width: 20px;
@@ -3676,7 +3686,7 @@
           font-size: clamp(28px, 10vw, 54px);
           letter-spacing: -0.045em;
           line-height: 1.03;
-          margin-bottom: 12px;
+          margin-bottom: 0;
           flex-direction: column;
           align-items: center;
           gap: 0;
@@ -3684,15 +3694,15 @@
         .ah-sub {
           font-size: 13.5px;
           line-height: 1.55;
-          margin-bottom: 14px;
+          margin-bottom: 0;
         }
         /* Metrics: compact 2×2 grid */
         .ah-metrics {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 10px 0;
+          gap: 12px 0;
           width: 100%;
-          margin-bottom: 14px;
+          margin-bottom: 0;
         }
         .ah-metric {
           padding: 0 8px;
@@ -3714,7 +3724,7 @@
         .ah-cta {
           flex-direction: column;
           align-items: center;
-          gap: 8px;
+          gap: 12px;
           width: 100%;
         }
         .ah-btn-dark {

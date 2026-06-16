@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SDS Motion Forge — Case Study · Govarthanan S.</title>
-  <meta name="description" content="How I designed, engineered, and published a production-grade CSS animation library with 600+ animations — 2,000+ users, zero required JavaScript, zero breaking changes across 5 versions." />
+  <meta name="description" content="How I designed, engineered, and published a production-grade CSS animation library with 600+ animations — 1,857 organic downloads, zero required JavaScript, zero breaking changes across 5 versions." />
   <meta property="og:image" content="https://govarthanan-product-engineer.netlify.app/images/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="581" />
@@ -1155,6 +1155,164 @@
       to { stroke-dashoffset: 0; }
     }
 
+    /* ── WEEKLY ORGANIC GROWTH CHART ── */
+    .growth-chart-card {
+      margin-top: 32px;
+      padding: 32px;
+      border: 1px solid var(--border-md);
+      border-radius: 16px;
+      background: var(--bg-2);
+      box-shadow: var(--sh1);
+    }
+    .growth-chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .growth-chart-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .growth-chart-subtitle {
+      font-size: 13px;
+      color: var(--ink-muted);
+      max-width: 55ch;
+      line-height: 1.5;
+    }
+    .growth-chart-total {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .growth-chart-total .total-num {
+      display: block;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .growth-chart-total .total-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--ink-muted);
+    }
+    .growth-chart-bars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      align-items: end;
+      height: 180px;
+      padding-top: 24px;
+      border-bottom: 1px solid var(--border-md);
+      margin-bottom: 24px;
+    }
+    .growth-bar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .growth-bar-val {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+      opacity: 0.8;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .growth-bar-col-wrap {
+      width: 100%;
+      max-width: 48px;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+    }
+    .growth-bar-col {
+      width: 100%;
+      background: var(--border-md);
+      border-radius: 6px 6px 0 0;
+      transition: background 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .growth-bar-col::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      border-radius: inherit;
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .growth-bar-item:hover .growth-bar-col::after {
+      transform: scaleY(1);
+    }
+    .growth-bar-item:hover .growth-bar-val {
+      transform: translateY(-2px);
+      opacity: 1;
+    }
+    .growth-bar-item.active .growth-bar-col {
+      background: rgba(29, 29, 31, 0.15);
+    }
+    .growth-bar-item.active .growth-bar-col::after {
+      transform: scaleY(1);
+      background: var(--accent);
+    }
+    .growth-bar-lbl {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      margin-top: 12px;
+      margin-bottom: 8px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .growth-channels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .channel-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-mid);
+    }
+    .channel-pill i {
+      font-size: 15px;
+      color: var(--ink-muted);
+    }
+
+    @media (max-width: 576px) {
+      .growth-chart-header {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .growth-chart-total {
+        text-align: left;
+      }
+      .growth-bar-lbl {
+        font-size: 9px;
+      }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 680px) {
       .nav-tag { display: none; }
@@ -1212,12 +1370,12 @@
     <h1>I built the animation<br>library my clients needed.</h1>
     <p class="hero-sub">
       SDS Motion Forge — a production-grade CSS animation library I designed, engineered, and published solo.
-      600+ animation effects. 2,000+ users. Zero required JavaScript. Zero breaking changes across 5 versions.
+      600+ animation effects. 1,857 organic downloads. Zero required JavaScript. Zero breaking changes across 5 versions.
     </p>
     <div class="hero-metrics">
       <div class="hm">
-        <div class="hm-val"><span>2,000</span><span style="font-size:20px;color:rgba(255,255,255,.3)">+</span></div>
-        <div class="hm-label">Production Users<br>No marketing. Organic.</div>
+        <div class="hm-val"><span>1,857</span></div>
+        <div class="hm-label">Organic Downloads<br>No marketing. Organic.</div>
       </div>
       <div class="hm">
         <div class="hm-val"><span>0</span></div>
@@ -1277,7 +1435,7 @@
         <ul class="snap-list">
           <li><i class="ri-arrow-right-s-fill"></i> <span>Designed the DX first: <code class="inline">class="sds-fade-up"</code> and it works. Zero setup.</span></li>
           <li><i class="ri-arrow-right-s-fill"></i> <span>Backward compatibility = a product promise to every dev who adopted it</span></li>
-          <li><i class="ri-arrow-right-s-fill"></i> <span>Open source adoption (2,000+ users) as external market validation, without a launch campaign</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Open source adoption (1,857 organic downloads) as external market validation, without a launch campaign</span></li>
         </ul>
       </div>
       <div class="snap-card">
@@ -1320,7 +1478,7 @@
         <span class="rs-time-badge">30 Sec Scan</span>
         <div class="rs-check">Impact &amp; Value</div>
         <ul class="rs-items">
-          <li><i class="ri-checkbox-circle-fill"></i> <span>2,000+ production users — organic, no marketing</span></li>
+          <li><i class="ri-checkbox-circle-fill"></i> <span>1,857 organic downloads — no marketing budget</span></li>
           <li><i class="ri-checkbox-circle-fill"></i> <span>Used in 4 live production client products</span></li>
           <li><i class="ri-checkbox-circle-fill"></i> <span>100% prefers-reduced-motion coverage, machine-verified</span></li>
         </ul>
@@ -1437,7 +1595,7 @@
           <div class="pt-dot"></div>
           <div>
             <div class="pt-q">On open source as product strategy</div>
-            <div class="pt-a">2,000+ users without a launch campaign is external market validation. Other developers chose this over Animate.css or building their own. That's the strongest signal: the tool solves a real problem better than the alternatives. Publishing to npm is not shipping. Maintaining is shipping.</div>
+            <div class="pt-a">1,857 downloads without a launch campaign is external market validation. Other developers chose this over Animate.css or building their own. That's the strongest signal: the tool solves a real problem better than the alternatives. Publishing to npm is not shipping. Maintaining is shipping.</div>
           </div>
         </div>
         <div class="pt-item">
@@ -1821,9 +1979,9 @@
     <h2>Numbers that prove<br><em>it solves a real problem.</em></h2>
     <div class="impact-grid">
       <div class="impact-card blue">
-        <div class="impact-val">2,000<sub>+</sub></div>
-        <div class="impact-label">Production Users</div>
-        <p class="impact-desc">No marketing. No launch post. Developers find it via npm search and adopt it because it solves the problem — the strongest signal of value.</p>
+        <div class="impact-val">1,857</div>
+        <div class="impact-label">Total Organic Downloads</div>
+        <p class="impact-desc">Growth achieved entirely through organic discoverability, technical documentation, GitHub visibility, npm search indexing, and SEO metadata optimization. No marketing spend.</p>
         <div class="impact-proof">Organic Adoption</div>
       </div>
       <div class="impact-card warn">
@@ -1843,6 +2001,56 @@
         <div class="impact-label">Token format — Figma ↔ Code</div>
         <p class="impact-desc">Complete token scale in W3C Design Token format, importable by Figma Token Studio. Design and code share the same source of truth for motion timing.</p>
         <div class="impact-proof">Single Source of Truth</div>
+      </div>
+    </div>
+
+    <!-- ── WEEKLY ORGANIC GROWTH CHART PANEL ── -->
+    <div class="growth-chart-card">
+      <div class="growth-chart-header">
+        <div>
+          <div class="growth-chart-title">Weekly Organic Growth Trajectory</div>
+          <div class="growth-chart-subtitle">Downloads achieved entirely via search discoverability, SEO, and package indexing. Zero paid advertising, sponsorships, influencer campaigns, outreach, or marketing budget.</div>
+        </div>
+        <div class="growth-chart-total">
+          <span class="total-num">1,857</span>
+          <span class="total-lbl">Total Downloads</span>
+        </div>
+      </div>
+      <div class="growth-chart-bars">
+        <div class="growth-bar-item animate-grow">
+          <div class="growth-bar-val">789</div>
+          <div class="growth-bar-col-wrap">
+            <div class="growth-bar-col" style="height: 100%;"></div>
+          </div>
+          <div class="growth-bar-lbl">May 19–25</div>
+        </div>
+        <div class="growth-bar-item animate-grow">
+          <div class="growth-bar-val">601</div>
+          <div class="growth-bar-col-wrap">
+            <div class="growth-bar-col" style="height: 76%;"></div>
+          </div>
+          <div class="growth-bar-lbl">May 26–Jun 1</div>
+        </div>
+        <div class="growth-bar-item animate-grow">
+          <div class="growth-bar-val">264</div>
+          <div class="growth-bar-col-wrap">
+            <div class="growth-bar-col" style="height: 33%;"></div>
+          </div>
+          <div class="growth-bar-lbl">Jun 2–8</div>
+        </div>
+        <div class="growth-bar-item active animate-grow">
+          <div class="growth-bar-val">203</div>
+          <div class="growth-bar-col-wrap">
+            <div class="growth-bar-col" style="height: 26%;"></div>
+          </div>
+          <div class="growth-bar-lbl">Current Week</div>
+        </div>
+      </div>
+      <div class="growth-channels-grid">
+        <div class="channel-pill"><i class="ri-search-eye-line"></i> npm Search Indexing</div>
+        <div class="channel-pill"><i class="ri-google-fill"></i> SEO Metadata Optimization</div>
+        <div class="channel-pill"><i class="ri-book-read-line"></i> Technical Documentation</div>
+        <div class="channel-pill"><i class="ri-github-fill"></i> GitHub Visibility</div>
       </div>
     </div>
   </div>
@@ -1876,7 +2084,7 @@
           <i class="ri-tools-fill"></i>
           <h3 class="lesson-title">Open source is a maintenance surface, not a launch moment</h3>
         </div>
-        <p class="lesson-body">Publishing to npm is not shipping. Shipping is maintaining: answering issues, updating the build pipeline when a dependency changes, ensuring CI passes when GitHub Actions updates its runner. The difference between a package with 12 downloads and one with 2,000+ users is not the launch announcement. It is continued investment in reliability, backward compatibility, and documentation that does not go stale.</p>
+        <p class="lesson-body">Publishing to npm is not shipping. Shipping is maintaining: answering issues, updating the build pipeline when a dependency changes, ensuring CI passes when GitHub Actions updates its runner. The difference between a package with 12 downloads and one with 1,850+ downloads is not the launch announcement. It is continued investment in reliability, backward compatibility, and documentation that does not go stale.</p>
       </div>
     </div>
   </div>

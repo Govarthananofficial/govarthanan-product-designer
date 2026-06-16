@@ -16,7 +16,7 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
   <!-- Bootstrap 5.3.3 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-  
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -39,12 +39,12 @@
       --accent:     #1d1d1f;
       --accent-lt:  #f5f5f7;
       --accent-dk:  #1d1d1f;
-      
+
       /* Amazon specific brand colors, but toned to fit premium portfolio theme */
       --amazon-orange: var(--ink);
       --amazon-blue: var(--ink);
       --amazon-dark: var(--ink);
-      
+
       --NAV-H:      56px;
       --sh1: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
       --sh2: 0 4px 20px rgba(0, 0, 0, 0.07), 0 12px 40px rgba(0, 0, 0, 0.05);
@@ -653,7 +653,7 @@
       border-radius: 16px;
       border: 1px solid var(--border-md);
     }
-    
+
     /* Redesigned Tracker Mockup UI */
     .amazon-tracker-mockup {
       background: #ffffff;
@@ -684,7 +684,7 @@
     .mock-body {
       padding: 20px;
     }
-    
+
     /* Redesigned ETA Header */
     .mock-eta-card {
       margin-bottom: 20px;
@@ -700,7 +700,7 @@
       color: #111;
       letter-spacing: -0.02em;
     }
-    
+
     /* Redesigned Progress Tracker */
     .mock-timeline {
       display: flex;
@@ -783,7 +783,7 @@
     .mock-node.completed .mock-node-label {
       color: #111;
     }
-    
+
     /* Redesigned Quick Actions Panel */
     .mock-panel-label {
       font-size: 11px;
@@ -825,7 +825,7 @@
       font-size: 16px;
       color: #555;
     }
-    
+
     /* ── MAP VIEWPORT ── */
     .mock-map-viewport {
       margin-bottom: 20px;
@@ -883,7 +883,7 @@
       display: block;
       filter: grayscale(100%) brightness(0.95) contrast(1.05); /* Strict monochrome! */
     }
-    
+
     /* Above-the-fold Contact Support Button */
     .mock-contact-btn {
       display: block;
@@ -903,7 +903,7 @@
       background: var(--primary-hover);
       box-shadow: 0 3px 8px rgba(29, 29, 31, 0.2);
     }
-    
+
     /* Interactive Controller */
     .demo-controls {
       display: flex;
@@ -1152,7 +1152,7 @@
     <p>
       Amazon's order tracking page is visited millions of times daily — yet the experience felt cluttered, text-heavy, and visually unclear about actual delivery progress. The gap between user anxiety and design response was real. Grounded in real user insights rather than assumptions, this project redesigns the post-purchase moments to improve clarity, usability, and trust.
     </p>
-    
+
     <div class="snapshot-grid">
       <div class="snap-card">
         <div class="snap-card-label"><i class="ri-focus-3-fill"></i> The Goal</div>
@@ -1364,7 +1364,7 @@
           <!-- Progress Tracker Redesign -->
           <div class="mock-timeline">
             <div class="mock-timeline-fill" id="mock-timeline-bar" style="width: 33%;"></div>
-            
+
             <div class="mock-node completed" id="node-ordered">
               <div class="mock-dot"><i class="ri-check-fill"></i></div>
               <div class="mock-node-label">Ordered</div>
@@ -1518,7 +1518,7 @@
   <div class="container">
     <div class="s-label">Design Process</div>
     <h2>How the solution was structured.<br><em>A systematic UX workflow.</em></h2>
-    
+
     <div class="versions">
       <div class="version">
         <div class="v-tag"><span class="v-badge">Phase 01</span></div>
@@ -1587,7 +1587,7 @@
         <p class="principle-desc">Group related actions — cognitive load is a real UX cost.</p>
       </div>
     </div>
-    
+
     <div class="mt-5 p-4" style="background: var(--bg-2); border-left: 3px solid var(--ink); border-radius: 0 12px 12px 0;">
       <h6 style="color: var(--ink); font-weight: 700;"><i class="ri-magic-fill"></i> Next Iteration Focus</h6>
       <span style="font-size:14.5px;">Design layout states for complex delivery edge cases: delayed shipments, failed attempts, and address verification updates. The happy path is resolved; the anxious path needs design attention next.</span>
@@ -1638,58 +1638,58 @@
     document.getElementById('ctrl-transit').classList.remove('active');
     document.getElementById('ctrl-out').classList.remove('active');
     document.getElementById('ctrl-delivered').classList.remove('active');
-    
+
     // Reset timeline nodes
     const nodeOrdered = document.getElementById('node-ordered');
     const nodeTransit = document.getElementById('node-transit');
     const nodeOut = document.getElementById('node-out');
     const nodeDelivered = document.getElementById('node-delivered');
     const timelineBar = document.getElementById('mock-timeline-bar');
-    
+
     nodeOrdered.className = 'mock-node';
     nodeTransit.className = 'mock-node';
     nodeOut.className = 'mock-node';
     nodeDelivered.className = 'mock-node';
-    
+
     const etaVal = document.getElementById('mock-eta-val');
     const etaLbl = document.getElementById('mock-eta-lbl');
     const supportBtn = document.getElementById('mock-support-btn');
     const mapEl = document.getElementById('mock-map');
- 
+
     if (state === 'transit') {
       document.getElementById('ctrl-transit').classList.add('active');
-      
+
       nodeOrdered.classList.add('completed');
       nodeTransit.classList.add('active');
       timelineBar.style.width = '33%';
       mapEl.style.display = 'none';
-      
+
       etaLbl.textContent = 'Estimated Arrival:';
       etaVal.textContent = 'Expected: Today, 2:00 PM – 4:00 PM';
       supportBtn.style.background = 'var(--ink)';
       supportBtn.style.borderColor = 'var(--ink)';
       supportBtn.style.color = '#ffffff';
       supportBtn.innerHTML = '<i class="ri-customer-service-2-fill me-1"></i> Contact Support Instantly (One-Tap)';
-    } 
+    }
     else if (state === 'out') {
       document.getElementById('ctrl-out').classList.add('active');
-      
+
       nodeOrdered.classList.add('completed');
       nodeTransit.classList.add('completed');
       nodeOut.classList.add('active');
       timelineBar.style.width = '66%';
       mapEl.style.display = 'block';
-      
+
       etaLbl.textContent = 'Expected Delivery Window:';
       etaVal.textContent = 'Out for Delivery: Arriving in 15–30 mins';
       supportBtn.style.background = 'var(--ink)';
       supportBtn.style.borderColor = 'var(--ink)';
       supportBtn.style.color = '#ffffff';
       supportBtn.innerHTML = '<i class="ri-customer-service-2-fill me-1"></i> Contact Driver / Support Now';
-    } 
+    }
     else if (state === 'delivered') {
       document.getElementById('ctrl-delivered').classList.add('active');
-      
+
       nodeOrdered.classList.add('completed');
       nodeTransit.classList.add('completed');
       nodeOut.classList.add('completed');
@@ -1697,7 +1697,7 @@
       nodeDelivered.classList.add('active');
       timelineBar.style.width = '100%';
       mapEl.style.display = 'none';
-      
+
       etaLbl.textContent = 'Delivery Confirmed:';
       etaVal.textContent = 'Delivered: Today at 1:45 PM';
       supportBtn.style.background = 'var(--bg-2)';

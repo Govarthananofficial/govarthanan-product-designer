@@ -5233,7 +5233,7 @@
               <span class="ah-ml">Products Shipped</span>
             </div>
             <div class="ah-metric">
-              <span class="ah-mv" data-count="1857" data-suffix="">1,857</span>
+              <span class="ah-mv" data-count="1,857" data-suffix="">1,857</span>
               <span class="ah-ml">Total npm Downloads</span>
             </div>
             <div class="ah-metric">
@@ -5346,8 +5346,8 @@
               were designed.
             </p>
             <p class="about-p reveal">
-              Outside client work, I publish open-source tools with 1,857
-              total organic downloads, and I'm building <strong>Uxora</strong> — an
+              Outside client work, I publish open-source tools with 1,857 total
+              organic downloads, and I'm building <strong>Uxora</strong> — an
               AI-powered UX learning platform focused on real-world product
               thinking, not quizzes.
             </p>
@@ -5936,9 +5936,9 @@
             </div>
             <p class="p-desc">
               A production-ready CSS animation library with 600+ named animation
-              classes across 6 categories. One class name, zero JavaScript. Framework-agnostic —
-              works with Angular, React, Vue, Tailwind. 7 published versions,
-              1,857 organic npm downloads.
+              classes across 6 categories. One class name, zero JavaScript.
+              Framework-agnostic — works with Angular, React, Vue, Tailwind. 12
+              published versions, 1,857 organic npm downloads.
             </p>
             <div class="p-metrics">
               <div class="p-met">
@@ -6602,8 +6602,9 @@
               <div class="sys-card-body">
                 <div class="sys-card-name">SDS Motion Forge</div>
                 <p class="sys-card-desc">
-                  600+ production CSS animations across 6 categories. One class name, zero JS.
-                  Published on npm with 1,857 organic downloads, v5.0.0.
+                  600+ production CSS animations across 6 categories. One class
+                  name, zero JS. Published on npm with 1,857 organic downloads,
+                  v5.0.0.
                 </p>
               </div>
               <div class="sys-card-foot">
@@ -7672,16 +7673,19 @@
         initProcessHighlighting();
 
         // Non-split elements animate with a beautiful staggered fade-up batch reveal
-        const batchRevealElements = gsap.utils.toArray(".reveal").filter(el => 
-          !el.querySelector(".split-char") && 
-          !el.classList.contains("split-char") && 
-          !el.classList.contains("about-h") && 
-          !el.classList.contains("sys-h") && 
-          !el.classList.contains("tech-h") && 
-          !el.classList.contains("contact-h") && 
-          el.tagName !== "H2"
-        );
-        
+        const batchRevealElements = gsap.utils
+          .toArray(".reveal")
+          .filter(
+            (el) =>
+              !el.querySelector(".split-char") &&
+              !el.classList.contains("split-char") &&
+              !el.classList.contains("about-h") &&
+              !el.classList.contains("sys-h") &&
+              !el.classList.contains("tech-h") &&
+              !el.classList.contains("contact-h") &&
+              el.tagName !== "H2",
+          );
+
         ScrollTrigger.batch(batchRevealElements, {
           onEnter: (batch) => {
             gsap.set(batch, { opacity: 0, y: 28 });
@@ -7691,23 +7695,26 @@
               stagger: 0.12,
               duration: 0.8,
               ease: "power2.out",
-              overwrite: "auto"
+              overwrite: "auto",
             });
           },
           start: "top 88%",
-          once: true
+          once: true,
         });
 
         // Split elements (headings) animate container opacity with no shift (letters slide up inside)
-        const splitHeadingContainers = gsap.utils.toArray(".reveal").filter(el => 
-          el.querySelector(".split-char") || 
-          el.tagName === "H2" || 
-          el.classList.contains("about-h") || 
-          el.classList.contains("sys-h") || 
-          el.classList.contains("tech-h") || 
-          el.classList.contains("contact-h")
-        );
-        
+        const splitHeadingContainers = gsap.utils
+          .toArray(".reveal")
+          .filter(
+            (el) =>
+              el.querySelector(".split-char") ||
+              el.tagName === "H2" ||
+              el.classList.contains("about-h") ||
+              el.classList.contains("sys-h") ||
+              el.classList.contains("tech-h") ||
+              el.classList.contains("contact-h"),
+          );
+
         splitHeadingContainers.forEach((el) => {
           gsap.fromTo(
             el,
@@ -7729,7 +7736,7 @@
         // Helper animation functions
         function initSplitText() {
           const textElements = document.querySelectorAll(
-            "h2.reveal, .reveal h2, .sec-head h2, .about-h, .hiw-left h2, .sys-h, .tech-h, .contact-h"
+            "h2.reveal, .reveal h2, .sec-head h2, .about-h, .hiw-left h2, .sys-h, .tech-h, .contact-h",
           );
           textElements.forEach((el) => {
             if (el.querySelector(".split-word")) return;
@@ -7848,8 +7855,6 @@
             });
           });
         }
-
-
 
         function initProcessHighlighting() {
           const steps = document.querySelectorAll(".hiw-step");
@@ -8489,7 +8494,9 @@
         async function loadLocation() {
           // Attempt 1: BigDataCloud Reverse Geocode (free, keyless, CORS-enabled, HTTPS support)
           try {
-            const res = await fetch("https://api.bigdatacloud.net/data/reverse-geocode-client");
+            const res = await fetch(
+              "https://api.bigdatacloud.net/data/reverse-geocode-client",
+            );
             if (res.ok) {
               const data = await res.json();
               if (data.city && data.principalSubdivision && data.countryName) {

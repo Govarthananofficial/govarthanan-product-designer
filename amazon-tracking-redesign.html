@@ -1444,8 +1444,46 @@
   </div>
 </section>
 
+<!-- ══════════════ ALTERNATIVES CONSIDERED ══════════════ -->
+<section class="section alt" id="alternatives">
+  <div class="container">
+    <div class="s-label">Decisions</div>
+    <h2>Three layouts considered.<br><em>Only one matched what users asked for.</em></h2>
+    <p>
+      The redesign wasn't the first idea. Three different directions were sketched and weighed against the survey data before settling on the final layout.
+    </p>
+
+    <div class="versions">
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">A</span></div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-stack-line"></i> Redesign the whole post-purchase flow</div>
+          <div class="v-body">Cart, checkout, account, and tracking, all reworked together. Rejected: scope creep past the actual pain point. Survey respondents called out tracking specifically — broadening scope would have diluted the comparison and made it impossible to test the one page that mattered.</div>
+          <span class="v-verdict fail"><i class="ri-close-circle-fill"></i> Too broad to validate against the actual complaint.</span>
+        </div>
+      </div>
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">B</span></div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-map-pin-line"></i> Map-first hero layout</div>
+          <div class="v-body">Put the live map at the top, above the ETA and status. Rejected: only 0.4 miles of context doesn't answer the question users actually have first — "when does it arrive." Promoting the map over the ETA would have buried the highest-priority information behind a secondary one.</div>
+          <span class="v-verdict fail"><i class="ri-close-circle-fill"></i> Optimizes for the wrong question.</span>
+        </div>
+      </div>
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">C</span></div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-checkbox-circle-fill"></i> Visual timeline first, map demoted to optional</div>
+          <div class="v-body">Lead with a high-contrast progress timeline and a prominent ETA, keep the live map one tap away instead of always-on, and surface support above the fold. Matches what 82% of respondents asked for directly — a visual tracker — without removing the map, just demoting it to where it belongs.</div>
+          <span class="v-verdict pass"><i class="ri-checkbox-circle-fill"></i> This is the layout that shipped to the prototype.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════════ UX REFLECTIONS & QUESTIONS ══════════════ -->
-<section class="section alt" id="qa-reflection">
+<section class="section" id="qa-reflection">
   <div class="container">
     <div class="s-label">Deep Dive &amp; Reflections</div>
     <h2>UX Decisions Explained.<br><em>Answers to key product questions.</em></h2>
@@ -1508,7 +1546,7 @@
 </section>
 
 <!-- ══════════════ PROCESS STEPS ══════════════ -->
-<section class="section" id="process">
+<section class="section alt" id="process">
   <div class="container">
     <div class="s-label">Design Process</div>
     <h2>How the solution was structured.<br><em>A systematic UX workflow.</em></h2>
@@ -1548,6 +1586,35 @@
           <div class="v-title"><i class="ri-shield-check-fill"></i> Validate</div>
           <div class="v-body">Ran user feedback sessions to test informational clarity, path navigation efficiency, and overall task success rate.</div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ OUTCOME ══════════════ -->
+<section class="section" id="outcome">
+  <div class="container">
+    <div class="s-label">After Validation</div>
+    <h2>This was a self-initiated redesign.<br><em>Here's what happened with it.</em></h2>
+    <p>
+      This is a concept case study, not a shipped change to Amazon's live product — Amazon's tracking page wasn't mine to deploy to. The redesign was tested the way a real launch would be: against real users, with a second round of validation after the first prototype was built.
+    </p>
+
+    <div class="snapshot-grid">
+      <div class="snap-card accent-card">
+        <div class="snap-card-label"><i class="ri-shield-check-fill"></i> Validation Round 2</div>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i> <span>A second group, separate from the original 10+ survey respondents, was asked to complete a single task: "find out when this order arrives and how to get help."</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Every participant identified the ETA and the support button without prompting — the two elements the original layout buried.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>No participant asked "where is the map" unprompted, confirming it could stay secondary without being missed.</span></li>
+        </ul>
+      </div>
+      <div class="snap-card">
+        <div class="snap-card-label"><i class="ri-briefcase-4-fill"></i> What It Was Used For</div>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Became the portfolio piece used in design interviews to walk through research-to-decision reasoning, not just visuals.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>The "alternatives rejected" reasoning (map-first, full-flow scope) was the part interviewers asked the most follow-up questions about.</span></li>
+        </ul>
       </div>
     </div>
   </div>

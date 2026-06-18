@@ -1325,8 +1325,43 @@
   </div>
 </section>
 
+<!-- ══════════════ ALTERNATIVES CONSIDERED ══════════════ -->
+<section class="section" id="alternatives">
+  <div class="container">
+    <div class="s-label">Decisions</div>
+    <h2>Three ways to solve this.<br><em>Only one shipped.</em></h2>
+
+    <div class="versions">
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">A</span></div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-cloud-line"></i> Server-side rendering pipeline</div>
+          <div class="v-body">Send frame data to a backend, render and merge the PDF with a headless renderer, return a download link. Rejected: it means hosting and paying for a server for a free plugin, a network dependency that fails the "export in under 30 seconds" goal on slow connections, and a privacy concern — design files leaving Figma's sandbox entirely.</div>
+          <span class="v-verdict fail"><i class="ri-close-circle-fill"></i> Adds cost, latency, and a privacy liability.</span>
+        </div>
+      </div>
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">B</span></div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-stack-line"></i> Lean on Figma's native multi-export + a merge step</div>
+          <div class="v-body">Let Figma export each frame as before, and only build a lightweight "merge these PNGs" utility instead of a full export pipeline. Rejected: this still leaves the exact workflow that was the entire complaint — export, leave Figma, merge, reorder. It would have been a smaller build, but it would not have solved the problem.</div>
+          <span class="v-verdict fail"><i class="ri-close-circle-fill"></i> Solves nothing the user didn't already have.</span>
+        </div>
+      </div>
+      <div class="version">
+        <div class="v-tag"><span class="v-badge">C</span></div>
+        <div class="v-card">
+          <div class="v-title"><i class="ri-checkbox-circle-fill"></i> In-sandbox export + assembly, fully client-side</div>
+          <div class="v-body">Export frame bytes inside the Figma sandbox, pass them to the UI thread over <code>postMessage</code>, and assemble the PDF client-side with jsPDF. No server, no extra tools, no file ever leaves the user's machine. Harder to engineer around Figma's memory limits, but it's the only option that kept the plugin free, private, and offline-capable.</div>
+          <span class="v-verdict pass"><i class="ri-checkbox-circle-fill"></i> This is the architecture that shipped.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════════ REDESIGN PHILOSOPHY ══════════════ -->
-<section class="section" id="redesign">
+<section class="section alt" id="redesign">
   <div class="container">
     <div class="s-label">UX Iteration</div>
     <h2>What the first users taught me.<br><em>Redesigning for outcomes.</em></h2>
@@ -1370,7 +1405,7 @@
 </section>
 
 <!-- ══════════════ BUGS & CHALLENGES ══════════════ -->
-<section class="section alt" id="bugs">
+<section class="section" id="bugs">
   <div class="container">
     <div class="s-label">Engineering Challenges</div>
     <h2>Three bugs that taught me<br><em>more than the features did.</em></h2>
@@ -1431,7 +1466,7 @@
 </section>
 
 <!-- ══════════════ ACCESSIBILITY & DESIGN SYSTEM ══════════════ -->
-<section class="section" id="a11y-design">
+<section class="section alt" id="a11y-design">
   <div class="container">
     <div class="s-label">Design Execution</div>
     <h2>Accessibility & Visual System<br><em>in a constrained space.</em></h2>
@@ -1458,7 +1493,7 @@
 </section>
 
 <!-- ══════════════ IMPACT & RESULTS ══════════════ -->
-<section class="section alt" id="impact">
+<section class="section" id="impact">
   <div class="container">
     <div class="s-label">The Results</div>
     <h2>Four versions in 28 days.<br><em>What I learned as a Product Engineer.</em></h2>

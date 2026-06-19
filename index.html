@@ -148,6 +148,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <!-- Geist Sans + Geist Mono —— Vercel's open-source type system -->
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
 
     <link
       href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
@@ -171,7 +173,7 @@
       });
     </script>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&display=swap");
+      /* Geist design system fonts — loaded via <link> in <head> */
       /* ─── RESET ─── */
       *,
       *::before,
@@ -184,48 +186,109 @@
       /* ─── DESIGN TOKENS — Apple-neutral system ───
          #FFFFFF · #F5F5F7 · #1D1D1F · #86868B only */
       :root {
-        /* Brand → ink. Interactive elements are dark, not colored */
-        --primary: #1d1d1f;
-        --primary-hover: #000000;
-        --primary-faint: #f5f5f7;
-        --primary-tint: rgba(29, 29, 31, 0.08);
-        --primary-border: rgba(29, 29, 31, 0.18);
+        /* ─── Geist Light Design System Tokens ───────────────────────
+           Source: Vercel Geist — https://vercel.com/geist/introduction
+        ──────────────────────────────────────────────────────────────── */
 
-        /* Text scale — two-tone: dark ink + secondary gray */
-        --t1: #1d1d1f;
-        --t2: #1d1d1f;
-        --t3: #86868b;
-        --t4: #86868b;
+        /* Gray scale */
+        --gray-100: #f2f2f2;
+        --gray-200: #ebebeb;
+        --gray-300: #e6e6e6;
+        --gray-400: #eaeaea;
+        --gray-500: #c9c9c9;
+        --gray-600: #a8a8a8;
+        --gray-700: #8f8f8f;
+        --gray-800: #7d7d7d;
+        --gray-900: #4d4d4d;
+        --gray-1000: #171717;
 
-        /* Backgrounds — alternating white / soft gray */
-        --bg: #ffffff;
-        --bg-alt: #f5f5f7;
-        --bg-sub: #f5f5f7;
+        /* Gray alpha (translucent overlays) */
+        --gray-alpha-100: rgba(0,0,0,0.051);
+        --gray-alpha-200: rgba(0,0,0,0.082);
+        --gray-alpha-300: rgba(0,0,0,0.102);
+        --gray-alpha-400: rgba(0,0,0,0.078);
+        --gray-alpha-500: rgba(0,0,0,0.212);
+        --gray-alpha-600: rgba(0,0,0,0.239);
+        --gray-alpha-700: rgba(0,0,0,0.439);
+        --gray-alpha-800: rgba(0,0,0,0.510);
+        --gray-alpha-900: rgba(0,0,0,0.702);
+        --gray-alpha-1000: rgba(0,0,0,0.910);
 
-        /* Surfaces */
+        /* Backgrounds */
+        --background-100: #ffffff;
+        --background-200: #fafafa;
+
+        /* Accent — blue (links, focus, CTAs) */
+        --blue-100: #f0f7ff;
+        --blue-200: #e9f4ff;
+        --blue-700: #006bff;
+        --blue-800: #0059ec;
+
+        /* Accent — status colors */
+        --red-700:   #fc0035;
+        --red-800:   #ea001d;
+        --green-700: #28a948;
+        --amber-700: #ffae00;
+
+        /* ─── Semantic aliases ─────────────────────────────────────── */
+        /* Brand: ink — interactive elements are dark, not colored */
+        --primary:        #171717;  /* gray-1000 */
+        --primary-hover:  #000000;
+        --primary-faint:  #f2f2f2;  /* gray-100  */
+        --primary-tint:   rgba(0,0,0,0.051); /* gray-alpha-100 */
+        --primary-border: rgba(0,0,0,0.102); /* gray-alpha-300 */
+
+        /* Text scale */
+        --t1: #171717;  /* gray-1000 — primary text */
+        --t2: #171717;  /* gray-1000 */
+        --t3: #4d4d4d;  /* gray-900  — secondary text */
+        --t4: #8f8f8f;  /* gray-700  — muted / disabled */
+
+        /* Backgrounds */
+        --bg:     #ffffff;  /* background-100 */
+        --bg-alt: #fafafa;  /* background-200 */
+        --bg-sub: #f2f2f2;  /* gray-100 */
         --surface: #ffffff;
 
-        /* Dark sections → ink */
-        --dark: #1d1d1f;
-        --dark-card: rgba(255, 255, 255, 0.07);
-        --dark-hover: rgba(255, 255, 255, 0.13);
-        --dark-line: rgba(255, 255, 255, 0.08);
+        /* Dark sections */
+        --dark:       #171717; /* gray-1000 */
+        --dark-card:  rgba(255,255,255,0.07);
+        --dark-hover: rgba(255,255,255,0.13);
+        --dark-line:  rgba(255,255,255,0.08);
 
-        /* Borders — ink-derived hairlines */
-        --bd: rgba(29, 29, 31, 0.08);
-        --bd2: rgba(29, 29, 31, 0.14);
-        --bd3: rgba(29, 29, 31, 0.22);
+        /* Borders (Geist alpha scale) */
+        --bd:  rgba(0,0,0,0.078); /* gray-alpha-400 */
+        --bd2: rgba(0,0,0,0.102); /* gray-alpha-300 */
+        --bd3: rgba(0,0,0,0.212); /* gray-alpha-500 */
 
-        /* Shadows — neutral */
-        --sh1: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
-        --sh2: 0 4px 20px rgba(0, 0, 0, 0.07), 0 12px 40px rgba(0, 0, 0, 0.05);
-        --sh3: 0 8px 40px rgba(0, 0, 0, 0.09), 0 24px 72px rgba(0, 0, 0, 0.06);
+        /* Focus ring */
+        --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px #006bff;
+
+        /* Geist Elevation */
+        /* Raised cards */
+        --sh1: 0 2px 2px rgba(0,0,0,0.04);
+        /* Popovers & menus */
+        --sh2: 0 1px 1px rgba(0,0,0,0.02), 0 4px 8px -4px rgba(0,0,0,0.04), 0 16px 24px -8px rgba(0,0,0,0.06);
+        /* Modals & dialogs */
+        --sh3: 0 1px 1px rgba(0,0,0,0.02), 0 8px 16px -4px rgba(0,0,0,0.04), 0 24px 32px -8px rgba(0,0,0,0.06);
+
+        /* Geist Border Radius */
+        --radius-sm:   6px;
+        --radius-md:   12px;
+        --radius-lg:   16px;
+        --radius-full: 9999px;
+
+        /* Geist Motion */
+        --ease-geist: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        --dur-state:   150ms;
+        --dur-popover: 200ms;
+        --dur-overlay: 300ms;
 
         /* Layout grid */
-        --NAV-H: 60px;
-        --PAGE-W: 1280px;
+        --NAV-H:    60px;
+        --PAGE-W:   1200px;
         --PAGE-PAD: 80px;
-        --SEC-Y: 128px;
+        --SEC-Y:    128px;
       }
 
       /* ─── BASE ─── */
@@ -252,7 +315,7 @@
       body {
         background: var(--bg);
         color: var(--t1);
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         font-size: 15px;
         line-height: 1.6;
         overflow-x: hidden;
@@ -362,9 +425,9 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
-        letter-spacing: 0.22em;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
         color: var(--t4);
         margin-bottom: 20px;
@@ -380,19 +443,18 @@
 
       /* ─── HEADINGS ─── */
       h2 {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(40px, 4.5vw, 64px);
         line-height: 1;
         letter-spacing: -0.04em;
         color: var(--t1);
       }
       h2 em {
-        font-family: "DM Serif Display", serif;
-        font-style: italic;
-        font-weight: 400;
-        letter-spacing: -0.02em;
-        color: #86868b;
+        font-style: normal;
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        color: var(--gray-700);
       }
 
       /* ─── DIVIDER ─── */
@@ -434,7 +496,7 @@
       }
 
       .nav-logo {
-        font-weight: 700;
+        font-weight: 600;
         font-size: 14px;
         letter-spacing: -0.025em;
         color: var(--t1);
@@ -464,29 +526,35 @@
         color: var(--t4);
         text-decoration: none;
         letter-spacing: -0.01em;
-        transition: color 0.2s;
+        transition: color var(--dur-state);
       }
       .nav-links a:hover {
         color: var(--t1);
       }
 
       .nav-cta {
-        font-size: 13px;
-        font-weight: 600;
+        font-size: 14px;
+        font-weight: 500;
         color: #fff !important;
         background: var(--primary);
-        padding: 8px 22px;
-        border-radius: 7px;
+        padding: 0 10px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: var(--radius-sm);
         text-decoration: none;
         letter-spacing: -0.01em;
         transition:
-          background 0.2s,
-          box-shadow 0.2s,
-          transform 0.15s;
+          background var(--dur-state) var(--ease-geist),
+          box-shadow var(--dur-state);
       }
       .nav-cta:hover {
         background: var(--primary-hover) !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      }
+      .nav-cta:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
       }
 
       /* ═══════════════════════════════════
@@ -494,11 +562,11 @@
    #FFFFFF / #F5F5F7 / #1D1D1F / #86868B
 ═══════════════════════════════════ */
       #hero {
-        --ah-bg: #ffffff;
-        --ah-bg2: #f5f5f7;
-        --ah-ink: #1d1d1f;
-        --ah-mut: #86868b;
-        --ah-line: rgba(29, 29, 31, 0.1);
+        --ah-bg: var(--bg);
+        --ah-bg2: var(--bg-alt);
+        --ah-ink: var(--primary);
+        --ah-mut: var(--t4);
+        --ah-line: var(--bd2);
         --ah-ease: cubic-bezier(0.16, 1, 0.3, 1);
         width: 100%;
         height: calc(100vh - 48px);
@@ -570,7 +638,7 @@
         border: 1px solid rgba(255, 255, 255, 0.08);
         color: #ffffff;
         padding: 12px 14px;
-        border-radius: 14px;
+        border-radius: var(--radius-md);
         pointer-events: none;
         z-index: 100;
         opacity: 0;
@@ -693,7 +761,7 @@
         gap: 9px;
         background: var(--ah-bg2);
         border: 1px solid var(--ah-line);
-        border-radius: 100px;
+        border-radius: var(--radius-full);
         padding: 6px 15px 6px 10px;
       }
       .ah-dot {
@@ -768,8 +836,8 @@
       }
 
       .ah-h1 {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(36px, 5.5vw, 76px);
         line-height: 0.98;
         letter-spacing: -0.05em;
@@ -800,11 +868,10 @@
         animation-delay: 0.38s;
       }
       .ah-serif {
-        font-family: "Instrument Serif", serif;
-        font-style: italic;
-        font-weight: 400;
-        letter-spacing: -0.02em;
-        color: var(--ah-mut);
+        font-style: normal;
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        color: var(--gray-700);
       }
 
       .ah-sub {
@@ -841,26 +908,31 @@
         background: var(--ah-ink);
         color: #ffffff;
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 500;
         letter-spacing: -0.015em;
-        padding: 14px 26px;
-        border-radius: 980px;
+        padding: 0 14px;
+        height: 40px;
+        border-radius: var(--radius-sm);
         border: none;
         cursor: pointer;
         font-family: inherit;
         text-decoration: none;
         transition:
-          transform 0.32s var(--ah-ease),
-          box-shadow 0.32s var(--ah-ease),
-          background 0.2s;
+          transform var(--dur-state) var(--ease-geist),
+          box-shadow var(--dur-state) var(--ease-geist),
+          background var(--dur-state);
       }
       .ah-btn-dark:hover {
-        background: #38383a;
-        box-shadow: 0 12px 32px rgba(29, 29, 31, 0.18);
+        background: #000000;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      }
+      .ah-btn-dark:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
       }
       .ah-btn-dark i {
         font-size: 15px;
-        transition: transform 0.28s var(--ah-ease);
+        transition: transform var(--dur-state) var(--ease-geist);
       }
       .ah-btn-dark:hover i {
         transform: translate(2px, -2px);
@@ -869,29 +941,34 @@
         display: inline-flex;
         align-items: center;
         gap: 9px;
-        background: transparent;
+        background: #ffffff;
         color: var(--ah-ink);
         font-size: 14px;
         font-weight: 500;
         letter-spacing: -0.015em;
-        padding: 14px 24px;
-        border-radius: 980px;
-        border: 1px solid var(--ah-line);
+        padding: 0 14px;
+        height: 40px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--gray-alpha-400);
         text-decoration: none;
         transition:
-          background 0.2s,
-          border-color 0.2s;
+          background var(--dur-state),
+          border-color var(--dur-state);
       }
       .ah-btn-ghost:hover {
-        background: var(--ah-bg2);
-        border-color: rgba(29, 29, 31, 0.22);
+        background: var(--gray-100);
+        border-color: var(--gray-alpha-500);
+      }
+      .ah-btn-ghost:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
       }
       .ah-btn-ghost i {
         font-size: 15px;
-        color: var(--ah-mut);
+        color: var(--t4);
         transition:
-          transform 0.2s,
-          color 0.2s;
+          transform var(--dur-state),
+          color var(--dur-state);
       }
       .ah-btn-ghost:hover i {
         transform: translateX(3px);
@@ -1048,7 +1125,7 @@
         align-items: center;
         padding: 0 0 0 36px;
         white-space: nowrap;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 12px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
@@ -1087,8 +1164,8 @@
       }
 
       .about-h {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(36px, 4vw, 56px);
         line-height: 1;
         letter-spacing: -0.04em;
@@ -1096,10 +1173,10 @@
         margin-bottom: 32px;
       }
       .about-h em {
-        font-family: "DM Serif Display", serif;
-        font-style: italic;
-        font-weight: 400;
-        color: #86868b;
+        font-style: normal;
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        color: var(--gray-700);
       }
       .about-p {
         font-size: 15px;
@@ -1128,40 +1205,39 @@
         align-items: flex-start;
         gap: 16px;
         min-height: 0;
-        padding: 26px;
+        padding: 24px;
         border: 1px solid var(--bd);
-        border-radius: 12px;
+        border-radius: var(--radius-sm);
         background: var(--surface);
         transition:
-          transform 0.22s ease,
-          border-color 0.22s ease,
-          box-shadow 0.22s ease;
+          border-color var(--dur-state),
+          box-shadow var(--dur-state);
       }
       .cap-item:nth-child(n + 3) {
         margin-top: 0;
       }
       .cap-item:hover {
-        border-color: var(--primary-border);
+        border-color: var(--bd2);
         box-shadow: var(--sh1);
       }
       .cap-icon {
-        width: 38px;
-        height: 38px;
+        width: 36px;
+        height: 36px;
         flex-shrink: 0;
-        border-radius: 9px;
-        border: 1px solid var(--primary-border);
-        background: var(--primary-faint);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--bd2);
+        background: var(--gray-100);
         color: var(--primary);
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 16px;
         transition:
-          background 0.2s,
-          border-color 0.2s;
+          background var(--dur-state),
+          border-color var(--dur-state);
       }
       .cap-item:hover .cap-icon {
-        background: var(--primary-tint);
+        background: var(--gray-200);
       }
 
       .cap-name {
@@ -1186,14 +1262,14 @@
       .cap-tags span {
         display: inline-flex;
         align-items: center;
-        min-height: 26px;
-        padding: 5px 9px;
-        border-radius: 999px;
-        border: 1px solid var(--primary-border);
-        background: var(--primary-faint);
+        min-height: 24px;
+        padding: 4px 8px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--bd2);
+        background: var(--gray-100);
         color: var(--primary);
         font-size: 11px;
-        font-weight: 600;
+        font-weight: 500;
         line-height: 1;
         white-space: nowrap;
       }
@@ -1220,39 +1296,22 @@
 
       .p-card {
         background: var(--surface);
-        border: 1.5px solid var(--bd);
-        border-radius: 20px;
-        padding: 26px;
+        border: 1px solid var(--bd);
+        border-radius: var(--radius-md);
+        padding: 24px;
         position: relative;
         overflow: hidden;
         transition:
-          box-shadow 0.35s ease,
-          transform 0.35s ease,
-          border-color 0.3s;
-        box-shadow: var(--sh2);
+          box-shadow var(--dur-state),
+          border-color var(--dur-state);
+        box-shadow: var(--sh1);
       }
       .p-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(
-          90deg,
-          var(--primary) 0%,
-          rgba(29, 29, 31, 0.3) 100%
-        );
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        display: none; /* Geist: no top-bar accent */
       }
       .p-card:hover {
-        box-shadow: var(--sh3);
-        border-color: var(--primary-border);
-      }
-      .p-card:hover::before {
-        transform: scaleX(1);
+        box-shadow: var(--sh2);
+        border-color: var(--bd2);
       }
 
       .p-top {
@@ -1262,7 +1321,7 @@
         margin-bottom: 16px;
       }
       .p-num {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
         letter-spacing: 0.14em;
         color: var(--primary);
@@ -1271,14 +1330,14 @@
       .p-arrow {
         width: 32px;
         height: 32px;
-        border-radius: 8px;
+        border-radius: var(--radius-sm);
         border: 1px solid var(--bd2);
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 15px;
         color: var(--t4);
-        transition: all 0.25s;
+        transition: all var(--dur-state);
         flex-shrink: 0;
       }
       .p-card:hover .p-arrow {
@@ -1295,23 +1354,23 @@
         margin-bottom: 16px;
       }
       .p-tag {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
         letter-spacing: 0.08em;
-        padding: 4px 10px;
+        padding: 3px 8px;
         border: 1px solid var(--bd2);
-        border-radius: 4px;
+        border-radius: var(--radius-sm);
         color: var(--t4);
       }
       .p-tag.hl {
-        background: var(--primary-faint);
-        border-color: var(--primary-border);
+        background: var(--gray-100);
+        border-color: var(--bd2);
         color: var(--primary);
       }
 
       .p-name {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 24px;
         letter-spacing: -0.03em;
         color: var(--t1);
@@ -1371,8 +1430,8 @@
         padding-left: 16px;
       }
       .p-met-val {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 18px;
         letter-spacing: -0.025em;
         color: var(--t1);
@@ -1396,34 +1455,37 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
-        font-family: "DM Sans", sans-serif;
-        font-size: 11.5px;
-        font-weight: 600;
+        font-family: "Geist", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
         letter-spacing: -0.01em;
         color: var(--t1);
         background: #ffffff;
-        border: 1px solid var(--bd3);
-        padding: 7px 14px;
-        border-radius: 8px;
+        border: 1px solid var(--bd2);
+        padding: 0 10px;
+        height: 32px;
+        border-radius: var(--radius-sm);
         text-decoration: none;
         white-space: nowrap;
         flex-shrink: 0;
         cursor: pointer;
         transition:
-          background 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-          color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-          border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-          box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-          transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          background var(--dur-state),
+          color var(--dur-state),
+          border-color var(--dur-state),
+          box-shadow var(--dur-state);
       }
       .p-link-btn:hover {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: #ffffff;
-        box-shadow: 0 4px 12px rgba(29, 29, 31, 0.08);
+        background: var(--gray-100);
+        border-color: var(--bd3);
+        color: var(--t1);
+      }
+      .p-link-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
       }
       .p-link-btn:active {
-        box-shadow: 0 2px 6px rgba(29, 29, 31, 0.06);
+        background: var(--gray-200);
       }
       .p-link-btn i {
         font-size: 13px;
@@ -1480,7 +1542,7 @@
       }
 
       .pr-n {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 11px;
         color: var(--primary);
         letter-spacing: 0.08em;
@@ -1502,8 +1564,8 @@
 
       /* brand grid */
       .clients-h {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(26px, 3vw, 40px);
         line-height: 1;
         letter-spacing: -0.04em;
@@ -1512,10 +1574,11 @@
         margin-top: 4px;
       }
       .clients-h em {
-        font-family: "DM Serif Display", serif;
-        font-style: italic;
-        font-weight: 400;
-        color: #86868b;
+        font-family: "Geist", sans-serif;
+        font-style: normal;
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        color: var(--gray-700);
       }
 
       .brand-grid {
@@ -1527,7 +1590,7 @@
       .brand-card {
         background: var(--surface);
         border: 1.5px solid var(--bd);
-        border-radius: 14px;
+        border-radius: var(--radius-md);
         padding: 26px 24px;
         transition:
           box-shadow 0.28s,
@@ -1540,8 +1603,8 @@
         border-color: var(--primary-border);
       }
       .brand-letter {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 900;
+        font-family: "Geist", sans-serif;
+        font-weight: 800;
         font-size: 32px;
         letter-spacing: -0.05em;
         color: var(--primary);
@@ -1565,7 +1628,7 @@
 ═══════════════════════════════════ */
       #systems {
         /* Premium dark background */
-        background: #1d1d1f;
+        background: #171717;
         position: relative;
         overflow: hidden;
       }
@@ -1611,11 +1674,11 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
-        letter-spacing: 0.22em;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
-        color: #86868b;
+        color: var(--gray-600);
         margin-bottom: 32px;
       }
       .sys-label::before {
@@ -1642,8 +1705,8 @@
       }
 
       .sys-h {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(40px, 4.5vw, 64px);
         line-height: 1;
         letter-spacing: -0.04em;
@@ -1651,11 +1714,10 @@
         margin: 0;
       }
       .sys-h em {
-        font-family: "DM Serif Display", serif;
-        font-style: italic;
-        font-weight: 400;
-        letter-spacing: -0.02em;
-        color: #86868b;
+        font-style: normal;
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        color: var(--gray-700);
         display: block;
         margin-top: 4px;
       }
@@ -1685,7 +1747,7 @@
       .sys-stat {
         background: #ffffff;
         border: 1px solid rgba(29, 29, 31, 0.08);
-        border-radius: 12px;
+        border-radius: var(--radius-sm);
         padding: 16px 18px;
         display: flex;
         flex-direction: column;
@@ -1697,26 +1759,26 @@
           border-color 0.22s ease;
       }
       .sys-stat:hover {
-        background: #f5f5f7;
-        border-color: rgba(29, 29, 31, 0.18);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        background: var(--bg-alt);
+        border-color: var(--bd3);
+        box-shadow: var(--sh1);
       }
 
       .sys-stat-val {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 22px;
         letter-spacing: -0.045em;
-        color: #1d1d1f;
+        color: #171717;
         line-height: 1;
       }
 
       .sys-stat-lbl {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 9px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #86868b;
+        color: var(--gray-600);
         line-height: 1.3;
       }
 
@@ -1737,51 +1799,32 @@
       /* Premium white card surface */
       .sys-card {
         background: #ffffff;
-        border: 1.5px solid rgba(29, 29, 31, 0.08);
-        border-radius: 20px;
+        border: 1px solid rgba(0,0,0,0.078);
+        border-radius: var(--radius-md);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--sh1);
         transition:
-          border-color 0.3s ease,
-          transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-          box-shadow 0.4s ease,
-          background-color 0.3s ease;
+          border-color var(--dur-state),
+          box-shadow var(--dur-state);
       }
 
-      /* Monochromatic accent bar slides in from left on hover */
+      /* No top bar — Geist keeps things minimal */
       .sys-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(
-          90deg,
-          #1d1d1f 0%,
-          rgba(29, 29, 31, 0.28) 100%
-        );
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        display: none;
       }
-      .sys-card:hover::before {
-        transform: scaleX(1);
-      }
-
       .sys-card:hover {
-        border-color: rgba(29, 29, 31, 0.18);
-        background: #f5f5f7;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        border-color: rgba(0,0,0,0.18);
+        background: var(--gray-100);
+        box-shadow: var(--sh2);
       }
 
       .sys-card-inner {
-        padding: 36px 32px;
+        padding: 32px 28px;
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 272px;
+        min-height: 260px;
       }
 
       .sys-card-top {
@@ -1796,11 +1839,11 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 9.5px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #86868b;
+        color: var(--gray-600);
       }
 
       .sys-tag-dot {
@@ -1811,17 +1854,17 @@
       }
       /* Dot colors — simple indicators */
       .sys-dot--npm {
-        background: #1d1d1f;
+        background: #171717;
       }
       .sys-dot--figma {
-        background: #86868b;
+        background: #8f8f8f;
       }
       .sys-dot--ai {
-        background: rgba(29, 29, 31, 0.3);
+        background: rgba(23, 23, 23, 0.3);
       }
 
       .sys-card-num {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
         letter-spacing: 0.16em;
         color: #86868b;
@@ -1835,20 +1878,20 @@
 
       /* Card name: dark ink */
       .sys-card-name {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 20px;
         letter-spacing: -0.028em;
-        color: #1d1d1f;
+        color: #171717;
         line-height: 1.15;
         margin-bottom: 10px;
-        transition: color 0.22s ease;
+        transition: color var(--dur-state);
       }
 
       /* Description: readable muted body text */
       .sys-card-desc {
         font-size: 13px;
-        color: #555557;
+        color: var(--gray-900);
         line-height: 1.72;
         margin: 0;
         letter-spacing: -0.003em;
@@ -1880,11 +1923,11 @@
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
         letter-spacing: 0.1em;
-        padding: 5px 12px;
-        border-radius: 6px;
+        padding: 4px 10px;
+        border-radius: var(--radius-sm);
         text-transform: uppercase;
         font-weight: 500;
       }
@@ -1898,12 +1941,12 @@
 
       /* Live — dark pill outline */
       .sys-pill.live {
-        border: 1px solid rgba(29, 29, 31, 0.22);
-        color: #1d1d1f;
+        border: 1px solid var(--bd2);
+        color: #171717;
         background: transparent;
       }
       .sys-pill.live .sys-pill-dot {
-        background: #1d1d1f;
+        background: #171717;
         position: relative;
       }
       .sys-pill.live .sys-pill-dot::after {
@@ -1911,7 +1954,7 @@
         position: absolute;
         inset: -4px;
         border-radius: 50%;
-        border: 1.5px solid rgba(29, 29, 31, 0.45);
+        border: 1.5px solid rgba(23, 23, 23, 0.45);
         opacity: 0;
         transform: scale(1);
         will-change: transform, opacity;
@@ -1934,8 +1977,8 @@
 
       /* Dev — muted gray outline */
       .sys-pill.dev {
-        border: 1px solid rgba(29, 29, 31, 0.12);
-        color: #86868b;
+        border: 1px solid var(--bd);
+        color: var(--t4);
         background: transparent;
       }
 
@@ -1944,44 +1987,50 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        font-family: "DM Sans", sans-serif;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.01em;
-        padding: 6px 14px;
-        border-radius: 8px;
+        font-family: "Geist", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        padding: 0 10px;
+        height: 32px;
+        border-radius: var(--radius-sm);
         text-decoration: none;
         white-space: nowrap;
         appearance: none;
         -webkit-appearance: none;
         background: none;
         transition:
-          background-color 0.2s ease,
-          color 0.2s ease,
-          border-color 0.2s ease,
-          transform 0.2s ease,
-          box-shadow 0.2s ease;
+          background-color var(--dur-state),
+          color var(--dur-state),
+          border-color var(--dur-state),
+          box-shadow var(--dur-state);
       }
       .sys-btn.primary {
-        background: #1d1d1f;
+        background: #171717;
         color: #ffffff !important;
-        border: 1px solid #1d1d1f;
+        border: 1px solid #171717;
       }
       .sys-btn.primary:hover {
-        background: #ffffff;
-        color: #000000 !important;
-        border-color: #ffffff;
-        box-shadow: 0 4px 12px rgba(29, 29, 31, 0.25);
+        background: #000000;
+        border-color: #000000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      }
+      .sys-btn.primary:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
       }
       .sys-btn.secondary {
         background: transparent;
-        color: #1d1d1f !important;
-        border: 1px solid rgba(29, 29, 31, 0.18);
+        color: #171717 !important;
+        border: 1px solid rgba(0,0,0,0.102);
       }
       .sys-btn.secondary:hover {
-        background: rgba(29, 29, 31, 0.05);
-        border-color: rgba(29, 29, 31, 0.3);
-        color: #1d1d1f !important;
+        background: var(--gray-100);
+        border-color: rgba(0,0,0,0.212);
+      }
+      .sys-btn.secondary:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
       }
       a.sys-card:hover .sys-card-arr i {
         transform: translate(2px, -2px);
@@ -2036,7 +2085,7 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
@@ -2053,8 +2102,8 @@
       }
 
       .exp-sidebar-h {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(28px, 3vw, 44px);
         line-height: 1;
         letter-spacing: -0.04em;
@@ -2062,10 +2111,10 @@
         margin-bottom: 20px;
       }
       .exp-sidebar-h em {
-        font-family: "DM Serif Display", serif;
-        font-style: italic;
-        font-weight: 400;
-        color: #86868b;
+        font-style: normal;
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        color: var(--gray-700);
       }
       .exp-sidebar-p {
         font-size: 14px;
@@ -2097,8 +2146,8 @@
         gap: 20px;
       }
       .exp-role {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 17px;
         letter-spacing: -0.02em;
         color: var(--t1);
@@ -2110,14 +2159,14 @@
       }
 
       .exp-period {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 11px;
         color: var(--t4);
         white-space: nowrap;
         letter-spacing: 0.04em;
-        padding: 5px 12px;
+        padding: 4px 10px;
         border: 1px solid var(--bd2);
-        border-radius: 5px;
+        border-radius: var(--radius-sm);
         flex-shrink: 0;
         background: var(--surface);
       }
@@ -2153,14 +2202,15 @@
         flex-wrap: wrap;
       }
       .exp-badge {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 11px;
-        padding: 5px 12px;
-        background: var(--primary-faint);
-        border: 1px solid var(--primary-border);
+        padding: 4px 10px;
+        background: var(--gray-100);
+        border: 1px solid var(--bd2);
         color: var(--primary);
-        border-radius: 5px;
+        border-radius: var(--radius-sm);
         letter-spacing: 0.04em;
+        font-weight: 500;
       }
 
       /* ═══════════════════════════════════
@@ -2179,18 +2229,18 @@
       }
 
       .tech-h {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(36px, 4vw, 56px);
         line-height: 1;
         letter-spacing: -0.04em;
         color: var(--t1);
       }
       .tech-h em {
-        font-family: "DM Serif Display", serif;
-        font-style: italic;
-        font-weight: 400;
-        color: #86868b;
+        font-style: normal;
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        color: var(--gray-700);
       }
       .tech-sub {
         font-size: 15px;
@@ -2203,7 +2253,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         border: 1px solid var(--bd);
-        border-radius: 14px;
+        border-radius: var(--radius-md);
         overflow: hidden;
         box-shadow: var(--sh1);
       }
@@ -2216,7 +2266,7 @@
         gap: 16px;
         border-bottom: 1px solid var(--bd);
         border-right: 1px solid var(--bd);
-        transition: background 0.2s;
+        transition: background var(--dur-state);
       }
       .tech-row:hover {
         background: var(--bg-alt);
@@ -2238,7 +2288,7 @@
         transition: color 0.2s;
       }
       .tech-cat {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
         letter-spacing: 0.1em;
         color: var(--primary);
@@ -2250,7 +2300,7 @@
       .npm-card {
         margin-top: 40px;
         background: var(--dark);
-        border-radius: 16px;
+        border-radius: var(--radius-lg);
         padding: 40px 44px;
         display: flex;
         align-items: center;
@@ -2273,7 +2323,7 @@
         );
       }
       .npm-badge {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
@@ -2288,8 +2338,8 @@
         font-size: 7px;
       }
       .npm-title {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 20px;
         letter-spacing: -0.025em;
         color: #fff;
@@ -2315,8 +2365,8 @@
         border-left: none;
       }
       .npm-stat-val {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 28px;
         letter-spacing: -0.04em;
         color: #fff;
@@ -2378,11 +2428,11 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: #86868b;
+        color: var(--t4);
         margin-bottom: 24px;
       }
       .contact-label::before {
@@ -2390,31 +2440,30 @@
         display: block;
         width: 24px;
         height: 1px;
-        background: #1d1d1f;
+        background: var(--primary);
       }
 
       .contact-h {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 900;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(52px, 6vw, 88px);
         line-height: 0.92;
         letter-spacing: -0.05em;
-        color: #1d1d1f;
+        color: #171717;
         margin: 0 0 28px;
       }
       .contact-h em {
-        font-family: "DM Serif Display", serif;
-        font-style: italic;
-        font-weight: 400;
+        font-style: normal;
+        font-weight: 300;
         font-size: 1.04em;
-        letter-spacing: -0.03em;
-        color: #86868b;
+        letter-spacing: -0.04em;
+        color: var(--gray-700);
         display: block;
       }
 
       .contact-sub {
         font-size: 15px;
-        color: #86868b;
+        color: var(--t3);
         line-height: 1.78;
         max-width: 38ch;
         letter-spacing: -0.005em;
@@ -2425,50 +2474,33 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        background: #1d1d1f;
+        background: #171717;
         color: #ffffff;
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
+        font-family: "Geist", sans-serif;
+        font-weight: 500;
         font-size: 14px;
-        letter-spacing: -0.02em;
-        padding: 14px 28px;
-        border-radius: 10px;
+        letter-spacing: -0.01em;
+        padding: 0 16px;
+        height: 40px;
+        border-radius: var(--radius-sm);
         border: none;
         cursor: pointer;
-        position: relative;
-        overflow: hidden;
+        text-decoration: none;
         transition:
-          background 0.22s,
-          box-shadow 0.32s,
-          transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow:
-          0 2px 8px rgba(0, 0, 0, 0.16),
-          0 6px 24px rgba(0, 0, 0, 0.2);
-      }
-      .contact-cta-btn::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          135deg,
-          rgba(29, 29, 31, 0.04) 0%,
-          transparent 60%
-        );
-        opacity: 0;
-        transition: opacity 0.22s;
+          background var(--dur-state) var(--ease-geist),
+          box-shadow var(--dur-state);
       }
       .contact-cta-btn:hover {
         background: #000000;
-        box-shadow:
-          0 4px 16px rgba(0, 0, 0, 0.18),
-          0 14px 44px rgba(0, 0, 0, 0.24);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.18);
       }
-      .contact-cta-btn:hover::after {
-        opacity: 1;
+      .contact-cta-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
       }
       .contact-cta-btn i {
         font-size: 16px;
-        transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: transform var(--dur-state) var(--ease-geist);
       }
       .contact-cta-btn:hover i {
         transform: translateX(3px);
@@ -2482,11 +2514,11 @@
       }
 
       .contact-group-label {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 9.5px;
         letter-spacing: 0.18em;
         text-transform: uppercase;
-        color: #86868b;
+        color: var(--t4);
         margin-bottom: 10px;
         margin-top: 32px;
         display: flex;
@@ -2514,9 +2546,9 @@
         align-items: center;
         justify-content: space-between;
         padding: 16px 18px;
-        background: #f5f5f7;
-        border: 1px solid rgba(29, 29, 31, 0.08);
-        border-radius: 12px;
+        background: var(--bg-alt);
+        border: 1px solid var(--bd);
+        border-radius: var(--radius-sm);
         text-decoration: none;
         position: relative;
         overflow: hidden;
@@ -2534,7 +2566,7 @@
         top: 0;
         bottom: 0;
         width: 3px;
-        border-radius: 12px 0 0 12px;
+        border-radius: var(--radius-sm) 0 0 var(--radius-sm);
         background: rgba(29, 29, 31, 0);
         transition: background 0.24s;
       }
@@ -2564,8 +2596,8 @@
       .contact-row-icon {
         width: 38px;
         height: 38px;
-        border-radius: 8px;
-        background: #1d1d1f;
+        border-radius: var(--radius-sm);
+        background: var(--primary);
         color: #ffffff;
         display: flex;
         align-items: center;
@@ -2586,34 +2618,34 @@
         gap: 3px;
       }
       .contact-row-name {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 600;
+        font-family: "Geist", sans-serif;
+        font-weight: 500;
         font-size: 14px;
-        color: #1d1d1f;
+        color: var(--t1);
         letter-spacing: -0.02em;
         line-height: 1.2;
         transition: color 0.24s;
       }
       .contact-row-val {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 12px;
         letter-spacing: 0.03em;
         line-height: 1.4;
-        color: #86868b;
+        color: var(--t4);
         transition: color 0.24s;
       }
 
       .contact-row-arrow {
         width: 32px;
         height: 32px;
-        border-radius: 8px;
-        border: 1px solid rgba(29, 29, 31, 0.12);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--bd2);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
         font-size: 15px;
-        color: #86868b;
+        color: var(--t4);
         transition:
           border-color 0.24s,
           background 0.24s,
@@ -2658,7 +2690,7 @@
         width: 100%;
         max-width: 860px;
         max-height: 92vh;
-        border-radius: 24px;
+        border-radius: var(--radius-lg);
         overflow: hidden;
         position: relative;
         box-shadow:
@@ -2729,8 +2761,8 @@
         flex-shrink: 0;
       }
       .modal-left-title {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(22px, 2.4vw, 30px);
         letter-spacing: -0.04em;
         color: #ffffff;
@@ -2738,11 +2770,10 @@
         margin-bottom: 12px;
       }
       .modal-left-title em {
-        font-family: "DM Serif Display", serif;
-        font-style: italic;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 0.5);
-        letter-spacing: -0.02em;
+        font-style: normal;
+        font-weight: 300;
+        color: rgba(255,255,255,0.5);
+        letter-spacing: -0.03em;
       }
       .modal-left-sub {
         font-size: 13px;
@@ -2793,7 +2824,7 @@
         gap: 7px;
         background: rgba(255, 255, 255, 0.06);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 100px;
+        border-radius: var(--radius-full);
         padding: 6px 12px 6px 9px;
         margin-bottom: 28px;
       }
@@ -2854,9 +2885,9 @@
         right: 18px;
         width: 34px;
         height: 34px;
-        border-radius: 9px;
-        border: 1.5px solid var(--bd2);
-        background: rgba(255, 255, 255, 0.9);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--bd2);
+        background: rgba(255,255,255,0.9);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -2864,13 +2895,13 @@
         font-size: 18px;
         color: var(--t4);
         transition:
-          background 0.16s,
-          color 0.16s,
-          border-color 0.16s;
+          background var(--dur-state),
+          color var(--dur-state),
+          border-color var(--dur-state);
         z-index: 10;
       }
       .modal-close:hover {
-        background: var(--bg-sub);
+        background: var(--gray-100);
         color: var(--t1);
         border-color: var(--bd3);
       }
@@ -2889,7 +2920,7 @@
       .form-error-banner {
         background: #fff5f5;
         border: 1.5px solid rgba(220, 38, 38, 0.2);
-        border-radius: 10px;
+        border-radius: var(--radius-sm);
         padding: 10px 14px;
         font-size: 12.5px;
         color: #dc2626;
@@ -2915,19 +2946,19 @@
 
       .fl-label {
         position: absolute;
-        left: 14px;
+        left: 12px;
         top: 50%;
         transform: translateY(-50%);
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 13px;
-        color: var(--t3);
+        color: var(--t4);
         pointer-events: none;
         transition:
-          top 0.18s cubic-bezier(0.4, 0, 0.2, 1),
-          transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
-          font-size 0.18s,
-          letter-spacing 0.18s,
-          color 0.18s;
+          top 0.15s ease,
+          transform 0.15s ease,
+          font-size 0.15s,
+          letter-spacing 0.15s,
+          color 0.15s;
         line-height: 1;
         white-space: nowrap;
       }
@@ -2949,7 +2980,7 @@
         transform: none;
       }
       .fl-group.focused .fl-label {
-        color: #1d1d1f;
+        color: var(--primary);
       }
       .fl-group.has-val:not(.focused) .fl-label {
         color: var(--t3);
@@ -2969,19 +3000,18 @@
         display: block;
         width: 100%;
         box-sizing: border-box;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 14px;
         color: var(--t1);
-        background: #f8f8fa;
-        border: 1.5px solid rgba(29, 29, 31, 0.1);
-        border-radius: 12px;
-        padding: 22px 14px 8px;
+        background: #ffffff;
+        border: 1px solid var(--bd2);
+        border-radius: var(--radius-sm);
+        padding: 22px 12px 8px;
         height: 54px;
         outline: none;
         transition:
-          border-color 0.18s,
-          box-shadow 0.18s,
-          background 0.18s;
+          border-color var(--dur-state),
+          box-shadow var(--dur-state);
       }
       .fl-textarea {
         height: unset;
@@ -2992,14 +3022,14 @@
       }
       .fl-input:focus,
       .fl-textarea:focus {
-        border-color: #1d1d1f;
-        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.07);
+        border-color: var(--primary);
+        box-shadow: var(--focus-ring);
         background: #fff;
       }
       .fl-group.has-error .fl-input,
       .fl-group.has-error .fl-textarea {
-        border-color: #dc2626;
-        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+        border-color: var(--red-800);
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--red-800);
       }
       .fl-error {
         font-size: 11px;
@@ -3027,23 +3057,22 @@
         width: 100%;
         box-sizing: border-box;
         height: 54px;
-        padding: 22px 14px 8px;
-        background: #f8f8fa;
-        border: 1.5px solid rgba(29, 29, 31, 0.1);
-        border-radius: 12px;
+        padding: 22px 12px 8px;
+        background: #ffffff;
+        border: 1px solid var(--bd2);
+        border-radius: var(--radius-sm);
         transition:
-          border-color 0.18s,
-          box-shadow 0.18s,
-          background 0.18s;
+          border-color var(--dur-state),
+          box-shadow var(--dur-state);
       }
       .fl-phone-box:focus-within {
-        border-color: #1d1d1f;
-        box-shadow: 0 0 0 3px rgba(29, 29, 31, 0.07);
+        border-color: var(--primary);
+        box-shadow: var(--focus-ring);
         background: #fff;
       }
       .fl-group.has-error .fl-phone-box {
-        border-color: #dc2626;
-        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+        border-color: var(--red-800);
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--red-800);
       }
       .fl-cc {
         flex: 0 0 auto;
@@ -3053,13 +3082,14 @@
         line-height: 24px;
         box-sizing: border-box;
         border: none;
-        background: transparent
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2386868B' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
-          right center no-repeat;
+        background: transparent;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238F8F8F' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-position: right center;
+        background-repeat: no-repeat;
         background-size: 9px 6px;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 500;
         color: var(--t1);
         outline: none;
         appearance: none;
@@ -3080,7 +3110,7 @@
         height: 100%;
         border: none;
         background: transparent;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 14px;
         color: var(--t1);
         outline: none;
@@ -3104,47 +3134,37 @@
         justify-content: center;
         gap: 9px;
         width: 100%;
-        background: #0f0f11;
+        background: var(--primary);
         color: #fff;
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
+        font-family: "Geist", sans-serif;
+        font-weight: 500;
         font-size: 14px;
         letter-spacing: -0.01em;
-        padding: 16px;
-        border-radius: 12px;
+        padding: 0 16px;
+        height: 40px;
+        border-radius: var(--radius-sm);
         border: none;
         cursor: pointer;
-        margin-top: 20px;
+        margin-top: 16px;
         transition:
-          background 0.2s,
-          transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-          box-shadow 0.2s;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
-        position: relative;
-        overflow: hidden;
-      }
-      .form-submit-btn::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.07) 0%,
-          transparent 60%
-        );
-        pointer-events: none;
+          background var(--dur-state) var(--ease-geist),
+          box-shadow var(--dur-state);
       }
       .form-submit-btn:hover:not(:disabled) {
-        background: #ffffff;
-        color: #000000 !important;
-        box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
+        background: var(--primary-hover);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      }
+      .form-submit-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
       }
       .form-submit-btn:active:not(:disabled) {
+        background: #000;
       }
       .form-submit-btn:disabled {
         opacity: 0.55;
         cursor: not-allowed;
-        transform: none !important;
+        background: var(--gray-700);
       }
 
       .btn-spinner {
@@ -3195,8 +3215,8 @@
         box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
       }
       .form-success-title {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 22px;
         letter-spacing: -0.04em;
         color: var(--t1);
@@ -3232,7 +3252,7 @@
           max-width: 100%;
           height: 92dvh;
           max-height: 92dvh;
-          border-radius: 20px 20px 0 0;
+          border-radius: var(--radius-lg) var(--radius-lg) 0 0;
           overflow: hidden;
           transform: translateY(100%);
           transition: transform 0.44s cubic-bezier(0.16, 1, 0.3, 1);
@@ -3247,7 +3267,7 @@
           flex: 0 0 auto;
           background: #0f0f11;
           padding: 28px 24px 24px;
-          border-radius: 20px 20px 0 0;
+          border-radius: var(--radius-lg) var(--radius-lg) 0 0;
           min-height: unset;
           overflow: hidden;
         }
@@ -3349,7 +3369,7 @@
         .form-submit-btn {
           margin-top: 16px;
           padding: 16px;
-          border-radius: 10px;
+          border-radius: var(--radius-sm);
           font-size: 13px;
         }
 
@@ -3386,7 +3406,7 @@
         max-width: 920px;
         max-height: 88vh;
         background: #ffffff;
-        border-radius: 24px;
+        border-radius: var(--radius-lg);
         overflow: hidden;
         position: relative;
         box-shadow:
@@ -3412,19 +3432,19 @@
         margin-bottom: 10px;
       }
       .cs-modal-title {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(22px, 2.6vw, 30px);
         letter-spacing: -0.04em;
         color: var(--t1);
         line-height: 1.1;
       }
       .cs-modal-title em {
-        font-family: "DM Serif Display", serif;
-        font-style: italic;
-        font-weight: 400;
+        font-family: "Geist", sans-serif;
+        font-style: normal;
+        font-weight: 300;
         color: var(--t3);
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
       }
       .cs-modal-body {
         flex: 1 1 0;
@@ -3443,7 +3463,7 @@
         display: flex;
         flex-direction: column;
         border: 1px solid var(--bd2);
-        border-radius: 16px;
+        border-radius: var(--radius-md);
         padding: 0 0 22px;
         overflow: hidden;
         transition:
@@ -3487,8 +3507,8 @@
         margin-bottom: 14px;
       }
       .cs-item-name {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 16px;
         letter-spacing: -0.02em;
         color: var(--t1);
@@ -3509,18 +3529,18 @@
         font-size: 12.5px;
         font-weight: 600;
         padding: 10px 14px;
-        border-radius: 9px;
-        background: var(--ink, #1d1d1f);
+        border-radius: var(--radius-sm);
+        background: var(--primary);
         color: #ffffff;
         text-decoration: none;
-        border: 1px solid var(--ink, #1d1d1f);
+        border: 1px solid var(--primary);
         transition:
           background 0.18s,
           color 0.18s;
       }
       .cs-item-btn:hover {
         background: #ffffff;
-        color: var(--ink, #1d1d1f);
+        color: var(--primary);
       }
 
       @media (max-width: 1024px) {
@@ -3529,7 +3549,7 @@
           max-width: 100%;
           height: 92dvh;
           max-height: 92dvh;
-          border-radius: 20px 20px 0 0;
+          border-radius: var(--radius-lg) var(--radius-lg) 0 0;
           transform: translateY(100%) scale(1);
           transition: transform 0.44s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -3587,7 +3607,7 @@
         text-align: left;
       }
       .foot-col-label {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 9px;
         letter-spacing: 0.2em;
         text-transform: uppercase;
@@ -3722,10 +3742,10 @@
         }
       }
       .foot-name-display span {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 900;
+        font-family: "Geist", sans-serif;
+        font-weight: 800;
         font-size: clamp(36px, 5.6vw, 82px);
-        letter-spacing: -0.01em;
+        letter-spacing: -0.04em;
         line-height: 1;
         text-transform: uppercase;
         user-select: none;
@@ -3737,7 +3757,7 @@
         animation: footNameWave 1.8s ease-in-out infinite;
       }
       .fn-gray {
-        color: rgba(29, 29, 31, 0.16);
+        color: rgba(23,23,23,0.14);
         animation: footNameWaveGray 1.8s ease-in-out infinite;
       }
       .foot-name-display span:nth-child(1) {
@@ -3783,7 +3803,7 @@
       }
       .foot-copy,
       .foot-built {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10px;
         letter-spacing: 0.06em;
         color: var(--t4);
@@ -4169,7 +4189,7 @@
         position: relative;
         background: var(--surface);
         border: 1px solid var(--bd2);
-        border-radius: 20px;
+        border-radius: var(--radius-md);
         padding: 24px;
         display: flex;
         flex-direction: column;
@@ -4235,8 +4255,8 @@
         justify-content: center;
       }
       .client-logo-letter {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 16px;
         letter-spacing: -0.02em;
         color: var(--t1);
@@ -4244,8 +4264,8 @@
       }
 
       .client-name {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: 15px;
         letter-spacing: -0.02em;
         color: var(--t1);
@@ -4276,12 +4296,12 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 9.5px;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         padding: 5px 10px;
-        border-radius: 980px;
+        border-radius: var(--radius-full);
         font-weight: 600;
         flex-shrink: 0;
         margin-left: auto;
@@ -4358,16 +4378,16 @@
         gap: 6px;
       }
       .client-tag {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 10.5px;
         letter-spacing: 0.01em;
         padding: 5px 11px;
-        border-radius: 980px;
+        border-radius: var(--radius-sm);
         color: var(--t3);
         background: var(--bg-alt);
       }
       .client-tag:first-child {
-        background: var(--ink, #1d1d1f);
+        background: var(--primary);
         color: #ffffff;
       }
 
@@ -4376,15 +4396,15 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 11.5px;
-        font-weight: 600;
+        font-weight: 500;
         letter-spacing: -0.01em;
         color: var(--t1);
         background: transparent;
         border: 1px solid var(--bd3);
         padding: 8px 15px;
-        border-radius: 980px;
+        border-radius: var(--radius-sm);
         text-decoration: none;
         white-space: nowrap;
         flex-shrink: 0;
@@ -4396,8 +4416,8 @@
           transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .client-view-btn:hover {
-        background: var(--ink, #1d1d1f);
-        border-color: var(--ink, #1d1d1f);
+        background: var(--primary);
+        border-color: var(--primary);
         color: #ffffff;
         transform: translateY(-1px);
       }
@@ -4476,17 +4496,17 @@
       #testiCountNum {
         font-variant-numeric: tabular-nums;
         font-size: 40px;
-        font-weight: 700;
+        font-weight: 600;
         color: var(--primary);
         line-height: 1;
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         letter-spacing: -0.02em;
       }
       .testi-count-sep,
       .testi-count-total {
         font-size: 18px;
         color: var(--t4);
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
       }
       .testi-progress-track {
         width: 160px;
@@ -4538,7 +4558,7 @@
         height: 400px;
         background: var(--surface);
         border: 1.5px solid var(--bd);
-        border-radius: 20px;
+        border-radius: var(--radius-md);
         padding: 32px 28px;
         display: flex;
         flex-direction: column;
@@ -4583,8 +4603,9 @@
         font-size: 60px;
         line-height: 0.65;
         color: var(--primary);
-        opacity: 0.12;
-        font-family: "DM Serif Display", serif;
+        opacity: 0.10;
+        font-family: "Geist", sans-serif;
+        font-weight: 100;
         flex-shrink: 0;
       }
       .testi-body-h {
@@ -4611,7 +4632,7 @@
         align-items: center;
         justify-content: center;
         color: var(--primary);
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 13px;
         font-weight: 700;
         letter-spacing: 0.02em;
@@ -4754,7 +4775,7 @@
         border: 1px solid var(--bd2);
         width: 36px;
         height: 36px;
-        border-radius: 8px;
+        border-radius: var(--radius-sm);
         align-items: center;
         justify-content: center;
         font-size: 20px;
@@ -4799,8 +4820,8 @@
         display: flex;
         flex-direction: column;
         transform: translateX(100%);
-        transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: -12px 0 56px rgba(0, 0, 0, 0.12);
+        transition: transform var(--dur-overlay) var(--ease-geist);
+        box-shadow: -12px 0 56px rgba(0,0,0,0.12);
       }
       .mobile-menu.open {
         transform: translateX(0);
@@ -4830,7 +4851,7 @@
         border: 1px solid var(--bd2);
         width: 34px;
         height: 34px;
-        border-radius: 8px;
+        border-radius: var(--radius-sm);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -4838,8 +4859,8 @@
         font-size: 18px;
         color: var(--t4);
         transition:
-          background 0.16s,
-          color 0.16s;
+          background var(--dur-state),
+          color var(--dur-state);
       }
       .mob-close:hover {
         background: var(--bg-sub);
@@ -4902,12 +4923,13 @@
         background: var(--primary);
         color: #fff;
         font-size: 14px;
-        font-weight: 600;
-        padding: 12px 20px;
-        border-radius: 9px;
+        font-weight: 500;
+        padding: 0 20px;
+        height: 40px;
+        border-radius: var(--radius-sm);
         text-decoration: none;
         letter-spacing: -0.01em;
-        transition: background 0.2s;
+        transition: background var(--dur-state);
       }
       .mob-foot-cta:hover {
         background: var(--primary-hover);
@@ -4922,25 +4944,25 @@
         gap: 10px;
         background: transparent;
         color: var(--t2);
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 14px;
         font-weight: 500;
         letter-spacing: -0.02em;
-        padding: 13px 22px;
-        border-radius: 10px;
-        border: 1.5px solid var(--bd2);
+        padding: 0 14px;
+        height: 40px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--bd2);
         text-decoration: none;
         transition:
-          border-color 0.2s,
-          color 0.2s,
-          background 0.2s,
-          transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+          border-color var(--dur-state),
+          color var(--dur-state),
+          background var(--dur-state);
         cursor: pointer;
       }
       .resume-dl-btn:hover {
         color: var(--primary);
-        border-color: var(--primary-border);
-        background: var(--primary-faint);
+        border-color: var(--bd3);
+        background: var(--gray-100);
       }
       .resume-dl-btn i {
         font-size: 16px;
@@ -4972,18 +4994,19 @@
         letter-spacing: -0.01em;
         color: var(--t3);
         text-decoration: none;
-        padding: 6px 14px;
+        padding: 0 10px;
+        height: 32px;
         border: 1px solid var(--bd2);
-        border-radius: 7px;
+        border-radius: var(--radius-sm);
         transition:
-          color 0.2s,
-          border-color 0.2s,
-          background 0.2s;
+          color var(--dur-state),
+          border-color var(--dur-state),
+          background var(--dur-state);
       }
       .nav-resume-btn:hover {
         color: var(--primary);
-        border-color: var(--primary-border);
-        background: var(--primary-faint);
+        border-color: var(--bd3);
+        background: var(--gray-100);
       }
       .nav-resume-btn i {
         font-size: 14px;
@@ -5060,7 +5083,7 @@
       .hiw-step-icon {
         width: 38px;
         height: 38px;
-        border-radius: 10px;
+        border-radius: var(--radius-sm);
         border: 1.5px solid var(--bd2);
         background: var(--surface);
         display: flex;
@@ -5084,9 +5107,9 @@
         padding-top: 2px;
       }
       .hiw-step-title {
-        font-family: "DM Sans", sans-serif;
+        font-family: "Geist", sans-serif;
         font-size: 15.5px;
-        font-weight: 700;
+        font-weight: 600;
         letter-spacing: -0.02em;
         color: var(--t1);
         margin-bottom: 6px;
@@ -5110,7 +5133,7 @@
         color: var(--t4);
         background: var(--bg-alt);
         border: 1px solid var(--bd2);
-        border-radius: 5px;
+        border-radius: var(--radius-sm);
         padding: 3px 9px;
       }
 
@@ -5136,7 +5159,7 @@
         position: relative; /* For absolute positioning of icons */
         background: var(--surface);
         border: 1.5px solid var(--bd);
-        border-radius: 16px;
+        border-radius: var(--radius-md);
         padding: 24px 26px;
         display: flex;
         flex-direction: column;
@@ -5214,8 +5237,8 @@
         transform: none;
       }
       .impact-val {
-        font-family: "DM Sans", sans-serif;
-        font-weight: 800;
+        font-family: "Geist", sans-serif;
+        font-weight: 600;
         font-size: clamp(28px, 3.2vw, 42px);
         letter-spacing: -0.05em;
         line-height: 1;
@@ -5223,10 +5246,10 @@
         white-space: nowrap; /* Prevent symbol wrapping */
       }
       .impact-val em {
-        font-family: "DM Serif Display", serif;
-        font-style: italic;
-        font-weight: 400;
-        letter-spacing: -0.02em;
+        font-family: "Geist", sans-serif;
+        font-style: normal;
+        font-weight: 300;
+        letter-spacing: -0.03em;
         color: var(--t3);
       }
       .impact-label {
@@ -5288,13 +5311,13 @@
       }
       .impact-card.cta-card .sys-btn.white {
         background: #ffffff;
-        color: #1d1d1f !important;
+        color: #171717 !important;
         border: 1px solid #ffffff;
       }
       .impact-card.cta-card .sys-btn.white:hover {
-        background: #f5f5f7;
-        color: #1d1d1f !important;
-        border-color: #f5f5f7;
+        background: var(--gray-100);
+        color: #171717 !important;
+        border-color: var(--gray-100);
         box-shadow: 0 4px 12px rgba(255, 255, 255, 0.25);
       }
 

@@ -12,7 +12,7 @@
   <meta name="twitter:image" content="https://govarthanan-product-engineer.netlify.app/images/og-image.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
   <!-- Bootstrap 5.3.3 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
@@ -21,24 +21,45 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --primary: #1d1d1f;
-      --primary-hover: #000000;
-      --primary-faint: #f5f5f7;
-      --primary-tint: rgba(29, 29, 31, 0.08);
-      --primary-border: rgba(29, 29, 31, 0.18);
+      /* Geist tokens */
+      --gray-100: #f2f2f2;
+      --gray-200: #ebebeb;
+      --gray-300: #e6e6e6;
+      --gray-400: #eaeaea;
+      --gray-500: #c9c9c9;
+      --gray-600: #a8a8a8;
+      --gray-700: #8f8f8f;
+      --gray-800: #7d7d7d;
+      --gray-900: #4d4d4d;
+      --gray-1000: #171717;
 
-      --ink:        #1d1d1f;
-      --ink-mid:    #1d1d1f;
-      --ink-muted:  #86868b;
-      --ink-faint:  #86868b;
-      --border:     rgba(29, 29, 31, 0.08);
-      --border-md:  rgba(29, 29, 31, 0.14);
-      --bg:         #ffffff;
-      --bg-2:       #f5f5f7;
-      --bg-3:       #f5f5f7;
-      --accent:     #1d1d1f;
-      --accent-lt:  #f5f5f7;
-      --accent-dk:  #1d1d1f;
+      --gray-alpha-100: rgba(0,0,0,0.051);
+      --gray-alpha-200: rgba(0,0,0,0.082);
+      --gray-alpha-300: rgba(0,0,0,0.102);
+      --gray-alpha-400: rgba(0,0,0,0.078);
+      --gray-alpha-500: rgba(0,0,0,0.212);
+      --gray-alpha-600: rgba(0,0,0,0.239);
+      --gray-alpha-700: rgba(0,0,0,0.439);
+
+      /* Semantic mappings */
+      --primary:        var(--gray-1000);
+      --primary-hover:  #000000;
+      --primary-faint:  var(--gray-100);
+      --primary-tint:   var(--gray-alpha-100);
+      --primary-border: var(--gray-alpha-300);
+
+      --ink:            var(--gray-1000);
+      --ink-mid:        var(--gray-900);
+      --ink-muted:      var(--gray-700);
+      --ink-faint:      var(--gray-600);
+      --border:         var(--gray-alpha-400);
+      --border-md:      var(--gray-alpha-300);
+      --bg:             #ffffff;
+      --bg-2:           #fafafa;
+      --bg-3:           var(--gray-100);
+      --accent:         var(--gray-1000);
+      --accent-lt:      var(--gray-100);
+      --accent-dk:      #000000;
 
       /* Amazon specific brand colors, but toned to fit premium portfolio theme */
       --amazon-orange: var(--ink);
@@ -46,9 +67,17 @@
       --amazon-dark: var(--ink);
 
       --NAV-H:      56px;
-      --sh1: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
-      --sh2: 0 4px 20px rgba(0, 0, 0, 0.07), 0 12px 40px rgba(0, 0, 0, 0.05);
-      --sh3: 0 8px 40px rgba(0, 0, 0, 0.09), 0 24px 72px rgba(0, 0, 0, 0.06);
+
+      /* Geist elevations */
+      --sh1: 0 2px 2px rgba(0,0,0,0.04);
+      --sh2: 0 1px 1px rgba(0,0,0,0.02), 0 4px 8px -4px rgba(0,0,0,0.04), 0 16px 24px -8px rgba(0,0,0,0.06);
+      --sh3: 0 1px 1px rgba(0,0,0,0.02), 0 8px 16px -4px rgba(0,0,0,0.04), 0 24px 32px -8px rgba(0,0,0,0.06);
+
+      /* Geist radii */
+      --radius-sm:   6px;
+      --radius-md:   12px;
+      --radius-lg:   16px;
+      --radius-full: 9999px;
     }
 
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
@@ -56,7 +85,7 @@
     body {
       background: var(--bg);
       color: var(--ink);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-size: 16px;
       line-height: 1.6;
       overflow-x: hidden;
@@ -120,7 +149,7 @@
     .nav-back {
       display: inline-flex; align-items: center; gap: 7px;
       font-size: 13px; font-weight: 500; color: var(--ink-mid);
-      text-decoration: none; padding: 6px 12px; border-radius: 7px;
+      text-decoration: none; padding: 6px 12px; border-radius: var(--radius-sm);
       border: 1px solid var(--border-md);
       transition: background .15s;
     }
@@ -130,7 +159,7 @@
     .nav-pill {
       display: inline-flex; align-items: center; gap: 5px;
       font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
-      color: var(--ink-mid); padding: 5px 11px; border-radius: 6px;
+      color: var(--ink-mid); padding: 5px 11px; border-radius: var(--radius-sm);
       border: 1px solid var(--border-md); text-decoration: none;
       transition: background .15s;
     }
@@ -173,10 +202,10 @@
       margin-bottom: 20px;
     }
     .hero h1 em {
-      font-family: "Instrument Serif", serif;
-      font-style: italic;
-      font-weight: 400;
-      color: #86868b;
+      font-family: "Geist", sans-serif;
+      font-style: normal;
+      font-weight: 300;
+      color: var(--ink-muted);
     }
     .hero-sub {
       font-size: clamp(15px, 1.6vw, 18px);
@@ -192,7 +221,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 1px;
       background: rgba(255,255,255,.07);
-      border-radius: 14px 14px 0 0;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,.07);
       border-bottom: none;
@@ -220,22 +249,22 @@
       background: rgba(255,255,255,.04);
       border: 1px solid rgba(255,255,255,.07);
       border-top: none;
-      border-radius: 0 0 14px 14px;
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
       flex-wrap: wrap;
     }
     .btn-primary {
       display: inline-flex; align-items: center; gap: 7px;
       font-size: 12.5px; font-weight: 600; letter-spacing: -.01em;
-      background: #ffffff; color: #1d1d1f;
-      padding: 9px 18px; border-radius: 8px;
+      background: #ffffff; color: #171717;
+      padding: 9px 18px; border-radius: var(--radius-sm);
       text-decoration: none; border: none;
       transition: background .15s;
     }
-    .btn-primary:hover { background: #f5f5f7; }
+    .btn-primary:hover { background: var(--gray-100); }
     .btn-ghost {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 12.5px; font-weight: 500;
-      color: rgba(255,255,255,.5); padding: 9px 14px; border-radius: 8px;
+      color: rgba(255,255,255,.5); padding: 9px 14px; border-radius: var(--radius-sm);
       border: 1px solid rgba(255,255,255,.1); text-decoration: none;
       transition: background .15s;
     }
@@ -285,7 +314,7 @@
     }
     .toc a {
       font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
-      color: var(--ink-faint); padding: 4px 10px; border-radius: 5px;
+      color: var(--ink-faint); padding: 4px 10px; border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       text-decoration: none; transition: background .15s, color .15s;
     }
@@ -302,7 +331,7 @@
     .snap-card {
       background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: var(--radius-md);
       padding: 24px;
       transition: all 0.25s ease;
     }
@@ -384,10 +413,19 @@
       font-size: 13px;
       color: var(--ink);
     }
+    .problem-block {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      font-size: 14.5px;
+      color: var(--ink);
+      line-height: 1.6;
+    }
     .chat-bubble {
       background: var(--bg-2);
       border: 1px solid var(--border-md);
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       padding: 18px 22px;
       font-size: 14.5px;
       color: var(--ink);
@@ -412,8 +450,8 @@
       margin: 32px 0;
     }
     .problem-vs-col {
-      padding: 28px;
-      border-radius: 20px;
+      padding: 24px;
+      border-radius: var(--radius-md);
       transition: all 0.25s ease;
       box-shadow: var(--sh1);
     }
@@ -479,7 +517,7 @@
     .problem-space-card {
       background: var(--bg);
       border: 1px solid var(--border-md);
-      border-radius: 16px;
+      border-radius: var(--radius-md);
       padding: 24px;
       position: relative;
       overflow: hidden;
@@ -532,7 +570,7 @@
     .principle-card {
       background: var(--bg);
       border: 1px solid var(--border-md);
-      border-radius: 16px;
+      border-radius: var(--radius-md);
       padding: 28px;
       position: relative;
       overflow: hidden;
@@ -584,7 +622,7 @@
     .survey-metric-card {
       background: var(--bg-2);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: var(--radius-md);
       padding: 20px 16px;
       display: flex;
       flex-direction: column;
@@ -646,14 +684,14 @@
       margin: 40px 0;
       background: var(--bg-2);
       padding: 32px;
-      border-radius: 16px;
+      border-radius: var(--radius-md);
       border: 1px solid var(--border-md);
     }
 
     /* Redesigned Tracker Mockup UI */
     .amazon-tracker-mockup {
       background: #ffffff;
-      border-radius: 16px;
+      border-radius: var(--radius-md);
       box-shadow: var(--sh3);
       border: 1px solid rgba(0,0,0,0.08);
       overflow: hidden;
@@ -752,7 +790,7 @@
     .mock-node.active .mock-dot {
       border-color: var(--amazon-blue);
       background: var(--amazon-blue);
-      box-shadow: 0 0 0 4px rgba(29, 29, 31, 0.15);
+      box-shadow: 0 0 0 4px var(--gray-alpha-300);
     }
     .mock-node.active .mock-dot i {
       display: block;
@@ -798,7 +836,7 @@
     .mock-action-btn {
       background: #f7f8f8;
       border: 1px solid #d5d9d9;
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
       padding: 12px 10px;
       font-size: 12px;
       font-weight: 500;
@@ -824,7 +862,7 @@
     /* ── MAP VIEWPORT ── */
     .mock-map-viewport {
       margin-bottom: 20px;
-      border-radius: 12px;
+      border-radius: var(--radius-md);
       overflow: hidden;
       border: 1px solid var(--border-md);
       position: relative;
@@ -848,7 +886,7 @@
       font-weight: 700;
       text-transform: uppercase;
       padding: 4px 8px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       letter-spacing: 0.05em;
       display: inline-flex;
       align-items: center;
@@ -868,7 +906,7 @@
       font-size: 10px;
       font-weight: 700;
       padding: 4px 8px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--border);
     }
     .mock-map-img {
@@ -884,7 +922,7 @@
       display: block;
       background: var(--ink);
       border: 1px solid var(--ink);
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
       padding: 14px;
       font-size: 13.5px;
       font-weight: 700;
@@ -908,7 +946,7 @@
     .demo-btn {
       background: #ffffff;
       border: 1px solid var(--border-md);
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
       padding: 12px 16px;
       text-align: left;
       cursor: pointer;
@@ -965,7 +1003,7 @@
       height: 28px;
       font-size: 10px;
       font-weight: 800;
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--border-md);
       background: var(--bg);
       color: var(--ink);
@@ -974,7 +1012,7 @@
     .v-card {
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       padding: 24px;
       box-shadow: var(--sh1);
       transition: all 0.25s ease;
@@ -1008,7 +1046,7 @@
     /* ── PRODUCT THINKING / KEY INSIGHTS ── */
     .product-thinking {
       background: var(--ink);
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       padding: 32px 36px;
       margin: 24px 0;
     }
@@ -1045,7 +1083,7 @@
     .f-btn {
       display: inline-flex; align-items: center; gap: 7px;
       font-size: 12.5px; font-weight: 500;
-      padding: 9px 18px; border-radius: 8px; text-decoration: none;
+      padding: 9px 18px; border-radius: var(--radius-sm); text-decoration: none;
       transition: background .15s;
     }
     footer .f-btn.primary {
@@ -1649,7 +1687,7 @@
       </div>
     </div>
 
-    <div class="mt-5 p-4" style="background: var(--bg-2); border-left: 3px solid var(--ink); border-radius: 0 12px 12px 0;">
+    <div class="mt-5 p-4" style="background: var(--bg-2); border-left: 3px solid var(--ink); border-radius: 0 var(--radius-md) var(--radius-md) 0;">
       <h6 style="color: var(--ink); font-weight: 700;"><i class="ri-magic-fill"></i> Next Iteration Focus</h6>
       <span style="font-size:14.5px;">Design layout states for complex delivery edge cases: delayed shipments, failed attempts, and address verification updates. The happy path is resolved; the anxious path needs design attention next.</span>
     </div>

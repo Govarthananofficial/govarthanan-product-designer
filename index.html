@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -3427,6 +3427,8 @@
         letter-spacing: -0.02em;
       }
       .cs-modal-body {
+        flex: 1 1 0;
+        min-height: 0;
         padding: 28px 40px 40px;
         overflow-y: auto;
         scrollbar-width: none;
@@ -3521,9 +3523,18 @@
         color: var(--ink, #1d1d1f);
       }
 
-      @media (max-width: 760px) {
+      @media (max-width: 1024px) {
         .cs-modal-card {
-          max-height: 90dvh;
+          width: 100%;
+          max-width: 100%;
+          height: 92dvh;
+          max-height: 92dvh;
+          border-radius: 20px 20px 0 0;
+          transform: translateY(100%) scale(1);
+          transition: transform 0.44s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-overlay.open .cs-modal-card {
+          transform: translateY(0) scale(1);
         }
         .cs-modal-head {
           padding: 28px 24px 18px;
@@ -3531,6 +3542,31 @@
         .cs-modal-body {
           padding: 20px 24px 28px;
           grid-template-columns: 1fr;
+          gap: 24px;
+        }
+        #caseStudiesModal .modal-close {
+          background: rgba(29, 29, 31, 0.05);
+          border-color: rgba(29, 29, 31, 0.12);
+          color: var(--t1);
+        }
+        #caseStudiesModal .modal-close:hover {
+          background: rgba(29, 29, 31, 0.1);
+          border-color: rgba(29, 29, 31, 0.2);
+          color: var(--t1);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .cs-modal-card {
+          height: 94dvh;
+          max-height: 94dvh;
+        }
+        .cs-modal-head {
+          padding: 24px 18px 16px;
+        }
+        .cs-modal-body {
+          padding: 16px 16px 36px;
+          gap: 16px;
         }
       }
 
@@ -5338,6 +5374,7 @@
       role="dialog"
       aria-modal="true"
       aria-label="Navigation menu"
+      data-lenis-prevent
     >
       <div class="mob-head">
         <a href="#" class="mob-head-logo">
@@ -7506,7 +7543,7 @@
         </div>
 
         <!-- ── Right: Form Panel ── -->
-        <div class="modal-panel-right">
+        <div class="modal-panel-right" data-lenis-prevent>
           <div id="modalFormWrap">
             <div class="modal-section-label">Your Details</div>
 
@@ -7670,7 +7707,7 @@
           </div>
         </div>
 
-        <div class="cs-modal-body">
+        <div class="cs-modal-body" data-lenis-prevent>
           <div class="cs-item">
             <div class="cs-item-img-wrap">
               <img src="images/previews/sds-motion-forge.png" alt="SDS Motion Forge case study preview" loading="lazy" />

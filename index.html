@@ -3476,13 +3476,15 @@
       }
       .cs-item-img-wrap {
         width: 100%;
+        aspect-ratio: 16 / 9;
         overflow: hidden;
         background: var(--bg-2, #f5f5f7);
         border-bottom: 1px solid var(--bd2);
       }
       .cs-item-img-wrap img {
         width: 100%;
-        height: auto;
+        height: 100%;
+        object-fit: cover;
         display: block;
         transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       }
@@ -3560,7 +3562,7 @@
           padding: 28px 24px 18px;
         }
         .cs-modal-body {
-          padding: 20px 24px 28px;
+          padding: 20px 24px 100px;
           grid-template-columns: 1fr;
           gap: 24px;
         }
@@ -3585,7 +3587,7 @@
           padding: 24px 18px 16px;
         }
         .cs-modal-body {
-          padding: 16px 16px 36px;
+          padding: 16px 16px 100px;
           gap: 16px;
         }
       }
@@ -3920,18 +3922,17 @@
         }
         #hero {
           height: auto;
-          min-height: 100svh;
-          min-height: 100vh;
+          min-height: auto;
           overflow: visible;
         }
-        /* Center content vertically and provide balanced padding */
+        /* Align content cleanly and provide compact padding */
         .ah-inner {
-          justify-content: center;
-          padding-top: calc(var(--NAV-H) + 32px);
+          justify-content: flex-start;
+          padding-top: calc(var(--NAV-H) + 16px);
           padding-bottom: 40px;
           display: flex;
           flex-direction: column;
-          gap: 32px; /* gap between meta pill and center content */
+          gap: 24px; /* gap between meta pill and center content */
           width: 100% !important;
           max-width: none !important;
           padding-left: var(--PAGE-PAD, 20px) !important;
@@ -4664,7 +4665,7 @@
         }
         .testi-cards-area {
           display: flex;
-          align-items: stretch;
+          align-items: center;
           padding-bottom: 48px;
         }
         .testi-track {
@@ -5504,11 +5505,11 @@
               <span class="ah-ml">Products Shipped</span>
             </div>
             <div class="ah-metric">
-              <span class="ah-mv" data-count="1,857" data-suffix="">1,857</span>
+              <span class="ah-mv" data-count="1857" data-suffix="+">1,857+</span>
               <span class="ah-ml">Total npm Downloads</span>
             </div>
             <div class="ah-metric">
-              <span class="ah-mv" data-count="4" data-suffix="+">4+</span>
+              <span class="ah-mv" data-count="2" data-suffix="+">2+</span>
               <span class="ah-ml">Live Products</span>
             </div>
             <div class="ah-metric">
@@ -8334,7 +8335,7 @@
         ).matches;
 
         function run(el) {
-          const target = parseInt(el.dataset.count, 10);
+          const target = parseInt(el.dataset.count.replace(/,/g, ""), 10);
           const suffix = el.dataset.suffix || "";
           if (reduce || isNaN(target)) return; /* keep static markup value */
           const DUR = 1600;

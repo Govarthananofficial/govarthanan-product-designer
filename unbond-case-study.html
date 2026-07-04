@@ -1,0 +1,1454 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unbond — Bond &amp; Salary Companion App Case Study · Govarthanan S.</title>
+  <meta name="description" content="A private companion for employees serving a mandatory service bond — a live countdown, a document safety net, and an honest read on salary and market value." />
+  <meta property="og:image" content="https://govarthanan-product-engineer.netlify.app/images/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="581" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://govarthanan-product-engineer.netlify.app/images/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gray-100: #f2f2f2; --gray-200: #ebebeb; --gray-300: #e6e6e6; --gray-400: #eaeaea;
+      --gray-500: #c9c9c9; --gray-600: #a8a8a8; --gray-700: #8f8f8f; --gray-800: #7d7d7d;
+      --gray-900: #4d4d4d; --gray-1000: #171717;
+      --gray-alpha-100: rgba(0,0,0,0.051); --gray-alpha-200: rgba(0,0,0,0.082);
+      --gray-alpha-300: rgba(0,0,0,0.102); --gray-alpha-400: rgba(0,0,0,0.078);
+      --gray-alpha-500: rgba(0,0,0,0.212); --gray-alpha-600: rgba(0,0,0,0.239); --gray-alpha-700: rgba(0,0,0,0.439);
+
+      --primary: var(--gray-1000); --primary-hover: #000000; --primary-faint: var(--gray-100);
+      --primary-tint: var(--gray-alpha-100); --primary-border: var(--gray-alpha-300);
+
+      --ink: var(--gray-1000); --ink-mid: var(--gray-900); --ink-muted: var(--gray-700); --ink-faint: var(--gray-600);
+      --border: var(--gray-alpha-400); --border-md: var(--gray-alpha-300);
+      --bg: #ffffff; --bg-2: #fafafa; --bg-3: var(--gray-100);
+      --accent: var(--gray-1000); --accent-lt: var(--gray-100); --accent-dk: #000000;
+
+      --freedom: #1f9d66;
+      --freedom-lt: #e8f5ee;
+      --amber: #c97a1e;
+      --amber-lt: #fbeee0;
+      --signal: #d94f4f;
+      --signal-lt: #fbe9e9;
+
+      --NAV-H: 56px;
+      --sh1: 0 2px 2px rgba(0,0,0,0.04);
+      --sh2: 0 1px 1px rgba(0,0,0,0.02), 0 4px 8px -4px rgba(0,0,0,0.04), 0 16px 24px -8px rgba(0,0,0,0.06);
+      --sh3: 0 1px 1px rgba(0,0,0,0.02), 0 8px 16px -4px rgba(0,0,0,0.04), 0 24px 32px -8px rgba(0,0,0,0.06);
+      --radius-sm: 6px; --radius-md: 12px; --radius-lg: 16px; --radius-full: 9999px;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--bg); color: var(--ink); font-family: 'Geist', sans-serif;
+      font-size: 16px; line-height: 1.6; overflow-x: hidden;
+    }
+    body::after {
+      content: ""; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.45;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: inherit; }
+    button:focus, a:focus { outline: none !important; box-shadow: none !important; }
+    ul { list-style: none; }
+
+    /* ── PROGRESS + CURSOR ── */
+    #prog { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--border); z-index: 400; }
+    #prog-fill { height: 100%; width: 0%; background: var(--ink); transition: width .08s linear; }
+    .cursor-dot {
+      width: 6px; height: 6px; background: var(--primary); border-radius: 50%;
+      position: fixed; pointer-events: none; z-index: 10000;
+      transform: translate(-50%, -50%); transition: opacity 0.2s, transform 0.1s;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 2px; left: 0; right: 0; height: var(--NAV-H); z-index: 300;
+      background: rgba(255,255,255,0.93); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: var(--ink-mid);
+      text-decoration: none; padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-md);
+      transition: background .15s;
+    }
+    .nav-back:hover { background: var(--bg-2); }
+    .nav-tag { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+    .nav-right { display: flex; gap: 8px; }
+    .nav-pill {
+      display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--ink-mid); padding: 5px 11px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border-md); text-decoration: none; transition: background .15s;
+    }
+    .nav-pill:hover { background: var(--bg-2); }
+
+    /* ── HERO ── */
+    .hero { background: var(--ink); padding: calc(var(--NAV-H) + 64px) 0 64px; position: relative; overflow: hidden; }
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,.05) 0%, transparent 55%),
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,.03) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700;
+      letter-spacing: .22em; text-transform: uppercase; color: #ffffff; margin-bottom: 20px;
+    }
+    .eyebrow::before { content: ""; width: 20px; height: 1px; background: #ffffff; }
+    .hero h1 {
+      font-size: clamp(38px, 5.5vw, 68px); font-weight: 800; line-height: .96; letter-spacing: -.04em;
+      color: #fff; margin-bottom: 20px;
+    }
+    .hero h1 em { font-family: "Geist", sans-serif; font-style: normal; font-weight: 300; color: var(--ink-muted); }
+    .hero-sub { font-size: clamp(15px, 1.6vw, 18px); color: rgba(255,255,255,.55); line-height: 1.6; max-width: 60ch; margin-bottom: 28px; }
+
+    .hero-meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+    .hero-meta-chip {
+      display: flex; flex-direction: column; gap: 3px; padding: 10px 16px; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+    }
+    .hmc-label { font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.35); }
+    .hmc-val { font-size: 13px; font-weight: 600; color: #fff; }
+
+    .hero-metrics {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,.07);
+      border-radius: var(--radius-md) var(--radius-md) 0 0; overflow: hidden;
+      border: 1px solid rgba(255,255,255,.07); border-bottom: none;
+    }
+    .hm { padding: 20px 22px 22px; background: rgba(255,255,255,.03); display: flex; flex-direction: column; gap: 6px; }
+    .hm-val { font-size: clamp(26px, 3vw, 34px); font-weight: 800; letter-spacing: -.04em; color: #fff; line-height: 1; }
+    .hm-val span { color: #ffffff; }
+    .hm-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35); line-height: 1.4; }
+
+    .hero-cta {
+      display: flex; align-items: center; gap: 12px; padding: 16px 22px; background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07); border-top: none; border-radius: 0 0 var(--radius-md) var(--radius-md); flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; letter-spacing: -.01em;
+      background: #ffffff; color: #171717; padding: 9px 18px; border-radius: var(--radius-sm);
+      text-decoration: none; border: none; transition: background .15s;
+    }
+    .btn-primary:hover { background: var(--gray-100); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500;
+      color: rgba(255,255,255,.5); padding: 9px 14px; border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,.1); text-decoration: none; transition: background .15s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.75); }
+    .cta-sep { flex: 1; }
+    .cta-note { font-size: 11px; color: rgba(255,255,255,.25); letter-spacing: .05em; text-transform: uppercase; }
+
+    /* ── SECTIONS ── */
+    .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+    .section:last-of-type { border-bottom: none; }
+    .section.alt { background: var(--bg-2); }
+    .s-label {
+      display: inline-flex; align-items: center; gap: 9px; font-size: 10px; font-weight: 700; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px;
+    }
+    .s-label::before { content: ""; width: 16px; height: 1px; background: var(--ink-faint); }
+    .section h2 { font-size: clamp(22px, 2.8vw, 32px); font-weight: 800; letter-spacing: -.035em; color: var(--ink); line-height: 1.1; margin-bottom: 24px; }
+    .section h2 em { font-style: italic; font-weight: 300; color: var(--ink-muted); }
+    .section p { font-size: 15.5px; color: var(--ink-mid); line-height: 1.78; letter-spacing: -.005em; margin-bottom: 16px; }
+    .section p:last-child { margin-bottom: 0; }
+    .section strong { color: var(--ink); font-weight: 600; }
+    .sub-head {
+      display: flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 700; color: var(--ink);
+      margin: 40px 0 6px;
+    }
+    .sub-head i { font-size: 17px; color: var(--ink-muted); }
+    .sub-head:first-of-type { margin-top: 8px; }
+
+    /* ── PROBLEM BLOCK / CALLOUT ── */
+    .problem-block {
+      background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 18px 22px; font-size: 14.5px; color: var(--ink); line-height: 1.6; margin: 20px 0;
+    }
+    .problem-block .pb-label { display:block; font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 8px; }
+    .section.alt .problem-block { background: var(--bg); }
+
+    /* ── SNAPSHOT GRID ── */
+    .snapshot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+    .snap-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; transition: all 0.25s ease; }
+    .snap-card:hover { border-color: var(--border-md); box-shadow: var(--sh1); }
+    .snap-card.accent-card { background: var(--bg); border-color: var(--border-md); box-shadow: var(--sh1); }
+    .snap-card.accent-card:hover { box-shadow: var(--sh2); }
+    .section.alt .snap-card { background: var(--bg); }
+    .snap-card-label { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .snap-card-label i { font-size: 16px; color: var(--ink); }
+    .snap-list { list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; }
+    .snap-list li { font-size: 14px; color: var(--ink-mid); line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+    .snap-list li i { font-size: 14px; color: var(--ink-muted); margin-top: 3px; flex-shrink: 0; }
+    .snap-card.accent-card .snap-list li i { color: var(--ink); }
+
+    /* ── OVERVIEW STATS ── */
+    .ov-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; }
+    .ov-stat { background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 20px 16px; text-align: center; box-shadow: var(--sh1); }
+    .ov-stat-val { font-size: clamp(22px, 2.6vw, 28px); font-weight: 800; color: var(--ink); letter-spacing: -.03em; }
+    .ov-stat-label { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 8px; line-height: 1.4; }
+
+    /* ── SURVEY GAUGES ── */
+    .survey-dashboard { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin: 28px 0; }
+    .survey-metric-card {
+      background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px 16px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .survey-metric-card:hover { border-color: var(--border-md); box-shadow: var(--sh1); }
+    .survey-gauge-wrap { position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; flex-shrink: 0; }
+    .survey-gauge { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .survey-gauge-track { fill: none; stroke: rgba(0,0,0,0.04); stroke-width: 6; }
+    .survey-gauge-fill { fill: none; stroke: var(--ink); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 251.327; }
+    .survey-gauge-value { position: absolute; font-size: 18px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+    .survey-metric-label { font-size: 11.5px; font-weight: 600; color: var(--ink-mid); line-height: 1.4; }
+
+    /* ── CHAT / INTERVIEW DASHBOARD ── */
+    .qa-chat-dashboard { display: flex; flex-direction: column; gap: 24px; margin: 32px 0; }
+    .chat-row { display: flex; flex-direction: column; gap: 8px; max-width: 88%; }
+    .chat-row.interviewer-row { align-self: flex-start; }
+    .chat-row.designer-row { align-self: flex-start; border-left: 3px solid var(--ink); padding-left: 20px; margin-left: 10px; }
+    .chat-meta { display: flex; align-items: center; gap: 8px; font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); }
+    .chat-meta i { font-size: 13px; color: var(--ink); }
+    .chat-bubble { background: var(--bg-2); border: 1px solid var(--border-md); border-radius: var(--radius-lg); padding: 18px 22px; font-size: 14.5px; color: var(--ink); line-height: 1.6; }
+    .section.alt .chat-bubble { background: var(--bg); }
+    .chat-row.designer-row .chat-bubble { background: var(--bg); border-color: var(--border-md); font-size: 15px; line-height: 1.65; color: var(--ink-mid); box-shadow: var(--sh1); }
+
+    /* ── PRODUCT THINKING ── */
+    .product-thinking { background: var(--ink); border-radius: var(--radius-lg); padding: 32px 36px; margin: 24px 0; }
+    .pt-label { font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 20px; }
+    .pt-grid { display: flex; flex-direction: column; gap: 20px; }
+    .pt-item { display: grid; grid-template-columns: 20px 1fr; gap: 14px; }
+    .pt-dot { width: 6px; height: 6px; border-radius: 50%; background: #ffffff; margin-top: 7px; opacity: 0.4; }
+    .pt-q { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 4px; }
+    .pt-a { font-size: 14.5px; font-weight: 500; color: rgba(255,255,255,.85); line-height: 1.6; letter-spacing: -.01em; }
+
+    /* ── PERSONA ── */
+    .persona-card { display: grid; grid-template-columns: 120px 1fr; gap: 28px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; margin-top: 8px; }
+    .section.alt .persona-card { background: var(--bg); }
+    .persona-avatar { width: 92px; height: 92px; border-radius: 50%; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; }
+    .persona-name { font-size: 20px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
+    .persona-role { font-size: 12.5px; color: var(--ink-muted); margin: 4px 0 14px; text-transform: uppercase; letter-spacing: .04em; }
+    .persona-quote { font-style: italic; color: var(--ink-mid); border-left: 3px solid var(--ink); padding-left: 14px; margin: 14px 0 20px; font-size: 14.5px; }
+    .persona-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    /* ── EMPATHY MAP ── */
+    .empathy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+    .empathy-card { background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 22px; box-shadow: var(--sh1); }
+    .empathy-card h4 { font-size: 11px; text-transform: uppercase; letter-spacing: .14em; color: var(--ink-muted); margin-bottom: 12px; display: flex; gap: 8px; align-items: center; font-weight: 800; }
+    .empathy-card h4 i { font-size: 15px; color: var(--ink); }
+
+    /* ── JOURNEY MAP ── */
+    .journey-map { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-top: 28px; }
+    .journey-stage { background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 14px 12px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--sh1); }
+    .journey-num { font-size: 10.5px; color: var(--ink-faint); font-weight: 800; letter-spacing: .06em; }
+    .journey-bar-wrap { height: 56px; display: flex; align-items: flex-end; }
+    .journey-bar { width: 100%; border-radius: 4px 4px 0 0; background: var(--ink); opacity: .85; }
+    .journey-title { font-size: 12px; font-weight: 700; color: var(--ink); }
+    .journey-desc { font-size: 11px; color: var(--ink-muted); line-height: 1.45; }
+    .journey-axis { font-size: 10.5px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .1em; margin-top: 8px; }
+
+    /* ── PROBLEM SPACE CARDS (reused for opportunity mapping) ── */
+    .problem-space-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 24px; }
+    .problem-space-card { background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 22px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 14px; box-shadow: var(--sh1); transition: all 0.25s ease; }
+    .problem-space-card:hover { box-shadow: var(--sh2); border-color: var(--ink); }
+    .problem-space-header { display: flex; justify-content: space-between; align-items: center; }
+    .problem-space-num { font-size: 20px; font-weight: 800; color: var(--border-md); }
+    .problem-space-card:hover .problem-space-num { color: var(--ink-muted); }
+    .problem-space-icon { font-size: 20px; color: var(--ink); }
+    .problem-space-text { font-size: 13px; line-height: 1.55; color: var(--ink-muted); margin: 0; }
+    .problem-space-card:hover .problem-space-text { color: var(--ink); }
+    .ps-opportunity { font-size: 12px; font-weight: 700; color: var(--freedom); display: flex; gap: 6px; align-items: flex-start; line-height: 1.4; }
+    .ps-opportunity i { margin-top: 2px; flex-shrink: 0; }
+
+    /* ── COMPARE TABLE ── */
+    .compare-table-wrap { overflow-x: auto; margin-top: 24px; }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 640px; }
+    .compare-table th, .compare-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); text-align: left; }
+    .compare-table th { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-muted); font-weight: 800; }
+    .compare-table td { color: var(--ink-mid); }
+    .compare-table td.icon-cell { text-align: center; }
+    .compare-table .ic-check { color: var(--freedom); font-size: 17px; }
+    .compare-table .ic-cross { color: var(--ink-faint); font-size: 17px; }
+    .compare-table .ic-partial { color: var(--amber); font-size: 17px; }
+    .compare-table tr.highlight td { background: var(--bg-2); font-weight: 600; color: var(--ink); }
+    .section.alt .compare-table tr.highlight td { background: var(--bg); }
+
+    /* ── IA TREE ── */
+    .ia-tree { margin-top: 24px; padding-left: 0; }
+    .ia-tree > li { position: relative; padding: 8px 0 8px 24px; }
+    .ia-tree > li::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--border-md); }
+    .ia-tree > li:last-child::before { bottom: auto; height: 20px; }
+    .ia-tree > li::after { content: ""; position: absolute; left: 0; top: 20px; width: 16px; height: 1px; background: var(--border-md); }
+    .ia-node { font-weight: 800; color: var(--ink); font-size: 14px; display: flex; align-items: center; gap: 8px; }
+    .ia-node i { color: var(--ink-muted); font-size: 15px; }
+    .ia-tree ul { margin-top: 8px; padding-left: 18px; display: flex; flex-wrap: wrap; gap: 6px 10px; }
+    .ia-tree ul li {
+      font-size: 12px; color: var(--ink-muted); background: var(--bg); border: 1px solid var(--border-md);
+      border-radius: var(--radius-sm); padding: 5px 10px;
+    }
+    .section.alt .ia-tree ul li { background: var(--bg-2); }
+
+    /* ── FLOW DIAGRAM ── */
+    .flow-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 14px 0 28px; }
+    .flow-step {
+      background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 11px 16px;
+      font-size: 12.5px; font-weight: 600; color: var(--ink); box-shadow: var(--sh1); display: flex; align-items: center; gap: 7px;
+    }
+    .section.alt .flow-step { background: var(--bg-2); }
+    .flow-step i { color: var(--ink-muted); font-size: 14px; }
+    .flow-step.branch { border-style: dashed; }
+    .flow-arrow { color: var(--ink-faint); font-size: 16px; flex-shrink: 0; }
+    .flow-title { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 700; color: var(--ink); margin-top: 28px; }
+    .flow-title:first-of-type { margin-top: 8px; }
+    .flow-title i { color: var(--ink-muted); font-size: 16px; }
+
+    /* ── PRINCIPLES GRID ── */
+    .principles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
+    .principle-card {
+      background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 26px;
+      position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 10px;
+      box-shadow: var(--sh1); transition: all 0.25s ease; min-height: 150px;
+    }
+    .section.alt .principle-card { background: var(--bg-2); }
+    .principle-card:hover { box-shadow: var(--sh2); border-color: var(--ink); }
+    .principle-title { font-size: 14.5px; font-weight: 700; color: var(--ink); z-index: 2; margin: 0; }
+    .principle-desc { font-size: 12.5px; color: var(--ink-muted); line-height: 1.6; margin: 0; z-index: 2; }
+    .principle-num { position: absolute; bottom: -15px; right: 10px; font-size: 80px; font-weight: 900; color: var(--ink); opacity: 0.04; line-height: 1; pointer-events: none; z-index: 1; }
+
+    /* ── DESIGN SYSTEM: v-cards ── */
+    .v-row { display: flex; gap: 20px; margin-top: 24px; flex-wrap: wrap; }
+    .v-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--sh1); transition: all 0.25s ease; flex: 1; min-width: 220px; }
+    .v-card:hover { box-shadow: var(--sh2); border-color: var(--border-md); }
+    .v-title { font-size: 15px; font-weight: 700; letter-spacing: -.015em; color: var(--ink); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .v-title i { font-size: 18px; color: var(--ink-muted); }
+    .v-body { font-size: 13.5px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 0; }
+
+    /* ── SWATCHES ── */
+    .swatch-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-top: 24px; }
+    .swatch { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-md); box-shadow: var(--sh1); }
+    .swatch-color { height: 64px; }
+    .swatch-info { padding: 9px 11px; background: var(--bg); }
+    .swatch-name { font-size: 11.5px; font-weight: 700; color: var(--ink); }
+    .swatch-hex { font-size: 10.5px; color: var(--ink-muted); font-family: 'Geist Mono', monospace; }
+
+    /* ── TYPE SCALE ── */
+    .type-scale { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+    .type-row { display: flex; align-items: baseline; gap: 20px; border-bottom: 1px solid var(--border); padding-bottom: 14px; }
+    .type-label { width: 130px; flex-shrink: 0; font-size: 10.5px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+    .type-sample { font-weight: 800; color: var(--ink); letter-spacing: -.02em; }
+
+    /* ── COMPONENT PREVIEW ── */
+    .component-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
+    .comp-block { background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 22px; box-shadow: var(--sh1); display: flex; flex-direction: column; gap: 14px; }
+    .comp-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-muted); font-weight: 800; }
+    .ds-btn-primary, .ds-btn-secondary, .ds-btn-ghost { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; padding: 9px 16px; border-radius: var(--radius-sm); text-align: center; justify-content: center; }
+    .ds-btn-primary { background: var(--ink); color: #fff; }
+    .ds-btn-secondary { background: var(--bg-2); color: var(--ink); border: 1px solid var(--border-md); }
+    .ds-btn-ghost { background: transparent; color: var(--ink-muted); border: 1px dashed var(--border-md); }
+    .ds-input-label { font-size: 11px; color: var(--ink-muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+    .ds-input { border: 1px solid var(--border-md); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13.5px; color: var(--ink); background: var(--bg-2); }
+    .ds-doc-card { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--bg-2); border-radius: var(--radius-sm); font-size: 13px; }
+    .ds-doc-card i { color: var(--freedom); font-size: 16px; }
+    .ds-stat-chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: var(--radius-full); font-size: 11.5px; font-weight: 700; background: var(--freedom-lt); color: var(--freedom); width: fit-content; }
+
+    .token-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .token-chip { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--ink-mid); background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-sm); padding: 6px 10px; }
+
+    /* ── WIREFRAME FIDELITY ── */
+    .wireframe-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; }
+    .wf-card { background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--sh1); }
+    .section.alt .wf-card { background: var(--bg); }
+    .wf-frame { aspect-ratio: 9 / 15; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: var(--bg-2); }
+    .wf-block { border-radius: 6px; background: var(--gray-400); }
+    .wf-label { padding: 11px 14px; border-top: 1px solid var(--border); font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-muted); }
+
+    .wf-sketch .wf-frame { background: #fdfdfb; }
+    .wf-sketch .wf-block { background: transparent; border: 1.5px dashed var(--ink-faint); }
+    .wf-sketch .wf-ring { width: 70px; height: 70px; border-radius: 50%; border: 1.5px dashed var(--ink-faint); margin: 6px auto; }
+
+    .wf-lofi .wf-block { background: var(--gray-400); border: none; }
+    .wf-lofi .wf-ring { width: 70px; height: 70px; border-radius: 50%; background: var(--gray-400); margin: 6px auto; }
+
+    .wf-midfi .wf-block { background: var(--gray-300); border: 1px solid var(--border-md); }
+    .wf-midfi .wf-ring { width: 70px; height: 70px; border-radius: 50%; border: 6px solid var(--gray-500); margin: 6px auto; display:flex; align-items:center; justify-content:center; }
+    .wf-midfi .wf-ring i { color: var(--ink-muted); font-size: 20px; }
+
+    .wf-hifi .wf-ring { width: 74px; height: 74px; border-radius: 50%; border: 6px solid var(--ink); margin: 6px auto; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .wf-hifi .wf-ring b { font-size: 15px; color: var(--ink); }
+    .wf-hifi .wf-ring span { font-size: 7px; color: var(--ink-faint); text-transform: uppercase; }
+    .wf-hifi .wf-block.accent { background: var(--freedom-lt); }
+    .wf-hifi .wf-block.amber { background: var(--amber-lt); }
+
+    /* ── PHONE MOCKUPS ── */
+    .final-ui-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; margin-top: 32px; }
+    .ui-card { display: flex; flex-direction: column; gap: 14px; }
+    .ui-card-label { font-size: 12px; font-weight: 700; color: var(--ink); text-align: center; }
+    .phone-frame { width: 100%; max-width: 210px; margin: 0 auto; border-radius: 26px; border: 6px solid #171717; background: #171717; box-shadow: var(--sh3); }
+    .phone-screen { background: #fff; border-radius: 20px; overflow: hidden; aspect-ratio: 9 / 18.5; padding: 14px 11px 10px; display: flex; flex-direction: column; gap: 8px; }
+    .phone-screen.real { padding: 0; aspect-ratio: 540 / 1196; }
+    .phone-screen-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .phone-time { font-size: 9px; font-weight: 700; color: #171717; text-align: right; }
+    .phone-h { font-size: 9.5px; font-weight: 800; color: #171717; text-transform: uppercase; letter-spacing: .04em; }
+
+    .phone-ring-wrap { position: relative; width: 108px; height: 108px; margin: 4px auto 2px; }
+    .phone-ring-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .phone-ring-track { fill: none; stroke: #f0f0f0; stroke-width: 7; }
+    .phone-ring-fill { fill: none; stroke: #171717; stroke-width: 7; stroke-linecap: round; }
+    .phone-ring-val { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .phone-ring-num { font-size: 21px; font-weight: 800; color: #171717; letter-spacing: -.02em; }
+    .phone-ring-sub { font-size: 7px; color: #8f8f8f; text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; text-align: center; }
+    .phone-chip-row { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-top: 2px; }
+    .phone-chip { font-size: 7.8px; font-weight: 700; padding: 4px 8px; border-radius: 20px; background: #f5f5f5; color: #171717; }
+    .phone-chip.pos { background: #e8f5ee; color: #1f9d66; }
+    .phone-chip.warn { background: #fbeee0; color: #c97a1e; }
+
+    .phone-doc-group { font-size: 7.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #a8a8a8; margin-top: 3px; }
+    .phone-doc-item { display: flex; align-items: center; gap: 6px; font-size: 8.8px; color: #171717; padding: 7px 8px; background: #f7f7f7; border-radius: 8px; }
+    .phone-doc-item i { font-size: 12px; }
+    .phone-doc-item.done i { color: #1f9d66; }
+    .phone-doc-item.pending i { color: #c9c9c9; }
+    .phone-doc-item.risk i { color: #d94f4f; }
+    .phone-doc-item.risk { background: #fbe9e9; }
+
+    .phone-chart { display: flex; align-items: flex-end; gap: 7px; height: 88px; padding: 14px 3px 0; }
+    .phone-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; position: relative; }
+    .phone-bar { width: 100%; background: #171717; border-radius: 4px 4px 0 0; }
+    .phone-bar-val { font-size: 7px; font-weight: 800; color: #171717; position: absolute; top: -13px; }
+    .phone-bar-label { font-size: 7px; color: #a8a8a8; text-align: center; margin-top: 5px; }
+    .phone-hike-note { font-size: 8px; color: #1f9d66; font-weight: 700; text-align: center; margin-top: 2px; }
+
+    .phone-gauge-track { height: 6px; background: #f0f0f0; border-radius: 4px; position: relative; margin: 26px 6px 12px; }
+    .phone-gauge-marker { position: absolute; top: -13px; width: 2px; height: 18px; background: #171717; }
+    .phone-gauge-marker.market { background: #a8a8a8; }
+    .phone-gauge-marker span { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); font-size: 6.5px; font-weight: 800; white-space: nowrap; color: #171717; }
+    .phone-gauge-marker.market span { color: #8f8f8f; font-weight: 700; }
+    .phone-gauge-verdict { font-size: 8.5px; font-weight: 700; color: #1f9d66; text-align: center; margin-top: 10px; }
+
+    .phone-notif { display: flex; gap: 8px; padding: 9px; background: #f7f7f7; border-radius: 10px; align-items: flex-start; }
+    .phone-notif i { font-size: 13px; color: #171717; margin-top: 1px; }
+    .phone-notif-title { font-size: 8.5px; font-weight: 700; color: #171717; line-height: 1.3; }
+    .phone-notif-time { font-size: 7px; color: #a8a8a8; margin-top: 2px; }
+
+    /* ── PROTOTYPE DISABLED LINK ── */
+    .proto-link {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink-faint);
+      padding: 11px 20px; border-radius: var(--radius-sm); border: 1px dashed var(--border-md); background: var(--bg-2);
+    }
+
+    /* ── PROBLEM VS (before/after) ── */
+    .problem-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0; }
+    .problem-vs-col { padding: 24px; border-radius: var(--radius-md); transition: all 0.25s ease; box-shadow: var(--sh1); }
+    .problem-vs-col:first-child { background: var(--bg-2); border: 1px solid var(--border-md); }
+    .section.alt .problem-vs-col:first-child { background: var(--bg); }
+    .problem-vs-col:last-child { background: var(--bg); border: 1px solid var(--ink); }
+    .pvc-header { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 20px; }
+    .pvc-header.before { color: var(--ink-muted); }
+    .pvc-header.after { color: var(--ink); }
+    .pvc-header i { font-size: 18px; }
+    .pvc-list { list-style: none; display: flex; flex-direction: column; gap: 12px; padding: 0; margin: 0; }
+    .pvc-list li { font-size: 13.5px; color: var(--ink-mid); line-height: 1.6; display: flex; align-items: flex-start; gap: 10px; }
+    .pvc-list li i { font-size: 16px; margin-top: 3px; flex-shrink: 0; }
+    .problem-vs-col:first-child .pvc-list li i { color: var(--ink-muted); }
+    .problem-vs-col:last-child .pvc-list li i { color: var(--freedom); }
+
+    /* ── TESTING TABLE ── */
+    .test-table-wrap { overflow-x: auto; margin-top: 24px; }
+    .test-table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 640px; }
+    .test-table th, .test-table td { padding: 13px 14px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+    .test-table th { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-muted); font-weight: 800; }
+    .test-table td { color: var(--ink-mid); }
+    .test-table td.rate { font-weight: 800; color: var(--ink); white-space: nowrap; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); padding: 56px 32px 40px; text-align: center; }
+    .footer-tag { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.25); margin-bottom: 10px; }
+    .footer-title { font-size: 20px; font-weight: 800; letter-spacing: -.03em; color: #fff; margin-bottom: 6px; }
+    .footer-sub { font-size: 14px; color: rgba(255,255,255,.4); margin-bottom: 24px; max-width: 44ch; margin-left: auto; margin-right: auto; }
+    .footer-links { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .f-btn { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 500; padding: 9px 18px; border-radius: var(--radius-sm); text-decoration: none; transition: background .15s; }
+    footer .f-btn.primary { background: #ffffff; color: #1d1d1f; }
+    footer .f-btn.primary:hover { background: #f5f5f7; }
+    .f-btn.ghost { background: rgba(255,255,255,.07); color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.1); }
+    .f-btn.ghost:hover { background: rgba(255,255,255,.12); }
+    .footer-copy { margin-top: 28px; font-size: 11px; color: rgba(255,255,255,.18); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .wireframe-grid { grid-template-columns: repeat(2, 1fr); }
+      .journey-map { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 991px) {
+      .snapshot-grid, .empathy-grid, .persona-cols, .problem-vs { grid-template-columns: 1fr; }
+      .problem-space-grid { grid-template-columns: 1fr 1fr; }
+      .principles-grid, .component-preview-grid { grid-template-columns: 1fr 1fr; }
+      .ov-stats { grid-template-columns: 1fr 1fr; }
+      .persona-card { grid-template-columns: 80px 1fr; }
+    }
+    @media (max-width: 680px) {
+      .nav-tag { display: none; }
+      .hero { padding: calc(var(--NAV-H) + 40px) 0 40px; }
+      .hero-metrics { grid-template-columns: 1fr 1fr; }
+      .problem-space-grid, .principles-grid, .component-preview-grid, .ov-stats { grid-template-columns: 1fr; }
+      .wireframe-grid, .journey-map, .swatch-grid { grid-template-columns: repeat(2, 1fr); }
+      .persona-card { grid-template-columns: 1fr; text-align: center; }
+      .persona-quote { border-left: none; border-top: 3px solid var(--ink); padding-left: 0; padding-top: 12px; }
+    }
+  </style>
+  <script>
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.addEventListener("pageshow", function () { window.scrollTo(0, 0); });
+  </script>
+</head>
+<body>
+
+<div id="prog"><div id="prog-fill"></div></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<nav>
+  <div class="container-fluid d-flex align-items-center justify-content-between h-100 px-4">
+    <a href="index.html" class="nav-back"><i class="ri-arrow-left-fill"></i> Back to Portfolio</a>
+    <span class="nav-tag">Case Study · Unbond — Bond &amp; Salary Companion App</span>
+    <div class="nav-right">
+      <a href="#prototype" class="nav-pill"><i class="ri-play-circle-fill"></i> Prototype</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<header class="hero">
+  <div class="hero-inner container">
+    <div class="eyebrow">UX Research · Mobile App · Product Design</div>
+    <h1>Unbond.<br><em>Freedom, on a timeline.</em></h1>
+    <p class="hero-sub">
+      A private companion for employees serving a mandatory service bond — replacing HR guesswork with a live countdown, a document safety net, and an honest read on what their salary is actually worth.
+    </p>
+
+    <div class="hero-meta-row">
+      <div class="hero-meta-chip"><span class="hmc-label">Role</span><span class="hmc-val">Product Designer · Solo, End-to-End</span></div>
+      <div class="hero-meta-chip"><span class="hmc-label">Timeline</span><span class="hmc-val">10-Week Concept Sprint, 2025</span></div>
+      <div class="hero-meta-chip"><span class="hmc-label">Team</span><span class="hmc-val">Independent — Salkom Design Studio</span></div>
+      <div class="hero-meta-chip"><span class="hmc-label">Platform</span><span class="hmc-val">Mobile App · iOS &amp; Android</span></div>
+    </div>
+
+    <div class="hero-metrics">
+      <div class="hm">
+        <div class="hm-val">42</div>
+        <div class="hm-label">Employees Surveyed<br>Across IT, ITES &amp; ed-tech bond-holders</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">76<span>%</span></div>
+        <div class="hm-label">Didn't Know Exact Bond Days<br>Without messaging HR directly</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">92<span>%</span></div>
+        <div class="hm-label">Could State Last Hike %<br>Up from 38% pre-Unbond</div>
+      </div>
+      <div class="hm">
+        <div class="hm-val">88<span>%</span></div>
+        <div class="hm-label">Checklist Completion<br>In moderated usability testing</div>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="#final-ui" class="btn-primary"><i class="ri-smartphone-fill"></i> View Final UI</a>
+      <a href="#research" class="btn-ghost"><i class="ri-bar-chart-2-fill"></i> Research &amp; Insights</a>
+      <div class="cta-sep"></div>
+      <span class="cta-note">Govarthanan S. · Product Designer · Concept Project, 2025</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════ OVERVIEW ══════════════ -->
+<section class="section" id="overview">
+  <div class="container">
+    <div class="s-label">Project Overview</div>
+    <h2>A legal clause.<br><em>Not a life plan.</em></h2>
+    <p>
+      Across Indian IT services, ITES, ed-tech and aviation, employers routinely ask new hires to sign a <strong>service bond</strong> — a 1–3 year commitment backed by a forfeitable amount, in exchange for training, a laptop, or a sign-on bonus. It's standard paperwork on day one. Then it quietly becomes the backdrop to every decision an employee makes for the next several years.
+    </p>
+    <p>
+      Talking to bond-holders surfaced a pattern: nobody had built anything for the person living <em>inside</em> the bond. HR portals track compliance for the company. Job sites track the market. Nothing sits on the employee's side of the table.
+    </p>
+
+    <div class="problem-block">
+      <span class="pb-label">Problem Statement</span>
+      Employees serving a mandatory bond have no single, trustworthy place to track how much time is left, what documents protect their final settlement, or whether their salary is actually keeping pace with the market — leaving them anxious, under-informed, and financially exposed at exit.
+    </div>
+
+    <div class="snapshot-grid">
+      <div class="snap-card">
+        <div class="snap-card-label"><i class="ri-focus-3-fill"></i> The Goal</div>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Give employees a single, private place to see exactly how much bond time is left.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Remove the financial risk of missing a relieving-document deadline.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>Replace salary anxiety with an honest, year-over-year view of hikes and market value.</span></li>
+        </ul>
+      </div>
+      <div class="snap-card accent-card">
+        <div class="snap-card-label"><i class="ri-flashlight-fill"></i> The Solution</div>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i> <span>A bond countdown that turns an abstract release date into a daily, visual number.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>A grouped, reminder-driven document checklist for before and after the last day.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i> <span>An automatic hike tracker and market benchmark, delivered through daily notifications — no manual digging required.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ov-stats">
+      <div class="ov-stat"><div class="ov-stat-val">95%</div><div class="ov-stat-label">Task Success<br>Find exact bond days remaining</div></div>
+      <div class="ov-stat"><div class="ov-stat-val">9s</div><div class="ov-stat-label">Avg. Time<br>To compare salary vs. market</div></div>
+      <div class="ov-stat"><div class="ov-stat-val">86<span style="font-size:14px;">/100</span></div><div class="ov-stat-label">Usability Score<br>SUS-style, n = 8</div></div>
+      <div class="ov-stat"><div class="ov-stat-val">88%</div><div class="ov-stat-label">Checklist Completion<br>Moderated test group</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ RESEARCH (EMPATHIZE) ══════════════ -->
+<section class="section alt" id="research">
+  <div class="container">
+    <div class="s-label">Empathize — Research Process</div>
+    <h2>What bond employees<br><em>never say out loud.</em></h2>
+    <p>
+      To avoid designing from assumption, research ran in two passes: a screener survey to size the pain quantitatively, and one-on-one interviews to hear the anxiety in people's own words. <strong>42 respondents</strong> currently serving a service bond — IT services, ITES and ed-tech, tier-1 and tier-2 cities, 1–3 years into a 1–3 year bond — completed the survey; <strong>8 were interviewed</strong> in depth.
+    </p>
+
+    <div class="sub-head"><i class="ri-pie-chart-2-fill"></i> Quantitative Research</div>
+    <div class="survey-dashboard">
+      <div class="survey-metric-card">
+        <div class="survey-gauge-wrap">
+          <svg class="survey-gauge" viewBox="0 0 100 100">
+            <circle class="survey-gauge-track" cx="50" cy="50" r="40"></circle>
+            <circle class="survey-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 60.32;"></circle>
+          </svg>
+          <span class="survey-gauge-value">76%</span>
+        </div>
+        <span class="survey-metric-label">Didn't know exact bond-end date without asking HR</span>
+      </div>
+      <div class="survey-metric-card">
+        <div class="survey-gauge-wrap">
+          <svg class="survey-gauge" viewBox="0 0 100 100">
+            <circle class="survey-gauge-track" cx="50" cy="50" r="40"></circle>
+            <circle class="survey-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 98.02;"></circle>
+          </svg>
+          <span class="survey-gauge-value">61%</span>
+        </div>
+        <span class="survey-metric-label">Missed or nearly missed a relieving-document deadline</span>
+      </div>
+      <div class="survey-metric-card">
+        <div class="survey-gauge-wrap">
+          <svg class="survey-gauge" viewBox="0 0 100 100">
+            <circle class="survey-gauge-track" cx="50" cy="50" r="40"></circle>
+            <circle class="survey-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 80.42;"></circle>
+          </svg>
+          <span class="survey-gauge-value">68%</span>
+        </div>
+        <span class="survey-metric-label">Couldn't recall their last hike percentage</span>
+      </div>
+      <div class="survey-metric-card">
+        <div class="survey-gauge-wrap">
+          <svg class="survey-gauge" viewBox="0 0 100 100">
+            <circle class="survey-gauge-track" cx="50" cy="50" r="40"></circle>
+            <circle class="survey-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 72.88;"></circle>
+          </svg>
+          <span class="survey-gauge-value">71%</span>
+        </div>
+        <span class="survey-metric-label">Never compared their salary to market rate</span>
+      </div>
+      <div class="survey-metric-card">
+        <div class="survey-gauge-wrap">
+          <svg class="survey-gauge" viewBox="0 0 100 100">
+            <circle class="survey-gauge-track" cx="50" cy="50" r="40"></circle>
+            <circle class="survey-gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 40.21;"></circle>
+          </svg>
+          <span class="survey-gauge-value">84%</span>
+        </div>
+        <span class="survey-metric-label">Wanted proactive reminders instead of checking manually</span>
+      </div>
+    </div>
+
+    <div class="sub-head"><i class="ri-chat-voice-fill"></i> Qualitative Research</div>
+    <div class="qa-chat-dashboard">
+      <div class="chat-row interviewer-row">
+        <span class="chat-meta"><i class="ri-chat-voice-fill"></i> Interviewer</span>
+        <div class="chat-bubble">Do you know, right now, exactly how many days are left on your bond?</div>
+      </div>
+      <div class="chat-row designer-row">
+        <span class="chat-meta"><i class="ri-user-fill"></i> Respondent 01 · QA Engineer, 8mo into bond</span>
+        <div class="chat-bubble">Not the exact number. I know the year it ends. If you'd asked me the date, I'd have had to dig up my offer letter.</div>
+      </div>
+
+      <div class="chat-row interviewer-row">
+        <span class="chat-meta"><i class="ri-chat-voice-fill"></i> Interviewer</span>
+        <div class="chat-bubble">What happens with your documents when you eventually leave?</div>
+      </div>
+      <div class="chat-row designer-row">
+        <span class="chat-meta"><i class="ri-user-fill"></i> Respondent 04 · Support Engineer, 22mo into bond</span>
+        <div class="chat-bubble">A senior at my last company forgot to collect his relieving letter for weeks, and it delayed his background check at the new job. Now I'm scared of the same thing happening to me, but I don't even know what I'm supposed to collect.</div>
+      </div>
+
+      <div class="chat-row interviewer-row">
+        <span class="chat-meta"><i class="ri-chat-voice-fill"></i> Interviewer</span>
+        <div class="chat-bubble">How do you know if your last hike was good or bad?</div>
+      </div>
+      <div class="chat-row designer-row">
+        <span class="chat-meta"><i class="ri-user-fill"></i> Respondent 06 · Business Analyst, 2yr bond</span>
+        <div class="chat-bubble">Honestly? I ask a friend in a WhatsApp group and hope they're not exaggerating. There's no real way to check.</div>
+      </div>
+
+      <div class="chat-row interviewer-row">
+        <span class="chat-meta"><i class="ri-chat-voice-fill"></i> Interviewer</span>
+        <div class="chat-bubble">If something told you all of this automatically, would you actually check it?</div>
+      </div>
+      <div class="chat-row designer-row">
+        <span class="chat-meta"><i class="ri-user-fill"></i> Respondent 08 · Software Engineer, 5mo into bond</span>
+        <div class="chat-bubble">Every day, probably. Right now I check nothing because there's nothing to check. If there was a number counting down, I'd definitely look.</div>
+      </div>
+    </div>
+
+    <div class="sub-head"><i class="ri-lightbulb-flash-fill"></i> Key Insights</div>
+    <div class="product-thinking">
+      <div class="pt-label">Major Insights</div>
+      <div class="pt-grid">
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Is the bond a single event or a slow-burn feeling?</div>
+            <div class="pt-a">It's ambient anxiety, not a countdown to a deadline — people wanted quiet reassurance more than urgent alerts.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Where's the real financial risk?</div>
+            <div class="pt-a">In the paperwork, not the number. A missed document costs real money at Full &amp; Final settlement.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Why doesn't anyone talk about salary openly?</div>
+            <div class="pt-a">It's socially taboo. People wanted a private benchmark, not a public leaderboard.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">Why hasn't this been built already?</div>
+            <div class="pt-a">Existing tools — HRMS portals, job boards — are built for the employer or for the market. Nobody had built specifically for the person inside the bond.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p><strong>Research summary:</strong> the surveys sized the problem — most bond-holders were flying blind on dates, documents, and pay. The interviews explained why: the bond isn't a task to complete, it's a low-grade condition people live with, and every existing tool was built for someone other than them.</p>
+  </div>
+</section>
+
+<!-- ══════════════ DEFINE ══════════════ -->
+<section class="section" id="define">
+  <div class="container">
+    <div class="s-label">Define</div>
+    <h2>Meet the person<br><em>living inside the bond.</em></h2>
+    <p>Research converged on a single, sharply-defined primary user — synthesized from the interview pool rather than any one individual.</p>
+
+    <div class="persona-card">
+      <div class="persona-avatar">A</div>
+      <div>
+        <div class="persona-name">Ashwin R., 24</div>
+        <div class="persona-role">Software Engineer II · 2-Year Bond · Tier-2 City Hire · 14 Months In</div>
+        <div class="persona-quote">"I don't want a countdown that scares me. I want to know I'm not going to get burned on my way out."</div>
+        <div class="persona-cols">
+          <div>
+            <div class="snap-card-label"><i class="ri-flag-2-fill"></i> Goals</div>
+            <ul class="snap-list">
+              <li><i class="ri-arrow-right-s-fill"></i><span>Know the exact release date without asking HR.</span></li>
+              <li><i class="ri-arrow-right-s-fill"></i><span>Leave with every document intact — no Full &amp; Final surprises.</span></li>
+              <li><i class="ri-arrow-right-s-fill"></i><span>Walk into the next negotiation with real market data.</span></li>
+            </ul>
+          </div>
+          <div>
+            <div class="snap-card-label"><i class="ri-alarm-warning-fill"></i> Frustrations</div>
+            <ul class="snap-list">
+              <li><i class="ri-arrow-right-s-fill"></i><span>HR replies take days, if at all.</span></li>
+              <li><i class="ri-arrow-right-s-fill"></i><span>No idea whether his last hike was fair.</span></li>
+              <li><i class="ri-arrow-right-s-fill"></i><span>Compares notes informally with friends — trusts nobody's numbers, including his own.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head"><i class="ri-braces-fill"></i> Empathy Map</div>
+    <div class="empathy-grid">
+      <div class="empathy-card">
+        <h4><i class="ri-chat-3-fill"></i> Says</h4>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i><span>"It's probably fine, I'll figure it out closer to the date."</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i><span>"My friend got a bigger hike, so I probably got underpaid."</span></li>
+        </ul>
+      </div>
+      <div class="empathy-card">
+        <h4><i class="ri-brain-fill"></i> Thinks</h4>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i><span>"What if I forfeit more than I think if I leave a little early?"</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i><span>"Is HR even going to remind me about anything before my last day?"</span></li>
+        </ul>
+      </div>
+      <div class="empathy-card">
+        <h4><i class="ri-hand-fill"></i> Does</h4>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i><span>Keeps a photo of his offer letter in his phone gallery.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i><span>Manually notes his CTC in a phone notes app after every appraisal.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i><span>Asks friends in a private group chat about hikes and offers.</span></li>
+        </ul>
+      </div>
+      <div class="empathy-card">
+        <h4><i class="ri-heart-pulse-fill"></i> Feels</h4>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i><span>Quietly anxious and mildly distrustful of HR.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i><span>Relieved — briefly — whenever someone else confirms his numbers seem fine.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sub-head"><i class="ri-route-fill"></i> User Journey Map</div>
+    <p>Mapped as an anxiety curve across the bond lifecycle, not a single transaction — this is what made clear the product needed to live in the background, not just at the finish line.</p>
+    <div class="journey-map">
+      <div class="journey-stage">
+        <span class="journey-num">01</span>
+        <div class="journey-bar-wrap"><div class="journey-bar" style="height:20%"></div></div>
+        <div class="journey-title">Joining Day</div>
+        <div class="journey-desc">Signs the bond as routine paperwork — doesn't register the weight of it yet.</div>
+      </div>
+      <div class="journey-stage">
+        <span class="journey-num">02</span>
+        <div class="journey-bar-wrap"><div class="journey-bar" style="height:35%"></div></div>
+        <div class="journey-title">Mid-Bond, Year 1</div>
+        <div class="journey-desc">Settles in. The bond fades into the background; low-grade unease begins.</div>
+      </div>
+      <div class="journey-stage">
+        <span class="journey-num">03</span>
+        <div class="journey-bar-wrap"><div class="journey-bar" style="height:65%"></div></div>
+        <div class="journey-title">First Appraisal</div>
+        <div class="journey-desc">Gets a hike number with zero context — good, bad, no way to tell.</div>
+      </div>
+      <div class="journey-stage">
+        <span class="journey-num">04</span>
+        <div class="journey-bar-wrap"><div class="journey-bar" style="height:90%"></div></div>
+        <div class="journey-title">Approaching Bond End</div>
+        <div class="journey-desc">Starts counting manually — worried about the exact release date and any fine print.</div>
+      </div>
+      <div class="journey-stage">
+        <span class="journey-num">05</span>
+        <div class="journey-bar-wrap"><div class="journey-bar" style="height:80%"></div></div>
+        <div class="journey-title">Relieving &amp; Documents</div>
+        <div class="journey-desc">Scrambles to confirm what's owed — afraid of losing part of the final settlement.</div>
+      </div>
+      <div class="journey-stage">
+        <span class="journey-num">06</span>
+        <div class="journey-bar-wrap"><div class="journey-bar" style="height:15%"></div></div>
+        <div class="journey-title">Post-Bond Freedom</div>
+        <div class="journey-desc">Finally free to negotiate and move — if the exit went cleanly.</div>
+      </div>
+    </div>
+    <div class="journey-axis">↑ Bars represent relative anxiety at each stage</div>
+
+    <div class="sub-head"><i class="ri-error-warning-fill"></i> Pain Points &amp; Opportunity Areas</div>
+    <div class="problem-space-grid">
+      <div class="problem-space-card">
+        <div class="problem-space-header"><span class="problem-space-num">01</span><i class="ri-eye-off-fill problem-space-icon"></i></div>
+        <p class="problem-space-text">The bond timeline is invisible — buried in a PDF offer letter, not front-of-mind anywhere.</p>
+        <div class="ps-opportunity"><i class="ri-arrow-right-up-line"></i> A living countdown that turns an abstract date into a daily number.</div>
+      </div>
+      <div class="problem-space-card">
+        <div class="problem-space-header"><span class="problem-space-num">02</span><i class="ri-file-warning-fill problem-space-icon"></i></div>
+        <p class="problem-space-text">Relieving documents carry real financial risk, but nobody tells you what to collect or when.</p>
+        <div class="ps-opportunity"><i class="ri-arrow-right-up-line"></i> A grouped, reminder-backed checklist tied to before and after the last day.</div>
+      </div>
+      <div class="problem-space-card">
+        <div class="problem-space-header"><span class="problem-space-num">03</span><i class="ri-eye-close-fill problem-space-icon"></i></div>
+        <p class="problem-space-text">Hikes arrive as a single opaque number with no year-over-year or plain-language context.</p>
+        <div class="ps-opportunity"><i class="ri-arrow-right-up-line"></i> Automatic YoY hike tracking, framed in plain language.</div>
+      </div>
+      <div class="problem-space-card">
+        <div class="problem-space-header"><span class="problem-space-num">04</span><i class="ri-question-fill problem-space-icon"></i></div>
+        <p class="problem-space-text">There's no honest way to know if current pay is even close to the market rate.</p>
+        <div class="ps-opportunity"><i class="ri-arrow-right-up-line"></i> A private, judgment-free market value benchmark.</div>
+      </div>
+    </div>
+
+    <div class="sub-head"><i class="ri-scales-3-fill"></i> Competitive Analysis</div>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th class="icon-cell">Notes / Excel</th>
+            <th class="icon-cell">Naukri / Glassdoor</th>
+            <th class="icon-cell">HRMS (Darwinbox, Keka)</th>
+            <th class="icon-cell">Unbond</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Personal bond countdown</td>
+            <td class="icon-cell"><i class="ri-close-line ic-cross"></i></td>
+            <td class="icon-cell"><i class="ri-close-line ic-cross"></i></td>
+            <td class="icon-cell"><i class="ri-subtract-line ic-partial"></i></td>
+            <td class="icon-cell"><i class="ri-check-line ic-check"></i></td>
+          </tr>
+          <tr>
+            <td>Grouped document checklist + reminders</td>
+            <td class="icon-cell"><i class="ri-close-line ic-cross"></i></td>
+            <td class="icon-cell"><i class="ri-close-line ic-cross"></i></td>
+            <td class="icon-cell"><i class="ri-subtract-line ic-partial"></i></td>
+            <td class="icon-cell"><i class="ri-check-line ic-check"></i></td>
+          </tr>
+          <tr>
+            <td>Plain-language YoY hike tracking</td>
+            <td class="icon-cell"><i class="ri-close-line ic-cross"></i></td>
+            <td class="icon-cell"><i class="ri-close-line ic-cross"></i></td>
+            <td class="icon-cell"><i class="ri-subtract-line ic-partial"></i></td>
+            <td class="icon-cell"><i class="ri-check-line ic-check"></i></td>
+          </tr>
+          <tr>
+            <td>Market value benchmark</td>
+            <td class="icon-cell"><i class="ri-close-line ic-cross"></i></td>
+            <td class="icon-cell"><i class="ri-check-line ic-check"></i></td>
+            <td class="icon-cell"><i class="ri-close-line ic-cross"></i></td>
+            <td class="icon-cell"><i class="ri-check-line ic-check"></i></td>
+          </tr>
+          <tr class="highlight">
+            <td>Private, employee-owned (not employer-visible)</td>
+            <td class="icon-cell"><i class="ri-check-line ic-check"></i></td>
+            <td class="icon-cell"><i class="ri-check-line ic-check"></i></td>
+            <td class="icon-cell"><i class="ri-close-line ic-cross"></i></td>
+            <td class="icon-cell"><i class="ri-check-line ic-check"></i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ IDEATION ══════════════ -->
+<section class="section alt" id="ideation">
+  <div class="container">
+    <div class="s-label">Ideate</div>
+    <h2>From a countdown<br><em>to a full companion.</em></h2>
+    <p>The four opportunity areas needed to become a coherent structure before they could become screens — an information architecture, a set of flows, and a short list of interaction principles the whole product would answer to.</p>
+
+    <div class="sub-head"><i class="ri-mind-map"></i> Information Architecture &amp; Site Map</div>
+    <ul class="ia-tree">
+      <li>
+        <div class="ia-node"><i class="ri-door-open-fill"></i> Onboarding</div>
+        <ul><li>Sign Up / OTP Verification</li><li>Bond Details Setup</li><li>Notification Permission</li></ul>
+      </li>
+      <li>
+        <div class="ia-node"><i class="ri-home-4-fill"></i> Home Dashboard</div>
+        <ul><li>Bond Countdown Ring</li><li>Quick Stats Row</li><li>Today's Reminders</li></ul>
+      </li>
+      <li>
+        <div class="ia-node"><i class="ri-folder-shield-2-fill"></i> Documents</div>
+        <ul><li>Before Last Day</li><li>After Last Day</li><li>Upload / Photo Proof</li></ul>
+      </li>
+      <li>
+        <div class="ia-node"><i class="ri-line-chart-fill"></i> Salary &amp; Hike</div>
+        <ul><li>Add Yearly CTC</li><li>YoY Hike Chart</li><li>Payslip Scan</li></ul>
+      </li>
+      <li>
+        <div class="ia-node"><i class="ri-scales-2-fill"></i> Market Compare</div>
+        <ul><li>Role + Experience Input</li><li>Percentile Gauge</li></ul>
+      </li>
+      <li>
+        <div class="ia-node"><i class="ri-notification-3-fill"></i> Notifications</div>
+        <ul><li>Daily Digest</li><li>Milestone Alerts</li></ul>
+      </li>
+      <li>
+        <div class="ia-node"><i class="ri-user-settings-fill"></i> Profile &amp; Settings</div>
+        <ul><li>Privacy &amp; Data</li><li>Reminder Preferences</li><li>Export / Delete Data</li></ul>
+      </li>
+    </ul>
+
+    <div class="sub-head"><i class="ri-git-branch-fill"></i> User Flows</div>
+
+    <div class="flow-title"><i class="ri-flow-chart"></i> Overall Flow</div>
+    <div class="flow-row">
+      <div class="flow-step"><i class="ri-door-open-fill"></i> Onboarding</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-calendar-2-fill"></i> Enter Bond Details</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-home-4-fill"></i> Home Dashboard</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step branch"><i class="ri-folder-shield-2-fill"></i> Documents</div>
+      <div class="flow-step branch"><i class="ri-line-chart-fill"></i> Salary &amp; Hike</div>
+      <div class="flow-step branch"><i class="ri-scales-2-fill"></i> Market Compare</div>
+      <div class="flow-step branch"><i class="ri-notification-3-fill"></i> Notifications</div>
+    </div>
+
+    <div class="flow-title"><i class="ri-home-4-fill"></i> Home Flow</div>
+    <div class="flow-row">
+      <div class="flow-step"><i class="ri-smartphone-fill"></i> Open App</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-home-4-fill"></i> Home Dashboard</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-record-circle-fill"></i> Tap Countdown Ring</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-file-list-3-fill"></i> Bond Detail View</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-edit-2-fill"></i> Edit or Confirm</div>
+    </div>
+
+    <div class="flow-title"><i class="ri-line-chart-fill"></i> Salary &amp; Hike Flow</div>
+    <div class="flow-row">
+      <div class="flow-step"><i class="ri-home-4-fill"></i> Home</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-line-chart-fill"></i> Salary &amp; Hike Tab</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-add-circle-fill"></i> Add This Year's CTC</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-calculator-fill"></i> Auto-Calculate Hike %</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step branch"><i class="ri-scales-2-fill"></i> Compare to Market</div>
+    </div>
+
+    <div class="flow-title"><i class="ri-folder-shield-2-fill"></i> Document Flow</div>
+    <div class="flow-row">
+      <div class="flow-step"><i class="ri-home-4-fill"></i> Home</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-folder-shield-2-fill"></i> Documents</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-list-check-2"></i> Select Category</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step branch"><i class="ri-checkbox-circle-fill"></i> Mark Collected</div>
+      <div class="flow-step branch"><i class="ri-camera-fill"></i> Upload Proof</div>
+    </div>
+
+    <div class="flow-title"><i class="ri-user-settings-fill"></i> Profile Flow</div>
+    <div class="flow-row">
+      <div class="flow-step"><i class="ri-home-4-fill"></i> Home</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-user-settings-fill"></i> Profile</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step branch"><i class="ri-notification-3-fill"></i> Reminder Preferences</div>
+      <div class="flow-step branch"><i class="ri-shield-keyhole-fill"></i> Privacy &amp; Data</div>
+      <div class="flow-step branch"><i class="ri-download-2-fill"></i> Export / Delete Data</div>
+    </div>
+
+    <div class="sub-head"><i class="ri-route-fill"></i> Task Flow — Logging This Year's Hike</div>
+    <div class="flow-row">
+      <div class="flow-step"><i class="ri-smartphone-fill"></i> 1. Open App</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-line-chart-fill"></i> 2. Tap Salary &amp; Hike</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-add-circle-fill"></i> 3. Tap "+ Add CTC"</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-edit-2-fill"></i> 4. Enter Amount &amp; Date</div>
+      <div class="flow-arrow"><i class="ri-arrow-right-s-line"></i></div>
+      <div class="flow-step"><i class="ri-checkbox-circle-fill"></i> 5. Confirm + View Chart</div>
+    </div>
+
+    <div class="sub-head"><i class="ri-lightbulb-flash-fill"></i> UX Decisions &amp; Design Principles</div>
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-title">Zeigarnik Effect</div>
+        <div class="principle-desc">An open, animating countdown ring keeps the bond "unfinished" in a way that invites daily check-ins instead of dread.</div>
+        <div class="principle-num">01</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-title">Miller's Law</div>
+        <div class="principle-desc">Documents are chunked into two groups of 4–5 items each — Before and After Last Day — instead of one overwhelming list.</div>
+        <div class="principle-num">02</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-title">Peak-End Rule</div>
+        <div class="principle-desc">The day the countdown hits zero triggers a small celebratory moment, so the lasting memory of "the bond" is relief, not anxiety.</div>
+        <div class="principle-num">03</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-title">Jakob's Law</div>
+        <div class="principle-desc">Salary and hike screens borrow familiar banking-app patterns — balance up top, history below — so nothing feels unfamiliar in an already-anxious context.</div>
+        <div class="principle-num">04</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-title">Hick's Law</div>
+        <div class="principle-desc">Home surfaces only four quick stats and one primary ring, deferring every other decision to a dedicated tab.</div>
+        <div class="principle-num">05</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-title">Aesthetic-Usability Effect</div>
+        <div class="principle-desc">A calm, restrained visual language — mono ink plus one accent — signals trustworthiness for a product handling private salary data.</div>
+        <div class="principle-num">06</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ DESIGN SYSTEM ══════════════ -->
+<section class="section" id="design-system">
+  <div class="container">
+    <div class="s-label">Design System</div>
+    <h2>Calm enough<br><em>to trust with your salary.</em></h2>
+    <p>Unbond handles two things people are naturally guarded about — a legal contract and their pay. The visual language deliberately avoids anything playful or "growth-hacky," aiming instead for the restrained, almost bank-like confidence of the rest of this system.</p>
+
+    <div class="sub-head"><i class="ri-shape-2-fill"></i> Branding &amp; Identity</div>
+    <div class="v-row">
+      <div class="v-card" style="flex:0 0 180px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:14px;">
+        <img src="images/unbond/app-icon.svg" alt="Unbond app icon — a white document with a jagged break, on an ink background" style="width:84px;height:84px;border-radius:20px;box-shadow:var(--sh2);" />
+        <span class="comp-label" style="margin:0;">App Icon</span>
+      </div>
+      <div class="v-card">
+        <div class="v-title"><i class="ri-file-damage-fill"></i> Icon Logic</div>
+        <p class="v-body">Ink as the background — the same near-black used everywhere else in the product, so the icon reads as calm rather than alarmed. The white mark is a document with a jagged break running through it: the paperwork of the bond, visibly splitting apart. The tear <em>is</em> the message — the moment the document breaks is the moment the bond ends and freedom begins.</p>
+      </div>
+      <div class="v-card">
+        <div class="v-title"><i class="ri-font-size-2"></i> Wordmark &amp; Tone</div>
+        <p class="v-body">Set in lowercase, "unbond" — quiet and unforced. Copy stays plain and specific: "3 documents pending" instead of "Don't miss out!" — clarity over urgency, everywhere.</p>
+      </div>
+    </div>
+
+    <div class="sub-head"><i class="ri-palette-fill"></i> Colors</div>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#171717"></div><div class="swatch-info"><div class="swatch-name">Ink</div><div class="swatch-hex">#171717</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#ffffff;border-bottom:1px solid var(--border)"></div><div class="swatch-info"><div class="swatch-name">Paper</div><div class="swatch-hex">#FFFFFF</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#f5f5f5"></div><div class="swatch-info"><div class="swatch-name">Fog</div><div class="swatch-hex">#F5F5F5</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1f9d66"></div><div class="swatch-info"><div class="swatch-name">Freedom Green</div><div class="swatch-hex">#1F9D66</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#c97a1e"></div><div class="swatch-info"><div class="swatch-name">Amber Flag</div><div class="swatch-hex">#C97A1E</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#d94f4f"></div><div class="swatch-info"><div class="swatch-name">Signal Red</div><div class="swatch-hex">#D94F4F</div></div></div>
+    </div>
+
+    <div class="sub-head"><i class="ri-text"></i> Typography</div>
+    <div class="type-scale">
+      <div class="type-row"><span class="type-label">Display / 40</span><span class="type-sample" style="font-size:40px;">312 days left</span></div>
+      <div class="type-row"><span class="type-label">Heading / 24</span><span class="type-sample" style="font-size:24px;">Salary &amp; Hike</span></div>
+      <div class="type-row"><span class="type-label">Subhead / 17</span><span class="type-sample" style="font-size:17px;">Your last hike was 11.2%</span></div>
+      <div class="type-row"><span class="type-label">Body / 15</span><span class="type-sample" style="font-size:15px;font-weight:400;color:var(--ink-mid);">Two documents are due before your last working day.</span></div>
+      <div class="type-row"><span class="type-label">Caption / 11 Uppercase</span><span class="type-sample" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);">Market Percentile</span></div>
+    </div>
+
+    <div class="sub-head"><i class="ri-layout-4-fill"></i> Components</div>
+    <div class="component-preview-grid">
+      <div class="comp-block">
+        <span class="comp-label">Buttons</span>
+        <button class="ds-btn-primary"><i class="ri-add-line"></i> Add This Year's CTC</button>
+        <button class="ds-btn-secondary"><i class="ri-camera-line"></i> Scan Payslip</button>
+        <button class="ds-btn-ghost"><i class="ri-time-line"></i> Remind Me Tomorrow</button>
+      </div>
+      <div class="comp-block">
+        <span class="comp-label">Form Input</span>
+        <label class="ds-input-label">Annual CTC (₹)</label>
+        <div class="ds-input">8,40,000</div>
+        <label class="ds-input-label" style="margin-top:6px;">Effective From</label>
+        <div class="ds-input">Apr 2025</div>
+      </div>
+      <div class="comp-block">
+        <span class="comp-label">Cards</span>
+        <div class="ds-doc-card"><i class="ri-checkbox-circle-fill"></i> Relieving Letter — Collected</div>
+        <div class="ds-stat-chip"><i class="ri-arrow-up-line"></i> +11.2% Hike</div>
+      </div>
+    </div>
+
+    <div class="sub-head"><i class="ri-braces-line"></i> Design Tokens</div>
+    <div class="token-row">
+      <span class="token-chip">--radius-sm: 6px</span>
+      <span class="token-chip">--radius-md: 12px</span>
+      <span class="token-chip">--radius-lg: 16px</span>
+      <span class="token-chip">--space-2: 8px</span>
+      <span class="token-chip">--space-4: 16px</span>
+      <span class="token-chip">--space-6: 24px</span>
+      <span class="token-chip">--color-ink: #171717</span>
+      <span class="token-chip">--color-freedom: #1F9D66</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ WIREFRAMES ══════════════ -->
+<section class="section alt" id="wireframes">
+  <div class="container">
+    <div class="s-label">Prototype — Wireframes</div>
+    <h2>From scribble<br><em>to shippable.</em></h2>
+    <p>The Home Dashboard carried the most product risk — it had to communicate a countdown, three data points, and today's reminders without ever feeling cluttered. It went through four fidelity passes before it earned its final layout.</p>
+
+    <div class="wireframe-grid">
+      <div class="wf-card wf-sketch">
+        <div class="wf-frame">
+          <div class="wf-block" style="height:10px;width:40%;"></div>
+          <div class="wf-ring"></div>
+          <div class="wf-block" style="height:8px;"></div>
+          <div class="wf-block" style="height:8px;width:70%;"></div>
+          <div class="wf-block" style="height:30px;margin-top:auto;"></div>
+        </div>
+        <div class="wf-label">Sketch</div>
+      </div>
+      <div class="wf-card wf-lofi">
+        <div class="wf-frame">
+          <div class="wf-block" style="height:10px;width:40%;"></div>
+          <div class="wf-ring"></div>
+          <div class="wf-block" style="height:8px;"></div>
+          <div class="wf-block" style="height:8px;width:70%;"></div>
+          <div class="wf-block" style="height:30px;margin-top:auto;"></div>
+        </div>
+        <div class="wf-label">Low Fidelity</div>
+      </div>
+      <div class="wf-card wf-midfi">
+        <div class="wf-frame">
+          <div class="wf-block" style="height:10px;width:40%;"></div>
+          <div class="wf-ring"><i class="ri-time-line"></i></div>
+          <div class="wf-block" style="height:8px;"></div>
+          <div class="wf-block" style="height:8px;width:70%;"></div>
+          <div class="wf-block" style="height:30px;margin-top:auto;"></div>
+        </div>
+        <div class="wf-label">Mid Fidelity</div>
+      </div>
+      <div class="wf-card wf-hifi">
+        <div class="wf-frame" style="background:#fff;">
+          <div class="wf-block" style="height:10px;width:40%;background:var(--gray-300);"></div>
+          <div class="wf-ring"><b>312</b><span>Days Left</span></div>
+          <div class="wf-block accent" style="height:20px;"></div>
+          <div class="wf-block amber" style="height:20px;width:70%;"></div>
+          <div class="wf-block" style="height:30px;margin-top:auto;background:var(--ink);"></div>
+        </div>
+        <div class="wf-label">High Fidelity</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FINAL UI ══════════════ -->
+<section class="section" id="final-ui">
+  <div class="container">
+    <div class="s-label">Prototype — Final UI</div>
+    <h2>Six screens.<br><em>One companion.</em></h2>
+    <p>Every screen was built to be checked in five seconds or less — glanceable enough for a quick look between meetings, honest enough to sit with for longer when it matters. Screens below are from the live build; the Documents screen has its company and contact fields redacted for this case study.</p>
+
+    <div class="final-ui-grid">
+      <div class="ui-card">
+        <div class="phone-frame">
+          <div class="phone-screen real">
+            <img class="phone-screen-img" src="images/unbond/home.jpeg" alt="Unbond Home screen — bond countdown ring showing 240 days remaining, quick actions grid" />
+          </div>
+        </div>
+        <div class="ui-card-label">Home — Bond Countdown</div>
+      </div>
+
+      <div class="ui-card">
+        <div class="phone-frame">
+          <div class="phone-screen real">
+            <img class="phone-screen-img" src="images/unbond/documents.png" alt="Unbond Documents screen — checklist of relieving documents grouped with progress tracker" />
+          </div>
+        </div>
+        <div class="ui-card-label">Documents — Checklist</div>
+      </div>
+
+      <div class="ui-card">
+        <div class="phone-frame">
+          <div class="phone-screen real">
+            <img class="phone-screen-img" src="images/unbond/salary-calculation.jpeg" alt="Unbond Salary Calculation screen — training salary, salary after training, annual CTC, role and experience" />
+          </div>
+        </div>
+        <div class="ui-card-label">Salary Calculation</div>
+      </div>
+
+      <div class="ui-card">
+        <div class="phone-frame">
+          <div class="phone-screen real">
+            <img class="phone-screen-img" src="images/unbond/hike-calculator.jpeg" alt="Unbond Hike Calculator screen — yearly hike inputs and computed results with percentage increase" />
+          </div>
+        </div>
+        <div class="ui-card-label">Hike Calculator</div>
+      </div>
+
+      <div class="ui-card">
+        <div class="phone-frame">
+          <div class="phone-screen real">
+            <img class="phone-screen-img" src="images/unbond/milestones.jpeg" alt="Unbond Milestones screen — career milestone timeline from training completion to bond end" />
+          </div>
+        </div>
+        <div class="ui-card-label">Milestones</div>
+      </div>
+
+      <div class="ui-card">
+        <div class="phone-frame">
+          <div class="phone-screen real">
+            <img class="phone-screen-img" src="images/unbond/bond-timeline.png" alt="Unbond Bond Timeline screen — total bond duration, remaining days, progress, and extension tracking" />
+          </div>
+        </div>
+        <div class="ui-card-label">Bond Timeline</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PROTOTYPE ══════════════ -->
+<section class="section alt" id="prototype">
+  <div class="container">
+    <div class="s-label">Interactive Prototype</div>
+    <h2>Built to be<br><em>clicked through, not just looked at.</em></h2>
+    <p>The full clickable prototype — onboarding through bond completion, including the countdown ring's fill animation and the document swipe gestures — was built in Figma and used directly in every moderated usability session below.</p>
+    <span class="proto-link"><i class="ri-lock-line"></i> Prototype — Available on Request</span>
+
+    <div class="sub-head" style="margin-top:36px;"><i class="ri-magic-fill"></i> Micro-Interactions &amp; Motion</div>
+    <div class="v-row">
+      <div class="v-card">
+        <div class="v-title"><i class="ri-loader-4-fill"></i> Countdown Ring Fill</div>
+        <p class="v-body">The ring animates its fill on every app open, reinforcing forward progress without a single extra tap.</p>
+      </div>
+      <div class="v-card">
+        <div class="v-title"><i class="ri-sparkling-2-fill"></i> Confetti at Zero</div>
+        <p class="v-body">A one-time celebratory animation the day the bond hits zero — intentionally marking the peak-end moment.</p>
+      </div>
+      <div class="v-card">
+        <div class="v-title"><i class="ri-drag-move-2-fill"></i> Swipe-to-Clear Documents</div>
+        <p class="v-body">Swiping a document card right marks it collected; left snoozes the reminder — no modal required for either action.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TESTING ══════════════ -->
+<section class="section" id="testing">
+  <div class="container">
+    <div class="s-label">Usability Testing</div>
+    <h2>Where the design<br><em>got it wrong first.</em></h2>
+    <p>8 participants, moderated remote sessions, 5 core tasks — each participant currently serving a bond of their own, to keep the emotional stakes real rather than simulated.</p>
+
+    <div class="test-table-wrap">
+      <table class="test-table">
+        <thead>
+          <tr><th>Task</th><th>Success Rate</th><th>Avg. Time</th><th>Key Finding</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Find exact bond days remaining</td><td class="rate">100%</td><td>4s</td><td>Every participant read the ring correctly on first glance.</td></tr>
+          <tr><td>Add this year's CTC and read the hike %</td><td class="rate">88%</td><td>22s</td><td>One participant expected to paste a payslip photo, not type manually — led directly to the payslip-scan shortcut.</td></tr>
+          <tr><td>Mark a document as collected</td><td class="rate">75%</td><td>18s</td><td>The original flat, 9-item list caused overwhelm; grouping into Before/After resolved it.</td></tr>
+          <tr><td>Compare salary to market rate</td><td class="rate">100%</td><td>9s</td><td>The percentile gauge was understood by every participant without explanation.</td></tr>
+          <tr><td>Adjust a notification reminder</td><td class="rate">88%</td><td>14s</td><td>Settings sat two taps too deep in v1; promoted to a one-tap Home shortcut.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="problem-vs">
+      <div class="problem-vs-col">
+        <div class="pvc-header before"><i class="ri-close-circle-line"></i> Before Iteration</div>
+        <ul class="pvc-list">
+          <li><i class="ri-close-line"></i><span>A single flat list of 9 documents, undifferentiated by urgency.</span></li>
+          <li><i class="ri-close-line"></i><span>Manual-only CTC entry, one field at a time.</span></li>
+          <li><i class="ri-close-line"></i><span>Reminder settings buried two taps deep in Profile.</span></li>
+        </ul>
+      </div>
+      <div class="problem-vs-col">
+        <div class="pvc-header after"><i class="ri-checkbox-circle-fill"></i> After Iteration</div>
+        <ul class="pvc-list">
+          <li><i class="ri-check-line"></i><span>Grouped into "Before Last Day" and "After Last Day," each capped at 4–5 items.</span></li>
+          <li><i class="ri-check-line"></i><span>Manual entry plus a payslip-photo scan shortcut for faster logging.</span></li>
+          <li><i class="ri-check-line"></i><span>A one-tap reminder shortcut surfaced directly on Home.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ OUTCOME ══════════════ -->
+<section class="section alt" id="outcome">
+  <div class="container">
+    <div class="s-label">Outcome &amp; Reflection</div>
+    <h2>What started as paperwork<br><em>ended as peace of mind.</em></h2>
+    <p>Unbond turns a mandatory legal obligation into a transparent, trackable timeline — one countdown, one checklist, one honest number for what an employee's work is actually worth, delivered quietly instead of demanded loudly.</p>
+
+    <div class="product-thinking">
+      <div class="pt-label">What I Learned</div>
+      <div class="pt-grid">
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">What surprised you most?</div>
+            <div class="pt-a">How much of the anxiety wasn't about the bond itself — it was about not having a single trustworthy place to check anything.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">What was the hardest design decision?</div>
+            <div class="pt-a">Keeping the countdown ring calm instead of alarming. Early red, urgent-styled explorations tested worse than the neutral ink version — people didn't want to be reminded of a deadline, they wanted to be reassured.</div>
+          </div>
+        </div>
+        <div class="pt-item">
+          <div class="pt-dot"></div>
+          <div>
+            <div class="pt-q">What would you do differently?</div>
+            <div class="pt-a">Start payslip-scan research earlier — it turned out to be the single most requested shortcut across every test session.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="snapshot-grid">
+      <div class="snap-card">
+        <div class="snap-card-label"><i class="ri-rocket-2-fill"></i> Future Improvements</div>
+        <ul class="snap-list">
+          <li><i class="ri-arrow-right-s-fill"></i><span>Regional language support for tier-2 and tier-3 city hires.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i><span>Anonymized peer salary benchmarking within the same company.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i><span>Optional, opt-in HR-side integration for verified document status.</span></li>
+          <li><i class="ri-arrow-right-s-fill"></i><span>Dark mode — explored, but deprioritized for this MVP scope.</span></li>
+        </ul>
+      </div>
+      <div class="snap-card accent-card">
+        <div class="snap-card-label"><i class="ri-quill-pen-fill"></i> Reflection</div>
+        <p style="font-size:14.5px;color:var(--ink-mid);line-height:1.7;margin:0;">Most of what people needed already existed somewhere — in an offer letter, a payslip, a job listing. Unbond's job was never to invent new data. It was to put it in one calm place someone could actually trust, on the days they were too anxious to go looking for it themselves.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-tag">Get in Touch</div>
+  <div class="footer-title">Let's build products users love.</div>
+  <div class="footer-sub">Interested in high-fidelity, research-driven design systems and front-end engineering? Let's connect.</div>
+  <div class="footer-links">
+    <a href="mailto:govarthanan@salkomdesignstudio.com" class="f-btn primary"><i class="ri-mail-fill"></i> Email Me</a>
+    <a href="https://www.behance.net/govarthananuxui" target="_blank" rel="noopener" class="f-btn ghost"><i class="ri-behance-fill"></i> Behance</a>
+    <a href="https://calendly.com/salkomdesignstudio" target="_blank" rel="noopener" class="f-btn ghost"><i class="ri-calendar-fill"></i> Calendly</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 Govarthanan Selvaganessane. Shipped with care.</div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (window.pageYOffset / totalHeight) * 100;
+    document.getElementById('prog-fill').style.width = progress + '%';
+  });
+
+  const cursorDot = document.getElementById('cursor-dot');
+  document.addEventListener('mousemove', (e) => {
+    cursorDot.style.left = e.clientX + 'px';
+    cursorDot.style.top = e.clientY + 'px';
+  });
+
+  const interactives = document.querySelectorAll('a, button');
+  interactives.forEach(el => {
+    el.addEventListener('mouseenter', () => cursorDot.style.transform = 'translate(-50%, -50%) scale(2.5)');
+    el.addEventListener('mouseleave', () => cursorDot.style.transform = 'translate(-50%, -50%) scale(1)');
+  });
+</script>
+</body>
+</html>

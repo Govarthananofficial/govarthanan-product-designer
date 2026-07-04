@@ -4259,6 +4259,55 @@
         transform: scaleX(1);
       }
 
+      .client-card-media {
+        position: relative;
+        margin: -24px -24px 20px;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background: var(--bg-alt);
+        border-bottom: 1px solid var(--bd2);
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
+      }
+      .client-card-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .client-card:hover .client-card-media img {
+        transform: scale(1.045);
+      }
+      .client-card-media .client-status {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        margin-left: 0;
+        background: rgba(255, 255, 255, 0.94);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+      .client-card-media-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 100%;
+        background: linear-gradient(135deg, var(--bg-alt), var(--surface));
+        color: var(--t4);
+      }
+      .client-card-media-placeholder i {
+        font-size: 26px;
+      }
+      .client-card-media-placeholder span {
+        font-size: 10.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
       .client-card-top {
         display: flex;
         flex-direction: row;
@@ -4788,6 +4837,9 @@
         }
         .client-card {
           padding: 20px 16px;
+        }
+        .client-card-media {
+          margin: -20px -16px 16px;
         }
         .client-card-foot-links {
           flex-direction: column;
@@ -6437,6 +6489,12 @@
         </div>
         <div class="client-cards reveal">
           <div class="client-card">
+            <div class="client-card-media">
+              <img src="images/clients/digigold.jpg" alt="DigiGold App — live gold and silver rate trends screen" loading="lazy" />
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">D</span>
@@ -6446,9 +6504,6 @@
                 <div class="client-cat">Fintech · Multi-Brand</div>
                 <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
-              <span class="client-status live"
-                ><span class="client-status-dot"></span>Live</span
-              >
             </div>
             <p class="client-desc">
               Designed and frontend-developed an end-to-end gold savings
@@ -6477,6 +6532,12 @@
           </div>
 
           <div class="client-card">
+            <div class="client-card-media">
+              <img src="images/clients/aura-elite-events.jpg" alt="Aura Elite Events — live event brand website hero section" loading="lazy" />
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Sold Out</span
+              >
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">A</span>
@@ -6486,9 +6547,6 @@
                 <div class="client-cat">Events · Brand</div>
                 <div class="client-agency">Salkom Design Studio</div>
               </div>
-              <span class="client-status live"
-                ><span class="client-status-dot"></span>Sold Out</span
-              >
             </div>
             <p class="client-desc">
               Led full brand identity, campaign strategy, social content, and
@@ -6523,6 +6581,13 @@
           </div>
 
           <div class="client-card">
+            <div class="client-card-media">
+              <div class="client-card-media-placeholder">
+                <i class="ri-figma-fill"></i>
+                <span>Figma Prototype</span>
+              </div>
+              <span class="client-status dev">In Dev</span>
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">V</span>
@@ -6532,7 +6597,6 @@
                 <div class="client-cat">Gaming · SaaS</div>
                 <div class="client-agency">Salkom Design Studio</div>
               </div>
-              <span class="client-status dev">In Dev</span>
             </div>
             <p class="client-desc">
               Designed a fantasy gaming hub app from 0→1 — UX research,
@@ -6560,6 +6624,15 @@
           </div>
 
           <div class="client-card">
+            <div class="client-card-media">
+              <div class="client-card-media-placeholder">
+                <i class="ri-figma-fill"></i>
+                <span>Figma Prototype</span>
+              </div>
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">G</span>
@@ -6569,9 +6642,6 @@
                 <div class="client-cat">Jewellery Retail</div>
                 <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
-              <span class="client-status live"
-                ><span class="client-status-dot"></span>Live</span
-              >
             </div>
             <p class="client-desc">
               Designed operational dashboards with real metrics and live data —
@@ -6608,6 +6678,15 @@
           </div>
 
           <div class="client-card">
+            <div class="client-card-media">
+              <div class="client-card-media-placeholder">
+                <i class="ri-figma-fill"></i>
+                <span>Figma Prototype</span>
+              </div>
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">L</span>
@@ -6617,9 +6696,6 @@
                 <div class="client-cat">Jewellery Retail</div>
                 <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
-              <span class="client-status live"
-                ><span class="client-status-dot"></span>Live</span
-              >
             </div>
             <p class="client-desc">
               Designed dashboard systems with real metrics and live data for
@@ -6648,6 +6724,12 @@
 
           <!-- Rujas Andavar Jewellery -->
           <div class="client-card">
+            <div class="client-card-media">
+              <img src="images/clients/rujas-andavar.jpg" alt="Rujas Andavar Jewellery — live brand website homepage" loading="lazy" />
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">R</span>
@@ -6657,9 +6739,6 @@
                 <div class="client-cat">Jewellery · Brand</div>
                 <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
-              <span class="client-status live"
-                ><span class="client-status-dot"></span>Live</span
-              >
             </div>
             <p class="client-desc">
               Designed a luxury jewellery brand website focused on product
@@ -6688,6 +6767,12 @@
 
           <!-- Saravana Elite -->
           <div class="client-card">
+            <div class="client-card-media">
+              <img src="images/clients/saravana-elite.jpg" alt="Saravana Elite — live jewellery e-commerce website homepage" loading="lazy" />
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">S</span>
@@ -6697,9 +6782,6 @@
                 <div class="client-cat">Jewellery · E-Commerce</div>
                 <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
-              <span class="client-status live"
-                ><span class="client-status-dot"></span>Live</span
-              >
             </div>
             <p class="client-desc">
               Designed a premium jewellery e-commerce and brand experience
@@ -6728,6 +6810,12 @@
 
           <!-- Sakthi Jewellers -->
           <div class="client-card">
+            <div class="client-card-media">
+              <img src="images/clients/sakthi-jewellers.jpg" alt="Sakthi Jewellers — live jewellery website homepage" loading="lazy" />
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">S</span>
@@ -6737,9 +6825,6 @@
                 <div class="client-cat">Jewellery · Website + App</div>
                 <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
-              <span class="client-status live"
-                ><span class="client-status-dot"></span>Live</span
-              >
             </div>
             <p class="client-desc">
               Designed an end-to-end jewellery ecosystem — website and mobile
@@ -6776,6 +6861,12 @@
 
           <!-- SRM Jewellery App -->
           <div class="client-card">
+            <div class="client-card-media">
+              <img src="images/clients/srm-jewellery.jpg" alt="SRM Jewellery App — live digital gold savings dashboard screen" loading="lazy" />
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">S</span>
@@ -6785,9 +6876,6 @@
                 <div class="client-cat">Jewellery · Mobile App</div>
                 <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
-              <span class="client-status live"
-                ><span class="client-status-dot"></span>Live</span
-              >
             </div>
             <p class="client-desc">
               Designed a customer-focused jewellery mobile application covering
@@ -6816,6 +6904,12 @@
 
           <!-- Sunil Estimate App -->
           <div class="client-card">
+            <div class="client-card-media">
+              <img src="images/clients/sunil-estimate.jpg" alt="Sunil Estimate App — smart jewellery store dashboard feature screen" loading="lazy" />
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">S</span>
@@ -6825,9 +6919,6 @@
                 <div class="client-cat">Business Utility · Mobile App</div>
                 <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
-              <span class="client-status live"
-                ><span class="client-status-dot"></span>Live</span
-              >
             </div>
             <p class="client-desc">
               Designed a business utility application for estimate generation,
@@ -6856,6 +6947,15 @@
 
           <!-- Pothys Desktop Dashboard -->
           <div class="client-card">
+            <div class="client-card-media">
+              <div class="client-card-media-placeholder">
+                <i class="ri-figma-fill"></i>
+                <span>Figma Prototype</span>
+              </div>
+              <span class="client-status live"
+                ><span class="client-status-dot"></span>Live</span
+              >
+            </div>
             <div class="client-card-top">
               <div class="client-logo-wrap">
                 <span class="client-logo-letter">P</span>
@@ -6865,9 +6965,6 @@
                 <div class="client-cat">Retail · Enterprise</div>
                 <div class="client-agency">JRK Consulting Services Pvt Ltd</div>
               </div>
-              <span class="client-status live"
-                ><span class="client-status-dot"></span>Live</span
-              >
             </div>
             <p class="client-desc">
               Designed a retail management dashboard for large-scale operations

@@ -294,6 +294,18 @@
       /* ─── BASE ─── */
       html {
         scroll-behavior: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      html::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+      }
+      body::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
       }
       html.lenis,
       html.lenis body {

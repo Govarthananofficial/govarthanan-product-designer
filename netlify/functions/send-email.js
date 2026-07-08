@@ -364,7 +364,7 @@ exports.handler = async function (event) {
               <div style="padding:28px 0;border-top:1px solid #E0E0DC;margin-bottom:8px;">
                 <p style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
                            font-size:13px;line-height:1.85;color:#6A6A62;margin:0;">
-                  I&rsquo;m a <strong style="color:#1A1A18;font-weight:600;">Product Designer &amp; Frontend Engineer</strong>
+                  I&rsquo;m a <strong style="color:#1A1A18;font-weight:600;">UI/UX Designer &amp; Frontend Engineer</strong>
                   with 2+ years building production apps across fintech, retail &amp; SaaS &mdash; including
                   Pothys DigiGold, GRT &amp; Lalitha Jewellery. While you wait, explore the work below.
                 </p>
@@ -411,7 +411,7 @@ exports.handler = async function (event) {
               <p style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
                          font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
                          color:#8A8A80;margin:0 0 4px 0;">
-                Product Designer &amp; Frontend Engineer
+                UI/UX Designer &amp; Frontend Engineer
               </p>
               <p style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
                          font-size:11px;color:#A0A098;margin:0 0 28px 0;">

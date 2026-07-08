@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -149,7 +149,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <!-- Geist Sans + Geist Mono —— Vercel's open-source type system -->
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
 
     <link
       href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
@@ -203,16 +206,16 @@
         --gray-1000: #171717;
 
         /* Gray alpha (translucent overlays) */
-        --gray-alpha-100: rgba(0,0,0,0.051);
-        --gray-alpha-200: rgba(0,0,0,0.082);
-        --gray-alpha-300: rgba(0,0,0,0.102);
-        --gray-alpha-400: rgba(0,0,0,0.078);
-        --gray-alpha-500: rgba(0,0,0,0.212);
-        --gray-alpha-600: rgba(0,0,0,0.239);
-        --gray-alpha-700: rgba(0,0,0,0.439);
-        --gray-alpha-800: rgba(0,0,0,0.510);
-        --gray-alpha-900: rgba(0,0,0,0.702);
-        --gray-alpha-1000: rgba(0,0,0,0.910);
+        --gray-alpha-100: rgba(0, 0, 0, 0.051);
+        --gray-alpha-200: rgba(0, 0, 0, 0.082);
+        --gray-alpha-300: rgba(0, 0, 0, 0.102);
+        --gray-alpha-400: rgba(0, 0, 0, 0.078);
+        --gray-alpha-500: rgba(0, 0, 0, 0.212);
+        --gray-alpha-600: rgba(0, 0, 0, 0.239);
+        --gray-alpha-700: rgba(0, 0, 0, 0.439);
+        --gray-alpha-800: rgba(0, 0, 0, 0.51);
+        --gray-alpha-900: rgba(0, 0, 0, 0.702);
+        --gray-alpha-1000: rgba(0, 0, 0, 0.91);
 
         /* Backgrounds */
         --background-100: #ffffff;
@@ -225,70 +228,74 @@
         --blue-800: #0059ec;
 
         /* Accent — status colors */
-        --red-700:   #fc0035;
-        --red-800:   #ea001d;
+        --red-700: #fc0035;
+        --red-800: #ea001d;
         --green-700: #28a948;
         --amber-700: #ffae00;
 
         /* ─── Semantic aliases ─────────────────────────────────────── */
         /* Brand: ink — interactive elements are dark, not colored */
-        --primary:        #171717;  /* gray-1000 */
-        --primary-hover:  #000000;
-        --primary-faint:  #f2f2f2;  /* gray-100  */
-        --primary-tint:   rgba(0,0,0,0.051); /* gray-alpha-100 */
-        --primary-border: rgba(0,0,0,0.102); /* gray-alpha-300 */
+        --primary: #171717; /* gray-1000 */
+        --primary-hover: #000000;
+        --primary-faint: #f2f2f2; /* gray-100  */
+        --primary-tint: rgba(0, 0, 0, 0.051); /* gray-alpha-100 */
+        --primary-border: rgba(0, 0, 0, 0.102); /* gray-alpha-300 */
 
         /* Text scale */
-        --t1: #171717;  /* gray-1000 — primary text */
-        --t2: #171717;  /* gray-1000 */
-        --t3: #4d4d4d;  /* gray-900  — secondary text */
-        --t4: #8f8f8f;  /* gray-700  — muted / disabled */
+        --t1: #171717; /* gray-1000 — primary text */
+        --t2: #171717; /* gray-1000 */
+        --t3: #4d4d4d; /* gray-900  — secondary text */
+        --t4: #8f8f8f; /* gray-700  — muted / disabled */
 
         /* Backgrounds */
-        --bg:     #ffffff;  /* background-100 */
-        --bg-alt: #fafafa;  /* background-200 */
-        --bg-sub: #f2f2f2;  /* gray-100 */
+        --bg: #ffffff; /* background-100 */
+        --bg-alt: #fafafa; /* background-200 */
+        --bg-sub: #f2f2f2; /* gray-100 */
         --surface: #ffffff;
 
         /* Dark sections */
-        --dark:       #171717; /* gray-1000 */
-        --dark-card:  rgba(255,255,255,0.07);
-        --dark-hover: rgba(255,255,255,0.13);
-        --dark-line:  rgba(255,255,255,0.08);
+        --dark: #171717; /* gray-1000 */
+        --dark-card: rgba(255, 255, 255, 0.07);
+        --dark-hover: rgba(255, 255, 255, 0.13);
+        --dark-line: rgba(255, 255, 255, 0.08);
 
         /* Borders (Geist alpha scale) */
-        --bd:  rgba(0,0,0,0.078); /* gray-alpha-400 */
-        --bd2: rgba(0,0,0,0.102); /* gray-alpha-300 */
-        --bd3: rgba(0,0,0,0.212); /* gray-alpha-500 */
+        --bd: rgba(0, 0, 0, 0.078); /* gray-alpha-400 */
+        --bd2: rgba(0, 0, 0, 0.102); /* gray-alpha-300 */
+        --bd3: rgba(0, 0, 0, 0.212); /* gray-alpha-500 */
 
         /* Focus ring */
         --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px #006bff;
 
         /* Geist Elevation */
         /* Raised cards */
-        --sh1: 0 2px 2px rgba(0,0,0,0.04);
+        --sh1: 0 2px 2px rgba(0, 0, 0, 0.04);
         /* Popovers & menus */
-        --sh2: 0 1px 1px rgba(0,0,0,0.02), 0 4px 8px -4px rgba(0,0,0,0.04), 0 16px 24px -8px rgba(0,0,0,0.06);
+        --sh2:
+          0 1px 1px rgba(0, 0, 0, 0.02), 0 4px 8px -4px rgba(0, 0, 0, 0.04),
+          0 16px 24px -8px rgba(0, 0, 0, 0.06);
         /* Modals & dialogs */
-        --sh3: 0 1px 1px rgba(0,0,0,0.02), 0 8px 16px -4px rgba(0,0,0,0.04), 0 24px 32px -8px rgba(0,0,0,0.06);
+        --sh3:
+          0 1px 1px rgba(0, 0, 0, 0.02), 0 8px 16px -4px rgba(0, 0, 0, 0.04),
+          0 24px 32px -8px rgba(0, 0, 0, 0.06);
 
         /* Geist Border Radius */
-        --radius-sm:   6px;
-        --radius-md:   12px;
-        --radius-lg:   16px;
+        --radius-sm: 6px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
         --radius-full: 9999px;
 
         /* Geist Motion */
         --ease-geist: cubic-bezier(0.175, 0.885, 0.32, 1.1);
-        --dur-state:   150ms;
+        --dur-state: 150ms;
         --dur-popover: 200ms;
         --dur-overlay: 300ms;
 
         /* Layout grid */
-        --NAV-H:    60px;
-        --PAGE-W:   1200px;
+        --NAV-H: 60px;
+        --PAGE-W: 1200px;
         --PAGE-PAD: 80px;
-        --SEC-Y:    128px;
+        --SEC-Y: 128px;
       }
 
       /* ─── BASE ─── */
@@ -327,7 +334,12 @@
       body {
         background: var(--bg);
         color: var(--t1);
-        font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family:
+          "Geist",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
         font-size: 15px;
         line-height: 1.6;
         overflow-x: hidden;
@@ -562,7 +574,7 @@
       }
       .nav-cta:hover {
         background: var(--primary-hover) !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
       }
       .nav-cta:focus-visible {
         outline: none;
@@ -926,7 +938,7 @@
       }
       .ah-btn-dark:hover {
         background: #000000;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
       }
       .ah-btn-dark:focus-visible {
         outline: none;
@@ -1801,7 +1813,7 @@
       /* Premium white card surface */
       .sys-card {
         background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.078);
+        border: 1px solid rgba(0, 0, 0, 0.078);
         border-radius: var(--radius-md);
         position: relative;
         overflow: hidden;
@@ -1816,7 +1828,7 @@
         display: none;
       }
       .sys-card:hover {
-        border-color: rgba(0,0,0,0.18);
+        border-color: rgba(0, 0, 0, 0.18);
         background: var(--gray-100);
         box-shadow: var(--sh2);
       }
@@ -2015,7 +2027,7 @@
       .sys-btn.primary:hover {
         background: #000000;
         border-color: #000000;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
       }
       .sys-btn.primary:focus-visible {
         outline: none;
@@ -2024,11 +2036,11 @@
       .sys-btn.secondary {
         background: transparent;
         color: #171717 !important;
-        border: 1px solid rgba(0,0,0,0.102);
+        border: 1px solid rgba(0, 0, 0, 0.102);
       }
       .sys-btn.secondary:hover {
         background: var(--gray-100);
-        border-color: rgba(0,0,0,0.212);
+        border-color: rgba(0, 0, 0, 0.212);
       }
       .sys-btn.secondary:focus-visible {
         outline: none;
@@ -2494,7 +2506,7 @@
       }
       .contact-cta-btn:hover {
         background: #000000;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
       }
       .contact-cta-btn:focus-visible {
         outline: none;
@@ -2774,7 +2786,7 @@
       .modal-left-title em {
         font-style: normal;
         font-weight: 300;
-        color: rgba(255,255,255,0.5);
+        color: rgba(255, 255, 255, 0.5);
         letter-spacing: -0.03em;
       }
       .modal-left-sub {
@@ -2889,7 +2901,7 @@
         height: 34px;
         border-radius: var(--radius-sm);
         border: 1px solid var(--bd2);
-        background: rgba(255,255,255,0.9);
+        background: rgba(255, 255, 255, 0.9);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -3031,7 +3043,9 @@
       .fl-group.has-error .fl-input,
       .fl-group.has-error .fl-textarea {
         border-color: var(--red-800);
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--red-800);
+        box-shadow:
+          0 0 0 2px #ffffff,
+          0 0 0 4px var(--red-800);
       }
       .fl-error {
         font-size: 11px;
@@ -3074,7 +3088,9 @@
       }
       .fl-group.has-error .fl-phone-box {
         border-color: var(--red-800);
-        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--red-800);
+        box-shadow:
+          0 0 0 2px #ffffff,
+          0 0 0 4px var(--red-800);
       }
       .fl-cc {
         flex: 0 0 auto;
@@ -3154,7 +3170,7 @@
       }
       .form-submit-btn:hover:not(:disabled) {
         background: var(--primary-hover);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
       }
       .form-submit-btn:focus-visible {
         outline: none;
@@ -3567,7 +3583,9 @@
         box-shadow: var(--sh2);
         pointer-events: none;
         z-index: 100;
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
       }
       .cs-modal-scroll-indicator.hidden {
         opacity: 0;
@@ -3793,7 +3811,7 @@
         animation: footNameWave 1.8s ease-in-out infinite;
       }
       .fn-gray {
-        color: rgba(23,23,23,0.14);
+        color: rgba(23, 23, 23, 0.14);
         animation: footNameWaveGray 1.8s ease-in-out infinite;
       }
       .foot-name-display span:nth-child(1) {
@@ -4687,7 +4705,7 @@
         font-size: 60px;
         line-height: 0.65;
         color: var(--primary);
-        opacity: 0.10;
+        opacity: 0.1;
         font-family: "Geist", sans-serif;
         font-weight: 100;
         flex-shrink: 0;
@@ -4908,7 +4926,7 @@
         flex-direction: column;
         transform: translateX(100%);
         transition: transform var(--dur-overlay) var(--ease-geist);
-        box-shadow: -12px 0 56px rgba(0,0,0,0.12);
+        box-shadow: -12px 0 56px rgba(0, 0, 0, 0.12);
       }
       .mobile-menu.open {
         transform: translateX(0);
@@ -5455,8 +5473,8 @@
           <li><a href="#experience">Experience</a></li>
           <li>
             <a
-              href="Govarthanan Selvaganessane Product Designer Resume.pdf"
-              download="Govarthanan Selvaganessane Product Designer Resume.pdf"
+              href="Govarthanan Selvaganessane Ui-Ux Designer Resume.pdf"
+              download="Govarthanan Selvaganessane Ui-Ux Designer Resume.pdf"
               class="nav-resume-btn"
             >
               <i class="ri-download-2-fill"></i> Resume
@@ -5537,8 +5555,8 @@
       </div>
       <div class="mob-foot">
         <a
-          href="Govarthanan Selvaganessane Product Designer Resume.pdf"
-          download="Govarthanan Selvaganessane Product Designer Resume.pdf"
+          href="Govarthanan Selvaganessane Ui-Ux Designer Resume.pdf"
+          download="Govarthanan Selvaganessane Ui-Ux Designer Resume.pdf"
           class="resume-dl-btn resume-dl-btn--full"
         >
           <i class="ri-download-2-fill"></i> Download Resume
@@ -5591,7 +5609,9 @@
               <span class="ah-ml">Products Shipped</span>
             </div>
             <div class="ah-metric">
-              <span class="ah-mv" data-count="1857" data-suffix="+">1,857+</span>
+              <span class="ah-mv" data-count="1857" data-suffix="+"
+                >1,857+</span
+              >
               <span class="ah-ml">Total npm Downloads</span>
             </div>
             <div class="ah-metric">
@@ -5605,11 +5625,7 @@
           </div>
 
           <div class="ah-cta">
-            <button
-              type="button"
-              id="openCaseStudiesModal"
-              class="ah-btn-dark"
-            >
+            <button type="button" id="openCaseStudiesModal" class="ah-btn-dark">
               View Case Studies
               <i class="ri-arrow-right-up-fill"></i>
             </button>
@@ -5624,8 +5640,8 @@
                 <i class="ri-arrow-right-fill"></i>
               </a>
               <a
-                href="Govarthanan Selvaganessane Product Designer Resume.pdf"
-                download="Govarthanan Selvaganessane Product Designer Resume.pdf"
+                href="Govarthanan Selvaganessane Ui-Ux Designer Resume.pdf"
+                download="Govarthanan Selvaganessane Ui-Ux Designer Resume.pdf"
                 class="ah-btn-ghost"
               >
                 <i class="ri-download-2-fill"></i>
@@ -6196,14 +6212,16 @@
             </div>
             <div class="p-name">Unbond</div>
             <div class="p-sub">
-              Bond &amp; salary companion for employees under a mandatory service contract.
+              Bond &amp; salary companion for employees under a mandatory
+              service contract.
             </div>
             <p class="p-desc">
-              Designed a private mobile companion for employees serving a service
-              bond — a live countdown, a document safety net for the final
-              settlement, and an automatic year-over-year hike and market-value
-              tracker. Grounded in a 42-person survey and 8 moderated interviews
-              with bond-holders across IT, ITES and ed-tech.
+              Designed a private mobile companion for employees serving a
+              service bond — a live countdown, a document safety net for the
+              final settlement, and an automatic year-over-year hike and
+              market-value tracker. Grounded in a 42-person survey and 8
+              moderated interviews with bond-holders across IT, ITES and
+              ed-tech.
             </p>
             <div class="p-metrics">
               <div class="p-met">
@@ -6492,7 +6510,11 @@
         <div class="client-cards reveal">
           <div class="client-card">
             <div class="client-card-media">
-              <img src="images/clients/digigold.jpg" alt="DigiGold App — live gold and silver rate trends screen" loading="lazy" />
+              <img
+                src="images/clients/digigold.jpg"
+                alt="DigiGold App — live gold and silver rate trends screen"
+                loading="lazy"
+              />
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Live</span
               >
@@ -6535,7 +6557,11 @@
 
           <div class="client-card">
             <div class="client-card-media">
-              <img src="images/clients/aura-elite-events.jpg" alt="Aura Elite Events — live event brand website hero section" loading="lazy" />
+              <img
+                src="images/clients/aura-elite-events.jpg"
+                alt="Aura Elite Events — live event brand website hero section"
+                loading="lazy"
+              />
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Sold Out</span
               >
@@ -6727,7 +6753,11 @@
           <!-- Rujas Andavar Jewellery -->
           <div class="client-card">
             <div class="client-card-media">
-              <img src="images/clients/rujas-andavar.jpg" alt="Rujas Andavar Jewellery — live brand website homepage" loading="lazy" />
+              <img
+                src="images/clients/rujas-andavar.jpg"
+                alt="Rujas Andavar Jewellery — live brand website homepage"
+                loading="lazy"
+              />
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Live</span
               >
@@ -6770,7 +6800,11 @@
           <!-- Saravana Elite -->
           <div class="client-card">
             <div class="client-card-media">
-              <img src="images/clients/saravana-elite.jpg" alt="Saravana Elite — live jewellery e-commerce website homepage" loading="lazy" />
+              <img
+                src="images/clients/saravana-elite.jpg"
+                alt="Saravana Elite — live jewellery e-commerce website homepage"
+                loading="lazy"
+              />
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Live</span
               >
@@ -6813,7 +6847,11 @@
           <!-- Sakthi Jewellers -->
           <div class="client-card">
             <div class="client-card-media">
-              <img src="images/clients/sakthi-jewellers.jpg" alt="Sakthi Jewellers — live jewellery website homepage" loading="lazy" />
+              <img
+                src="images/clients/sakthi-jewellers.jpg"
+                alt="Sakthi Jewellers — live jewellery website homepage"
+                loading="lazy"
+              />
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Live</span
               >
@@ -6864,7 +6902,11 @@
           <!-- SRM Jewellery App -->
           <div class="client-card">
             <div class="client-card-media">
-              <img src="images/clients/srm-jewellery.jpg" alt="SRM Jewellery App — live digital gold savings dashboard screen" loading="lazy" />
+              <img
+                src="images/clients/srm-jewellery.jpg"
+                alt="SRM Jewellery App — live digital gold savings dashboard screen"
+                loading="lazy"
+              />
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Live</span
               >
@@ -6907,7 +6949,11 @@
           <!-- Sunil Estimate App -->
           <div class="client-card">
             <div class="client-card-media">
-              <img src="images/clients/sunil-estimate.jpg" alt="Sunil Estimate App — smart jewellery store dashboard feature screen" loading="lazy" />
+              <img
+                src="images/clients/sunil-estimate.jpg"
+                alt="Sunil Estimate App — smart jewellery store dashboard feature screen"
+                loading="lazy"
+              />
               <span class="client-status live"
                 ><span class="client-status-dot"></span>Live</span
               >
@@ -7187,8 +7233,8 @@
             </p>
             <div class="exp-sidebar-resume reveal">
               <a
-                href="Govarthanan Selvaganessane Product Designer Resume.pdf"
-                download="Govarthanan Selvaganessane Product Designer Resume.pdf"
+                href="Govarthanan Selvaganessane Ui-Ux Designer Resume.pdf"
+                download="Govarthanan Selvaganessane Ui-Ux Designer Resume.pdf"
                 class="resume-dl-btn"
               >
                 <i class="ri-download-2-fill"></i>
@@ -7910,10 +7956,16 @@
         <div class="cs-modal-body" data-lenis-prevent>
           <div class="cs-item">
             <div class="cs-item-img-wrap">
-              <img src="images/previews/sds-motion-forge.png" alt="SDS Motion Forge case study preview" loading="lazy" />
+              <img
+                src="images/previews/sds-motion-forge.png"
+                alt="SDS Motion Forge case study preview"
+                loading="lazy"
+              />
             </div>
             <div class="cs-item-content">
-              <div class="cs-item-tag"><i class="ri-npmjs-fill"></i> NPM Package</div>
+              <div class="cs-item-tag">
+                <i class="ri-npmjs-fill"></i> NPM Package
+              </div>
               <div class="cs-item-name">SDS Motion Forge</div>
               <p class="cs-item-desc">
                 600+ production CSS animations across 6 categories. One class
@@ -7928,10 +7980,16 @@
 
           <div class="cs-item">
             <div class="cs-item-img-wrap">
-              <img src="images/previews/framestack-pdf.png" alt="FrameStack PDF case study preview" loading="lazy" />
+              <img
+                src="images/previews/framestack-pdf.png"
+                alt="FrameStack PDF case study preview"
+                loading="lazy"
+              />
             </div>
             <div class="cs-item-content">
-              <div class="cs-item-tag"><i class="ri-window-line"></i> Figma Plugin</div>
+              <div class="cs-item-tag">
+                <i class="ri-window-line"></i> Figma Plugin
+              </div>
               <div class="cs-item-name">FrameStack PDF</div>
               <p class="cs-item-desc">
                 Figma plugin for direct frame-to-PDF export. Four versions
@@ -7945,10 +8003,16 @@
 
           <div class="cs-item">
             <div class="cs-item-img-wrap">
-              <img src="images/previews/amazon-tracking-redesign.png" alt="Amazon Order Tracking case study preview" loading="lazy" />
+              <img
+                src="images/previews/amazon-tracking-redesign.png"
+                alt="Amazon Order Tracking case study preview"
+                loading="lazy"
+              />
             </div>
             <div class="cs-item-content">
-              <div class="cs-item-tag"><i class="ri-shopping-bag-3-fill"></i> UX Research</div>
+              <div class="cs-item-tag">
+                <i class="ri-shopping-bag-3-fill"></i> UX Research
+              </div>
               <div class="cs-item-name">Amazon Order Tracking</div>
               <p class="cs-item-desc">
                 Redesigning clarity, trust, and usability in post-purchase
@@ -7962,14 +8026,21 @@
 
           <div class="cs-item">
             <div class="cs-item-img-wrap">
-              <img src="images/previews/unbond-case-study.svg" alt="Unbond case study preview" loading="lazy" />
+              <img
+                src="images/previews/unbond-case-study.svg"
+                alt="Unbond case study preview"
+                loading="lazy"
+              />
             </div>
             <div class="cs-item-content">
-              <div class="cs-item-tag"><i class="ri-timer-flash-fill"></i> UX Research</div>
+              <div class="cs-item-tag">
+                <i class="ri-timer-flash-fill"></i> UX Research
+              </div>
               <div class="cs-item-name">Unbond</div>
               <p class="cs-item-desc">
-                A private bond &amp; salary companion for employees under contract —
-                live countdown, document safety net, and honest market value.
+                A private bond &amp; salary companion for employees under
+                contract — live countdown, document safety net, and honest
+                market value.
               </p>
               <a href="unbond-case-study.html" class="cs-item-btn">
                 <i class="ri-file-text-fill"></i> View Case Study
@@ -9335,8 +9406,12 @@
         const overlay = document.getElementById("caseStudiesModal");
         const openBtn = document.getElementById("openCaseStudiesModal");
         const closeBtn = document.getElementById("closeCaseStudiesModal");
-        const modalBody = overlay ? overlay.querySelector(".cs-modal-body") : null;
-        const scrollIndicator = document.getElementById("csModalScrollIndicator");
+        const modalBody = overlay
+          ? overlay.querySelector(".cs-modal-body")
+          : null;
+        const scrollIndicator = document.getElementById(
+          "csModalScrollIndicator",
+        );
         let isOpen = false;
 
         function openModal() {

@@ -223,6 +223,12 @@
     .infra-tile.wide { grid-column: span 2; }
     .infra-tile.featured { grid-column: span 2; grid-row: span 2; background: var(--ink); border-color: var(--ink); }
     .infra-tile.featured:hover { border-color: var(--ink); }
+    .infra-featured-foot { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+    .infra-feature-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .infra-feature-tag { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.75); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); border-radius: var(--radius-sm); padding: 5px 10px; }
+    .infra-cta { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: #fff; text-decoration: none; width: fit-content; }
+    .infra-cta i { font-size: 15px; }
+    .infra-cta:hover { text-decoration: underline; }
     .infra-icon { width: 42px; height: 42px; border-radius: 11px; background: var(--bg-2); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
     .infra-tile.featured .infra-icon { width: 52px; height: 52px; border-radius: 14px; font-size: 24px; background: rgba(255,255,255,.12); color: #fff; }
     .infra-eyebrow { font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-top: 4px; }
@@ -785,10 +791,20 @@
 
     <div class="infra-bento">
       <div class="infra-tile featured">
-        <div class="infra-icon"><i class="ri-global-fill"></i></div>
-        <div class="infra-eyebrow">Core Deliverable</div>
-        <div class="infra-title">Event Website — Built from Scratch</div>
-        <p class="infra-desc">Designed and developed a purpose-built event website with event information, lineup, gallery, and a direct ticket purchase CTA linked to BookMyShow. Mobile-first, fast-loading, brand-consistent.</p>
+        <div>
+          <div class="infra-icon"><i class="ri-global-fill"></i></div>
+          <div class="infra-eyebrow">Core Deliverable</div>
+          <div class="infra-title">Event Website — Built from Scratch</div>
+          <p class="infra-desc">Designed and developed a purpose-built event website with event information, lineup, gallery, and a direct ticket purchase CTA linked to BookMyShow. Mobile-first, fast-loading, brand-consistent.</p>
+        </div>
+        <div class="infra-featured-foot">
+          <div class="infra-feature-tags">
+            <span class="infra-feature-tag">Mobile-First</span>
+            <span class="infra-feature-tag">Fast-Loading</span>
+            <span class="infra-feature-tag">BookMyShow-Linked</span>
+          </div>
+          <a href="https://theauraeliteevents.com/" target="_blank" rel="noopener noreferrer" class="infra-cta">Visit the Live Site <i class="ri-arrow-right-up-line"></i></a>
+        </div>
       </div>
       <div class="infra-tile wide">
         <div class="infra-icon"><i class="ri-ticket-2-fill"></i></div>

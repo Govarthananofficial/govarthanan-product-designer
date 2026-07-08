@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>River Rumble Blast — Event Branding &amp; Digital Campaign Case Study · Govarthanan S.</title>
+  <meta name="description" content="Full-stack creative, branding, and digital campaign execution for Aura Elite Events' River Rumble Blast — 0 to 1,400+ tickets sold in 20 days, solo end-to-end." />
+  <meta property="og:image" content="https://govarthanan-product-engineer.netlify.app/images/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="581" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://govarthanan-product-engineer.netlify.app/images/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gray-100: #f2f2f2; --gray-200: #ebebeb; --gray-300: #e6e6e6; --gray-400: #eaeaea;
+      --gray-500: #c9c9c9; --gray-600: #a8a8a8; --gray-700: #8f8f8f; --gray-800: #7d7d7d;
+      --gray-900: #4d4d4d; --gray-1000: #171717;
+      --gray-alpha-300: rgba(0,0,0,0.102); --gray-alpha-400: rgba(0,0,0,0.078);
+
+      --ink: var(--gray-1000); --ink-mid: var(--gray-900); --ink-muted: var(--gray-700); --ink-faint: var(--gray-600);
+      --border: var(--gray-alpha-400); --border-md: var(--gray-alpha-300);
+      --bg: #ffffff; --bg-2: #fafafa;
+
+      --freedom: #1f9d66;
+
+      --NAV-H: 56px;
+      --sh1: 0 2px 2px rgba(0,0,0,0.04);
+      --sh2: 0 1px 1px rgba(0,0,0,0.02), 0 4px 8px -4px rgba(0,0,0,0.04), 0 16px 24px -8px rgba(0,0,0,0.06);
+      --radius-sm: 6px; --radius-md: 12px; --radius-lg: 16px; --radius-full: 9999px;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--bg); color: var(--ink); font-family: 'Geist', sans-serif;
+      font-size: 16px; line-height: 1.6; overflow-x: hidden;
+    }
+    body::after {
+      content: ""; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.45;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: inherit; }
+    button:focus, a:focus { outline: none !important; box-shadow: none !important; }
+    ul { list-style: none; }
+
+    /* ── PROGRESS + CURSOR ── */
+    #prog { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--border); z-index: 400; }
+    #prog-fill { height: 100%; width: 0%; background: var(--ink); transition: width .08s linear; }
+    .cursor-dot {
+      width: 6px; height: 6px; background: var(--ink); border-radius: 50%;
+      position: fixed; pointer-events: none; z-index: 10000;
+      transform: translate(-50%, -50%); transition: opacity 0.2s, transform 0.1s;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 2px; left: 0; right: 0; height: var(--NAV-H); z-index: 300;
+      background: rgba(255,255,255,0.93); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-back {
+      display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: var(--ink-mid);
+      text-decoration: none; padding: 6px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-md);
+      transition: background .15s;
+    }
+    .nav-back:hover { background: var(--bg-2); }
+    .nav-tag { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+    .nav-right { display: flex; gap: 8px; }
+    .nav-pill {
+      display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--ink-mid); padding: 5px 11px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border-md); text-decoration: none; transition: background .15s;
+    }
+    .nav-pill:hover { background: var(--bg-2); }
+
+    /* ── HERO ── */
+    .hero { background: var(--ink); padding: calc(var(--NAV-H) + 64px) 0 0; position: relative; overflow: hidden; }
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,.05) 0%, transparent 55%),
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,.03) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 1; padding-bottom: 64px; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700;
+      letter-spacing: .22em; text-transform: uppercase; color: #ffffff; margin-bottom: 20px;
+    }
+    .eyebrow::before { content: ""; width: 20px; height: 1px; background: #ffffff; }
+    .hero h1 {
+      font-size: clamp(38px, 5.5vw, 68px); font-weight: 800; line-height: .96; letter-spacing: -.04em;
+      color: #fff; margin-bottom: 20px;
+    }
+    .hero h1 em { font-family: "Geist", sans-serif; font-style: normal; font-weight: 300; color: var(--ink-muted); }
+    .hero-sub { font-size: clamp(15px, 1.6vw, 18px); color: rgba(255,255,255,.55); line-height: 1.6; max-width: 60ch; margin-bottom: 28px; }
+
+    .hero-metrics {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,.07);
+      border-radius: var(--radius-md) var(--radius-md) 0 0; overflow: hidden;
+      border: 1px solid rgba(255,255,255,.07); border-bottom: none;
+    }
+    .hm { padding: 20px 22px 22px; background: rgba(255,255,255,.03); display: flex; flex-direction: column; gap: 6px; }
+    .hm-val { font-size: clamp(26px, 3vw, 34px); font-weight: 800; letter-spacing: -.04em; color: #fff; line-height: 1; }
+    .hm-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35); line-height: 1.4; }
+
+    .hero-cta {
+      display: flex; align-items: center; gap: 12px; padding: 16px 22px; background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07); border-top: none; border-radius: 0 0 var(--radius-md) var(--radius-md); flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; letter-spacing: -.01em;
+      background: #ffffff; color: #171717; padding: 9px 18px; border-radius: var(--radius-sm);
+      text-decoration: none; border: none; transition: background .15s;
+    }
+    .btn-primary:hover { background: var(--gray-100); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500;
+      color: rgba(255,255,255,.5); padding: 9px 14px; border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,.1); text-decoration: none; transition: background .15s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.75); }
+    .cta-sep { flex: 1; }
+    .cta-note { font-size: 11px; color: rgba(255,255,255,.25); letter-spacing: .05em; text-transform: uppercase; }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap { overflow: hidden; background: var(--ink); height: 46px; display: flex; align-items: center; border-top: 1px solid rgba(255,255,255,.08); }
+    .marquee-track { display: flex; width: max-content; animation: mq 30s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      display: inline-flex; align-items: center; padding: 0 0 0 30px; white-space: nowrap;
+      font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.6);
+    }
+    .marquee-item::after { content: "✦"; display: inline-block; margin-left: 30px; color: rgba(255,255,255,.22); font-size: 10px; }
+    @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── META FACT BAR ── */
+    .meta-bar { background: var(--bg); border-bottom: 1px solid var(--border); padding: 22px 0; }
+    .meta-bar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+    .meta-fact { display: flex; flex-direction: column; gap: 4px; }
+    .mf-label { font-size: 9.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+    .mf-val { font-size: 13px; font-weight: 700; color: var(--ink); }
+
+    /* ── SECTIONS ── */
+    .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+    .section:last-of-type { border-bottom: none; }
+    .section.alt { background: var(--bg-2); }
+    .s-label {
+      display: inline-flex; align-items: center; gap: 9px; font-size: 10px; font-weight: 700; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px;
+    }
+    .s-label::before { content: ""; width: 16px; height: 1px; background: var(--ink-faint); }
+    .section h2 { font-size: clamp(22px, 2.8vw, 32px); font-weight: 800; letter-spacing: -.035em; color: var(--ink); line-height: 1.1; margin-bottom: 24px; }
+    .section h2 em { font-style: italic; font-weight: 300; color: var(--ink-muted); }
+    .section p { font-size: 15.5px; color: var(--ink-mid); line-height: 1.78; letter-spacing: -.005em; margin-bottom: 16px; }
+    .section p:last-child { margin-bottom: 0; }
+    .section strong { color: var(--ink); font-weight: 600; }
+    .sub-head {
+      display: flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 700; color: var(--ink);
+      margin: 40px 0 6px;
+    }
+    .sub-head i { font-size: 17px; color: var(--ink-muted); }
+    .sub-head:first-of-type { margin-top: 8px; }
+
+    /* ── OVERVIEW STATS ── */
+    .ov-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; }
+    .ov-stat { background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 20px 16px; text-align: center; box-shadow: var(--sh1); }
+    .ov-stat-val { font-size: clamp(22px, 2.6vw, 28px); font-weight: 800; color: var(--ink); letter-spacing: -.03em; }
+    .ov-stat-label { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 8px; line-height: 1.4; }
+    .ov-stat-sub { font-size: 10px; color: var(--ink-faint); margin-top: 3px; }
+
+    /* ── PROBLEM SPACE CARDS (challenge) ── */
+    .problem-space-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 24px; }
+    .problem-space-card { background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 22px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 14px; box-shadow: var(--sh1); transition: all 0.25s ease; }
+    .problem-space-card:hover { box-shadow: var(--sh2); border-color: var(--ink); }
+    .problem-space-header { display: flex; justify-content: space-between; align-items: center; }
+    .problem-space-num { font-size: 20px; font-weight: 800; color: var(--border-md); }
+    .problem-space-card:hover .problem-space-num { color: var(--ink-muted); }
+    .problem-space-icon { font-size: 20px; color: var(--ink); }
+    .problem-space-text { font-size: 13px; line-height: 1.55; color: var(--ink-muted); margin: 0; }
+    .problem-space-text strong { display: block; font-size: 14px; color: var(--ink); margin-bottom: 4px; }
+    .problem-space-card:hover .problem-space-text { color: var(--ink-mid); }
+
+    /* ── PRINCIPLES GRID (strategy + learnings) ── */
+    .principles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
+    .principle-card {
+      background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 26px;
+      position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 10px;
+      box-shadow: var(--sh1); transition: all 0.25s ease; min-height: 170px;
+    }
+    .section.alt .principle-card { background: var(--bg-2); }
+    .principle-card:hover { box-shadow: var(--sh2); border-color: var(--ink); }
+    .principle-title { font-size: 14.5px; font-weight: 700; color: var(--ink); z-index: 2; margin: 0; line-height: 1.35; }
+    .principle-desc { font-size: 12.5px; color: var(--ink-muted); line-height: 1.6; margin: 0; z-index: 2; }
+    .principle-num { position: absolute; bottom: -15px; right: 10px; font-size: 80px; font-weight: 900; color: var(--ink); opacity: 0.04; line-height: 1; pointer-events: none; z-index: 1; }
+
+    /* ── v-cards (execution / infra) ── */
+    .v-row { display: flex; gap: 20px; margin-top: 24px; flex-wrap: wrap; }
+    .v-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--sh1); transition: all 0.25s ease; flex: 1; min-width: 220px; }
+    .section.alt .v-card { background: var(--bg); }
+    .v-card:hover { box-shadow: var(--sh2); border-color: var(--border-md); }
+    .v-title { font-size: 15px; font-weight: 700; letter-spacing: -.015em; color: var(--ink); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .v-body { font-size: 13.5px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 0; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .skill-tag { font-size: 10.5px; font-weight: 700; color: var(--ink-mid); background: var(--bg-2); border: 1px solid var(--border-md); border-radius: var(--radius-sm); padding: 4px 9px; }
+    .section.alt .skill-tag { background: var(--bg); }
+
+    /* ── DELIVERABLES LIST ── */
+    .dl-block { margin-top: 34px; }
+    .dl-block:first-of-type { margin-top: 8px; }
+    .snap-list { list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; }
+    .snap-list li { font-size: 13.5px; color: var(--ink-mid); line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+    .snap-list li i { font-size: 14px; color: var(--freedom); margin-top: 3px; flex-shrink: 0; }
+    .deliv-list { display: block; column-count: 2; column-gap: 32px; margin-top: 4px; }
+    .deliv-list li { display: flex; break-inside: avoid; margin-bottom: 12px; }
+
+    /* ── EXECUTION PROOF GRID ── */
+    .proof-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; margin-top: 24px; }
+    .proof-item { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--bg); box-shadow: var(--sh1); transition: box-shadow .2s; }
+    .proof-item:hover { box-shadow: var(--sh2); }
+    .proof-media { aspect-ratio: 4 / 5; background: #000; }
+    .proof-media img, .proof-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .proof-label { padding: 10px 12px; font-size: 12px; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: 7px; border-top: 1px solid var(--border); }
+    .proof-label i { color: var(--ink-muted); font-size: 14px; }
+
+    /* ── FACES OF THE EVENT ── */
+    .face-card { display: grid; grid-template-columns: 380px 1fr; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--sh1); margin-top: 28px; }
+    .face-card:first-of-type { margin-top: 24px; }
+    .face-card:nth-of-type(2) { grid-template-columns: 1fr 380px; }
+    .face-card:nth-of-type(2) .face-media { order: 2; }
+    .face-media { background: #000; min-height: 340px; position: relative; overflow: hidden; }
+    .face-media img, .face-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .face-body { padding: 32px 36px; display: flex; flex-direction: column; gap: 14px; }
+    .face-name { font-size: 23px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
+    .face-role { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-muted); margin-top: -10px; }
+    .face-quote { font-style: italic; color: var(--ink-mid); border-left: 3px solid var(--ink); padding-left: 14px; font-size: 14px; line-height: 1.6; margin: 4px 0; }
+    .face-detail h4 { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-muted); margin-bottom: 3px; }
+    .face-detail p { font-size: 13.5px; color: var(--ink-mid); line-height: 1.6; margin: 0; }
+    .face-tag { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; padding: 7px 14px; border-radius: var(--radius-full); background: var(--bg-2); border: 1px solid var(--border-md); color: var(--ink-mid); margin-top: 4px; }
+
+    /* ── TIMELINE ── */
+    .tl-item { display: grid; grid-template-columns: 130px 1fr; gap: 24px; padding: 26px 0; border-bottom: 1px solid var(--border); }
+    .tl-item:first-child { padding-top: 4px; }
+    .tl-item:last-child { border-bottom: none; padding-bottom: 4px; }
+    .tl-day { font-size: 13px; font-weight: 800; color: var(--ink); letter-spacing: -.01em; }
+    .tl-phase { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }
+    .tl-title { font-size: 16.5px; font-weight: 800; color: var(--ink); margin-bottom: 8px; letter-spacing: -.01em; }
+    .tl-desc { font-size: 13.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 14px; }
+    .tl-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tl-tag { font-size: 11px; font-weight: 600; color: var(--ink-mid); background: var(--bg-2); border: 1px solid var(--border-md); border-radius: var(--radius-sm); padding: 5px 10px; }
+    .tl-item.highlight { background: var(--bg); margin: 0 -24px; padding: 26px 24px; border-radius: var(--radius-md); border-bottom: none; box-shadow: var(--sh1); border: 1px solid var(--ink); }
+
+    /* ── CHANNEL GRID ── */
+    .channel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+    .channel-item { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg); box-shadow: var(--sh1); }
+    .channel-code { width: 40px; height: 40px; border-radius: 9px; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 800; flex-shrink: 0; letter-spacing: .02em; }
+    .channel-name { font-size: 14px; font-weight: 800; color: var(--ink); }
+    .channel-detail { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+
+    /* ── TEAM INTRO ── */
+    .team-intro { display: flex; align-items: center; gap: 16px; margin: 20px 0; }
+    .team-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0; }
+    .team-name { font-size: 16px; font-weight: 800; color: var(--ink); }
+    .team-role { font-size: 12.5px; color: var(--ink-muted); margin-top: 2px; }
+
+    /* ── GEO GRID ── */
+    .geo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 24px; }
+    .geo-chip { background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-md); padding: 22px 12px; text-align: center; box-shadow: var(--sh1); }
+    .geo-code { font-size: 24px; font-weight: 800; color: var(--ink); letter-spacing: -.02em; }
+    .geo-name { font-size: 11px; color: var(--ink-muted); margin-top: 8px; text-transform: uppercase; letter-spacing: .04em; }
+
+    /* ── PULL QUOTE ── */
+    .pull-quote { background: var(--ink); border-radius: var(--radius-lg); padding: 40px 44px; margin-top: 32px; }
+    .pull-quote p { font-size: 19px; font-style: italic; font-weight: 300; color: #fff; line-height: 1.55; margin: 0 0 16px; }
+    .pull-quote cite { font-size: 11.5px; font-style: normal; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.4); }
+
+    /* ── NOTE BLOCK ── */
+    .note-block { background: var(--bg-2); border: 1px solid var(--border-md); border-left: 4px solid var(--ink); border-radius: var(--radius-md); padding: 24px 28px; margin-top: 20px; }
+    .note-block p { font-size: 14.5px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 14px; }
+    .note-block p:last-child { margin-bottom: 0; }
+
+    /* ── COLOPHON ── */
+    .colophon { padding: 48px 0 8px; text-align: center; }
+    .colophon-studio { font-size: 13px; font-weight: 800; letter-spacing: .04em; color: var(--ink); }
+    .colophon-meta { font-size: 12px; color: var(--ink-muted); margin-top: 4px; }
+    .colophon-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 18px; }
+    .token-chip { font-family: 'Geist Mono', monospace; font-size: 11px; color: var(--ink-mid); background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-sm); padding: 6px 10px; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--ink); padding: 56px 32px 40px; text-align: center; }
+    .footer-tag { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.25); margin-bottom: 10px; }
+    .footer-title { font-size: 20px; font-weight: 800; letter-spacing: -.03em; color: #fff; margin-bottom: 6px; }
+    .footer-sub { font-size: 14px; color: rgba(255,255,255,.4); margin-bottom: 24px; max-width: 44ch; margin-left: auto; margin-right: auto; }
+    .footer-links { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .f-btn { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 500; padding: 9px 18px; border-radius: var(--radius-sm); text-decoration: none; transition: background .15s; }
+    footer .f-btn.primary { background: #ffffff; color: #1d1d1f; }
+    footer .f-btn.primary:hover { background: #f5f5f7; }
+    .f-btn.ghost { background: rgba(255,255,255,.07); color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.1); }
+    .f-btn.ghost:hover { background: rgba(255,255,255,.12); }
+    .footer-copy { margin-top: 28px; font-size: 11px; color: rgba(255,255,255,.18); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .face-card, .face-card:nth-of-type(2) { grid-template-columns: 1fr; }
+      .face-card:nth-of-type(2) .face-media { order: 0; }
+      .face-media { min-height: 260px; }
+    }
+    @media (max-width: 991px) {
+      .problem-space-grid { grid-template-columns: 1fr 1fr; }
+      .principles-grid { grid-template-columns: 1fr 1fr; }
+      .ov-stats { grid-template-columns: 1fr 1fr; }
+      .meta-bar-grid { grid-template-columns: repeat(3, 1fr); row-gap: 18px; }
+      .geo-grid { grid-template-columns: repeat(3, 1fr); }
+      .deliv-list { column-count: 1; }
+    }
+    @media (max-width: 680px) {
+      .nav-tag { display: none; }
+      .hero { padding: calc(var(--NAV-H) + 40px) 0 0; }
+      .hero-metrics { grid-template-columns: 1fr; }
+      .problem-space-grid, .principles-grid, .component-preview-grid, .ov-stats { grid-template-columns: 1fr; }
+      .meta-bar-grid { grid-template-columns: repeat(2, 1fr); }
+      .geo-grid { grid-template-columns: repeat(2, 1fr); }
+      .channel-grid { grid-template-columns: 1fr; }
+      .tl-item { grid-template-columns: 1fr; gap: 6px; }
+      .tl-item.highlight { margin: 0; }
+    }
+  </style>
+  <script>
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.addEventListener("pageshow", function () { window.scrollTo(0, 0); });
+  </script>
+</head>
+<body>
+
+<div id="prog"><div id="prog-fill"></div></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<nav>
+  <div class="container-fluid d-flex align-items-center justify-content-between h-100 px-4">
+    <a href="index.html" class="nav-back"><i class="ri-arrow-left-fill"></i> Back to Portfolio</a>
+    <span class="nav-tag">Case Study · River Rumble Blast — Event Branding &amp; Digital Execution</span>
+    <div class="nav-right">
+      <a href="https://theauraeliteevents.com/" target="_blank" rel="noopener noreferrer" class="nav-pill"><i class="ri-global-fill"></i> Live Website</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════ HERO ══════════════ -->
+<header class="hero">
+  <div class="hero-inner container">
+    <div class="eyebrow">Case Study · Event Branding &amp; Digital Execution</div>
+    <h1>River Rumble Blast.<br><em>Zero to sold out.</em></h1>
+    <p class="hero-sub">A full-stack creative, branding, and digital campaign execution that turned a New Year's event in Pondicherry into a sold-out phenomenon.</p>
+
+    <div class="hero-metrics">
+      <div class="hm"><div class="hm-val">1,400</div><div class="hm-label">Tickets Sold</div></div>
+      <div class="hm"><div class="hm-val">20</div><div class="hm-label">Day Campaign</div></div>
+      <div class="hm"><div class="hm-val">200</div><div class="hm-label">Last-Minute Rush</div></div>
+    </div>
+    <div class="hero-cta">
+      <a href="https://theauraeliteevents.com/" target="_blank" rel="noopener noreferrer" class="btn-primary"><i class="ri-global-fill"></i> Visit Live Website</a>
+      <a href="#proof" class="btn-ghost"><i class="ri-play-circle-fill"></i> Execution Proof</a>
+      <div class="cta-sep"></div>
+      <span class="cta-note">Aura Elite Events · NYE 2025 → 2026</span>
+    </div>
+  </div>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Brand Identity</span>
+      <span class="marquee-item">Digital Campaign</span>
+      <span class="marquee-item">BookMyShow</span>
+      <span class="marquee-item">Meta Ads</span>
+      <span class="marquee-item">Event Branding</span>
+      <span class="marquee-item">1400+ Tickets</span>
+      <span class="marquee-item">Pondicherry NYE</span>
+      <span class="marquee-item">Creative Direction</span>
+      <span class="marquee-item">Brand Identity</span>
+      <span class="marquee-item">Digital Campaign</span>
+      <span class="marquee-item">BookMyShow</span>
+      <span class="marquee-item">Meta Ads</span>
+      <span class="marquee-item">Event Branding</span>
+      <span class="marquee-item">1400+ Tickets</span>
+      <span class="marquee-item">Pondicherry NYE</span>
+      <span class="marquee-item">Creative Direction</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════ META FACT BAR ══════════════ -->
+<div class="meta-bar">
+  <div class="container meta-bar-grid">
+    <div class="meta-fact"><span class="mf-label">Client</span><span class="mf-val">Aura Elite Events</span></div>
+    <div class="meta-fact"><span class="mf-label">Event</span><span class="mf-val">River Rumble Blast, NYE 2025 → 2026</span></div>
+    <div class="meta-fact"><span class="mf-label">Location</span><span class="mf-val">Pondicherry, India</span></div>
+    <div class="meta-fact"><span class="mf-label">Scope</span><span class="mf-val">Branding · Campaign · Digital Infra</span></div>
+    <div class="meta-fact"><span class="mf-label">Outcome</span><span class="mf-val">1400+ Tickets · Sold Out</span></div>
+    <div class="meta-fact"><span class="mf-label">Duration</span><span class="mf-val">End-to-End, 30 Days</span></div>
+  </div>
+</div>
+
+<main>
+
+<!-- ══════════════ 01 CHALLENGE ══════════════ -->
+<section class="section" id="challenge">
+  <div class="container">
+    <div class="s-label">01 — The Challenge</div>
+    <h2>The brief was bigger<br><em>than it looked.</em></h2>
+    <p>Aura Elite Events came to us with a vision: create Pondicherry's most talked-about New Year's Eve celebration. River Rumble Blast had the venue, the vibe, and the ambition — but needed everything else built from zero.</p>
+    <p>No brand. No awareness. No digital presence. No ticketing system. No marketing pipeline. We had 30 days to design, build, launch, market, and sell out an event from the ground up — across branding, print, digital, social, and physical presence.</p>
+    <p>The challenge wasn't just creative. It was systemic. Every touchpoint had to be built in parallel, every message had to be consistent, and every rupee of campaign spend had to convert. We had to be the creative agency, digital marketing team, web developer, and brand strategist — simultaneously.</p>
+
+    <div class="problem-space-grid">
+      <div class="problem-space-card">
+        <div class="problem-space-header"><span class="problem-space-num">01</span><i class="ri-shape-2-fill problem-space-icon"></i></div>
+        <p class="problem-space-text"><strong>Zero Brand Equity</strong>No existing identity, no audience, no recognition. The River Rumble Blast name needed to mean something — fast.</p>
+      </div>
+      <div class="problem-space-card">
+        <div class="problem-space-header"><span class="problem-space-num">02</span><i class="ri-map-pin-fill problem-space-icon"></i></div>
+        <p class="problem-space-text"><strong>Multi-State Awareness</strong>Target audience spread across Tamil Nadu, Andhra Pradesh, Kerala, Karnataka, and Telangana — each needing tailored reach.</p>
+      </div>
+      <div class="problem-space-card">
+        <div class="problem-space-header"><span class="problem-space-num">03</span><i class="ri-team-fill problem-space-icon"></i></div>
+        <p class="problem-space-text"><strong>Full Sponsor Ecosystem</strong>Title sponsors, co-sponsors, and stall partners needed separate, high-quality pitch collateral — all within the same brand system.</p>
+      </div>
+      <div class="problem-space-card">
+        <div class="problem-space-header"><span class="problem-space-num">04</span><i class="ri-time-fill problem-space-icon"></i></div>
+        <p class="problem-space-text"><strong>Tight Execution Window</strong>20-day campaign window to build awareness, drive ticket sales via BookMyShow, and create a last-minute urgency surge.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 02 STRATEGY ══════════════ -->
+<section class="section alt" id="strategy">
+  <div class="container">
+    <div class="s-label">02 — Our Strategy</div>
+    <h2>Three pillars.<br><em>One identity.</em></h2>
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-title">Brand Before Everything</div>
+        <div class="principle-desc">We established the visual identity first — a cohesive theme across every single touchpoint. The same colour system, typography, and energy from title sponsor brochures to WhatsApp messages. Consistency was the strategy.</div>
+        <div class="principle-num">01</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-title">Phased Digital Hype</div>
+        <div class="principle-desc">A structured 20-day campaign starting with teaser content and countdown posts, moving to full awareness via Meta Ads, state-targeted campaigns, and direct channel selling through Instagram and WhatsApp.</div>
+        <div class="principle-num">02</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-title">System-Level Execution</div>
+        <div class="principle-desc">BookMyShow integration, a purpose-built event website, GoDaddy domain setup, Pondy city flex placements, and every discipline — brand, motion, campaign, and dev — run in parallel, on deadline, by one specialist.</div>
+        <div class="principle-num">03</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 03 DELIVERABLES ══════════════ -->
+<section class="section" id="deliverables">
+  <div class="container">
+    <div class="s-label">03 — Creative Deliverables</div>
+    <h2>Every touchpoint.<br><em>Designed with intent.</em></h2>
+
+    <div class="dl-block">
+      <div class="sub-head"><i class="ri-award-fill"></i> Sponsorship Collateral</div>
+      <ul class="snap-list deliv-list">
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Title Sponsor Brochure</strong> — premium A4, full-bleed brand treatment</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Co-Sponsor Brochure</strong> — mid-tier benefits breakdown, visual parity</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Stall Calling Pamphlet</strong> — vendor pitch with footfall projections</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Stall Price List Pamphlet</strong> — tiered pricing with brand positioning</span></li>
+      </ul>
+    </div>
+
+    <div class="dl-block">
+      <div class="sub-head"><i class="ri-file-list-3-fill"></i> Poster &amp; Print Series</div>
+      <ul class="snap-list deliv-list">
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Event Poster</strong> — main artwork, digital + print optimised</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Wall Poster / Flex</strong> — large format, Pondicherry key locations</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>BookMyShow Banner</strong> — platform-spec, conversion-driven layout</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Countdown Poster Series</strong> — daily hype build, social-first</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Reveal Poster</strong> — FOMO activation for last-week surge</span></li>
+      </ul>
+    </div>
+
+    <div class="dl-block">
+      <div class="sub-head"><i class="ri-instagram-fill"></i> Digital Campaign Assets</div>
+      <ul class="snap-list deliv-list">
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Meta Ad Creatives</strong> — Instagram + Facebook, state-targeted sets</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Instagram Story Series</strong> — 20-day awareness + CTA flow</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>WhatsApp Campaign Assets</strong> — broadcast-ready, direct ticket link</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Awareness Ticket Integration</strong> — social-to-checkout flow</span></li>
+      </ul>
+    </div>
+
+    <div class="dl-block">
+      <div class="sub-head"><i class="ri-global-fill"></i> Web &amp; Digital Infrastructure</div>
+      <ul class="snap-list deliv-list">
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>Event Website</strong> — purpose-built, mobile-first, booking-linked</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>GoDaddy Domain + Hosting</strong> — end-to-end account setup &amp; config</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>BookMyShow Sales Integration</strong> — live ticketing pipeline</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span><strong>WhatsApp &amp; Instagram Direct Chat</strong> — inquiry-to-purchase funnel</span></li>
+      </ul>
+    </div>
+
+    <div class="dl-block">
+      <div class="sub-head"><i class="ri-movie-2-fill"></i> Video Production &amp; Editing</div>
+      <ul class="snap-list deliv-list">
+        <li><i class="ri-checkbox-circle-fill"></i><span>Event teaser &amp; hype videos</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span>Countdown reels — 20, 15, 10, 5 day series</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span>Reveal video — full event announcement</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span>Post-event highlight reel</span></li>
+      </ul>
+    </div>
+
+    <div class="dl-block">
+      <div class="sub-head"><i class="ri-map-pin-fill"></i> On-Ground Branding (Pondy)</div>
+      <ul class="snap-list deliv-list">
+        <li><i class="ri-checkbox-circle-fill"></i><span>Flex installations at Pondicherry's main locations</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span>BookMyShow banner ads — platform placements</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span>Venue branding coordination</span></li>
+        <li><i class="ri-checkbox-circle-fill"></i><span>Physical print distribution across hotspots</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ EXECUTION PROOF ══════════════ -->
+<section class="section alt" id="proof">
+  <div class="container">
+    <div class="s-label">Campaign Assets</div>
+    <h2>The Hype.<br><em>Built in motion.</em></h2>
+    <p>The teasers, reels, and posts that ran through the 20-day build-up — the pre-launch content that turned a brand-new name into a sold-out waitlist.</p>
+    <div class="proof-grid">
+      <div class="proof-item">
+        <div class="proof-media"><img src="images/river-rumble/ticket-price-details.jpg" alt="Instagram post — River Rumble Blast ticket price details, Diamond, Couple and Gold passes" loading="lazy" /></div>
+        <div class="proof-label"><i class="ri-instagram-fill"></i> Ticket Price Details</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-media"><video src="videos/river-rumble/teaser-reel.mp4" controls preload="metadata" playsinline></video></div>
+        <div class="proof-label"><i class="ri-movie-2-fill"></i> Teaser Reel</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-media"><video src="videos/river-rumble/founder-byte.mp4" controls preload="metadata" playsinline></video></div>
+        <div class="proof-label"><i class="ri-user-fill"></i> Founder Byte</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-media"><video src="videos/river-rumble/hype-reel-01.mp4" controls preload="metadata" playsinline></video></div>
+        <div class="proof-label"><i class="ri-rocket-fill"></i> Hype Reel 01</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-media"><video src="videos/river-rumble/hype-reel-02.mp4" controls preload="metadata" playsinline></video></div>
+        <div class="proof-label"><i class="ri-rocket-fill"></i> Hype Reel 02</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-media"><img src="images/river-rumble/event-announcement.jpg" alt="River Rumble Blast — New Year Party 2026 event announcement poster" loading="lazy" /></div>
+        <div class="proof-label"><i class="ri-flag-2-fill"></i> Announcement</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ THE CORE ATTRACTION ══════════════ -->
+<section class="section" id="faces">
+  <div class="container">
+    <div class="s-label">The Core Attraction</div>
+    <h2>The Faces of.<br><em>The Campaign.</em></h2>
+    <p>Two announced headliners anchored the marketing push — cast and positioned to give the campaign a face, a reason to follow, and a reason to buy before a single ticket went live.</p>
+
+    <div class="face-card">
+      <div class="face-media"><img src="images/river-rumble/yashika-aannand.jpg" alt="Yashika Aannand — River Rumble Blast celebrity guest announcement poster" loading="lazy" /></div>
+      <div class="face-body">
+        <div class="face-name">Yashika Aannand</div>
+        <div class="face-role">Celebrity Guest — Campaign Announcement</div>
+        <p class="face-quote">"Positioned as the campaign's headline draw — effortless glamour and high-fashion editorial energy built into every announcement asset."</p>
+        <div class="face-detail"><h4>Celebrity Aura</h4><p>Her announcement reframed the campaign narrative into a high-society luxury gathering, anchoring the Diamond and Couple pass positioning.</p></div>
+        <div class="face-detail"><h4>Media Highlights</h4><p>Featured across all major press releases. The pre-event hype built around her cinematic personality directly drove ticket sales.</p></div>
+        <div class="face-detail"><h4>Fashion &amp; Style</h4><p>Blending traditional glamour with cutting-edge modern fashion, core to the campaign's visual identity.</p></div>
+        <span class="face-tag"><i class="ri-movie-2-fill"></i> Announcement Assets</span>
+      </div>
+    </div>
+
+    <div class="face-card">
+      <div class="face-media"><video src="videos/river-rumble/live-performance.mp4" controls preload="metadata" playsinline></video></div>
+      <div class="face-body">
+        <div class="face-name">Tamizhboy</div>
+        <div class="face-role">The Underground Movement</div>
+        <p class="face-quote">"Raw street energy meets modern Tamil hip-hop culture. Lyrical authenticity that resonated deeply with the youth demographic the campaign was built to reach."</p>
+        <div class="face-detail"><h4>Music Journey</h4><p>From underground cyphers to headlining stages, representing ambition, authenticity, and the voice of the streets.</p></div>
+        <div class="face-detail"><h4>Viral Tracks</h4><p>High-voltage hits that dominated social media algorithms throughout the campaign window.</p></div>
+        <div class="face-detail"><h4>Casting Fit</h4><p>Prior performance footage of his crowd control and stage presence made him a strong marketing fit for the event's target demographic.</p></div>
+        <span class="face-tag"><i class="ri-play-circle-fill"></i> Artist Reel</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 04 CAMPAIGN EXECUTION ══════════════ -->
+<section class="section alt" id="timeline">
+  <div class="container">
+    <div class="s-label">04 — Campaign Execution</div>
+    <h2>20 days.<br><em>Zero wasted moments.</em></h2>
+
+    <div class="tl">
+      <div class="tl-item">
+        <div class="tl-when"><div class="tl-day">Day 1–3</div><div class="tl-phase">Phase Zero</div></div>
+        <div class="tl-body">
+          <div class="tl-title">Brand Lock &amp; System Build</div>
+          <p class="tl-desc">Visual identity finalised. Colour palette, typography, and brand rules established. All creative assets produced in a single consistent design system. Website skeleton deployed. BookMyShow listing initiated.</p>
+          <div class="tl-tags"><span class="tl-tag">Brand Guidelines</span><span class="tl-tag">Asset Production</span><span class="tl-tag">Web Dev</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-when"><div class="tl-day">Day 4–7</div><div class="tl-phase">Phase One</div></div>
+        <div class="tl-body">
+          <div class="tl-title">Teaser Launch &amp; Countdown Activation</div>
+          <p class="tl-desc">Countdown poster series launched across Instagram. WhatsApp broadcast to warm audiences. Teaser video dropped. "Something massive is coming to Pondy" narrative seeded. Zero ticket details revealed — pure hype.</p>
+          <div class="tl-tags"><span class="tl-tag">Instagram</span><span class="tl-tag">WhatsApp</span><span class="tl-tag">Video</span><span class="tl-tag">Countdown Posts</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-when"><div class="tl-day">Day 8–14</div><div class="tl-phase">Phase Two</div></div>
+        <div class="tl-body">
+          <div class="tl-title">Full Awareness Campaign — State-Wise Targeting</div>
+          <p class="tl-desc">Meta Ads campaign went live with state-specific ad sets targeting Tamil Nadu, AP, Kerala, Karnataka, and Telangana. BookMyShow listing activated with early bird pricing. Stall partner pamphlets distributed. Pondy flex boards installed. Website fully live with ticket CTA.</p>
+          <div class="tl-tags"><span class="tl-tag">Meta Ads</span><span class="tl-tag">BookMyShow</span><span class="tl-tag">Flex Print</span><span class="tl-tag">State Targeting</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-when"><div class="tl-day">Day 15–18</div><div class="tl-phase">Phase Three</div></div>
+        <div class="tl-body">
+          <div class="tl-title">Reveal Poster &amp; FOMO Surge</div>
+          <p class="tl-desc">Full reveal poster dropped — artists, lineup, venue visual. WhatsApp broadcast with direct BookMyShow link. Instagram Story selling with "Seats filling fast" messaging. Direct chat activation on Instagram and WhatsApp for instant queries.</p>
+          <div class="tl-tags"><span class="tl-tag">Reveal Poster</span><span class="tl-tag">WhatsApp Broadcast</span><span class="tl-tag">FOMO Content</span><span class="tl-tag">Direct Chat Sales</span></div>
+        </div>
+      </div>
+      <div class="tl-item highlight">
+        <div class="tl-when"><div class="tl-day">Day 19–20</div><div class="tl-phase">Phase Four</div></div>
+        <div class="tl-body">
+          <div class="tl-title">Last-Minute Surge — 200+ Tickets in 48hrs</div>
+          <p class="tl-desc">"Final 100 tickets" emergency content. Aggressive WhatsApp outreach. Retargeting ads pushed. Social proof reposted. The 200+ last-minute ticket spike was built into the strategy — urgency was designed, not accidental.</p>
+          <div class="tl-tags"><span class="tl-tag">Urgency Content</span><span class="tl-tag">Retargeting</span><span class="tl-tag">+200 Last-Minute</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 05 THE NUMBERS ══════════════ -->
+<section class="section" id="numbers">
+  <div class="container">
+    <div class="s-label">05 — The Numbers</div>
+    <h2>When execution meets<br><em>a real strategy.</em></h2>
+    <div class="ov-stats">
+      <div class="ov-stat"><div class="ov-stat-val">1,200+</div><div class="ov-stat-label">Primary Tickets Sold</div><div class="ov-stat-sub">via BookMyShow &amp; Direct</div></div>
+      <div class="ov-stat"><div class="ov-stat-val">200+</div><div class="ov-stat-label">Last-Minute Sales</div><div class="ov-stat-sub">Final 48-hour surge</div></div>
+      <div class="ov-stat"><div class="ov-stat-val">20 days</div><div class="ov-stat-label">Campaign Window</div><div class="ov-stat-sub">Zero to sold out</div></div>
+      <div class="ov-stat"><div class="ov-stat-val">5 states</div><div class="ov-stat-label">Geographic Reach</div><div class="ov-stat-sub">Targeted digital awareness</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 06 META CAMPAIGN PERFORMANCE ══════════════ -->
+<section class="section alt" id="meta-performance">
+  <div class="container">
+    <div class="s-label">06 — Meta Campaign Performance</div>
+    <h2>Campaigns built on<br><em>data, not guesswork.</em></h2>
+    <p>Instagram &amp; Facebook Ads · Meta Suite</p>
+
+    <div class="ov-stats">
+      <div class="ov-stat"><div class="ov-stat-val">5+</div><div class="ov-stat-label">Ad Campaigns</div></div>
+      <div class="ov-stat"><div class="ov-stat-val">5</div><div class="ov-stat-label">States Targeted</div></div>
+      <div class="ov-stat"><div class="ov-stat-val">3</div><div class="ov-stat-label">Campaign Phases</div></div>
+      <div class="ov-stat"><div class="ov-stat-val">20</div><div class="ov-stat-label">Days Run Time</div></div>
+    </div>
+
+    <div class="sub-head"><i class="ri-instagram-fill"></i> Ad Placements</div>
+    <div class="v-row">
+      <div class="v-card"><div class="v-title">📱 Instagram Feed + Stories</div><p class="v-body">Primary placement for teaser, countdown, and reveal creative.</p></div>
+      <div class="v-card"><div class="v-title">📘 Facebook Feed + Reels</div><p class="v-body">Secondary reach across an older, local Pondicherry demographic.</p></div>
+      <div class="v-card"><div class="v-title">🎯 State Retargeting</div><p class="v-body">Active retargeting on warm audiences across all 5 target states.</p></div>
+    </div>
+
+    <div class="sub-head"><i class="ri-plug-fill"></i> Channel Sales Integration</div>
+    <div class="channel-grid">
+      <div class="channel-item"><div class="channel-code">BMS</div><div><div class="channel-name">BookMyShow</div><div class="channel-detail">Active listing + banner ad placement</div></div></div>
+      <div class="channel-item"><div class="channel-code">WA</div><div><div class="channel-name">WhatsApp</div><div class="channel-detail">Direct broadcast + DM ticket sales</div></div></div>
+      <div class="channel-item"><div class="channel-code">IG</div><div><div class="channel-name">Instagram</div><div class="channel-detail">DM sales + awareness ticket posts</div></div></div>
+      <div class="channel-item"><div class="channel-code">WEB</div><div><div class="channel-name">Event Website</div><div class="channel-detail">Live, direct CTA to BookMyShow</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 07 THE EXECUTION ══════════════ -->
+<section class="section" id="team">
+  <div class="container">
+    <div class="s-label">07 — The Execution</div>
+    <h2>Four disciplines.<br><em>One person, end to end.</em></h2>
+    <p>No agency. No hires. No handoffs.</p>
+
+    <div class="team-intro">
+      <div class="team-avatar">GS</div>
+      <div>
+        <div class="team-name">Govarthanan Selvaganessane</div>
+        <div class="team-role">Founder &amp; Design Engineer, Salkom Design Studio</div>
+      </div>
+    </div>
+    <p>Every card below was owned solo — same person doing the brand system, the ad campaigns, the print collateral, and the website build. No division of labor to coordinate, no briefs lost in translation between departments. One point of accountability from the first sketch to the final ticket sold.</p>
+
+    <div class="v-row" style="margin-top:28px;">
+      <div class="v-card">
+        <div class="v-title">🎨 Brand &amp; Print</div>
+        <p class="v-body">Graphic Design</p>
+        <div class="skill-tags"><span class="skill-tag">Illustrator</span><span class="skill-tag">Photoshop</span><span class="skill-tag">Brochures</span><span class="skill-tag">Posters</span></div>
+      </div>
+      <div class="v-card">
+        <div class="v-title">🎬 Motion &amp; Reels</div>
+        <p class="v-body">Video Editing</p>
+        <div class="skill-tags"><span class="skill-tag">Premiere Pro</span><span class="skill-tag">After Effects</span><span class="skill-tag">Reels</span><span class="skill-tag">Teaser Video</span></div>
+      </div>
+      <div class="v-card">
+        <div class="v-title">📊 Campaign Lead</div>
+        <p class="v-body">Digital Marketing</p>
+        <div class="skill-tags"><span class="skill-tag">Meta Ads</span><span class="skill-tag">WhatsApp</span><span class="skill-tag">Analytics</span><span class="skill-tag">Targeting</span></div>
+      </div>
+      <div class="v-card">
+        <div class="v-title">💻 Digital Build</div>
+        <p class="v-body">Web Design &amp; Dev</p>
+        <div class="skill-tags"><span class="skill-tag">Website Dev</span><span class="skill-tag">GoDaddy</span><span class="skill-tag">BMS Link</span><span class="skill-tag">Mobile UX</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 08 GEOGRAPHIC REACH ══════════════ -->
+<section class="section alt" id="reach">
+  <div class="container">
+    <div class="s-label">08 — Geographic Reach</div>
+    <h2>Pondicherry.<br><em>Felt across South India.</em></h2>
+    <div class="geo-grid">
+      <div class="geo-chip"><div class="geo-code">TN</div><div class="geo-name">Tamil Nadu</div></div>
+      <div class="geo-chip"><div class="geo-code">AP</div><div class="geo-name">Andhra Pradesh</div></div>
+      <div class="geo-chip"><div class="geo-code">KL</div><div class="geo-name">Kerala</div></div>
+      <div class="geo-chip"><div class="geo-code">KA</div><div class="geo-name">Karnataka</div></div>
+      <div class="geo-chip"><div class="geo-code">TS</div><div class="geo-name">Telangana</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 09 DIGITAL INFRASTRUCTURE ══════════════ -->
+<section class="section" id="infra">
+  <div class="container">
+    <div class="s-label">09 — Digital Infrastructure</div>
+    <h2>We didn't just market it.<br><em>We built the machine.</em></h2>
+
+    <div class="v-row">
+      <div class="v-card">
+        <div class="v-title">🌐 Event Website — Built from Scratch</div>
+        <p class="v-body">Designed and developed a purpose-built event website with event information, lineup, gallery, and a direct ticket purchase CTA linked to BookMyShow. Mobile-first, fast-loading, brand-consistent.</p>
+      </div>
+      <div class="v-card">
+        <div class="v-title">🔑 GoDaddy Domain &amp; Hosting Setup</div>
+        <p class="v-body">Guided the client through GoDaddy account creation, domain selection, and hosting purchase. Handled full DNS configuration, SSL setup, and deployment — end to end.</p>
+      </div>
+      <div class="v-card">
+        <div class="v-title">🎟 BookMyShow Integration &amp; Listing</div>
+        <p class="v-body">Full BookMyShow listing created with event details, seating categories, and pricing tiers. BMS banner ads placed for platform-level visibility. Sales tracked and integrated with campaign reporting.</p>
+      </div>
+      <div class="v-card">
+        <div class="v-title">💬 WhatsApp Direct Sales Funnel</div>
+        <p class="v-body">Awareness ticket posts on Instagram and WhatsApp connected to direct chat, enabling instant query resolution and frictionless ticket purchase — converting interest to payment in minutes.</p>
+      </div>
+      <div class="v-card">
+        <div class="v-title">📍 Physical Presence — Pondicherry</div>
+        <p class="v-body">Flex boards and wall posters installed at Pondicherry's main intersections, markets, and high-footfall zones. Designed for maximum impact, driving awareness beyond digital channels.</p>
+      </div>
+      <div class="v-card">
+        <div class="v-title">📊 Meta Suite Campaign Management</div>
+        <p class="v-body">Full Meta Business Suite management across the 20-day campaign window. Ad set structuring by state, budget allocation by phase, creative rotation, and performance-based optimisation throughout.</p>
+      </div>
+    </div>
+
+    <div class="pull-quote">
+      <p>"We didn't just promote River Rumble Blast. We built the brand, the machine, and the demand — then watched 1,400 tickets sell out to prove it."</p>
+      <cite>— Aura Elite Events · River Rumble Blast, NYE 2025 → 2026, Pondicherry</cite>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ POSTSCRIPT ══════════════ -->
+<section class="section" id="postscript">
+  <div class="container">
+    <div class="s-label">A Note on What Happened</div>
+    <h2>The campaign sold out.<br><em>The night didn't happen.</em></h2>
+    <div class="note-block">
+      <p>In the final hours before River Rumble Blast, the event itself was called off — local government approval didn't come through in time, and Yashika Aannand, who had travelled to Pondicherry, was ultimately unable to take the stage. Every ticket holder was refunded in full.</p>
+      <p>None of that reflects on the work delivered. The brand, the 20-day campaign, and the digital infrastructure did exactly what they were built to do — they sold out an event from zero in three weeks. Aura Elite Events paid in full, confirmed every campaign goal was met, and has since referred three new clients to the studio.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 10 KEY LEARNINGS ══════════════ -->
+<section class="section alt" id="learnings">
+  <div class="container">
+    <div class="s-label">10 — Key Learnings</div>
+    <h2>What this project<br><em>proved.</em></h2>
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-title">Brand consistency is the highest-leverage creative investment</div>
+        <div class="principle-desc">Every touchpoint — from a pamphlet to a WhatsApp message — carrying the same visual language created trust and recognition at scale. Audiences knew River Rumble Blast before they ever clicked.</div>
+        <div class="principle-num">01</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-title">Urgency must be engineered, not hoped for</div>
+        <div class="principle-desc">The 200+ last-minute ticket spike wasn't luck. It was a designed phase of the campaign — countdown content, reveal timing, and retargeting built explicitly to create a FOMO surge in the final 48 hours.</div>
+        <div class="principle-num">02</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-title">Multi-channel integration multiplies ROI</div>
+        <div class="principle-desc">No single channel sold 1,400 tickets. BookMyShow + Meta Ads + WhatsApp + Instagram + website + flex + physical print — each reinforcing the others created a system that was far greater than its parts.</div>
+        <div class="principle-num">03</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="colophon">
+  <div class="container">
+    <div class="colophon-studio">Salkom Studio</div>
+    <div class="colophon-meta">River Rumble Blast · NYE 2025 → 2026 · Pondicherry</div>
+    <div class="colophon-tags">
+      <span class="token-chip">Event Branding</span>
+      <span class="token-chip">Digital Campaign</span>
+      <span class="token-chip">Creative Direction</span>
+      <span class="token-chip">Web Development</span>
+      <span class="token-chip">Meta Ads</span>
+      <span class="token-chip">1400+ Tickets</span>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="footer-tag">Get in Touch</div>
+  <div class="footer-title">Let's build brands people show up for.</div>
+  <div class="footer-sub">Interested in high-impact event branding, campaign strategy, and full-stack digital execution? Let's connect.</div>
+  <div class="footer-links">
+    <a href="mailto:govarthanan@salkomdesignstudio.com" class="f-btn primary"><i class="ri-mail-fill"></i> Email Me</a>
+    <a href="https://www.behance.net/govarthananuxui" target="_blank" rel="noopener" class="f-btn ghost"><i class="ri-behance-fill"></i> Behance</a>
+    <a href="https://calendly.com/salkomdesignstudio" target="_blank" rel="noopener" class="f-btn ghost"><i class="ri-calendar-fill"></i> Calendly</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 Govarthanan Selvaganessane. Shipped with care.</div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (window.pageYOffset / totalHeight) * 100;
+    document.getElementById('prog-fill').style.width = progress + '%';
+  });
+
+  const cursorDot = document.getElementById('cursor-dot');
+  document.addEventListener('mousemove', (e) => {
+    cursorDot.style.left = e.clientX + 'px';
+    cursorDot.style.top = e.clientY + 'px';
+  });
+
+  const interactives = document.querySelectorAll('a, button');
+  interactives.forEach(el => {
+    el.addEventListener('mouseenter', () => cursorDot.style.transform = 'translate(-50%, -50%) scale(2.5)');
+    el.addEventListener('mouseleave', () => cursorDot.style.transform = 'translate(-50%, -50%) scale(1)');
+  });
+</script>
+</body>
+</html>

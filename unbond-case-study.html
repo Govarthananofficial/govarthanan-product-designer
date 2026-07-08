@@ -337,6 +337,10 @@
     .v-card:hover { box-shadow: var(--sh2); border-color: var(--border-md); }
     .v-title { font-size: 15px; font-weight: 700; letter-spacing: -.015em; color: var(--ink); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
     .v-title i { font-size: 18px; color: var(--ink-muted); }
+
+    /* ── TECH STACK: reuses .sub-head + .token-row/.token-chip ── */
+    .stack-block { margin-top: 32px; }
+    .stack-block:first-of-type { margin-top: 8px; }
     .v-body { font-size: 13.5px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 0; }
 
     /* ── SWATCHES ── */
@@ -1412,6 +1416,68 @@
       <div class="snap-card accent-card">
         <div class="snap-card-label"><i class="ri-quill-pen-fill"></i> Reflection</div>
         <p style="font-size:14.5px;color:var(--ink-mid);line-height:1.7;margin:0;">Most of what people needed already existed somewhere — in an offer letter, a payslip, a job listing. Unbond's job was never to invent new data. It was to put it in one calm place someone could actually trust, on the days they were too anxious to go looking for it themselves.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TECH STACK ══════════════ -->
+<section class="section" id="tech-stack">
+  <div class="container">
+    <div class="s-label">Engineering &amp; Tech Stack</div>
+    <h2>Designed in Figma.<br><em>Shipped in Flutter.</em></h2>
+    <p>Unbond isn't a clickable prototype dressed up as a case study — it's a real, production Flutter app with a live backend, push notifications, and a Play Store billing flow. Here's exactly what it's built on.</p>
+
+    <div class="stack-block">
+      <div class="sub-head"><i class="ri-stack-fill"></i> Core, State &amp; Routing</div>
+      <div class="token-row">
+        <span class="token-chip">flutter — cross-platform UI, iOS &amp; Android from one codebase</span>
+        <span class="token-chip">flutter_riverpod 2.6 — app-wide state management</span>
+        <span class="token-chip">go_router 17.2 — declarative routing with an auth guard</span>
+        <span class="token-chip">shared_preferences 2.5 — quote rotation index &amp; feature flags</span>
+      </div>
+    </div>
+
+    <div class="stack-block">
+      <div class="sub-head"><i class="ri-shield-keyhole-fill"></i> Backend &amp; Auth</div>
+      <div class="token-row">
+        <span class="token-chip">firebase_auth 6.5 — Google Sign-In only</span>
+        <span class="token-chip">supabase_flutter 2.15 — PostgreSQL + Row-Level Security data storage</span>
+        <span class="token-chip">firebase_messaging 16.0 — admin broadcast notifications</span>
+      </div>
+    </div>
+
+    <div class="stack-block">
+      <div class="sub-head"><i class="ri-notification-3-fill"></i> Notifications &amp; Scheduling</div>
+      <div class="token-row">
+        <span class="token-chip">flutter_local_notifications 20.1 — all 7 in-app notification types</span>
+        <span class="token-chip">timezone 0.10 — timezone-aware notification scheduling</span>
+        <span class="token-chip">uuid 4.5 — stable IDs for notification history entries</span>
+      </div>
+    </div>
+
+    <div class="stack-block">
+      <div class="sub-head"><i class="ri-shopping-bag-3-fill"></i> Native, Growth &amp; Monetization</div>
+      <div class="token-row">
+        <span class="token-chip">local_auth 2.3 — optional biometric app lock</span>
+        <span class="token-chip">permission_handler 12.0 — Android 13 + OEM battery fix</span>
+        <span class="token-chip">image_picker 1.1 — profile photo picker</span>
+        <span class="token-chip">device_info_plus 11.2 — manufacturer detection</span>
+        <span class="token-chip">package_info_plus 9.0 — app version shown in app bars</span>
+        <span class="token-chip">in_app_purchase 3.2 — Premium Lifetime unlock via Play Billing</span>
+        <span class="token-chip">in_app_update 4.2 — Play In-App Update API</span>
+        <span class="token-chip">clarity_flutter 1.9 — Microsoft Clarity session analytics</span>
+      </div>
+    </div>
+
+    <div class="stack-block">
+      <div class="sub-head"><i class="ri-palette-fill"></i> Design, Content &amp; Utilities</div>
+      <div class="token-row">
+        <span class="token-chip">flutter_svg 2.2 — onboarding illustrations</span>
+        <span class="token-chip">google_fonts 6.2 — DM Serif Display headline font</span>
+        <span class="token-chip">remixicon 4.9 — iconography</span>
+        <span class="token-chip">url_launcher 6.3 — Gmail deep link for the mail generator</span>
+        <span class="token-chip">intl 0.20 — date formatting</span>
       </div>
     </div>
   </div>

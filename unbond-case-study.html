@@ -338,9 +338,33 @@
     .v-title { font-size: 15px; font-weight: 700; letter-spacing: -.015em; color: var(--ink); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
     .v-title i { font-size: 18px; color: var(--ink-muted); }
 
-    /* ── TECH STACK: reuses .sub-head + .token-row/.token-chip ── */
-    .stack-block { margin-top: 32px; }
+    /* ── TECH STACK ── */
+    .stack-block { margin-top: 34px; }
     .stack-block:first-of-type { margin-top: 8px; }
+    .stack-cat { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .stack-cat-icon {
+      width: 32px; height: 32px; border-radius: 9px; background: var(--ink); color: #fff;
+      display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;
+    }
+    .stack-cat-text { display: flex; flex-direction: column; gap: 1px; }
+    .stack-cat-label { font-size: 12.5px; font-weight: 800; color: var(--ink); letter-spacing: -.01em; }
+    .stack-cat-count { font-size: 10.5px; font-weight: 600; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .08em; }
+    .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+    .stack-item {
+      background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 13px 15px; transition: all 0.2s ease;
+    }
+    .section.alt .stack-item { background: var(--bg); }
+    .stack-item:hover { border-color: var(--border-md); box-shadow: var(--sh1); transform: translateY(-1px); }
+    .stack-item-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+    .stack-item-name { font-family: 'Geist Mono', 'SFMono-Regular', Consolas, monospace; font-size: 12.5px; font-weight: 800; color: var(--ink); letter-spacing: -.01em; }
+    .stack-item-ver {
+      font-family: 'Geist Mono', 'SFMono-Regular', Consolas, monospace; font-size: 9.5px; font-weight: 700;
+      color: var(--ink-faint); background: var(--bg); border: 1px solid var(--border-md); border-radius: var(--radius-full);
+      padding: 2px 8px; flex-shrink: 0;
+    }
+    .section.alt .stack-item-ver { background: var(--bg-2); }
+    .stack-item-desc { font-size: 12px; color: var(--ink-muted); line-height: 1.5; }
     .v-body { font-size: 13.5px; color: var(--ink-muted); line-height: 1.65; margin-bottom: 0; }
 
     /* ── SWATCHES ── */
@@ -1429,55 +1453,154 @@
     <p>Unbond isn't a clickable prototype dressed up as a case study — it's a real, production Flutter app with a live backend, push notifications, and a Play Store billing flow. Here's exactly what it's built on.</p>
 
     <div class="stack-block">
-      <div class="sub-head"><i class="ri-stack-fill"></i> Core, State &amp; Routing</div>
-      <div class="token-row">
-        <span class="token-chip">flutter — cross-platform UI, iOS &amp; Android from one codebase</span>
-        <span class="token-chip">flutter_riverpod 2.6 — app-wide state management</span>
-        <span class="token-chip">go_router 17.2 — declarative routing with an auth guard</span>
-        <span class="token-chip">shared_preferences 2.5 — quote rotation index &amp; feature flags</span>
+      <div class="stack-cat">
+        <div class="stack-cat-icon"><i class="ri-stack-fill"></i></div>
+        <div class="stack-cat-text">
+          <div class="stack-cat-label">Core, State &amp; Routing</div>
+          <div class="stack-cat-count">4 Packages</div>
+        </div>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">flutter</span><span class="stack-item-ver">SDK</span></div>
+          <div class="stack-item-desc">Cross-platform UI, iOS &amp; Android from one codebase</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">flutter_riverpod</span><span class="stack-item-ver">2.6</span></div>
+          <div class="stack-item-desc">App-wide state management</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">go_router</span><span class="stack-item-ver">17.2</span></div>
+          <div class="stack-item-desc">Declarative routing with an auth guard</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">shared_preferences</span><span class="stack-item-ver">2.5</span></div>
+          <div class="stack-item-desc">Quote rotation index &amp; feature flags</div>
+        </div>
       </div>
     </div>
 
     <div class="stack-block">
-      <div class="sub-head"><i class="ri-shield-keyhole-fill"></i> Backend &amp; Auth</div>
-      <div class="token-row">
-        <span class="token-chip">firebase_auth 6.5 — Google Sign-In only</span>
-        <span class="token-chip">supabase_flutter 2.15 — PostgreSQL + Row-Level Security data storage</span>
-        <span class="token-chip">firebase_messaging 16.0 — admin broadcast notifications</span>
+      <div class="stack-cat">
+        <div class="stack-cat-icon"><i class="ri-shield-keyhole-fill"></i></div>
+        <div class="stack-cat-text">
+          <div class="stack-cat-label">Backend &amp; Auth</div>
+          <div class="stack-cat-count">3 Packages</div>
+        </div>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">firebase_auth</span><span class="stack-item-ver">6.5</span></div>
+          <div class="stack-item-desc">Google Sign-In only</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">supabase_flutter</span><span class="stack-item-ver">2.15</span></div>
+          <div class="stack-item-desc">PostgreSQL + Row-Level Security data storage</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">firebase_messaging</span><span class="stack-item-ver">16.0</span></div>
+          <div class="stack-item-desc">Admin broadcast notifications</div>
+        </div>
       </div>
     </div>
 
     <div class="stack-block">
-      <div class="sub-head"><i class="ri-notification-3-fill"></i> Notifications &amp; Scheduling</div>
-      <div class="token-row">
-        <span class="token-chip">flutter_local_notifications 20.1 — all 7 in-app notification types</span>
-        <span class="token-chip">timezone 0.10 — timezone-aware notification scheduling</span>
-        <span class="token-chip">uuid 4.5 — stable IDs for notification history entries</span>
+      <div class="stack-cat">
+        <div class="stack-cat-icon"><i class="ri-notification-3-fill"></i></div>
+        <div class="stack-cat-text">
+          <div class="stack-cat-label">Notifications &amp; Scheduling</div>
+          <div class="stack-cat-count">3 Packages</div>
+        </div>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">flutter_local_notifications</span><span class="stack-item-ver">20.1</span></div>
+          <div class="stack-item-desc">All 7 in-app notification types</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">timezone</span><span class="stack-item-ver">0.10</span></div>
+          <div class="stack-item-desc">Timezone-aware notification scheduling</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">uuid</span><span class="stack-item-ver">4.5</span></div>
+          <div class="stack-item-desc">Stable IDs for notification history entries</div>
+        </div>
       </div>
     </div>
 
     <div class="stack-block">
-      <div class="sub-head"><i class="ri-shopping-bag-3-fill"></i> Native, Growth &amp; Monetization</div>
-      <div class="token-row">
-        <span class="token-chip">local_auth 2.3 — optional biometric app lock</span>
-        <span class="token-chip">permission_handler 12.0 — Android 13 + OEM battery fix</span>
-        <span class="token-chip">image_picker 1.1 — profile photo picker</span>
-        <span class="token-chip">device_info_plus 11.2 — manufacturer detection</span>
-        <span class="token-chip">package_info_plus 9.0 — app version shown in app bars</span>
-        <span class="token-chip">in_app_purchase 3.2 — Premium Lifetime unlock via Play Billing</span>
-        <span class="token-chip">in_app_update 4.2 — Play In-App Update API</span>
-        <span class="token-chip">clarity_flutter 1.9 — Microsoft Clarity session analytics</span>
+      <div class="stack-cat">
+        <div class="stack-cat-icon"><i class="ri-shopping-bag-3-fill"></i></div>
+        <div class="stack-cat-text">
+          <div class="stack-cat-label">Native, Growth &amp; Monetization</div>
+          <div class="stack-cat-count">8 Packages</div>
+        </div>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">local_auth</span><span class="stack-item-ver">2.3</span></div>
+          <div class="stack-item-desc">Optional biometric app lock</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">permission_handler</span><span class="stack-item-ver">12.0</span></div>
+          <div class="stack-item-desc">Android 13 + OEM battery fix</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">image_picker</span><span class="stack-item-ver">1.1</span></div>
+          <div class="stack-item-desc">Profile photo picker</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">device_info_plus</span><span class="stack-item-ver">11.2</span></div>
+          <div class="stack-item-desc">Manufacturer detection</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">package_info_plus</span><span class="stack-item-ver">9.0</span></div>
+          <div class="stack-item-desc">App version shown in app bars</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">in_app_purchase</span><span class="stack-item-ver">3.2</span></div>
+          <div class="stack-item-desc">Premium Lifetime unlock via Play Billing</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">in_app_update</span><span class="stack-item-ver">4.2</span></div>
+          <div class="stack-item-desc">Play In-App Update API</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">clarity_flutter</span><span class="stack-item-ver">1.9</span></div>
+          <div class="stack-item-desc">Microsoft Clarity session analytics</div>
+        </div>
       </div>
     </div>
 
     <div class="stack-block">
-      <div class="sub-head"><i class="ri-palette-fill"></i> Design, Content &amp; Utilities</div>
-      <div class="token-row">
-        <span class="token-chip">flutter_svg 2.2 — onboarding illustrations</span>
-        <span class="token-chip">google_fonts 6.2 — DM Serif Display headline font</span>
-        <span class="token-chip">remixicon 4.9 — iconography</span>
-        <span class="token-chip">url_launcher 6.3 — Gmail deep link for the mail generator</span>
-        <span class="token-chip">intl 0.20 — date formatting</span>
+      <div class="stack-cat">
+        <div class="stack-cat-icon"><i class="ri-palette-fill"></i></div>
+        <div class="stack-cat-text">
+          <div class="stack-cat-label">Design, Content &amp; Utilities</div>
+          <div class="stack-cat-count">5 Packages</div>
+        </div>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">flutter_svg</span><span class="stack-item-ver">2.2</span></div>
+          <div class="stack-item-desc">Onboarding illustrations</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">google_fonts</span><span class="stack-item-ver">6.2</span></div>
+          <div class="stack-item-desc">DM Serif Display headline font</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">remixicon</span><span class="stack-item-ver">4.9</span></div>
+          <div class="stack-item-desc">Iconography</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">url_launcher</span><span class="stack-item-ver">6.3</span></div>
+          <div class="stack-item-desc">Gmail deep link for the mail generator</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-top"><span class="stack-item-name">intl</span><span class="stack-item-ver">0.20</span></div>
+          <div class="stack-item-desc">Date formatting</div>
+        </div>
       </div>
     </div>
   </div>

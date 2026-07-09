@@ -200,12 +200,13 @@
       border-bottom: 1px solid var(--border);
     }
     .nav-back {
-      display: inline-flex; align-items: center; gap: 7px;
-      font-size: 13px; font-weight: 500; color: var(--ink-mid);
-      text-decoration: none; padding: 6px 12px; border-radius: var(--radius-sm);
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Geist', sans-serif; font-size: 12px; font-weight: 500; line-height: 16px; color: var(--ink-mid);
+      text-decoration: none; padding: 0 12px; height: 32px; border-radius: var(--radius-sm);
       border: 1px solid var(--border-md);
       transition: background .15s;
     }
+    .nav-back i { font-size: 13px; }
     .nav-back:hover { background: var(--bg-2); }
     .nav-tag { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
     .nav-right { display: flex; gap: 8px; }
@@ -305,25 +306,27 @@
       flex-wrap: wrap;
     }
     .btn-primary {
-      display: inline-flex; align-items: center; gap: 7px;
-      font-size: 12.5px; font-weight: 600; letter-spacing: -.01em;
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 500; line-height: 20px;
       background: var(--accent); color: #fff;
-      padding: 9px 18px; border-radius: var(--radius-sm);
+      padding: 0 16px; height: 40px; border-radius: var(--radius-sm);
       text-decoration: none; border: none;
       transition: background .15s;
     }
+    .btn-primary i { font-size: 16px; }
     .btn-primary:hover { background: var(--accent-dk); }
     .hero .btn-primary {
       background: #ffffff; color: var(--gray-1000);
     }
     .hero .btn-primary:hover { background: var(--gray-100); }
     .btn-ghost {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 12.5px; font-weight: 500;
-      color: rgba(255,255,255,.5); padding: 9px 14px; border-radius: var(--radius-sm);
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 500; line-height: 20px;
+      color: rgba(255,255,255,.6); padding: 0 16px; height: 40px; border-radius: var(--radius-sm);
       border: 1px solid rgba(255,255,255,.1); text-decoration: none;
       transition: background .15s;
     }
+    .btn-ghost i { font-size: 16px; }
     .btn-ghost:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.75); }
     .cta-sep { flex: 1; }
     .cta-note {
@@ -1048,11 +1051,12 @@
       display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;
     }
     .f-btn {
-      display: inline-flex; align-items: center; gap: 7px;
-      font-size: 12.5px; font-weight: 500;
-      padding: 9px 18px; border-radius: var(--radius-sm); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 500; line-height: 20px;
+      padding: 0 14px; height: 40px; border-radius: var(--radius-sm); text-decoration: none;
       transition: background .15s;
     }
+    .f-btn i { font-size: 15px; }
     footer .f-btn.primary {
       background: #ffffff; color: var(--gray-1000);
     }
@@ -2280,6 +2284,7 @@
       let mouseX = 0, mouseY = 0;
       let followerX = 0, followerY = 0;
       let dotX = 0, dotY = 0;
+      let lastFollowerX = 0, lastFollowerY = 0;
 
       document.addEventListener("mousemove", (e) => {
         mouseX = e.clientX;
@@ -2289,12 +2294,20 @@
       function updateCursor() {
         dotX += (mouseX - dotX) * 0.35;
         dotY += (mouseY - dotY) * 0.35;
-        
+
         followerX += (mouseX - followerX) * 0.12;
         followerY += (mouseY - followerY) * 0.12;
 
+        const dx = followerX - lastFollowerX;
+        const dy = followerY - lastFollowerY;
+        const speed = Math.sqrt(dx * dx + dy * dy);
+        const warp = Math.min(speed / 120, 0.45);
+        const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+        lastFollowerX = followerX;
+        lastFollowerY = followerY;
+
         dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
-        follower.style.transform = `translate3d(${followerX}px, ${followerY}px, 0) translate(-50%, -50%)`;
+        follower.style.transform = `translate3d(${followerX}px, ${followerY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scale(${1 + warp}, ${1 - warp})`;
 
         requestAnimationFrame(updateCursor);
       }

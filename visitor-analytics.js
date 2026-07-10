@@ -20,6 +20,11 @@
  *                      resolved more precisely since.
  *   phase "leave"    — page is being hidden/closed. Backend fills in the
  *                      final Time on Site for that visit's row.
+ *   phase "refine"   — fires a moment after "start", once IP-location and
+ *                      Client Hints device-model lookups resolve (both are
+ *                      async and never ready in time for "start" itself).
+ *                      Patches Location/Device/OS in place, even if the
+ *                      visitor never loads a second page.
  * A resume-PDF click sends event "download" instead — flips Resume
  * Downloaded to Yes on the same visit's row, no new row.
  */
@@ -179,10 +184,13 @@
   // for privacy unless a site asks via User-Agent Client Hints. This upgrades
   // the resolved device/OS labels in place when that API is available —
   // Chromium-only; Safari/Firefox keep the regex guesses above, and iOS
-  // blocks this entirely regardless of browser.
+  // blocks this entirely regardless of browser. Always resolves (never
+  // rejects) so callers can safely wait on it alongside other lookups.
   function upgradeDeviceInfo() {
-    if (!(navigator.userAgentData && navigator.userAgentData.getHighEntropyValues)) return;
-    navigator.userAgentData.getHighEntropyValues(['model', 'platformVersion'])
+    if (!(navigator.userAgentData && navigator.userAgentData.getHighEntropyValues)) {
+      return Promise.resolve();
+    }
+    return navigator.userAgentData.getHighEntropyValues(['model', 'platformVersion'])
       .then(function (info) {
         if (!info) return;
         if (info.model) currentDeviceLabel = resolveAndroidDevice(info.model);
@@ -426,9 +434,6 @@
   }
   writeVisit(visit);
 
-  fetchAccurateLocation();
-  upgradeDeviceInfo();
-
   function reportVisitState() {
     transmit({
       phase: isNewVisit ? 'start' : 'continue',
@@ -452,6 +457,21 @@
   // Fire immediately so a row appears/updates the moment someone loads a
   // page — "is anyone visiting" shouldn't depend on them leaving cleanly.
   reportVisitState();
+
+  // Location and the real device model both resolve asynchronously — never
+  // in time for the "start" ping above. Patch the row as soon as both settle
+  // (independently of whether the visitor ever loads a second page), so even
+  // a single-page bounce still ends up with accurate Location/Device/OS
+  // instead of being stuck on "Unknown Location" / a generic UA placeholder.
+  Promise.all([fetchAccurateLocation(), upgradeDeviceInfo()]).then(function () {
+    transmit({
+      phase: 'refine',
+      visitId: visit.visitId,
+      place: currentLocation,
+      device: currentDeviceLabel,
+      os: currentOSLabel
+    });
+  });
 
   function reportLeave() {
     if (leaveSent) return;

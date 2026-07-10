@@ -32,9 +32,20 @@
  *                precisely since the row was first written.
  *   "leave"    — the page is being closed/hidden. Fills in the final
  *                Time on Site for that visit's row.
+ *   "refine"   — fires a moment after "start", once IP-location lookup and
+ *                Client Hints device-model lookup resolve (both are
+ *                asynchronous and are never ready in time for "start"
+ *                itself). Patches Location/Device/OS on the existing row
+ *                without touching Exit Page/page trail/count — this is what
+ *                keeps single-page visits from being stuck showing
+ *                "Unknown Location" forever.
  * A resume-PDF click is not a visit and never inserts its own row — it just
  * flips "Resume Downloaded" to Yes on the row for that same visit, matched
  * by Visit ID.
+ *
+ * Every request is processed under a script lock (see doPost) so two
+ * requests for the same visit arriving close together can never race each
+ * other and produce a duplicate row.
  *
  * LOCATION IS ONE PLAIN-TEXT BOX. NO LATITUDE. NO LONGITUDE. The client
  * resolves an area name (locality/city/region/country) from the visitor's
@@ -75,7 +86,6 @@ var PALETTE = {
   headerBg: '#1a1a1a', headerFg: '#ffffff',
   rowA: '#ffffff', rowB: '#f6f7f9',
   border: '#e1e3e6',
-  pendingBg: '#fff8e1', pendingFg: '#8a6d1a',
   doneBg: '#e2f4e8', doneFg: '#1e6b34',
   downloadBg: '#e4ecff', downloadFg: '#1d3f9e'
 };
@@ -89,7 +99,19 @@ function fieldCol(key) {
 
 // Apps Script requires this exact function name to receive POSTs from the
 // deployed Web App — the client only ever sends POST, never GET.
+//
+// Wrapped in a script lock: without it, two requests for the same visit
+// arriving close together (e.g. "start" and a near-instant "leave") can each
+// read the sheet before the other has finished writing, both conclude the
+// row doesn't exist yet, and both insert their own row for the same visit.
+// The lock forces requests to be handled one at a time so that never happens.
 function doPost(e) {
+  var lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+  } catch (lockErr) {
+    return jsonReply({ ok: false, error: 'Server busy, request dropped' });
+  }
   try {
     var payload = JSON.parse(e.postData.contents);
     var sheet = openTrackingTab();
@@ -97,6 +119,8 @@ function doPost(e) {
     return jsonReply({ ok: true });
   } catch (err) {
     return jsonReply({ ok: false, error: String(err) });
+  } finally {
+    lock.releaseLock();
   }
 }
 
@@ -125,6 +149,13 @@ function routePayload(sheet, payload) {
     return;
   }
 
+  if (payload.phase === 'refine') {
+    // Silently drop if the row isn't there yet — "refine" is a best-effort
+    // accuracy patch, never worth inserting a partial row over.
+    refineVisit(sheet, payload);
+    return;
+  }
+
   // payload.phase === 'start': first page of a brand new visit.
   insertRow(sheet, rowFromPayload(payload));
 }
@@ -142,7 +173,7 @@ function rowFromPayload(payload) {
   row.exit = exit;
   row.trail = payload.trail || exit;
   row.pageCount = payload.pageCount || 1;
-  row.duration = '';
+  row.duration = (payload.duration !== undefined) ? payload.duration : '';
   row.browser = payload.browser || '';
   row.category = payload.category || '';
   row.lang = payload.lang || '';
@@ -233,7 +264,9 @@ function applyFormatting(sheet) {
 // Whole-row highlight, first matching rule wins, top to bottom:
 //   1. Resume Downloaded = Yes  -> blue, no matter how the visit is going
 //   2. Time on Site is filled   -> green, visit has a final known duration
-//   3. otherwise                -> amber, visit is still in progress
+//   3. otherwise                -> no highlight, just the plain row banding
+//      (visit still in progress — deliberately not colored, so the sheet
+//      reads as data rather than a status board)
 function applyStatusColors(sheet) {
   var total = FIELDS.length;
   var rows = sheet.getMaxRows();
@@ -252,12 +285,7 @@ function applyStatusColors(sheet) {
     .setBackground(PALETTE.doneBg).setFontColor(PALETTE.doneFg)
     .setRanges([everyRow]).build();
 
-  var pendingRule = SpreadsheetApp.newConditionalFormatRule()
-    .whenFormulaSatisfied('=' + durationCell + '=""')
-    .setBackground(PALETTE.pendingBg).setFontColor(PALETTE.pendingFg)
-    .setRanges([everyRow]).build();
-
-  sheet.setConditionalFormatRules([downloadRule, doneRule, pendingRule]);
+  sheet.setConditionalFormatRules([downloadRule, doneRule]);
 }
 
 function insertRow(sheet, row) {
@@ -298,6 +326,18 @@ function closeOutVisit(sheet, payload) {
   var row = locateVisitRow(sheet, payload.visitId);
   if (row === -1) return false;
   sheet.getRange(row, fieldCol('duration')).setValue(payload.duration);
+  return true;
+}
+
+// Patches Location/Device/OS only — never touches Exit Page, page trail, or
+// page count, since a "refine" isn't a new page, just a late-arriving,
+// more-accurate answer for fields that started as async placeholders.
+function refineVisit(sheet, payload) {
+  var row = locateVisitRow(sheet, payload.visitId);
+  if (row === -1) return false;
+  if (payload.place) sheet.getRange(row, fieldCol('place')).setValue(payload.place);
+  if (payload.device) sheet.getRange(row, fieldCol('device')).setValue(payload.device);
+  if (payload.os) sheet.getRange(row, fieldCol('os')).setValue(payload.os);
   return true;
 }
 

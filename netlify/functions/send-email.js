@@ -224,7 +224,7 @@ exports.handler = async function (event) {
                     </span>
                   </td>
                   <td align="right">
-                    <a href="https://govarthanan-product-engineer.netlify.app/"
+                    <a href="https://govarthanan-ui-ux-designer.netlify.app/"
                        style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
                               font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
                               color:#1A1A18 !important;text-decoration:none;
@@ -385,7 +385,7 @@ exports.handler = async function (event) {
                     </a>
                   </td>
                   <td class="btn-half r" style="width:50%;padding-left:6px;" valign="top">
-                    <a href="https://govarthanan-product-engineer.netlify.app/sds-motion-forge.html"
+                    <a href="https://govarthanan-ui-ux-designer.netlify.app/sds-motion-forge.html"
                        style="display:block;text-align:center;text-decoration:none;
                               font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
                               font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
@@ -741,7 +741,7 @@ exports.handler = async function (event) {
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
                   <td class="cta-half" style="width:50%;padding-right:6px;" valign="top">
-                    <a href="mailto:${safeEmail}?subject=Re%3A%20Your%20message%20on%20govarthanan-product-engineer.netlify.app&body=Hi%20${encodeURIComponent(name)}%2C%0A%0A"
+                    <a href="mailto:${safeEmail}?subject=Re%3A%20Your%20message%20on%20govarthanan-ui-ux-designer.netlify.app&body=Hi%20${encodeURIComponent(name)}%2C%0A%0A"
                        style="display:block;text-align:center;text-decoration:none;
                               font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
                               font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
@@ -751,7 +751,7 @@ exports.handler = async function (event) {
                     </a>
                   </td>
                   <td class="cta-half r" style="width:50%;padding-left:6px;" valign="top">
-                    <a href="https://govarthanan-product-engineer.netlify.app/"
+                    <a href="https://govarthanan-ui-ux-designer.netlify.app/"
                        style="display:block;text-align:center;text-decoration:none;
                               font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
                               font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
@@ -772,7 +772,7 @@ exports.handler = async function (event) {
                          font-size:11px;color:#3A3A34;margin:0;letter-spacing:0.03em;">
                 Auto-sent from portfolio contact form
                 &nbsp;&middot;&nbsp;
-                govarthanan-product-engineer.netlify.app
+                govarthanan-ui-ux-designer.netlify.app
               </p>
             </td>
           </tr>

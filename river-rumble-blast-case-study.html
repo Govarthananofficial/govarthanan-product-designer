@@ -16,6 +16,8 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
   <link rel="stylesheet" href="design-tokens.css" />
+  <script src="dot-grid-background.js" defer></script>
+  <script src="visitor-analytics.js" defer></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -123,14 +125,14 @@
       border-radius: var(--radius-md) var(--radius-md) 0 0; overflow: hidden;
       border: 1px solid rgba(255,255,255,.07); border-bottom: none;
     }
-    .hm { padding: 20px 20px 22px; background: rgba(255,255,255,.03); display: flex; flex-direction: column; gap: 10px; transition: background .2s; }
-    .hm:hover { background: rgba(255,255,255,.05); }
+    .hm { padding: 20px 20px 22px; background: #242424; display: flex; flex-direction: column; gap: 10px; transition: background .2s; }
+    .hm:hover { background: #2a2a2a; }
     .hm-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); background: rgba(255,255,255,.08); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 15px; }
     .hm-val { font-size: clamp(22px, 2.6vw, 30px); font-weight: 800; letter-spacing: -.04em; color: #fff; line-height: 1; }
     .hm-label { font-size: var(--label-12-size); letter-spacing: .09em; text-transform: uppercase; color: rgba(255,255,255,.35); line-height: 1.4; }
 
     .hero-cta {
-      display: flex; align-items: center; gap: 12px; padding: 16px 22px; background: rgba(255,255,255,.04);
+      display: flex; align-items: center; gap: 12px; padding: 16px 22px; background: #2c2c2c;
       border: 1px solid rgba(255,255,255,.07); border-top: none; border-radius: 0 0 var(--radius-md) var(--radius-md); flex-wrap: wrap;
     }
     .btn-primary {
@@ -151,7 +153,7 @@
     .cta-note { font-size: var(--label-12-size); color: rgba(255,255,255,.25); letter-spacing: .05em; text-transform: uppercase; }
 
     /* ── MARQUEE ── */
-    .marquee-wrap { overflow: hidden; background: var(--ink); height: 46px; display: flex; align-items: center; border-top: 1px solid rgba(255,255,255,.08); }
+    .marquee-wrap { position: relative; z-index: 1; overflow: hidden; background: var(--ink); height: 46px; display: flex; align-items: center; border-top: 1px solid rgba(255,255,255,.08); }
     .marquee-track { display: flex; width: max-content; animation: mq 30s linear infinite; }
     .marquee-track:hover { animation-play-state: paused; }
     .marquee-item {
@@ -279,11 +281,11 @@
     .section.alt .skill-tag { background: var(--bg); }
 
     /* ── DIGITAL INFRASTRUCTURE: BENTO GRID ── */
-    .infra-bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(170px, auto); gap: 16px; margin-top: 24px; grid-auto-flow: dense; align-items: start; }
-    .infra-tile { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 26px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--sh1); transition: all 0.25s ease; }
+    .infra-bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(170px, auto); gap: 16px; margin-top: 24px; grid-auto-flow: dense; align-items: stretch; }
+    .infra-tile { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 26px; display: flex; flex-direction: column; justify-content: flex-start; gap: 10px; box-shadow: var(--sh1); transition: all 0.25s ease; }
     .infra-tile:hover { box-shadow: var(--sh2); border-color: var(--border-md); }
     .infra-tile.wide { grid-column: span 2; }
-    .infra-tile.featured { grid-column: span 2; grid-row: span 2; background: var(--ink); border-color: var(--ink); }
+    .infra-tile.featured { grid-column: span 2; grid-row: span 2; justify-content: space-between; background: var(--ink); border-color: var(--ink); }
     .infra-tile.featured:hover { border-color: var(--ink); }
     .infra-featured-foot { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
     .infra-feature-tags { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -485,7 +487,7 @@
 </nav>
 
 <!-- ══════════════ HERO ══════════════ -->
-<header class="hero">
+<header class="hero" data-dot-grid>
   <div class="hero-inner container">
     <div class="eyebrow">Case Study · Event Branding &amp; Digital Execution</div>
     <h1>River Rumble Blast.<br><em>Zero to sold out.</em></h1>
@@ -1113,7 +1115,7 @@
           <div class="infra-icon"><i class="ri-global-fill"></i></div>
           <div class="infra-eyebrow">Core Deliverable</div>
           <div class="infra-title">Event Website — Built from Scratch</div>
-          <p class="infra-desc">Designed and developed a purpose-built event website with event information, lineup, gallery, and a direct ticket purchase CTA linked to BookMyShow. Mobile-first, fast-loading, brand-consistent.</p>
+          <p class="infra-desc">Designed and developed a purpose-built event website with event information, lineup, gallery, and a direct ticket purchase CTA linked to BookMyShow. Mobile-first, fast-loading, brand-consistent. Skeleton shipped in the first 3 days, fully live with the ticket CTA by Phase Two — serving as the campaign's central hub that every channel, from Meta Ads to Instagram to WhatsApp, pointed back to.</p>
         </div>
         <div class="infra-featured-foot">
           <div class="infra-feature-tags">

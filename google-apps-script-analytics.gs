@@ -1,18 +1,22 @@
 /**
  * Portfolio Visitor Analytics — Google Apps Script Web App backend.
+ * FRESH REWRITE — deploy this into a BRAND NEW Google Sheet, not the old one.
  *
  * This file is NOT executed by the website directly — it runs on Google's
  * servers. To activate it:
  *
- *   1. Create a new Google Sheet (e.g. "Portfolio Visitor Analytics").
+ *   1. Create a brand new Google Sheet (e.g. "Portfolio Visitor Analytics v2").
+ *      Do NOT reuse the old sheet — this is a clean slate.
  *   2. Extensions -> Apps Script.
- *   3. Delete the placeholder code and paste this entire file in.
+ *   3. Delete the placeholder code (myFunction() etc.) and paste this ENTIRE
+ *      file in.
  *   4. Deploy -> New deployment -> select type "Web app".
  *        - Execute as: Me
  *        - Who has access: Anyone
  *   5. Click Deploy, authorize when prompted, and copy the Web App URL
  *      (ends in /exec).
- *   6. Paste that URL into ANALYTICS_URL near the top of visitor-analytics.js.
+ *   6. Paste that URL into ANALYTICS_URL near the top of visitor-analytics.js
+ *      (currently blank — the site silently no-ops until it's set).
  *
  * To ship a code change after the first deploy: paste the new code in,
  * save, then Deploy -> Manage deployments -> pencil icon -> Version:
@@ -42,6 +46,13 @@
  * Resume downloads do NOT get their own row — they flip "Resume Downloaded"
  * to Yes on the visitor's existing row (matched by Session ID).
  *
+ * NO LATITUDE/LONGITUDE ANYWHERE. Location is a single accurate text box
+ * ("Neighborhood, City, Region, Country") resolved IP-side by the client
+ * script via a 3-provider fallback chain — see loadLocation() in
+ * visitor-analytics.js. This is the practical accuracy ceiling without
+ * prompting the visitor for GPS permission (which most visitors decline
+ * anyway, and would show a popup on every visit).
+ *
  * If the columns below ever change, the sheet won't auto-migrate old rows —
  * either delete the "Visitor Log" tab and let the next event rebuild it, or
  * run reformatVisitorLog() manually (see below) to reapply the current
@@ -54,14 +65,14 @@
 
 var SHEET_NAME = 'Visitor Log';
 var HEADERS = [
-  'Timestamp', 'Traffic Source', 'Entry Page', 'Exit Page', 'Pages Visited',
-  'Page Path', 'Time on Site (s)', 'Resume Downloaded', 'Device', 'OS Version',
-  'Browser', 'Device Type', 'Location', 'Language', 'Screen', 'Session ID'
+  'Timestamp', 'Location', 'Resume Downloaded', 'Traffic Source', 'Device',
+  'OS Version', 'Entry Page', 'Exit Page', 'Page Path', 'Pages Visited',
+  'Time on Site (s)', 'Browser', 'Device Type', 'Language', 'Screen', 'Session ID'
 ];
 var COL = {
-  timestamp: 1, trafficSource: 2, entryPage: 3, exitPage: 4, pagesVisited: 5,
-  pagePath: 6, timeOnSite: 7, resumeDownloaded: 8, device: 9, osVersion: 10,
-  browser: 11, deviceType: 12, location: 13, language: 14, screen: 15, sessionId: 16
+  timestamp: 1, location: 2, resumeDownloaded: 3, trafficSource: 4, device: 5,
+  osVersion: 6, entryPage: 7, exitPage: 8, pagePath: 9, pagesVisited: 10,
+  timeOnSite: 11, browser: 12, deviceType: 13, language: 14, screen: 15, sessionId: 16
 };
 
 var COLOR = {
@@ -114,12 +125,12 @@ function doPost(e) {
 function rowFromNewVisit(data) {
   var exitPage = data.exitPage || data.page;
   return {
-    timestamp: data.timestamp, trafficSource: data.trafficSource || 'Direct / None',
+    timestamp: data.timestamp, location: data.location,
+    resumeDownloaded: 'No', trafficSource: data.trafficSource || 'Direct / None',
+    device: data.device, osVersion: data.osVersion,
     entryPage: data.entryPage || exitPage, exitPage: exitPage,
-    pagesVisited: data.pagesVisited || 1, pagePath: data.pagePath || exitPage,
-    timeOnSite: '', resumeDownloaded: 'No',
-    device: data.device, osVersion: data.osVersion, browser: data.browser,
-    deviceType: data.deviceType, location: data.location,
+    pagePath: data.pagePath || exitPage, pagesVisited: data.pagesVisited || 1,
+    timeOnSite: '', browser: data.browser, deviceType: data.deviceType,
     language: data.language || '', screen: data.screenRes || '',
     sessionId: data.sessionId || ''
   };
@@ -185,18 +196,18 @@ function buildLayout(sheet) {
 
   // ── Column widths tuned per field ──
   sheet.setColumnWidth(COL.timestamp, 150);
-  sheet.setColumnWidth(COL.trafficSource, 150);
-  sheet.setColumnWidth(COL.entryPage, 150);
-  sheet.setColumnWidth(COL.exitPage, 150);
-  sheet.setColumnWidth(COL.pagesVisited, 100);
-  sheet.setColumnWidth(COL.pagePath, 260);
-  sheet.setColumnWidth(COL.timeOnSite, 110);
+  sheet.setColumnWidth(COL.location, 220);
   sheet.setColumnWidth(COL.resumeDownloaded, 130);
+  sheet.setColumnWidth(COL.trafficSource, 150);
   sheet.setColumnWidth(COL.device, 210);
   sheet.setColumnWidth(COL.osVersion, 110);
+  sheet.setColumnWidth(COL.entryPage, 150);
+  sheet.setColumnWidth(COL.exitPage, 150);
+  sheet.setColumnWidth(COL.pagePath, 260);
+  sheet.setColumnWidth(COL.pagesVisited, 100);
+  sheet.setColumnWidth(COL.timeOnSite, 110);
   sheet.setColumnWidth(COL.browser, 90);
   sheet.setColumnWidth(COL.deviceType, 95);
-  sheet.setColumnWidth(COL.location, 220);
   sheet.setColumnWidth(COL.language, 80);
   sheet.setColumnWidth(COL.screen, 130);
   sheet.hideColumns(COL.sessionId); // correlation key only, not for reading
@@ -254,9 +265,9 @@ function setConditionalFormatting(sheet) {
 
 function appendVisitorRow(sheet, r) {
   sheet.appendRow([
-    r.timestamp, r.trafficSource, r.entryPage, r.exitPage, r.pagesVisited, r.pagePath,
-    r.timeOnSite, r.resumeDownloaded, r.device, r.osVersion, r.browser, r.deviceType,
-    r.location, r.language, r.screen, r.sessionId
+    r.timestamp, r.location, r.resumeDownloaded, r.trafficSource, r.device,
+    r.osVersion, r.entryPage, r.exitPage, r.pagePath, r.pagesVisited,
+    r.timeOnSite, r.browser, r.deviceType, r.language, r.screen, r.sessionId
   ]);
 }
 

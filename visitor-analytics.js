@@ -9,8 +9,9 @@
  *
  * Backend: a Google Apps Script Web App (see google-apps-script-analytics.gs in
  * this repo) that appends/updates a row per VISIT (not per page load) in a
- * Google Sheet. Deploy that script, then paste the resulting /exec URL into
- * ANALYTICS_URL below. Until it's set, this script silently no-ops.
+ * Google Sheet. Deploy that script into a BRAND NEW Google Sheet, then paste
+ * the resulting /exec URL into ANALYTICS_URL below. Until it's set, this
+ * script silently no-ops.
  *
  * ONE ROW PER VISIT: a "visit" is everything a visitor does in one browser
  * tab, even across several pages. A sessionStorage-backed session (cleared
@@ -29,7 +30,7 @@
 (function () {
   'use strict';
 
-  var ANALYTICS_URL = 'https://script.google.com/macros/s/AKfycbxWgjLFJZjXAXxYjoQ8NDidaPWVmdt19oi0_iHzLAOfGxgONjFTmVuSVrYS6Kg6F4bl/exec';
+  var ANALYTICS_URL = 'https://script.google.com/macros/s/AKfycbyHet4FYi5PaLE527o89edrOlX43U5sclFp6G5AbBw2tin6X7xjNEx5yRD6cj6cHyCK/exec';
 
   var PAGE_NAMES = {
     '/': 'Home',
@@ -391,7 +392,7 @@
   // sessionStorage persists across page loads within the SAME TAB and is
   // wiped the instant the tab/window closes — exactly "one row per visit",
   // never a long-lived visitor identifier, never a cookie.
-  var SESSION_KEY = 'va_session_v2';
+  var SESSION_KEY = 'va_session_v3';
 
   function loadSession() {
     try {

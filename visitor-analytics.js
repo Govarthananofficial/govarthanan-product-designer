@@ -146,16 +146,22 @@
   var deviceType = getDeviceType(ua);
   var deviceName = getDeviceName(ua);
   var referrer = document.referrer || 'Direct / None';
-  var pageviewSent = false;
+  var exitSent = false;
 
   loadLocation();
 
-  function sendPageview() {
-    if (pageviewSent) return;
-    pageviewSent = true;
+  function sendPageview(stage) {
+    if (stage === 'exit') {
+      if (exitSent) return;
+      exitSent = true;
+    }
     var seconds = Math.round((Date.now() - startTime) / 1000);
     send({
       type: 'pageview',
+      stage: stage, // 'enter' fires immediately on load (guarantees a row shows up
+                     // right away); 'exit' fires when the visitor leaves, carrying
+                     // the real time-on-page. Count "enter" rows for page-popularity;
+                     // "exit" rows are the same visit, just completing its duration.
       timestamp: nowIST(),
       page: page,
       timeOnPageSeconds: seconds,
@@ -167,14 +173,18 @@
     });
   }
 
+  // Fire immediately so a row appears the moment someone loads the page —
+  // don't make "is anyone visiting" depend on them leaving cleanly first.
+  sendPageview('enter');
+
   // visibilitychange (hidden) is the most reliable exit signal on mobile
   // Safari/Chrome, where pagehide/beforeunload are unreliable; pagehide
-  // covers desktop back/forward-cache navigations. Guarded by pageviewSent
+  // covers desktop back/forward-cache navigations. Guarded by exitSent
   // so only the first of these to fire actually sends.
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'hidden') sendPageview();
+    if (document.visibilityState === 'hidden') sendPageview('exit');
   });
-  window.addEventListener('pagehide', sendPageview);
+  window.addEventListener('pagehide', function () { sendPageview('exit'); });
 
   // Resume download tracking — fires immediately on click, since a PDF
   // download doesn't necessarily navigate the visitor away from the page.

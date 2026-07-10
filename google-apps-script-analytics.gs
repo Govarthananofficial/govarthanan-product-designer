@@ -17,9 +17,17 @@
  * Two tabs are created automatically on first write, no manual sheet setup
  * needed: "Pageviews" and "Resume Downloads".
  *
+ * Each visit writes TWO rows to Pageviews: a "Stage" = enter row the instant
+ * the page loads (so a row shows up right away, not only after the visitor
+ * leaves), and a "Stage" = exit row when they leave, carrying the real
+ * Time on Page. To count actual visits (not double them), filter/pivot on
+ * Stage = "enter". The matching "exit" row for the same visit is the one
+ * with the same Page + the next later Timestamp.
+ *
  * "Which page is most visited" isn't computed here — it's a one-line
- * PivotTable in the Pageviews sheet (rows: Page, values: COUNTA), or a
- * COUNTIF formula. No need to bake aggregation into the backend.
+ * PivotTable in the Pageviews sheet (rows: Page, values: COUNTA, filtered
+ * to Stage = "enter"), or a COUNTIFS formula. No need to bake aggregation
+ * into the backend.
  */
 function doPost(e) {
   try {
@@ -33,8 +41,8 @@ function doPost(e) {
       );
     } else {
       appendRow(ss, 'Pageviews',
-        ['Timestamp', 'Page', 'Time on Page (s)', 'Browser', 'OS / Device', 'Device Type', 'Location', 'Referrer'],
-        [data.timestamp, data.page, data.timeOnPageSeconds, data.browser, data.os, data.deviceType, data.location, data.referrer]
+        ['Timestamp', 'Stage', 'Page', 'Time on Page (s)', 'Browser', 'OS / Device', 'Device Type', 'Location', 'Referrer'],
+        [data.timestamp, data.stage || 'enter', data.page, data.timeOnPageSeconds, data.browser, data.os, data.deviceType, data.location, data.referrer]
       );
     }
 

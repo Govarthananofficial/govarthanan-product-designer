@@ -1,29 +1,35 @@
 /*!
- * Visitor Analytics — lightweight, anonymous, first-party pageview + resume-download tracker.
+ * Visitor Analytics — lightweight, anonymous, first-party visit tracker.
  *
  * Runs on every page of the site. Collects only standard, non-invasive signals:
- * browser, device model/OS, approximate (IP-derived) location with coordinates,
- * screen size, language, referrer, and time spent on page. No cookies, no
+ * browser, device model/OS, approximate (IP-derived) location, screen size,
+ * language, traffic source, and time spent on site. No cookies, no
  * cross-site tracking, no permission prompts, no name/email — kept fully
  * anonymous and separate from the contact form's lead-capture pipeline.
  *
  * Backend: a Google Apps Script Web App (see google-apps-script-analytics.gs in
- * this repo) that appends/updates a row per visit in a Google Sheet. Deploy
- * that script, then paste the resulting /exec URL into ANALYTICS_URL below.
- * Until it's set, this script silently no-ops.
+ * this repo) that appends/updates a row per VISIT (not per page load) in a
+ * Google Sheet. Deploy that script, then paste the resulting /exec URL into
+ * ANALYTICS_URL below. Until it's set, this script silently no-ops.
  *
- * Events sent:
- *   - "pageview" / stage "enter": fires immediately on load, so a row shows
- *     up right away rather than only after the visitor leaves.
- *   - "pageview" / stage "exit": fires when that same visit ends, updating
- *     the same row (matched via sessionId) with real time-on-page, plus
- *     whatever device/location detail resolved after page-load.
- *   - "resume_download": fired immediately when a visitor clicks the resume PDF.
+ * ONE ROW PER VISIT: a "visit" is everything a visitor does in one browser
+ * tab, even across several pages. A sessionStorage-backed session (cleared
+ * the moment the tab closes — never a cookie, never persisted long-term)
+ * tracks the entry page, every page path since, and a per-visit start time:
+ *
+ *   - stage "enter": the first page of a brand new visit. Appends a row.
+ *   - stage "nav":   every later page in the SAME visit. Updates that row's
+ *     Exit Page / Pages Visited / Page Path, and refreshes Device/OS/Location.
+ *   - stage "exit":  fires when the current page is hidden/unloaded. Fills
+ *     in the running Time on Site. If the visitor moves to another page on
+ *     the site, its own "nav"/"exit" pings simply keep updating the same row.
+ *   - "resume_download": fired immediately when a visitor clicks the resume
+ *     PDF — sets Resume Downloaded = Yes on the row, doesn't add a new one.
  */
 (function () {
   'use strict';
 
-  var ANALYTICS_URL = 'https://script.google.com/macros/s/AKfycbwCq4E2fVW6DG2dy9fvMiS2_VgseB-RMnRlf-uWGgwCiuIGN-_B-njxGc1nkCJ4HcJt/exec';
+  var ANALYTICS_URL = 'https://script.google.com/macros/s/AKfycbxWgjLFJZjXAXxYjoQ8NDidaPWVmdt19oi0_iHzLAOfGxgONjFTmVuSVrYS6Kg6F4bl/exec';
 
   var PAGE_NAMES = {
     '/': 'Home',
@@ -234,40 +240,38 @@
     return name.replace(/\s*\(the\)\s*$/i, '').trim();
   }
 
-  // ── Location — same 3-provider fallback chain as the contact form
-  // (BigDataCloud -> ipapi.co -> ipinfo.io). Now also keeps the raw lat/lon
-  // each provider already returns, for a precise map pin alongside the
-  // human-readable city/region/country text. Still IP-based only — no
-  // navigator.geolocation call, so no permission prompt is ever shown. ──
+  // ── Location — single accurate text box, no separate lat/long fields.
+  // Same 3-provider fallback chain as the contact form (BigDataCloud ->
+  // ipapi.co -> ipinfo.io). Still IP-based only — no navigator.geolocation
+  // call, so no permission prompt is ever shown; this is the practical
+  // accuracy ceiling without asking the visitor for GPS access. Picks the
+  // most specific place name each provider offers (neighborhood/locality
+  // over city when available) and appends the postcode when BigDataCloud
+  // has one, for the most precise "one box" location reasonably obtainable
+  // from an IP address alone. ──
   var resolvedLocation = 'Unknown Location';
-  var resolvedLat = '';
-  var resolvedLon = '';
 
   function loadLocation() {
     return fetch('https://api.bigdatacloud.net/data/reverse-geocode-client')
       .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
       .then(function (data) {
         var country = cleanCountryName(data.countryName);
-        if (data.city && data.principalSubdivision && country) {
-          resolvedLocation = data.city + ', ' + data.principalSubdivision + ', ' + country;
-        } else if (data.city && country) {
-          resolvedLocation = data.city + ', ' + country;
-        }
-        if (data.latitude != null) resolvedLat = String(data.latitude);
-        if (data.longitude != null) resolvedLon = String(data.longitude);
+        var place = data.locality || data.city;
+        var cityPart = (data.city && data.locality && data.locality !== data.city)
+          ? data.locality + ', ' + data.city
+          : place;
+        if (data.postcode) cityPart = cityPart ? cityPart + ' ' + data.postcode : data.postcode;
+        var parts = [cityPart, data.principalSubdivision, country].filter(Boolean);
+        if (parts.length) resolvedLocation = parts.join(', ');
       })
       .catch(function () {
         return fetch('https://ipapi.co/json/')
           .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
           .then(function (data) {
             var country = cleanCountryName(data.country_name);
-            if (data.city && data.region && country) {
-              resolvedLocation = data.city + ', ' + data.region + ', ' + country;
-            } else if (data.city && country) {
-              resolvedLocation = data.city + ', ' + country;
-            }
-            if (data.latitude != null) resolvedLat = String(data.latitude);
-            if (data.longitude != null) resolvedLon = String(data.longitude);
+            var cityPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
+            var parts = [cityPart, data.region, country].filter(Boolean);
+            if (parts.length) resolvedLocation = parts.join(', ');
           });
       })
       .catch(function () {
@@ -275,24 +279,97 @@
           .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
           .then(function (data) {
             var country = cleanCountryName(data.country);
-            if (data.city && data.region && country) {
-              resolvedLocation = data.city + ', ' + data.region + ', ' + country;
-            } else if (data.city && country) {
-              resolvedLocation = data.city + ', ' + country;
-            }
-            if (data.loc) {
-              var parts = data.loc.split(',');
-              if (parts[0]) resolvedLat = parts[0];
-              if (parts[1]) resolvedLon = parts[1];
-            }
+            var cityPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
+            var parts = [cityPart, data.region, country].filter(Boolean);
+            if (parts.length) resolvedLocation = parts.join(', ');
           });
       })
       .catch(function () { /* silently give up — stays "Unknown Location" */ });
   }
 
-  function mapsLink() {
-    if (!resolvedLat || !resolvedLon) return '';
-    return 'https://www.google.com/maps/search/?api=1&query=' + resolvedLat + ',' + resolvedLon;
+  // ── Traffic source — where the visit actually came from.
+  //
+  // Priority order:
+  //   1. ?utm_source=… or ?src=… on the URL — the ONLY fully reliable signal.
+  //      Tag links shared on WhatsApp/Instagram/etc. with this (e.g.
+  //      "?utm_source=whatsapp") because those apps typically strip the
+  //      referrer entirely when opening a link in the system browser — no
+  //      amount of client-side detection can recover that after the fact.
+  //   2. In-app browser sniffing — Instagram, Facebook and LinkedIn's own
+  //      in-app browsers add a recognizable token to the User-Agent, so taps
+  //      on links opened *inside* those apps are still identifiable even
+  //      with no referrer.
+  //   3. document.referrer domain — covers Google, direct social-site
+  //      visits (e.g. clicking through from linkedin.com/feed on desktop),
+  //      YouTube, etc.
+  //   4. "Direct / None" — no referrer and no UTM tag; this is what most
+  //      WhatsApp/Instagram-DM taps will show up as without tagging (#1). ──
+  var SOURCE_LABELS = {
+    instagram: 'Instagram', ig: 'Instagram',
+    linkedin: 'LinkedIn',
+    whatsapp: 'WhatsApp', wa: 'WhatsApp',
+    facebook: 'Facebook', fb: 'Facebook',
+    twitter: 'Twitter/X', x: 'Twitter/X',
+    google: 'Google',
+    youtube: 'YouTube',
+    tiktok: 'TikTok',
+    reddit: 'Reddit',
+    pinterest: 'Pinterest',
+    telegram: 'Telegram',
+    email: 'Email', newsletter: 'Email'
+  };
+
+  var REFERRER_DOMAINS = [
+    [/(^|\.)google\./i, 'Google'],
+    [/(^|\.)bing\.com$/i, 'Bing'],
+    [/(^|\.)duckduckgo\.com$/i, 'DuckDuckGo'],
+    [/(^|\.)yahoo\./i, 'Yahoo'],
+    [/(^|\.)instagram\.com$/i, 'Instagram'],
+    [/(^|\.)facebook\.com$/i, 'Facebook'],
+    [/^fb\.me$/i, 'Facebook'],
+    [/(^|\.)linkedin\.com$/i, 'LinkedIn'],
+    [/^lnkd\.in$/i, 'LinkedIn'],
+    [/(^|\.)twitter\.com$/i, 'Twitter/X'],
+    [/(^|\.)x\.com$/i, 'Twitter/X'],
+    [/^t\.co$/i, 'Twitter/X'],
+    [/(^|\.)whatsapp\.com$/i, 'WhatsApp'],
+    [/^wa\.me$/i, 'WhatsApp'],
+    [/(^|\.)youtube\.com$/i, 'YouTube'],
+    [/^youtu\.be$/i, 'YouTube'],
+    [/(^|\.)reddit\.com$/i, 'Reddit'],
+    [/(^|\.)pinterest\./i, 'Pinterest'],
+    [/^t\.me$/i, 'Telegram'],
+    [/(^|\.)telegram\.org$/i, 'Telegram'],
+    [/(^|\.)github\.com$/i, 'GitHub'],
+    [/(^|\.)behance\.net$/i, 'Behance'],
+    [/(^|\.)dribbble\.com$/i, 'Dribbble']
+  ];
+
+  function getUrlParam(name) {
+    var m = location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  function hostnameOf(url) {
+    try { return new URL(url).hostname.replace(/^www\./, ''); }
+    catch (e) { return ''; }
+  }
+
+  function classifyTrafficSource(ua, referrer) {
+    var override = (getUrlParam('utm_source') || getUrlParam('src')).toLowerCase();
+    if (override) return SOURCE_LABELS[override] || (override.charAt(0).toUpperCase() + override.slice(1));
+
+    if (/instagram/i.test(ua)) return 'Instagram';
+    if (/FBAN|FBAV|FB_IAB|FBIOS/i.test(ua)) return 'Facebook';
+    if (/LinkedInApp/i.test(ua)) return 'LinkedIn';
+
+    if (!referrer) return 'Direct / None';
+    var host = hostnameOf(referrer);
+    if (!host) return 'Direct / None';
+    for (var i = 0; i < REFERRER_DOMAINS.length; i++) {
+      if (REFERRER_DOMAINS[i][0].test(host)) return REFERRER_DOMAINS[i][1];
+    }
+    return 'Other (' + host + ')';
   }
 
   function send(payload) {
@@ -310,94 +387,114 @@
     }).catch(function () {});
   }
 
+  // ── Session (= one visit, possibly across several pages) ──
+  // sessionStorage persists across page loads within the SAME TAB and is
+  // wiped the instant the tab/window closes — exactly "one row per visit",
+  // never a long-lived visitor identifier, never a cookie.
+  var SESSION_KEY = 'va_session_v2';
+
+  function loadSession() {
+    try {
+      var raw = sessionStorage.getItem(SESSION_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
+  function saveSession(session) {
+    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch (e) {}
+  }
+
+  function generateSessionId() {
+    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  }
+
   var ua = navigator.userAgent;
-  var startTime = Date.now();
   var page = pageName();
   var browser = getBrowserName(ua);
   var deviceType = getDeviceType(ua);
   var resolvedDeviceName = getDeviceName(ua);   // upgraded in place by loadDeviceModel() if possible
   var resolvedOSVersion = getOSVersion(ua);     // upgraded in place by loadDeviceModel() if possible
-  var referrer = document.referrer || 'Direct / None';
+  var referrer = document.referrer || '';
   var language = navigator.language || navigator.userLanguage || 'Unknown';
   var screenRes = screen.width + '×' + screen.height + ' @' + (window.devicePixelRatio || 1) + 'x';
   var exitSent = false;
 
-  // A fresh, random, never-stored ID generated on every page load — exists
-  // only to let the backend match this visit's "enter" and "exit" events to
-  // the same spreadsheet row. Not a tracking identifier: it's discarded when
-  // the tab closes, never written to localStorage/cookies, and carries no
-  // information about who the visitor is.
-  var sessionId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  var session = loadSession();
+  var isNewSession = !session;
+  if (isNewSession) {
+    session = {
+      sessionId: generateSessionId(),
+      entryPage: page,
+      pagesPath: [page],
+      trafficSource: classifyTrafficSource(ua, referrer),
+      startTime: Date.now()
+    };
+  } else if (session.pagesPath[session.pagesPath.length - 1] !== page) {
+    session.pagesPath.push(page);
+  }
+  saveSession(session);
 
   loadLocation();
   loadDeviceModel();
 
-  function sendPageview(stage) {
-    if (stage === 'exit') {
-      if (exitSent) return;
-      exitSent = true;
-    }
-    var seconds = Math.round((Date.now() - startTime) / 1000);
+  function sendVisitPing() {
     send({
-      type: 'pageview',
-      stage: stage, // 'enter' fires immediately on load so a row appears right
-                     // away; 'exit' fires when the visitor leaves and updates
-                     // that same row (matched via sessionId) with the real
-                     // time-on-page — plus the freshest device/location data,
-                     // since both can resolve to something more accurate than
-                     // what was known at the instant the page loaded.
-      sessionId: sessionId,
+      type: 'visit',
+      stage: isNewSession ? 'enter' : 'nav',
+      sessionId: session.sessionId,
       timestamp: nowIST(),
-      page: page,
-      timeOnPageSeconds: seconds,
+      trafficSource: session.trafficSource,
+      entryPage: session.entryPage,
+      exitPage: page,
+      pagesVisited: session.pagesPath.length,
+      pagePath: session.pagesPath.join(' → '),
       browser: browser,
       device: resolvedDeviceName,
       osVersion: resolvedOSVersion,
       deviceType: deviceType,
       location: resolvedLocation,
-      latitude: resolvedLat,
-      longitude: resolvedLon,
-      mapsLink: mapsLink(),
       language: language,
-      screenRes: screenRes,
-      referrer: referrer
+      screenRes: screenRes
     });
   }
 
-  // Fire immediately so a row appears the moment someone loads the page —
-  // don't make "is anyone visiting" depend on them leaving cleanly first.
-  sendPageview('enter');
+  // Fire immediately so a row appears/updates the moment someone loads a
+  // page — don't make "is anyone visiting" depend on them leaving cleanly first.
+  sendVisitPing();
+
+  function sendExit() {
+    if (exitSent) return;
+    exitSent = true;
+    var seconds = Math.round((Date.now() - session.startTime) / 1000);
+    send({
+      type: 'visit',
+      stage: 'exit',
+      sessionId: session.sessionId,
+      timeOnSiteSeconds: seconds
+    });
+  }
 
   // visibilitychange (hidden) is the most reliable exit signal on mobile
   // Safari/Chrome, where pagehide/beforeunload are unreliable; pagehide
   // covers desktop back/forward-cache navigations. Guarded by exitSent
   // so only the first of these to fire actually sends.
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'hidden') sendPageview('exit');
+    if (document.visibilityState === 'hidden') sendExit();
   });
-  window.addEventListener('pagehide', function () { sendPageview('exit'); });
+  window.addEventListener('pagehide', sendExit);
 
   // Resume download tracking — fires immediately on click, since a PDF
   // download doesn't necessarily navigate the visitor away from the page.
+  // Sets Resume Downloaded = Yes on this visit's existing row rather than
+  // creating a new one.
   document.addEventListener('click', function (e) {
     var link = e.target.closest && e.target.closest('a[href$=".pdf"]');
     if (!link) return;
     send({
       type: 'resume_download',
-      sessionId: sessionId,
+      sessionId: session.sessionId,
       timestamp: nowIST(),
-      page: page,
-      browser: browser,
-      device: resolvedDeviceName,
-      osVersion: resolvedOSVersion,
-      deviceType: deviceType,
-      location: resolvedLocation,
-      latitude: resolvedLat,
-      longitude: resolvedLon,
-      mapsLink: mapsLink(),
-      language: language,
-      screenRes: screenRes,
-      referrer: referrer
+      page: page
     });
   }, { capture: true });
 })();

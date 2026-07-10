@@ -160,6 +160,14 @@ function reformatVisitorLog() {
 function buildLayout(sheet) {
   var lastCol = HEADERS.length;
 
+  // If row 1 is already visitor data rather than the header (e.g. this tab
+  // existed and had rows appended to it before buildLayout ever ran on it),
+  // push everything down a row instead of overwriting that data.
+  var hasHeader = sheet.getLastRow() > 0 && sheet.getRange(1, 1).getValue() === HEADERS[0];
+  if (!hasHeader && sheet.getLastRow() > 0) {
+    sheet.insertRowBefore(1);
+  }
+
   sheet.getRange(1, 1, 1, lastCol).setValues([HEADERS]);
   sheet.setFrozenRows(1);
   sheet.setFrozenColumns(1);

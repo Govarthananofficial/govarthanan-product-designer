@@ -74,7 +74,7 @@
     if (/ipad/i.test(ua)) return 'iPad';
     if (/android/i.test(ua)) {
       var m = ua.match(/Linux;\s+Android\s+[^;]+;\s+([^)]+)/i);
-      return (m && m[1]) ? 'Android (' + m[1].trim() + ')' : 'Android Device';
+      return (m && m[1]) ? brandFromModel(m[1].trim()) : 'Android Device';
     }
     if (/macintosh/i.test(ua) || /mac os x/i.test(ua)) {
       return (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) ? 'iPad (macOS Mode)' : 'Macintosh';
@@ -83,6 +83,59 @@
     if (/linux/i.test(ua)) return 'Linux PC';
     if (/cros/i.test(ua)) return 'ChromeOS Device';
     return 'Generic Device';
+  }
+
+  // Maps a raw Android model code (e.g. "SM-A536E", "CPH2173", "M2101K6G")
+  // to a readable "Brand (model)" label. Covers the brands dominant in the
+  // Indian market (Samsung, Xiaomi/Redmi/POCO, vivo, Oppo, iQOO, Realme,
+  // OnePlus) plus a few others; falls back to the raw code if unrecognized.
+  var MODEL_BRAND_PATTERNS = [
+    [/^SM-/i, 'Samsung'],
+    [/^CPH/i, 'Oppo'],
+    [/^RMX/i, 'Realme'],
+    [/realme/i, 'Realme'],
+    [/^V2\d{3}/i, 'vivo'],
+    [/^I2\d{3}/i, 'iQOO'],
+    [/iqoo/i, 'iQOO'],
+    [/redmi/i, 'Redmi'],
+    [/poco/i, 'POCO'],
+    [/^M(19|20|21|22)\w*/i, 'Xiaomi/Redmi'],
+    [/^2\d{5,}/i, 'Xiaomi/Redmi'], // Xiaomi's numeric-first model/codenames, e.g. "2201116SG"
+    [/^moto/i, 'Motorola'],
+    [/oneplus/i, 'OnePlus'],
+    [/^GM\d/i, 'OnePlus'],
+    [/^pixel/i, 'Google Pixel'],
+    [/^LG-/i, 'LG'],
+    [/nokia/i, 'Nokia'],
+    [/lenovo/i, 'Lenovo'],
+    [/^infinix/i, 'Infinix'],
+    [/^tecno/i, 'Tecno'],
+    [/^asus/i, 'Asus'],
+    [/^nothing/i, 'Nothing']
+  ];
+
+  function brandFromModel(model) {
+    for (var i = 0; i < MODEL_BRAND_PATTERNS.length; i++) {
+      if (MODEL_BRAND_PATTERNS[i][0].test(model)) {
+        return MODEL_BRAND_PATTERNS[i][1] + ' (' + model + ')';
+      }
+    }
+    return 'Android (' + model + ')'; // unrecognized brand — show the raw code
+  }
+
+  // Modern Chrome deliberately hides the real device model in navigator.userAgent
+  // for privacy (it sends a generic placeholder like "Android 10; K") unless a
+  // site explicitly asks via the User-Agent Client Hints API. This upgrades
+  // resolvedDeviceName to the real brand/model when that API is available —
+  // Chromium-only, so Safari/Firefox keep using the regex-based UA guess above.
+  function loadDeviceModel() {
+    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+      navigator.userAgentData.getHighEntropyValues(['model'])
+        .then(function (info) {
+          if (info && info.model) resolvedDeviceName = brandFromModel(info.model);
+        })
+        .catch(function () { /* keep the UA-string-based guess */ });
+    }
   }
 
   // ── Approximate location — same 3-provider fallback chain as the contact
@@ -144,7 +197,7 @@
   var page = pageName();
   var browser = getBrowserName(ua);
   var deviceType = getDeviceType(ua);
-  var deviceName = getDeviceName(ua);
+  var resolvedDeviceName = getDeviceName(ua); // upgraded in place by loadDeviceModel() if possible
   var referrer = document.referrer || 'Direct / None';
   var exitSent = false;
 
@@ -156,6 +209,7 @@
   var sessionId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
 
   loadLocation();
+  loadDeviceModel();
 
   function sendPageview(stage) {
     if (stage === 'exit') {
@@ -168,13 +222,15 @@
       stage: stage, // 'enter' fires immediately on load so a row appears right
                      // away; 'exit' fires when the visitor leaves and updates
                      // that same row (matched via sessionId) with the real
-                     // time-on-page, instead of adding a second row.
+                     // time-on-page — plus the freshest device/location data,
+                     // since both can resolve to something more accurate than
+                     // what was known at the instant the page loaded.
       sessionId: sessionId,
       timestamp: nowIST(),
       page: page,
       timeOnPageSeconds: seconds,
       browser: browser,
-      os: deviceName,
+      os: resolvedDeviceName,
       deviceType: deviceType,
       location: resolvedLocation,
       referrer: referrer
@@ -205,7 +261,7 @@
       timestamp: nowIST(),
       page: page,
       browser: browser,
-      os: deviceName,
+      os: resolvedDeviceName,
       deviceType: deviceType,
       location: resolvedLocation,
       referrer: referrer

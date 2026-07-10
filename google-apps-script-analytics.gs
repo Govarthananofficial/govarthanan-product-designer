@@ -69,7 +69,7 @@ function doPost(e) {
         location: data.location, referrer: data.referrer, sessionId: data.sessionId || ''
       });
     } else if (data.stage === 'exit') {
-      var updated = updateTimeOnPage(sheet, data.sessionId, data.timeOnPageSeconds);
+      var updated = completeVisitRow(sheet, data.sessionId, data.timeOnPageSeconds, data.os, data.location);
       if (!updated) {
         // No matching "enter" row found (e.g. the sheet was cleared mid-visit)
         // — still record it rather than silently dropping the data.
@@ -178,7 +178,12 @@ function appendVisitorRow(sheet, r) {
   markCompletion(sheet, row, r.event, r.timeOnPage);
 }
 
-function updateTimeOnPage(sheet, sessionId, seconds) {
+// Fires when a visit ends: fills in Time on Page on its row, and also
+// backfills OS/Device and Location with whatever the client resolved by
+// then — both can improve after page-load (device model via Client Hints,
+// location via the IP lookup), so the completed row ends up more accurate
+// than the "enter" row was able to be.
+function completeVisitRow(sheet, sessionId, seconds, os, location) {
   if (!sessionId) return false;
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return false;
@@ -187,6 +192,8 @@ function updateTimeOnPage(sheet, sessionId, seconds) {
     if (ids[i][0] === sessionId) {
       var row = i + 2;
       sheet.getRange(row, COL.timeOnPage).setValue(seconds);
+      if (os) sheet.getRange(row, COL.os).setValue(os);
+      if (location) sheet.getRange(row, COL.location).setValue(location);
       markCompletion(sheet, row, 'Page Visit', seconds);
       return true;
     }

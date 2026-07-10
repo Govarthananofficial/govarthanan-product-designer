@@ -1,38 +1,35 @@
 /*!
- * Visitor Analytics — lightweight, anonymous, first-party visit tracker.
+ * Visitor tracker — anonymous, first-party, one row per visit.
  *
- * Runs on every page of the site. Collects only standard, non-invasive signals:
- * browser, device model/OS, approximate (IP-derived) location, screen size,
- * language, traffic source, and time spent on site. No cookies, no
- * cross-site tracking, no permission prompts, no name/email — kept fully
- * anonymous and separate from the contact form's lead-capture pipeline.
+ * Entirely new build, paired with a from-scratch google-apps-script-analytics.gs
+ * deployed into a brand new Google Sheet. No cookies, no cross-site tracking,
+ * no permission prompts, no name/email — kept fully separate from the
+ * contact form's lead-capture pipeline.
  *
- * Backend: a Google Apps Script Web App (see google-apps-script-analytics.gs in
- * this repo) that appends/updates a row per VISIT (not per page load) in a
- * Google Sheet. Deploy that script into a BRAND NEW Google Sheet, then paste
- * the resulting /exec URL into ANALYTICS_URL below. Until it's set, this
- * script silently no-ops.
+ * ANALYTICS_URL below must be the /exec URL from that new deployment. Until
+ * it's set, every call in here silently does nothing.
  *
- * ONE ROW PER VISIT: a "visit" is everything a visitor does in one browser
- * tab, even across several pages. A sessionStorage-backed session (cleared
- * the moment the tab closes — never a cookie, never persisted long-term)
- * tracks the entry page, every page path since, and a per-visit start time:
- *
- *   - stage "enter": the first page of a brand new visit. Appends a row.
- *   - stage "nav":   every later page in the SAME visit. Updates that row's
- *     Exit Page / Pages Visited / Page Path, and refreshes Device/OS/Location.
- *   - stage "exit":  fires when the current page is hidden/unloaded. Fills
- *     in the running Time on Site. If the visitor moves to another page on
- *     the site, its own "nav"/"exit" pings simply keep updating the same row.
- *   - "resume_download": fired immediately when a visitor clicks the resume
- *     PDF — sets Resume Downloaded = Yes on the row, doesn't add a new one.
+ * A "visit" is everything one person does in one browser tab, even across
+ * several pages. sessionStorage (cleared the instant the tab closes — never
+ * a cookie, never long-lived) tracks it and the client tells the backend
+ * which moment of the visit a request represents:
+ *   phase "start"    — first page of a brand new visit. Backend inserts a row.
+ *   phase "continue" — every later page of the SAME visit. Backend updates
+ *                      that row's Exit Page / page trail / count, and
+ *                      refreshes Device/OS/Location with anything that
+ *                      resolved more precisely since.
+ *   phase "leave"    — page is being hidden/closed. Backend fills in the
+ *                      final Time on Site for that visit's row.
+ * A resume-PDF click sends event "download" instead — flips Resume
+ * Downloaded to Yes on the same visit's row, no new row.
  */
 (function () {
   'use strict';
 
   var ANALYTICS_URL = 'https://script.google.com/macros/s/AKfycbyHet4FYi5PaLE527o89edrOlX43U5sclFp6G5AbBw2tin6X7xjNEx5yRD6cj6cHyCK/exec';
 
-  var PAGE_NAMES = {
+  // ── Page labels ──────────────────────────────────────────────────────────
+  var PAGE_TITLES = {
     '/': 'Home',
     '/index.html': 'Home',
     '/river-rumble-blast-case-study.html': 'River Rumble Blast',
@@ -42,21 +39,23 @@
     '/sds-motion-forge.html': 'SDS Motion Forge'
   };
 
-  function pageName() {
+  function resolvePageLabel() {
     var path = location.pathname;
-    if (PAGE_NAMES[path]) return PAGE_NAMES[path];
-    var clean = path.replace(/^\//, '').replace(/\.html$/, '');
-    return clean || 'Home';
+    if (PAGE_TITLES[path]) return PAGE_TITLES[path];
+    var trimmed = path.replace(/^\//, '').replace(/\.html$/, '');
+    return trimmed || 'Home';
   }
 
-  function nowIST() {
+  // ── Timestamp — IST, down to the second ────────────────────────────────
+  function preciseTimestamp() {
     return new Date().toLocaleString('en-IN', {
       timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
     });
   }
 
-  function getBrowserName(ua) {
+  // ── Browser / device category from the UA string ───────────────────────
+  function detectBrowser(ua) {
     if (/edg/i.test(ua)) return 'Edge';
     if (/OPR|Opera/i.test(ua)) return 'Opera';
     if (/chrome|crios/i.test(ua)) return /chromium/i.test(ua) ? 'Chromium' : 'Chrome';
@@ -66,17 +65,16 @@
     return 'Mozilla-compatible';
   }
 
-  function getDeviceType(ua) {
-    var mobileRegex = /Mobi|Android|iPhone|iPad|iPod|Windows Phone|IEMobile|BlackBerry/i;
-    var tabletRegex = /Tablet|iPad|PlayBook|Silk/i;
-    if (tabletRegex.test(ua)) return 'Tablet';
-    if (mobileRegex.test(ua)) return 'Mobile';
+  function detectCategory(ua) {
+    if (/Tablet|iPad|PlayBook|Silk/i.test(ua)) return 'Tablet';
+    if (/Mobi|Android|iPhone|iPad|iPod|Windows Phone|IEMobile|BlackBerry/i.test(ua)) return 'Mobile';
     return 'Desktop';
   }
 
-  // ── Android brand/model mapping — covers the brands dominant in the Indian
-  // market; falls back to the raw model code if the prefix isn't recognized. ──
-  var MODEL_BRAND_PATTERNS = [
+  // ── Android brand from its model code — covers brands dominant in the
+  // Indian market; unmatched codes still show the raw code rather than
+  // getting dropped. ──
+  var ANDROID_BRAND_RULES = [
     [/^SM-/i, 'Samsung'],
     [/^CPH/i, 'Oppo'],
     [/^RMX/i, 'Realme'],
@@ -87,7 +85,7 @@
     [/redmi/i, 'Redmi'],
     [/poco/i, 'POCO'],
     [/^M(19|20|21|22)\w*/i, 'Xiaomi/Redmi'],
-    [/^2\d{5,}/i, 'Xiaomi/Redmi'], // Xiaomi's numeric-first model/codenames, e.g. "2201116SG"
+    [/^2\d{5,}/i, 'Xiaomi/Redmi'], // Xiaomi numeric-first codenames, e.g. "2201116SG"
     [/^moto/i, 'Motorola'],
     [/oneplus/i, 'OnePlus'],
     [/^GM\d/i, 'OnePlus'],
@@ -101,21 +99,20 @@
     [/^nothing/i, 'Nothing']
   ];
 
-  function brandFromModel(model) {
-    for (var i = 0; i < MODEL_BRAND_PATTERNS.length; i++) {
-      if (MODEL_BRAND_PATTERNS[i][0].test(model)) {
-        return MODEL_BRAND_PATTERNS[i][1] + ' (' + model + ')';
+  function resolveAndroidDevice(modelCode) {
+    for (var i = 0; i < ANDROID_BRAND_RULES.length; i++) {
+      if (ANDROID_BRAND_RULES[i][0].test(modelCode)) {
+        return ANDROID_BRAND_RULES[i][1] + ' (' + modelCode + ')';
       }
     }
-    return 'Android (' + model + ')'; // unrecognized brand — show the raw code
+    return 'Android (' + modelCode + ')';
   }
 
-  // ── iPhone model guess — Apple deliberately does not expose the exact
-  // iPhone model to websites (no API for it, unlike Android's opt-in Client
-  // Hints). The standard workaround is matching CSS screen dimensions
-  // against known iPhone sizes; several models share a resolution, so this
-  // returns the matching group rather than a single guaranteed model. ──
-  var IPHONE_SCREEN_MODELS = [
+  // ── iPhone model guess by CSS screen size — Apple exposes no API for the
+  // exact model (unlike Android's opt-in Client Hints), so this is the
+  // standard workaround. Several models share a resolution, hence a group
+  // rather than one guaranteed model. ──
+  var IPHONE_SIZE_TABLE = [
     ['320x480', 'iPhone 4/4s'],
     ['320x568', 'iPhone 5/5s/5c/SE (1st gen)'],
     ['375x667', 'iPhone 6/6s/7/8/SE (2nd/3rd gen)'],
@@ -130,23 +127,23 @@
     ['440x956', 'iPhone 16 Pro Max']
   ];
 
-  function guessIphoneModel() {
-    var w = Math.min(screen.width, screen.height);
-    var h = Math.max(screen.width, screen.height);
-    var key = w + 'x' + h;
-    for (var i = 0; i < IPHONE_SCREEN_MODELS.length; i++) {
-      if (IPHONE_SCREEN_MODELS[i][0] === key) return IPHONE_SCREEN_MODELS[i][1] + ' (~' + key + ')';
+  function resolveIphoneModel() {
+    var short = Math.min(screen.width, screen.height);
+    var long = Math.max(screen.width, screen.height);
+    var key = short + 'x' + long;
+    for (var i = 0; i < IPHONE_SIZE_TABLE.length; i++) {
+      if (IPHONE_SIZE_TABLE[i][0] === key) return IPHONE_SIZE_TABLE[i][1] + ' (~' + key + ')';
     }
     return 'iPhone (' + key + ', unrecognized size)';
   }
 
-  function getDeviceName(ua) {
+  function resolveDeviceLabel(ua) {
     if (/windows phone/i.test(ua)) return 'Windows Phone';
     if (/ipad/i.test(ua)) return 'iPad';
-    if (/iphone/i.test(ua)) return guessIphoneModel();
+    if (/iphone/i.test(ua)) return resolveIphoneModel();
     if (/android/i.test(ua)) {
-      var m = ua.match(/Linux;\s+Android\s+[^;]+;\s+([^)]+)/i);
-      return (m && m[1]) ? brandFromModel(m[1].trim()) : 'Android Device';
+      var match = ua.match(/Linux;\s+Android\s+[^;]+;\s+([^)]+)/i);
+      return (match && match[1]) ? resolveAndroidDevice(match[1].trim()) : 'Android Device';
     }
     if (/macintosh/i.test(ua) || /mac os x/i.test(ua)) {
       return (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) ? 'iPad (macOS Mode)' : 'Macintosh';
@@ -157,54 +154,53 @@
     return 'Generic Device';
   }
 
-  // ── OS version, kept separate from device model so both are readable on
-  // their own (e.g. Device: "Samsung (SM-A536E)", OS: "Android 13"). ──
-  function getOSVersion(ua) {
-    var m;
+  // Kept separate from the device label so both read cleanly on their own
+  // (e.g. Device: "Samsung (SM-A536E)", OS: "Android 13").
+  function resolveOSLabel(ua) {
+    var match;
     if (/iphone|ipad|ipod/i.test(ua)) {
-      m = ua.match(/OS (\d+)_(\d+)/);
-      return m ? 'iOS ' + m[1] + '.' + m[2] : 'iOS';
+      match = ua.match(/OS (\d+)_(\d+)/);
+      return match ? 'iOS ' + match[1] + '.' + match[2] : 'iOS';
     }
     if (/android/i.test(ua)) {
-      m = ua.match(/Android\s+([\d.]+)/i);
-      return m ? 'Android ' + m[1] : 'Android';
+      match = ua.match(/Android\s+([\d.]+)/i);
+      return match ? 'Android ' + match[1] : 'Android';
     }
     if (/windows nt 10/i.test(ua)) return 'Windows 10/11';
     if (/windows nt 6\.3/i.test(ua)) return 'Windows 8.1';
     if (/windows nt 6\.2/i.test(ua)) return 'Windows 8';
     if (/windows nt 6\.1/i.test(ua)) return 'Windows 7';
-    m = ua.match(/mac os x ([\d_]+)/i);
-    if (m) return 'macOS ' + m[1].replace(/_/g, '.');
+    match = ua.match(/mac os x ([\d_]+)/i);
+    if (match) return 'macOS ' + match[1].replace(/_/g, '.');
     return '';
   }
 
-  // Modern Chrome deliberately hides the real device model in navigator.userAgent
-  // for privacy (sends a placeholder like "Android 10; K") unless a site asks via
-  // the User-Agent Client Hints API. This upgrades resolvedDeviceName/resolvedOS
-  // to real values when available — Chromium-only; Safari/Firefox keep the
-  // regex-based guesses above (and for iOS, Apple blocks this entirely regardless).
-  function loadDeviceModel() {
-    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-      navigator.userAgentData.getHighEntropyValues(['model', 'platformVersion'])
-        .then(function (info) {
-          if (info && info.model) resolvedDeviceName = brandFromModel(info.model);
-          if (info && info.platformVersion && /android/i.test(navigator.userAgent)) {
-            resolvedOSVersion = 'Android ' + info.platformVersion;
-          } else if (info && info.platformVersion && /windows/i.test(navigator.userAgent)) {
-            // Chromium's documented mapping: Windows 11 reports platformVersion >= 13.
-            var major = parseInt(info.platformVersion.split('.')[0], 10);
-            resolvedOSVersion = major >= 13 ? 'Windows 11' : 'Windows 10';
-          }
-        })
-        .catch(function () { /* keep the UA-string-based guesses */ });
-    }
+  // Chrome hides the real device model behind a placeholder ("Android 10; K")
+  // for privacy unless a site asks via User-Agent Client Hints. This upgrades
+  // the resolved device/OS labels in place when that API is available —
+  // Chromium-only; Safari/Firefox keep the regex guesses above, and iOS
+  // blocks this entirely regardless of browser.
+  function upgradeDeviceInfo() {
+    if (!(navigator.userAgentData && navigator.userAgentData.getHighEntropyValues)) return;
+    navigator.userAgentData.getHighEntropyValues(['model', 'platformVersion'])
+      .then(function (info) {
+        if (!info) return;
+        if (info.model) currentDeviceLabel = resolveAndroidDevice(info.model);
+        if (info.platformVersion && /android/i.test(navigator.userAgent)) {
+          currentOSLabel = 'Android ' + info.platformVersion;
+        } else if (info.platformVersion && /windows/i.test(navigator.userAgent)) {
+          // Chromium's documented mapping: Windows 11 reports platformVersion >= 13.
+          var majorVersion = parseInt(info.platformVersion.split('.')[0], 10);
+          currentOSLabel = majorVersion >= 13 ? 'Windows 11' : 'Windows 10';
+        }
+      })
+      .catch(function () { /* keep the UA-string-based guesses */ });
   }
 
-  // Some providers (BigDataCloud in particular) return the official UN/ISO
-  // long-form country name — "United States of America (the)", "Russian
-  // Federation (the)", "Korea (the Republic of)" — instead of the name
-  // everyone actually uses. Maps the common ones to their normal name;
-  // falls back to just stripping a trailing "(the)" for anything unmapped.
+  // Some providers return official UN/ISO long-form country names —
+  // "United States of America (the)", "Korea (the Republic of)" — instead of
+  // the name everyone actually uses. Maps the common ones; anything unmapped
+  // just gets a trailing "(the)" stripped off.
   var COUNTRY_NAME_FIXES = {
     'United States of America (the)': 'United States',
     'United States of America': 'United States',
@@ -235,54 +231,51 @@
     'Syrian Arab Republic': 'Syria'
   };
 
-  function cleanCountryName(name) {
+  function tidyCountryName(name) {
     if (!name) return name;
     if (COUNTRY_NAME_FIXES[name]) return COUNTRY_NAME_FIXES[name];
     return name.replace(/\s*\(the\)\s*$/i, '').trim();
   }
 
-  // ── Location — single accurate text box, no separate lat/long fields.
-  // Same 3-provider fallback chain as the contact form (BigDataCloud ->
-  // ipapi.co -> ipinfo.io). Still IP-based only — no navigator.geolocation
-  // call, so no permission prompt is ever shown; this is the practical
-  // accuracy ceiling without asking the visitor for GPS access. Picks the
-  // most specific place name each provider offers (neighborhood/locality
-  // over city when available) and appends the postcode when BigDataCloud
-  // has one, for the most precise "one box" location reasonably obtainable
-  // from an IP address alone. ──
-  var resolvedLocation = 'Unknown Location';
+  // ── Location — one accurate text box. NO latitude/longitude anywhere.
+  // 3-provider IP lookup fallback chain (BigDataCloud -> ipapi.co ->
+  // ipinfo.io). Never calls navigator.geolocation, so no permission popup
+  // ever shows — this is the practical accuracy ceiling for a silent,
+  // zero-friction lookup. Picks the most specific place name each provider
+  // offers and appends a postcode when one is available. ──
+  var currentLocation = 'Unknown Location';
 
-  function loadLocation() {
+  function fetchAccurateLocation() {
     return fetch('https://api.bigdatacloud.net/data/reverse-geocode-client')
       .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
       .then(function (data) {
-        var country = cleanCountryName(data.countryName);
+        var country = tidyCountryName(data.countryName);
         var place = data.locality || data.city;
-        var cityPart = (data.city && data.locality && data.locality !== data.city)
+        var areaPart = (data.city && data.locality && data.locality !== data.city)
           ? data.locality + ', ' + data.city
           : place;
-        if (data.postcode) cityPart = cityPart ? cityPart + ' ' + data.postcode : data.postcode;
-        var parts = [cityPart, data.principalSubdivision, country].filter(Boolean);
-        if (parts.length) resolvedLocation = parts.join(', ');
+        if (data.postcode) areaPart = areaPart ? areaPart + ' ' + data.postcode : data.postcode;
+        var parts = [areaPart, data.principalSubdivision, country].filter(Boolean);
+        if (parts.length) currentLocation = parts.join(', ');
       })
       .catch(function () {
         return fetch('https://ipapi.co/json/')
           .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
           .then(function (data) {
-            var country = cleanCountryName(data.country_name);
-            var cityPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
-            var parts = [cityPart, data.region, country].filter(Boolean);
-            if (parts.length) resolvedLocation = parts.join(', ');
+            var country = tidyCountryName(data.country_name);
+            var areaPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
+            var parts = [areaPart, data.region, country].filter(Boolean);
+            if (parts.length) currentLocation = parts.join(', ');
           });
       })
       .catch(function () {
         return fetch('https://ipinfo.io/json')
           .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
           .then(function (data) {
-            var country = cleanCountryName(data.country);
-            var cityPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
-            var parts = [cityPart, data.region, country].filter(Boolean);
-            if (parts.length) resolvedLocation = parts.join(', ');
+            var country = tidyCountryName(data.country);
+            var areaPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
+            var parts = [areaPart, data.region, country].filter(Boolean);
+            if (parts.length) currentLocation = parts.join(', ');
           });
       })
       .catch(function () { /* silently give up — stays "Unknown Location" */ });
@@ -293,19 +286,16 @@
   // Priority order:
   //   1. ?utm_source=… or ?src=… on the URL — the ONLY fully reliable signal.
   //      Tag links shared on WhatsApp/Instagram/etc. with this (e.g.
-  //      "?utm_source=whatsapp") because those apps typically strip the
-  //      referrer entirely when opening a link in the system browser — no
-  //      amount of client-side detection can recover that after the fact.
-  //   2. In-app browser sniffing — Instagram, Facebook and LinkedIn's own
+  //      "?utm_source=whatsapp"), because those apps typically strip the
+  //      referrer entirely when opening a link in the system browser.
+  //   2. In-app browser sniffing — Instagram, Facebook, and LinkedIn's own
   //      in-app browsers add a recognizable token to the User-Agent, so taps
-  //      on links opened *inside* those apps are still identifiable even
-  //      with no referrer.
-  //   3. document.referrer domain — covers Google, direct social-site
-  //      visits (e.g. clicking through from linkedin.com/feed on desktop),
-  //      YouTube, etc.
-  //   4. "Direct / None" — no referrer and no UTM tag; this is what most
-  //      WhatsApp/Instagram-DM taps will show up as without tagging (#1). ──
-  var SOURCE_LABELS = {
+  //      inside those apps are identifiable even with no referrer.
+  //   3. document.referrer domain — covers Google, direct social-site visits
+  //      (e.g. clicking through from linkedin.com/feed on desktop), YouTube.
+  //   4. "Direct / None" — no referrer and no UTM tag; most WhatsApp/
+  //      Instagram-DM taps land here without tagging (#1). ──
+  var SOURCE_ALIASES = {
     instagram: 'Instagram', ig: 'Instagram',
     linkedin: 'LinkedIn',
     whatsapp: 'WhatsApp', wa: 'WhatsApp',
@@ -320,7 +310,7 @@
     email: 'Email', newsletter: 'Email'
   };
 
-  var REFERRER_DOMAINS = [
+  var REFERRER_HOST_RULES = [
     [/(^|\.)google\./i, 'Google'],
     [/(^|\.)bing\.com$/i, 'Bing'],
     [/(^|\.)duckduckgo\.com$/i, 'DuckDuckGo'],
@@ -346,41 +336,42 @@
     [/(^|\.)dribbble\.com$/i, 'Dribbble']
   ];
 
-  function getUrlParam(name) {
-    var m = location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
-    return m ? decodeURIComponent(m[1]) : '';
+  function readUrlParam(name) {
+    var match = location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
+    return match ? decodeURIComponent(match[1]) : '';
   }
 
-  function hostnameOf(url) {
+  function hostOf(url) {
     try { return new URL(url).hostname.replace(/^www\./, ''); }
     catch (e) { return ''; }
   }
 
-  function classifyTrafficSource(ua, referrer) {
-    var override = (getUrlParam('utm_source') || getUrlParam('src')).toLowerCase();
-    if (override) return SOURCE_LABELS[override] || (override.charAt(0).toUpperCase() + override.slice(1));
+  function resolveTrafficSource(ua, referrer) {
+    var tag = (readUrlParam('utm_source') || readUrlParam('src')).toLowerCase();
+    if (tag) return SOURCE_ALIASES[tag] || (tag.charAt(0).toUpperCase() + tag.slice(1));
 
     if (/instagram/i.test(ua)) return 'Instagram';
     if (/FBAN|FBAV|FB_IAB|FBIOS/i.test(ua)) return 'Facebook';
     if (/LinkedInApp/i.test(ua)) return 'LinkedIn';
 
     if (!referrer) return 'Direct / None';
-    var host = hostnameOf(referrer);
+    var host = hostOf(referrer);
     if (!host) return 'Direct / None';
-    for (var i = 0; i < REFERRER_DOMAINS.length; i++) {
-      if (REFERRER_DOMAINS[i][0].test(host)) return REFERRER_DOMAINS[i][1];
+    for (var i = 0; i < REFERRER_HOST_RULES.length; i++) {
+      if (REFERRER_HOST_RULES[i][0].test(host)) return REFERRER_HOST_RULES[i][1];
     }
     return 'Other (' + host + ')';
   }
 
-  function send(payload) {
-    if (!ANALYTICS_URL) return; // not configured yet — no-op, never throws
+  // ── Transport ────────────────────────────────────────────────────────────
+  function transmit(payload) {
+    if (!ANALYTICS_URL) return; // not configured — no-op, never throws
     var body = JSON.stringify(payload);
     if (navigator.sendBeacon) {
       var blob = new Blob([body], { type: 'text/plain' });
       if (navigator.sendBeacon(ANALYTICS_URL, blob)) return;
     }
-    // Fallback for browsers without sendBeacon, or if the beacon failed to queue.
+    // Fallback for browsers without sendBeacon, or a queue failure.
     // no-cors + keepalive lets this survive page unload without blocking navigation.
     fetch(ANALYTICS_URL, {
       method: 'POST', mode: 'no-cors', keepalive: true,
@@ -388,114 +379,112 @@
     }).catch(function () {});
   }
 
-  // ── Session (= one visit, possibly across several pages) ──
+  // ── Session (= one visit, possibly across several pages) ────────────────
   // sessionStorage persists across page loads within the SAME TAB and is
   // wiped the instant the tab/window closes — exactly "one row per visit",
   // never a long-lived visitor identifier, never a cookie.
-  var SESSION_KEY = 'va_session_v3';
+  var VISIT_STORAGE_KEY = 'visit_track_v1';
 
-  function loadSession() {
+  function readVisit() {
     try {
-      var raw = sessionStorage.getItem(SESSION_KEY);
+      var raw = sessionStorage.getItem(VISIT_STORAGE_KEY);
       return raw ? JSON.parse(raw) : null;
     } catch (e) { return null; }
   }
 
-  function saveSession(session) {
-    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch (e) {}
+  function writeVisit(visit) {
+    try { sessionStorage.setItem(VISIT_STORAGE_KEY, JSON.stringify(visit)); } catch (e) {}
   }
 
-  function generateSessionId() {
+  function newVisitId() {
     return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
   }
 
   var ua = navigator.userAgent;
-  var page = pageName();
-  var browser = getBrowserName(ua);
-  var deviceType = getDeviceType(ua);
-  var resolvedDeviceName = getDeviceName(ua);   // upgraded in place by loadDeviceModel() if possible
-  var resolvedOSVersion = getOSVersion(ua);     // upgraded in place by loadDeviceModel() if possible
+  var page = resolvePageLabel();
+  var browser = detectBrowser(ua);
+  var category = detectCategory(ua);
+  var currentDeviceLabel = resolveDeviceLabel(ua); // upgraded in place by upgradeDeviceInfo() if possible
+  var currentOSLabel = resolveOSLabel(ua);          // upgraded in place by upgradeDeviceInfo() if possible
   var referrer = document.referrer || '';
   var language = navigator.language || navigator.userLanguage || 'Unknown';
-  var screenRes = screen.width + '×' + screen.height + ' @' + (window.devicePixelRatio || 1) + 'x';
-  var exitSent = false;
+  var screenSize = screen.width + '×' + screen.height + ' @' + (window.devicePixelRatio || 1) + 'x';
+  var leaveSent = false;
 
-  var session = loadSession();
-  var isNewSession = !session;
-  if (isNewSession) {
-    session = {
-      sessionId: generateSessionId(),
+  var visit = readVisit();
+  var isNewVisit = !visit;
+  if (isNewVisit) {
+    visit = {
+      visitId: newVisitId(),
       entryPage: page,
-      pagesPath: [page],
-      trafficSource: classifyTrafficSource(ua, referrer),
-      startTime: Date.now()
+      pagesSeen: [page],
+      source: resolveTrafficSource(ua, referrer),
+      startedAt: Date.now()
     };
-  } else if (session.pagesPath[session.pagesPath.length - 1] !== page) {
-    session.pagesPath.push(page);
+  } else if (visit.pagesSeen[visit.pagesSeen.length - 1] !== page) {
+    visit.pagesSeen.push(page);
   }
-  saveSession(session);
+  writeVisit(visit);
 
-  loadLocation();
-  loadDeviceModel();
+  fetchAccurateLocation();
+  upgradeDeviceInfo();
 
-  function sendVisitPing() {
-    send({
-      type: 'visit',
-      stage: isNewSession ? 'enter' : 'nav',
-      sessionId: session.sessionId,
-      timestamp: nowIST(),
-      trafficSource: session.trafficSource,
-      entryPage: session.entryPage,
-      exitPage: page,
-      pagesVisited: session.pagesPath.length,
-      pagePath: session.pagesPath.join(' → '),
+  function reportVisitState() {
+    transmit({
+      phase: isNewVisit ? 'start' : 'continue',
+      visitId: visit.visitId,
+      time: preciseTimestamp(),
+      source: visit.source,
+      entry: visit.entryPage,
+      exit: page,
+      pageCount: visit.pagesSeen.length,
+      trail: visit.pagesSeen.join(' → '),
       browser: browser,
-      device: resolvedDeviceName,
-      osVersion: resolvedOSVersion,
-      deviceType: deviceType,
-      location: resolvedLocation,
-      language: language,
-      screenRes: screenRes
+      device: currentDeviceLabel,
+      os: currentOSLabel,
+      category: category,
+      place: currentLocation,
+      lang: language,
+      screen: screenSize
     });
   }
 
   // Fire immediately so a row appears/updates the moment someone loads a
-  // page — don't make "is anyone visiting" depend on them leaving cleanly first.
-  sendVisitPing();
+  // page — "is anyone visiting" shouldn't depend on them leaving cleanly.
+  reportVisitState();
 
-  function sendExit() {
-    if (exitSent) return;
-    exitSent = true;
-    var seconds = Math.round((Date.now() - session.startTime) / 1000);
-    send({
-      type: 'visit',
-      stage: 'exit',
-      sessionId: session.sessionId,
-      timeOnSiteSeconds: seconds
+  function reportLeave() {
+    if (leaveSent) return;
+    leaveSent = true;
+    var seconds = Math.round((Date.now() - visit.startedAt) / 1000);
+    transmit({
+      phase: 'leave',
+      visitId: visit.visitId,
+      duration: seconds
     });
   }
 
   // visibilitychange (hidden) is the most reliable exit signal on mobile
   // Safari/Chrome, where pagehide/beforeunload are unreliable; pagehide
-  // covers desktop back/forward-cache navigations. Guarded by exitSent
-  // so only the first of these to fire actually sends.
+  // covers desktop back/forward-cache navigations. leaveSent guards against
+  // both firing.
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'hidden') sendExit();
+    if (document.visibilityState === 'hidden') reportLeave();
   });
-  window.addEventListener('pagehide', sendExit);
+  window.addEventListener('pagehide', reportLeave);
 
   // Resume download tracking — fires immediately on click, since a PDF
   // download doesn't necessarily navigate the visitor away from the page.
-  // Sets Resume Downloaded = Yes on this visit's existing row rather than
+  // Flags Resume Downloaded = Yes on this visit's existing row rather than
   // creating a new one.
   document.addEventListener('click', function (e) {
     var link = e.target.closest && e.target.closest('a[href$=".pdf"]');
     if (!link) return;
-    send({
-      type: 'resume_download',
-      sessionId: session.sessionId,
-      timestamp: nowIST(),
-      page: page
+    transmit({
+      event: 'download',
+      visitId: visit.visitId,
+      time: preciseTimestamp(),
+      exit: page
     });
   }, { capture: true });
 })();

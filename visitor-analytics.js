@@ -2,22 +2,23 @@
  * Visitor Analytics — lightweight, anonymous, first-party pageview + resume-download tracker.
  *
  * Runs on every page of the site. Collects only standard, non-invasive signals:
- * browser, OS/device type, approximate (city/country) location derived from IP,
- * referrer, and time spent on page. No cookies, no cross-site tracking, no
- * fingerprinting, no name/email — this is intentionally kept fully anonymous and
- * separate from the contact form's lead-capture pipeline (see index.html).
+ * browser, device model/OS, approximate (IP-derived) location with coordinates,
+ * screen size, language, referrer, and time spent on page. No cookies, no
+ * cross-site tracking, no permission prompts, no name/email — kept fully
+ * anonymous and separate from the contact form's lead-capture pipeline.
  *
  * Backend: a Google Apps Script Web App (see google-apps-script-analytics.gs in
- * this repo) that appends each event as a row to a Google Sheet. Deploy that
- * script, then paste the resulting /exec URL into ANALYTICS_URL below. Until
- * it's set, this script silently no-ops — safe to ship before the sheet exists.
+ * this repo) that appends/updates a row per visit in a Google Sheet. Deploy
+ * that script, then paste the resulting /exec URL into ANALYTICS_URL below.
+ * Until it's set, this script silently no-ops.
  *
  * Events sent:
- *   - "pageview": once per page load, fired at exit time so it can include
- *     total time-on-page. Fires on tab hide, navigation, or tab close.
- *   - "resume_download": fired immediately when a visitor clicks a link to a
- *     PDF (the resume) — doesn't wait for exit, since a download doesn't
- *     necessarily navigate the visitor away.
+ *   - "pageview" / stage "enter": fires immediately on load, so a row shows
+ *     up right away rather than only after the visitor leaves.
+ *   - "pageview" / stage "exit": fires when that same visit ends, updating
+ *     the same row (matched via sessionId) with real time-on-page, plus
+ *     whatever device/location detail resolved after page-load.
+ *   - "resume_download": fired immediately when a visitor clicks the resume PDF.
  */
 (function () {
   'use strict';
@@ -48,8 +49,6 @@
     });
   }
 
-  // ── Browser / device parsing — same logic as the contact form's detection
-  // in index.html, kept in sync so both pipelines report identical labels. ──
   function getBrowserName(ua) {
     if (/edg/i.test(ua)) return 'Edge';
     if (/OPR|Opera/i.test(ua)) return 'Opera';
@@ -68,27 +67,8 @@
     return 'Desktop';
   }
 
-  function getDeviceName(ua) {
-    if (/windows phone/i.test(ua)) return 'Windows Phone';
-    if (/iphone/i.test(ua)) return 'iPhone';
-    if (/ipad/i.test(ua)) return 'iPad';
-    if (/android/i.test(ua)) {
-      var m = ua.match(/Linux;\s+Android\s+[^;]+;\s+([^)]+)/i);
-      return (m && m[1]) ? brandFromModel(m[1].trim()) : 'Android Device';
-    }
-    if (/macintosh/i.test(ua) || /mac os x/i.test(ua)) {
-      return (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) ? 'iPad (macOS Mode)' : 'Macintosh';
-    }
-    if (/windows/i.test(ua)) return 'Windows PC';
-    if (/linux/i.test(ua)) return 'Linux PC';
-    if (/cros/i.test(ua)) return 'ChromeOS Device';
-    return 'Generic Device';
-  }
-
-  // Maps a raw Android model code (e.g. "SM-A536E", "CPH2173", "M2101K6G")
-  // to a readable "Brand (model)" label. Covers the brands dominant in the
-  // Indian market (Samsung, Xiaomi/Redmi/POCO, vivo, Oppo, iQOO, Realme,
-  // OnePlus) plus a few others; falls back to the raw code if unrecognized.
+  // ── Android brand/model mapping — covers the brands dominant in the Indian
+  // market; falls back to the raw model code if the prefix isn't recognized. ──
   var MODEL_BRAND_PATTERNS = [
     [/^SM-/i, 'Samsung'],
     [/^CPH/i, 'Oppo'],
@@ -123,24 +103,104 @@
     return 'Android (' + model + ')'; // unrecognized brand — show the raw code
   }
 
+  // ── iPhone model guess — Apple deliberately does not expose the exact
+  // iPhone model to websites (no API for it, unlike Android's opt-in Client
+  // Hints). The standard workaround is matching CSS screen dimensions
+  // against known iPhone sizes; several models share a resolution, so this
+  // returns the matching group rather than a single guaranteed model. ──
+  var IPHONE_SCREEN_MODELS = [
+    ['320x480', 'iPhone 4/4s'],
+    ['320x568', 'iPhone 5/5s/5c/SE (1st gen)'],
+    ['375x667', 'iPhone 6/6s/7/8/SE (2nd/3rd gen)'],
+    ['414x736', 'iPhone 6+/6s+/7+/8+'],
+    ['375x812', 'iPhone X/XS/11 Pro/12 mini/13 mini'],
+    ['414x896', 'iPhone XR/XS Max/11/11 Pro Max'],
+    ['390x844', 'iPhone 12/12 Pro/13/13 Pro/14'],
+    ['428x926', 'iPhone 12 Pro Max/13 Pro Max/14 Plus'],
+    ['393x852', 'iPhone 14 Pro/15/15 Pro/16'],
+    ['430x932', 'iPhone 14 Pro Max/15 Pro Max/15 Plus/16 Plus'],
+    ['402x874', 'iPhone 16 Pro'],
+    ['440x956', 'iPhone 16 Pro Max']
+  ];
+
+  function guessIphoneModel() {
+    var w = Math.min(screen.width, screen.height);
+    var h = Math.max(screen.width, screen.height);
+    var key = w + 'x' + h;
+    for (var i = 0; i < IPHONE_SCREEN_MODELS.length; i++) {
+      if (IPHONE_SCREEN_MODELS[i][0] === key) return IPHONE_SCREEN_MODELS[i][1] + ' (~' + key + ')';
+    }
+    return 'iPhone (' + key + ', unrecognized size)';
+  }
+
+  function getDeviceName(ua) {
+    if (/windows phone/i.test(ua)) return 'Windows Phone';
+    if (/ipad/i.test(ua)) return 'iPad';
+    if (/iphone/i.test(ua)) return guessIphoneModel();
+    if (/android/i.test(ua)) {
+      var m = ua.match(/Linux;\s+Android\s+[^;]+;\s+([^)]+)/i);
+      return (m && m[1]) ? brandFromModel(m[1].trim()) : 'Android Device';
+    }
+    if (/macintosh/i.test(ua) || /mac os x/i.test(ua)) {
+      return (navigator.maxTouchPoints && navigator.maxTouchPoints > 2) ? 'iPad (macOS Mode)' : 'Macintosh';
+    }
+    if (/windows/i.test(ua)) return 'Windows PC';
+    if (/linux/i.test(ua)) return 'Linux PC';
+    if (/cros/i.test(ua)) return 'ChromeOS Device';
+    return 'Generic Device';
+  }
+
+  // ── OS version, kept separate from device model so both are readable on
+  // their own (e.g. Device: "Samsung (SM-A536E)", OS: "Android 13"). ──
+  function getOSVersion(ua) {
+    var m;
+    if (/iphone|ipad|ipod/i.test(ua)) {
+      m = ua.match(/OS (\d+)_(\d+)/);
+      return m ? 'iOS ' + m[1] + '.' + m[2] : 'iOS';
+    }
+    if (/android/i.test(ua)) {
+      m = ua.match(/Android\s+([\d.]+)/i);
+      return m ? 'Android ' + m[1] : 'Android';
+    }
+    if (/windows nt 10/i.test(ua)) return 'Windows 10/11';
+    if (/windows nt 6\.3/i.test(ua)) return 'Windows 8.1';
+    if (/windows nt 6\.2/i.test(ua)) return 'Windows 8';
+    if (/windows nt 6\.1/i.test(ua)) return 'Windows 7';
+    m = ua.match(/mac os x ([\d_]+)/i);
+    if (m) return 'macOS ' + m[1].replace(/_/g, '.');
+    return '';
+  }
+
   // Modern Chrome deliberately hides the real device model in navigator.userAgent
-  // for privacy (it sends a generic placeholder like "Android 10; K") unless a
-  // site explicitly asks via the User-Agent Client Hints API. This upgrades
-  // resolvedDeviceName to the real brand/model when that API is available —
-  // Chromium-only, so Safari/Firefox keep using the regex-based UA guess above.
+  // for privacy (sends a placeholder like "Android 10; K") unless a site asks via
+  // the User-Agent Client Hints API. This upgrades resolvedDeviceName/resolvedOS
+  // to real values when available — Chromium-only; Safari/Firefox keep the
+  // regex-based guesses above (and for iOS, Apple blocks this entirely regardless).
   function loadDeviceModel() {
     if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-      navigator.userAgentData.getHighEntropyValues(['model'])
+      navigator.userAgentData.getHighEntropyValues(['model', 'platformVersion'])
         .then(function (info) {
           if (info && info.model) resolvedDeviceName = brandFromModel(info.model);
+          if (info && info.platformVersion && /android/i.test(navigator.userAgent)) {
+            resolvedOSVersion = 'Android ' + info.platformVersion;
+          } else if (info && info.platformVersion && /windows/i.test(navigator.userAgent)) {
+            // Chromium's documented mapping: Windows 11 reports platformVersion >= 13.
+            var major = parseInt(info.platformVersion.split('.')[0], 10);
+            resolvedOSVersion = major >= 13 ? 'Windows 11' : 'Windows 10';
+          }
         })
-        .catch(function () { /* keep the UA-string-based guess */ });
+        .catch(function () { /* keep the UA-string-based guesses */ });
     }
   }
 
-  // ── Approximate location — same 3-provider fallback chain as the contact
-  // form (BigDataCloud -> ipapi.co -> ipinfo.io), city/country level only. ──
+  // ── Location — same 3-provider fallback chain as the contact form
+  // (BigDataCloud -> ipapi.co -> ipinfo.io). Now also keeps the raw lat/lon
+  // each provider already returns, for a precise map pin alongside the
+  // human-readable city/region/country text. Still IP-based only — no
+  // navigator.geolocation call, so no permission prompt is ever shown. ──
   var resolvedLocation = 'Unknown Location';
+  var resolvedLat = '';
+  var resolvedLon = '';
 
   function loadLocation() {
     return fetch('https://api.bigdatacloud.net/data/reverse-geocode-client')
@@ -151,6 +211,8 @@
         } else if (data.city && data.countryName) {
           resolvedLocation = data.city + ', ' + data.countryName;
         }
+        if (data.latitude != null) resolvedLat = String(data.latitude);
+        if (data.longitude != null) resolvedLon = String(data.longitude);
       })
       .catch(function () {
         return fetch('https://ipapi.co/json/')
@@ -161,6 +223,8 @@
             } else if (data.city && data.country_name) {
               resolvedLocation = data.city + ', ' + data.country_name;
             }
+            if (data.latitude != null) resolvedLat = String(data.latitude);
+            if (data.longitude != null) resolvedLon = String(data.longitude);
           });
       })
       .catch(function () {
@@ -172,9 +236,19 @@
             } else if (data.city && data.country) {
               resolvedLocation = data.city + ', ' + data.country;
             }
+            if (data.loc) {
+              var parts = data.loc.split(',');
+              if (parts[0]) resolvedLat = parts[0];
+              if (parts[1]) resolvedLon = parts[1];
+            }
           });
       })
       .catch(function () { /* silently give up — stays "Unknown Location" */ });
+  }
+
+  function mapsLink() {
+    if (!resolvedLat || !resolvedLon) return '';
+    return 'https://www.google.com/maps/search/?api=1&query=' + resolvedLat + ',' + resolvedLon;
   }
 
   function send(payload) {
@@ -197,8 +271,11 @@
   var page = pageName();
   var browser = getBrowserName(ua);
   var deviceType = getDeviceType(ua);
-  var resolvedDeviceName = getDeviceName(ua); // upgraded in place by loadDeviceModel() if possible
+  var resolvedDeviceName = getDeviceName(ua);   // upgraded in place by loadDeviceModel() if possible
+  var resolvedOSVersion = getOSVersion(ua);     // upgraded in place by loadDeviceModel() if possible
   var referrer = document.referrer || 'Direct / None';
+  var language = navigator.language || navigator.userLanguage || 'Unknown';
+  var screenRes = screen.width + '×' + screen.height + ' @' + (window.devicePixelRatio || 1) + 'x';
   var exitSent = false;
 
   // A fresh, random, never-stored ID generated on every page load — exists
@@ -230,9 +307,15 @@
       page: page,
       timeOnPageSeconds: seconds,
       browser: browser,
-      os: resolvedDeviceName,
+      device: resolvedDeviceName,
+      osVersion: resolvedOSVersion,
       deviceType: deviceType,
       location: resolvedLocation,
+      latitude: resolvedLat,
+      longitude: resolvedLon,
+      mapsLink: mapsLink(),
+      language: language,
+      screenRes: screenRes,
       referrer: referrer
     });
   }
@@ -261,9 +344,15 @@
       timestamp: nowIST(),
       page: page,
       browser: browser,
-      os: resolvedDeviceName,
+      device: resolvedDeviceName,
+      osVersion: resolvedOSVersion,
       deviceType: deviceType,
       location: resolvedLocation,
+      latitude: resolvedLat,
+      longitude: resolvedLon,
+      mapsLink: mapsLink(),
+      language: language,
+      screenRes: screenRes,
       referrer: referrer
     });
   }, { capture: true });

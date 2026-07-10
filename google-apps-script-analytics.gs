@@ -18,24 +18,24 @@
  * save, then Deploy -> Manage deployments -> pencil icon -> Version:
  * "New version" -> Deploy. Saving alone does NOT publish it.
  *
- * If you're upgrading an existing "Visitor Log" tab that was created by an
- * older version of this script, delete that tab once — the next event will
- * recreate it fresh with the current layout and formatting below.
+ * If the columns below ever change (like this update did), the sheet won't
+ * auto-migrate old rows — either delete the "Visitor Log" tab and let the
+ * next event rebuild it (only works if you have another tab too; Sheets
+ * won't delete your last remaining tab), or just run reformatVisitorLog()
+ * manually (see below) to reapply the current layout to the existing tab.
  *
- * Everything lands in ONE tab, "Visitor Log", built and formatted
- * automatically on first write — banded rows, a dark header, right-aligned
- * numbers, auto-fit columns. No manual sheet setup needed.
+ * Everything lands in ONE tab, "Visitor Log": dark header, banded rows,
+ * auto-fit columns, color-coded events, hidden Session ID column.
  *
  * ONE ROW PER VISIT: the "enter" event (fires the instant a page loads)
  * appends a new row. The "exit" event (fires when that same visit ends)
  * finds that row again — matched by the hidden Session ID column, a random
  * per-page-load ID the client generates and never stores — and fills in
- * Time on Page on it, rather than adding a second row. A visit still in
- * progress simply shows a blank Time on Page until it completes, then the
- * row tints green.
+ * Time on Page, plus backfills Device/OS/Location/Maps Link with whatever
+ * resolved more accurately by then, rather than adding a second row.
  *
- * Resume downloads get their own row (Event = "Resume Download", tinted
- * blue) since they're a single instant, not a start/end pair.
+ * Resume downloads get their own row (Event = "Resume Download") since
+ * they're a single instant, not a start/end pair.
  *
  * "Which page is most visited" isn't computed here — it's a one-line
  * PivotTable (rows: Page, values: COUNTA, filter: Event = "Page Visit"),
@@ -43,8 +43,16 @@
  */
 
 var SHEET_NAME = 'Visitor Log';
-var HEADERS = ['Timestamp', 'Event', 'Page', 'Time on Page (s)', 'Browser', 'OS / Device', 'Device Type', 'Location', 'Referrer', 'Session ID'];
-var COL = { timestamp: 1, event: 2, page: 3, timeOnPage: 4, browser: 5, os: 6, deviceType: 7, location: 8, referrer: 9, sessionId: 10 };
+var HEADERS = [
+  'Timestamp', 'Event', 'Page', 'Time on Page (s)', 'Device', 'OS Version',
+  'Browser', 'Device Type', 'Location', 'Maps Link', 'Latitude', 'Longitude',
+  'Language', 'Screen', 'Referrer', 'Session ID'
+];
+var COL = {
+  timestamp: 1, event: 2, page: 3, timeOnPage: 4, device: 5, osVersion: 6,
+  browser: 7, deviceType: 8, location: 9, mapsLink: 10, latitude: 11,
+  longitude: 12, language: 13, screen: 14, referrer: 15, sessionId: 16
+};
 
 var COLOR = {
   header: '#1a1a1a',
@@ -63,28 +71,16 @@ function doPost(e) {
     var sheet = getOrCreateSheet();
 
     if (data.type === 'resume_download') {
-      appendVisitorRow(sheet, {
-        timestamp: data.timestamp, event: 'Resume Download', page: data.page, timeOnPage: '',
-        browser: data.browser, os: data.os, deviceType: data.deviceType,
-        location: data.location, referrer: data.referrer, sessionId: data.sessionId || ''
-      });
+      appendVisitorRow(sheet, rowFromPayload(data, 'Resume Download', ''));
     } else if (data.stage === 'exit') {
-      var updated = completeVisitRow(sheet, data.sessionId, data.timeOnPageSeconds, data.os, data.location);
+      var updated = completeVisitRow(sheet, data);
       if (!updated) {
         // No matching "enter" row found (e.g. the sheet was cleared mid-visit)
         // — still record it rather than silently dropping the data.
-        appendVisitorRow(sheet, {
-          timestamp: data.timestamp, event: 'Page Visit', page: data.page, timeOnPage: data.timeOnPageSeconds,
-          browser: data.browser, os: data.os, deviceType: data.deviceType,
-          location: data.location, referrer: data.referrer, sessionId: data.sessionId || ''
-        });
+        appendVisitorRow(sheet, rowFromPayload(data, 'Page Visit', data.timeOnPageSeconds));
       }
     } else {
-      appendVisitorRow(sheet, {
-        timestamp: data.timestamp, event: 'Page Visit', page: data.page, timeOnPage: '',
-        browser: data.browser, os: data.os, deviceType: data.deviceType,
-        location: data.location, referrer: data.referrer, sessionId: data.sessionId || ''
-      });
+      appendVisitorRow(sheet, rowFromPayload(data, 'Page Visit', ''));
     }
 
     return ContentService
@@ -95,6 +91,17 @@ function doPost(e) {
       .createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+function rowFromPayload(data, event, timeOnPage) {
+  return {
+    timestamp: data.timestamp, event: event, page: data.page, timeOnPage: timeOnPage,
+    device: data.device, osVersion: data.osVersion, browser: data.browser,
+    deviceType: data.deviceType, location: data.location, mapsLink: data.mapsLink || '',
+    latitude: data.latitude || '', longitude: data.longitude || '',
+    language: data.language || '', screen: data.screenRes || '',
+    referrer: data.referrer, sessionId: data.sessionId || ''
+  };
 }
 
 function getOrCreateSheet() {
@@ -114,10 +121,9 @@ function getOrCreateSheet() {
  * delete the tab because it's the only one left in the file.
  *
  * How to run it: in this editor, click the function dropdown at the top
- * (next to the Run/Debug buttons — it may currently say "doPost"), select
- * "reformatVisitorLog", then click Run (▶). Approve the permission prompt
- * if it appears. It's safe to run more than once; it only rewrites
- * formatting, never touches your existing row data.
+ * (next to the Run/Debug buttons), select "reformatVisitorLog", then click
+ * Run (▶). Approve the permission prompt if it appears. Safe to run more
+ * than once; it only rewrites formatting, never touches your row data.
  */
 function reformatVisitorLog() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -148,16 +154,22 @@ function buildLayout(sheet) {
     .setHorizontalAlignment('left');
   sheet.setRowHeight(1, 32);
 
-  // ── Column widths tuned per field, not one-size-fits-all ──
+  // ── Column widths tuned per field ──
   sheet.setColumnWidth(COL.timestamp, 150);
   sheet.setColumnWidth(COL.event, 130);
-  sheet.setColumnWidth(COL.page, 160);
-  sheet.setColumnWidth(COL.timeOnPage, 115);
+  sheet.setColumnWidth(COL.page, 150);
+  sheet.setColumnWidth(COL.timeOnPage, 110);
+  sheet.setColumnWidth(COL.device, 210);
+  sheet.setColumnWidth(COL.osVersion, 110);
   sheet.setColumnWidth(COL.browser, 90);
-  sheet.setColumnWidth(COL.os, 140);
   sheet.setColumnWidth(COL.deviceType, 95);
   sheet.setColumnWidth(COL.location, 190);
-  sheet.setColumnWidth(COL.referrer, 150);
+  sheet.setColumnWidth(COL.mapsLink, 130);
+  sheet.setColumnWidth(COL.latitude, 90);
+  sheet.setColumnWidth(COL.longitude, 90);
+  sheet.setColumnWidth(COL.language, 80);
+  sheet.setColumnWidth(COL.screen, 130);
+  sheet.setColumnWidth(COL.referrer, 140);
   sheet.hideColumns(COL.sessionId); // correlation key only, not for reading
 
   // ── Body: base font, banded rows, gridlines, sane alignment ──
@@ -165,6 +177,7 @@ function buildLayout(sheet) {
   bodyRange.setFontFamily('Google Sans').setFontSize(10).setVerticalAlignment('middle');
   sheet.getRange(2, COL.timeOnPage, 998, 1).setHorizontalAlignment('right').setNumberFormat('0" s"');
   sheet.getRange(2, COL.deviceType, 998, 1).setHorizontalAlignment('center');
+  sheet.getRange(2, COL.latitude, 998, 2).setHorizontalAlignment('right').setNumberFormat('0.0000');
 
   var existingBandings = sheet.getBandings();
   for (var b = 0; b < existingBandings.length; b++) existingBandings[b].remove();
@@ -191,37 +204,50 @@ function buildLayout(sheet) {
   ];
   sheet.setConditionalFormatRules(rules);
 
-  // ── Give the tab itself a color so it's identifiable among other sheets ──
   sheet.setTabColor(COLOR.header);
 }
 
 function appendVisitorRow(sheet, r) {
-  sheet.appendRow([r.timestamp, r.event, r.page, r.timeOnPage, r.browser, r.os, r.deviceType, r.location, r.referrer, r.sessionId]);
+  sheet.appendRow([
+    r.timestamp, r.event, r.page, r.timeOnPage, r.device, r.osVersion, r.browser,
+    r.deviceType, r.location, r.mapsLink, r.latitude, r.longitude, r.language,
+    r.screen, r.referrer, r.sessionId
+  ]);
   var row = sheet.getLastRow();
+  linkifyMapsCell(sheet, row, r.mapsLink);
   markCompletion(sheet, row, r.event, r.timeOnPage);
 }
 
-// Fires when a visit ends: fills in Time on Page on its row, and also
-// backfills OS/Device and Location with whatever the client resolved by
-// then — both can improve after page-load (device model via Client Hints,
-// location via the IP lookup), so the completed row ends up more accurate
-// than the "enter" row was able to be.
-function completeVisitRow(sheet, sessionId, seconds, os, location) {
-  if (!sessionId) return false;
+// Fires when a visit ends: fills in Time on Page, and backfills Device,
+// OS Version, Location, and Maps Link with whatever the client resolved by
+// then — device model (Client Hints) and location (IP lookup) can both
+// improve after page-load, so the completed row ends up more accurate than
+// the "enter" row was able to be.
+function completeVisitRow(sheet, data) {
+  if (!data.sessionId) return false;
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return false;
   var ids = sheet.getRange(2, COL.sessionId, lastRow - 1, 1).getValues();
   for (var i = ids.length - 1; i >= 0; i--) { // search newest-first, cheaper for recent visits
-    if (ids[i][0] === sessionId) {
+    if (ids[i][0] === data.sessionId) {
       var row = i + 2;
-      sheet.getRange(row, COL.timeOnPage).setValue(seconds);
-      if (os) sheet.getRange(row, COL.os).setValue(os);
-      if (location) sheet.getRange(row, COL.location).setValue(location);
-      markCompletion(sheet, row, 'Page Visit', seconds);
+      sheet.getRange(row, COL.timeOnPage).setValue(data.timeOnPageSeconds);
+      if (data.device) sheet.getRange(row, COL.device).setValue(data.device);
+      if (data.osVersion) sheet.getRange(row, COL.osVersion).setValue(data.osVersion);
+      if (data.location) sheet.getRange(row, COL.location).setValue(data.location);
+      if (data.latitude) sheet.getRange(row, COL.latitude).setValue(data.latitude);
+      if (data.longitude) sheet.getRange(row, COL.longitude).setValue(data.longitude);
+      if (data.mapsLink) linkifyMapsCell(sheet, row, data.mapsLink);
+      markCompletion(sheet, row, 'Page Visit', data.timeOnPageSeconds);
       return true;
     }
   }
   return false;
+}
+
+function linkifyMapsCell(sheet, row, url) {
+  if (!url) return;
+  sheet.getRange(row, COL.mapsLink).setFormula('=HYPERLINK("' + url + '", "Open in Maps")');
 }
 
 // A completed visit (Time on Page filled in) gets a distinct green tint on

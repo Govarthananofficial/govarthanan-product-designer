@@ -14,43 +14,78 @@
  *      (ends in /exec).
  *   6. Paste that URL into ANALYTICS_URL near the top of visitor-analytics.js.
  *
- * Everything lands in ONE tab, "Visitor Log", created automatically on first
- * write — no manual sheet setup needed. Each row's "Event" column says
- * plainly what happened:
- *   - "Page Visit (Arrived)" — fires the instant a page loads.
- *   - "Page Visit (Left)"    — fires when that same visit ends, carrying the
- *                              real Time on Page.
- *   - "Resume Download"      — fires when the visitor clicks the resume PDF.
+ * To ship a code change after the first deploy: paste the new code in,
+ * save, then Deploy -> Manage deployments -> pencil icon -> Version:
+ * "New version" -> Deploy. Saving alone does NOT publish it.
+ *
+ * If you're upgrading an existing "Visitor Log" tab that was created by an
+ * older version of this script, delete that tab once — the next event will
+ * recreate it fresh with the current layout and formatting below.
+ *
+ * Everything lands in ONE tab, "Visitor Log", built and formatted
+ * automatically on first write — banded rows, a dark header, right-aligned
+ * numbers, auto-fit columns. No manual sheet setup needed.
+ *
+ * ONE ROW PER VISIT: the "enter" event (fires the instant a page loads)
+ * appends a new row. The "exit" event (fires when that same visit ends)
+ * finds that row again — matched by the hidden Session ID column, a random
+ * per-page-load ID the client generates and never stores — and fills in
+ * Time on Page on it, rather than adding a second row. A visit still in
+ * progress simply shows a blank Time on Page until it completes, then the
+ * row tints green.
+ *
+ * Resume downloads get their own row (Event = "Resume Download", tinted
+ * blue) since they're a single instant, not a start/end pair.
  *
  * "Which page is most visited" isn't computed here — it's a one-line
- * PivotTable (rows: Page, values: COUNTA, filter: Event = "Page Visit
- * (Arrived)"), or a COUNTIFS formula. No need to bake aggregation into the
- * backend.
- *
- * NOTE: if you're upgrading from the old two-tab version, delete the old
- * "Pageviews" and "Resume Downloads" tabs — this version writes to a fresh
- * "Visitor Log" tab instead, so old data won't mix with the new schema.
+ * PivotTable (rows: Page, values: COUNTA, filter: Event = "Page Visit"),
+ * or a COUNTIFS formula.
  */
+
+var SHEET_NAME = 'Visitor Log';
+var HEADERS = ['Timestamp', 'Event', 'Page', 'Time on Page (s)', 'Browser', 'OS / Device', 'Device Type', 'Location', 'Referrer', 'Session ID'];
+var COL = { timestamp: 1, event: 2, page: 3, timeOnPage: 4, browser: 5, os: 6, deviceType: 7, location: 8, referrer: 9, sessionId: 10 };
+
+var COLOR = {
+  header: '#1a1a1a',
+  headerText: '#ffffff',
+  bandFirst: '#ffffff',
+  bandSecond: '#f6f7f9',
+  inProgressBg: '#fff8e1', inProgressText: '#8a6d1a',
+  completeBg: '#e2f4e8', completeText: '#1e6b34',
+  downloadBg: '#e4ecff', downloadText: '#1d3f9e',
+  gridBorder: '#e1e3e6'
+};
+
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = getOrCreateSheet();
 
-    var eventLabel;
-    var timeOnPage = '';
     if (data.type === 'resume_download') {
-      eventLabel = 'Resume Download';
+      appendVisitorRow(sheet, {
+        timestamp: data.timestamp, event: 'Resume Download', page: data.page, timeOnPage: '',
+        browser: data.browser, os: data.os, deviceType: data.deviceType,
+        location: data.location, referrer: data.referrer, sessionId: data.sessionId || ''
+      });
     } else if (data.stage === 'exit') {
-      eventLabel = 'Page Visit (Left)';
-      timeOnPage = data.timeOnPageSeconds;
+      var updated = updateTimeOnPage(sheet, data.sessionId, data.timeOnPageSeconds);
+      if (!updated) {
+        // No matching "enter" row found (e.g. the sheet was cleared mid-visit)
+        // — still record it rather than silently dropping the data.
+        appendVisitorRow(sheet, {
+          timestamp: data.timestamp, event: 'Page Visit', page: data.page, timeOnPage: data.timeOnPageSeconds,
+          browser: data.browser, os: data.os, deviceType: data.deviceType,
+          location: data.location, referrer: data.referrer, sessionId: data.sessionId || ''
+        });
+      }
     } else {
-      eventLabel = 'Page Visit (Arrived)';
+      appendVisitorRow(sheet, {
+        timestamp: data.timestamp, event: 'Page Visit', page: data.page, timeOnPage: '',
+        browser: data.browser, os: data.os, deviceType: data.deviceType,
+        location: data.location, referrer: data.referrer, sessionId: data.sessionId || ''
+      });
     }
-
-    appendRow(ss, 'Visitor Log',
-      ['Timestamp', 'Event', 'Page', 'Time on Page (s)', 'Browser', 'OS / Device', 'Device Type', 'Location', 'Referrer'],
-      [data.timestamp, eventLabel, data.page, timeOnPage, data.browser, data.os, data.deviceType, data.location, data.referrer]
-    );
 
     return ContentService
       .createTextOutput(JSON.stringify({ ok: true }))
@@ -62,12 +97,108 @@ function doPost(e) {
   }
 }
 
-function appendRow(ss, sheetName, headers, row) {
-  var sheet = ss.getSheetByName(sheetName);
-  if (!sheet) {
-    sheet = ss.insertSheet(sheetName);
-    sheet.appendRow(headers);
-    sheet.setFrozenRows(1);
+function getOrCreateSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (sheet) return sheet;
+
+  sheet = ss.insertSheet(SHEET_NAME);
+  buildLayout(sheet);
+  return sheet;
+}
+
+function buildLayout(sheet) {
+  var lastCol = HEADERS.length;
+
+  sheet.getRange(1, 1, 1, lastCol).setValues([HEADERS]);
+  sheet.setFrozenRows(1);
+  sheet.setFrozenColumns(1);
+
+  // ── Header: dark bar, white bold text, comfortable height ──
+  sheet.getRange(1, 1, 1, lastCol)
+    .setFontWeight('bold')
+    .setFontFamily('Google Sans')
+    .setFontSize(10)
+    .setBackground(COLOR.header)
+    .setFontColor(COLOR.headerText)
+    .setVerticalAlignment('middle')
+    .setHorizontalAlignment('left');
+  sheet.setRowHeight(1, 32);
+
+  // ── Column widths tuned per field, not one-size-fits-all ──
+  sheet.setColumnWidth(COL.timestamp, 150);
+  sheet.setColumnWidth(COL.event, 130);
+  sheet.setColumnWidth(COL.page, 160);
+  sheet.setColumnWidth(COL.timeOnPage, 115);
+  sheet.setColumnWidth(COL.browser, 90);
+  sheet.setColumnWidth(COL.os, 140);
+  sheet.setColumnWidth(COL.deviceType, 95);
+  sheet.setColumnWidth(COL.location, 190);
+  sheet.setColumnWidth(COL.referrer, 150);
+  sheet.hideColumns(COL.sessionId); // correlation key only, not for reading
+
+  // ── Body: base font, banded rows, gridlines, sane alignment ──
+  var bodyRange = sheet.getRange(2, 1, 998, lastCol);
+  bodyRange.setFontFamily('Google Sans').setFontSize(10).setVerticalAlignment('middle');
+  sheet.getRange(2, COL.timeOnPage, 998, 1).setHorizontalAlignment('right').setNumberFormat('0" s"');
+  sheet.getRange(2, COL.deviceType, 998, 1).setHorizontalAlignment('center');
+
+  var existingBandings = sheet.getBandings();
+  for (var b = 0; b < existingBandings.length; b++) existingBandings[b].remove();
+  var banding = sheet.getRange(1, 1, 999, lastCol).applyRowBanding(SpreadsheetApp.BandingTheme.LIGHT_GREY, true, false);
+  banding.setHeaderRowColor(COLOR.header)
+    .setFirstRowColor(COLOR.bandFirst)
+    .setSecondRowColor(COLOR.bandSecond);
+
+  sheet.getRange(1, 1, 999, lastCol).setBorder(
+    true, true, true, true, true, true, COLOR.gridBorder, SpreadsheetApp.BorderStyle.SOLID
+  );
+
+  // ── Event column: color-coded at a glance ──
+  var eventCol = sheet.getRange(2, COL.event, 998, 1);
+  var rules = [
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('Resume Download')
+      .setBackground(COLOR.downloadBg).setFontColor(COLOR.downloadText).setBold(true)
+      .setRanges([eventCol]).build(),
+    SpreadsheetApp.newConditionalFormatRule()
+      .whenTextEqualTo('Page Visit')
+      .setBackground(COLOR.inProgressBg).setFontColor(COLOR.inProgressText)
+      .setRanges([eventCol]).build()
+  ];
+  sheet.setConditionalFormatRules(rules);
+
+  // ── Give the tab itself a color so it's identifiable among other sheets ──
+  sheet.setTabColor(COLOR.header);
+}
+
+function appendVisitorRow(sheet, r) {
+  sheet.appendRow([r.timestamp, r.event, r.page, r.timeOnPage, r.browser, r.os, r.deviceType, r.location, r.referrer, r.sessionId]);
+  var row = sheet.getLastRow();
+  markCompletion(sheet, row, r.event, r.timeOnPage);
+}
+
+function updateTimeOnPage(sheet, sessionId, seconds) {
+  if (!sessionId) return false;
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return false;
+  var ids = sheet.getRange(2, COL.sessionId, lastRow - 1, 1).getValues();
+  for (var i = ids.length - 1; i >= 0; i--) { // search newest-first, cheaper for recent visits
+    if (ids[i][0] === sessionId) {
+      var row = i + 2;
+      sheet.getRange(row, COL.timeOnPage).setValue(seconds);
+      markCompletion(sheet, row, 'Page Visit', seconds);
+      return true;
+    }
   }
-  sheet.appendRow(row);
+  return false;
+}
+
+// A completed visit (Time on Page filled in) gets a distinct green tint on
+// its Event cell, overriding the conditional "in progress" amber for that
+// one row. Resume downloads keep their conditional blue automatically.
+function markCompletion(sheet, row, event, timeOnPage) {
+  if (event === 'Page Visit' && timeOnPage !== '' && timeOnPage != null) {
+    sheet.getRange(row, COL.event).setBackground(COLOR.completeBg).setFontColor(COLOR.completeText).setFontWeight('bold');
+  }
 }

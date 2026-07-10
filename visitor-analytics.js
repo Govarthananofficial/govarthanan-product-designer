@@ -148,6 +148,13 @@
   var referrer = document.referrer || 'Direct / None';
   var exitSent = false;
 
+  // A fresh, random, never-stored ID generated on every page load — exists
+  // only to let the backend match this visit's "enter" and "exit" events to
+  // the same spreadsheet row. Not a tracking identifier: it's discarded when
+  // the tab closes, never written to localStorage/cookies, and carries no
+  // information about who the visitor is.
+  var sessionId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+
   loadLocation();
 
   function sendPageview(stage) {
@@ -158,10 +165,11 @@
     var seconds = Math.round((Date.now() - startTime) / 1000);
     send({
       type: 'pageview',
-      stage: stage, // 'enter' fires immediately on load (guarantees a row shows up
-                     // right away); 'exit' fires when the visitor leaves, carrying
-                     // the real time-on-page. Count "enter" rows for page-popularity;
-                     // "exit" rows are the same visit, just completing its duration.
+      stage: stage, // 'enter' fires immediately on load so a row appears right
+                     // away; 'exit' fires when the visitor leaves and updates
+                     // that same row (matched via sessionId) with the real
+                     // time-on-page, instead of adding a second row.
+      sessionId: sessionId,
       timestamp: nowIST(),
       page: page,
       timeOnPageSeconds: seconds,
@@ -193,6 +201,7 @@
     if (!link) return;
     send({
       type: 'resume_download',
+      sessionId: sessionId,
       timestamp: nowIST(),
       page: page,
       browser: browser,

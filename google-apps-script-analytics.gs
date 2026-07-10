@@ -14,37 +14,43 @@
  *      (ends in /exec).
  *   6. Paste that URL into ANALYTICS_URL near the top of visitor-analytics.js.
  *
- * Two tabs are created automatically on first write, no manual sheet setup
- * needed: "Pageviews" and "Resume Downloads".
- *
- * Each visit writes TWO rows to Pageviews: a "Stage" = enter row the instant
- * the page loads (so a row shows up right away, not only after the visitor
- * leaves), and a "Stage" = exit row when they leave, carrying the real
- * Time on Page. To count actual visits (not double them), filter/pivot on
- * Stage = "enter". The matching "exit" row for the same visit is the one
- * with the same Page + the next later Timestamp.
+ * Everything lands in ONE tab, "Visitor Log", created automatically on first
+ * write — no manual sheet setup needed. Each row's "Event" column says
+ * plainly what happened:
+ *   - "Page Visit (Arrived)" — fires the instant a page loads.
+ *   - "Page Visit (Left)"    — fires when that same visit ends, carrying the
+ *                              real Time on Page.
+ *   - "Resume Download"      — fires when the visitor clicks the resume PDF.
  *
  * "Which page is most visited" isn't computed here — it's a one-line
- * PivotTable in the Pageviews sheet (rows: Page, values: COUNTA, filtered
- * to Stage = "enter"), or a COUNTIFS formula. No need to bake aggregation
- * into the backend.
+ * PivotTable (rows: Page, values: COUNTA, filter: Event = "Page Visit
+ * (Arrived)"), or a COUNTIFS formula. No need to bake aggregation into the
+ * backend.
+ *
+ * NOTE: if you're upgrading from the old two-tab version, delete the old
+ * "Pageviews" and "Resume Downloads" tabs — this version writes to a fresh
+ * "Visitor Log" tab instead, so old data won't mix with the new schema.
  */
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
     var ss = SpreadsheetApp.getActiveSpreadsheet();
 
+    var eventLabel;
+    var timeOnPage = '';
     if (data.type === 'resume_download') {
-      appendRow(ss, 'Resume Downloads',
-        ['Timestamp', 'Page', 'Browser', 'OS / Device', 'Device Type', 'Location', 'Referrer'],
-        [data.timestamp, data.page, data.browser, data.os, data.deviceType, data.location, data.referrer]
-      );
+      eventLabel = 'Resume Download';
+    } else if (data.stage === 'exit') {
+      eventLabel = 'Page Visit (Left)';
+      timeOnPage = data.timeOnPageSeconds;
     } else {
-      appendRow(ss, 'Pageviews',
-        ['Timestamp', 'Stage', 'Page', 'Time on Page (s)', 'Browser', 'OS / Device', 'Device Type', 'Location', 'Referrer'],
-        [data.timestamp, data.stage || 'enter', data.page, data.timeOnPageSeconds, data.browser, data.os, data.deviceType, data.location, data.referrer]
-      );
+      eventLabel = 'Page Visit (Arrived)';
     }
+
+    appendRow(ss, 'Visitor Log',
+      ['Timestamp', 'Event', 'Page', 'Time on Page (s)', 'Browser', 'OS / Device', 'Device Type', 'Location', 'Referrer'],
+      [data.timestamp, eventLabel, data.page, timeOnPage, data.browser, data.os, data.deviceType, data.location, data.referrer]
+    );
 
     return ContentService
       .createTextOutput(JSON.stringify({ ok: true }))

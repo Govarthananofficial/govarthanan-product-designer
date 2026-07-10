@@ -1,0 +1,229 @@
+/* ==========================================================================
+   Geist Design System — shared tokens
+   Single source of truth for color, type, spacing, radius, and shadow used
+   across index.html and every case-study page. Linked via <link rel="stylesheet">
+   in each page's <head>, before that page's own <style> block.
+   ========================================================================== */
+
+:root {
+  /* ── Font families ── */
+  --font-sans: 'Geist', sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+
+  /* ── Core aliases ── */
+  --primary: #171717;
+  --secondary: #4d4d4d;
+  --tertiary: #006bff;
+  --neutral: #f2f2f2;
+  --background-100: #ffffff;
+  --background-200: #fafafa;
+
+  /* ── Gray scale (100 bg -> 1000 primary text/icon) ── */
+  --gray-100: #f2f2f2;
+  --gray-200: #ebebeb;
+  --gray-300: #e6e6e6;
+  --gray-400: #eaeaea;
+  --gray-500: #c9c9c9;
+  --gray-600: #a8a8a8;
+  --gray-700: #8f8f8f;
+  --gray-800: #7d7d7d;
+  --gray-900: #4d4d4d;
+  --gray-1000: #171717;
+
+  /* ── Gray alpha (translucent — for borders/dividers/overlays over any bg) ── */
+  --gray-alpha-100: #0000000d;
+  --gray-alpha-200: #00000015;
+  --gray-alpha-300: #0000001a;
+  --gray-alpha-400: #00000014;
+  --gray-alpha-500: #00000036;
+  --gray-alpha-600: #0000003d;
+  --gray-alpha-700: #00000070;
+  --gray-alpha-800: #00000082;
+  --gray-alpha-900: #000000b3;
+  --gray-alpha-1000: #000000e8;
+
+  /* ── Accent scales ── */
+  --blue-100: #f0f7ff;
+  --blue-200: #e9f4ff;
+  --blue-300: #dfefff;
+  --blue-400: #cae7ff;
+  --blue-500: #94ccff;
+  --blue-600: #48aeff;
+  --blue-700: #006bff;
+  --blue-800: #0059ec;
+  --blue-900: #005ff2;
+  --blue-1000: #002359;
+
+  --red-100: #ffeeef;
+  --red-200: #ffe8ea;
+  --red-300: #ffe3e4;
+  --red-400: #ffd7d6;
+  --red-500: #ffb1b3;
+  --red-600: #ff676d;
+  --red-700: #fc0035;
+  --red-800: #ea001d;
+  --red-900: #d8001b;
+  --red-1000: #47000c;
+
+  --amber-100: #fff6de;
+  --amber-200: #fff4cf;
+  --amber-300: #fff1c1;
+  --amber-400: #ffdc73;
+  --amber-500: #ffc543;
+  --amber-600: #ffa600;
+  --amber-700: #ffae00;
+  --amber-800: #ff9300;
+  --amber-900: #aa4d00;
+  --amber-1000: #561900;
+
+  --green-100: #ecfdec;
+  --green-200: #e5fce7;
+  --green-300: #d3fad1;
+  --green-400: #b9f5bc;
+  --green-500: #82eb8d;
+  --green-600: #4ce15e;
+  --green-700: #28a948;
+  --green-800: #279141;
+  --green-900: #107d32;
+  --green-1000: #003a00;
+
+  --teal-100: #defffb;
+  --teal-200: #ddfef6;
+  --teal-300: #ccf9f1;
+  --teal-400: #b1f7ec;
+  --teal-500: #52f0db;
+  --teal-600: #00e3c4;
+  --teal-700: #00ac96;
+  --teal-800: #00927f;
+  --teal-900: #007f70;
+  --teal-1000: #003f34;
+
+  --purple-100: #faf0ff;
+  --purple-200: #f9f0ff;
+  --purple-300: #f6e8ff;
+  --purple-400: #f2d9ff;
+  --purple-500: #dfa7ff;
+  --purple-600: #c979ff;
+  --purple-700: #a000f8;
+  --purple-800: #8500d1;
+  --purple-900: #7d00cc;
+  --purple-1000: #2f004e;
+
+  --pink-100: #ffe8f6;
+  --pink-200: #ffe8f3;
+  --pink-300: #ffdfeb;
+  --pink-400: #ffd3e1;
+  --pink-500: #fdb3cc;
+  --pink-600: #f97ea7;
+  --pink-700: #f22782;
+  --pink-800: #e4106e;
+  --pink-900: #c41562;
+  --pink-1000: #460523;
+
+  /* ── Spacing scale (4px base) ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-16: 64px;
+  --space-24: 96px;
+
+  /* ── Radius scale ── */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* ── Elevation ── */
+  --shadow-raised: 0 2px 2px rgba(0, 0, 0, 0.04);
+  --shadow-popover: 0 1px 1px rgba(0, 0, 0, 0.02), 0 4px 8px -4px rgba(0, 0, 0, 0.04), 0 16px 24px -8px rgba(0, 0, 0, 0.06);
+  --shadow-modal: 0 1px 1px rgba(0, 0, 0, 0.02), 0 8px 16px -4px rgba(0, 0, 0, 0.04), 0 24px 32px -8px rgba(0, 0, 0, 0.06);
+
+  /* ── Focus ring (two-layer: gap in surface color, then blue-700 ring) ── */
+  --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px #006bff;
+
+  /* ── Typography scale — heading (weight 600 throughout) ── */
+  --fw-heading: 600;
+  --heading-72-size: 72px; --heading-72-lh: 72px; --heading-72-ls: -4.32px;
+  --heading-64-size: 64px; --heading-64-lh: 64px; --heading-64-ls: -3.84px;
+  --heading-56-size: 56px; --heading-56-lh: 56px; --heading-56-ls: -3.36px;
+  --heading-48-size: 48px; --heading-48-lh: 56px; --heading-48-ls: -2.88px;
+  --heading-40-size: 40px; --heading-40-lh: 48px; --heading-40-ls: -2.4px;
+  --heading-32-size: 32px; --heading-32-lh: 40px; --heading-32-ls: -1.28px;
+  --heading-24-size: 24px; --heading-24-lh: 32px; --heading-24-ls: -0.96px;
+  --heading-20-size: 20px; --heading-20-lh: 26px; --heading-20-ls: -0.4px;
+  --heading-16-size: 16px; --heading-16-lh: 24px; --heading-16-ls: -0.32px;
+  --heading-14-size: 14px; --heading-14-lh: 20px; --heading-14-ls: -0.28px;
+
+  /* ── Buttons (weight 500 throughout) ── */
+  --fw-button: 500;
+  --button-16-size: 16px; --button-16-lh: 20px;
+  --button-14-size: 14px; --button-14-lh: 20px;
+  --button-12-size: 12px; --button-12-lh: 16px;
+
+  /* ── Labels — single-line UI text (weight 400) ── */
+  --fw-label: 400;
+  --label-20-size: 20px; --label-20-lh: 32px;
+  --label-18-size: 18px; --label-18-lh: 20px;
+  --label-16-size: 16px; --label-16-lh: 20px;
+  --label-14-size: 14px; --label-14-lh: 20px;
+  --label-13-size: 13px; --label-13-lh: 16px;
+  --label-12-size: 12px; --label-12-lh: 16px;
+
+  /* ── Copy — multi-line body text (weight 400) ── */
+  --fw-copy: 400;
+  --copy-24-size: 24px; --copy-24-lh: 36px;
+  --copy-20-size: 20px; --copy-20-lh: 36px;
+  --copy-18-size: 18px; --copy-18-lh: 28px;
+  --copy-16-size: 16px; --copy-16-lh: 24px;
+  --copy-14-size: 14px; --copy-14-lh: 20px;
+  --copy-13-size: 13px; --copy-13-lh: 18px;
+
+  /* ── Button component sizing tiers ── */
+  --btn-height-sm: 32px; --btn-padding-sm: 0 6px;
+  --btn-height-md: 40px; --btn-padding-md: 0 10px;
+  --btn-height-lg: 48px; --btn-padding-lg: 0 14px;
+  --btn-radius: var(--radius-sm);
+
+  /* ── Input component sizing tiers ── */
+  --input-height-sm: 32px;
+  --input-height-md: 40px;
+  --input-height-lg: 48px;
+  --input-padding: 0 12px;
+  --input-radius: var(--radius-sm);
+}
+
+/* ── Optional typography utility classes (available for direct reuse; existing
+   component classes should reference the variables above rather than being
+   forced onto these names) ── */
+.text-heading-72 { font-family: var(--font-sans); font-size: var(--heading-72-size); font-weight: var(--fw-heading); line-height: var(--heading-72-lh); letter-spacing: var(--heading-72-ls); }
+.text-heading-64 { font-family: var(--font-sans); font-size: var(--heading-64-size); font-weight: var(--fw-heading); line-height: var(--heading-64-lh); letter-spacing: var(--heading-64-ls); }
+.text-heading-56 { font-family: var(--font-sans); font-size: var(--heading-56-size); font-weight: var(--fw-heading); line-height: var(--heading-56-lh); letter-spacing: var(--heading-56-ls); }
+.text-heading-48 { font-family: var(--font-sans); font-size: var(--heading-48-size); font-weight: var(--fw-heading); line-height: var(--heading-48-lh); letter-spacing: var(--heading-48-ls); }
+.text-heading-40 { font-family: var(--font-sans); font-size: var(--heading-40-size); font-weight: var(--fw-heading); line-height: var(--heading-40-lh); letter-spacing: var(--heading-40-ls); }
+.text-heading-32 { font-family: var(--font-sans); font-size: var(--heading-32-size); font-weight: var(--fw-heading); line-height: var(--heading-32-lh); letter-spacing: var(--heading-32-ls); }
+.text-heading-24 { font-family: var(--font-sans); font-size: var(--heading-24-size); font-weight: var(--fw-heading); line-height: var(--heading-24-lh); letter-spacing: var(--heading-24-ls); }
+.text-heading-20 { font-family: var(--font-sans); font-size: var(--heading-20-size); font-weight: var(--fw-heading); line-height: var(--heading-20-lh); letter-spacing: var(--heading-20-ls); }
+.text-heading-16 { font-family: var(--font-sans); font-size: var(--heading-16-size); font-weight: var(--fw-heading); line-height: var(--heading-16-lh); letter-spacing: var(--heading-16-ls); }
+.text-heading-14 { font-family: var(--font-sans); font-size: var(--heading-14-size); font-weight: var(--fw-heading); line-height: var(--heading-14-lh); letter-spacing: var(--heading-14-ls); }
+
+.text-button-16 { font-family: var(--font-sans); font-size: var(--button-16-size); font-weight: var(--fw-button); line-height: var(--button-16-lh); }
+.text-button-14 { font-family: var(--font-sans); font-size: var(--button-14-size); font-weight: var(--fw-button); line-height: var(--button-14-lh); }
+.text-button-12 { font-family: var(--font-sans); font-size: var(--button-12-size); font-weight: var(--fw-button); line-height: var(--button-12-lh); }
+
+.text-label-20 { font-family: var(--font-sans); font-size: var(--label-20-size); font-weight: var(--fw-label); line-height: var(--label-20-lh); }
+.text-label-18 { font-family: var(--font-sans); font-size: var(--label-18-size); font-weight: var(--fw-label); line-height: var(--label-18-lh); }
+.text-label-16 { font-family: var(--font-sans); font-size: var(--label-16-size); font-weight: var(--fw-label); line-height: var(--label-16-lh); }
+.text-label-14 { font-family: var(--font-sans); font-size: var(--label-14-size); font-weight: var(--fw-label); line-height: var(--label-14-lh); }
+.text-label-13 { font-family: var(--font-sans); font-size: var(--label-13-size); font-weight: var(--fw-label); line-height: var(--label-13-lh); }
+.text-label-12 { font-family: var(--font-sans); font-size: var(--label-12-size); font-weight: var(--fw-label); line-height: var(--label-12-lh); }
+
+.text-copy-24 { font-family: var(--font-sans); font-size: var(--copy-24-size); font-weight: var(--fw-copy); line-height: var(--copy-24-lh); }
+.text-copy-20 { font-family: var(--font-sans); font-size: var(--copy-20-size); font-weight: var(--fw-copy); line-height: var(--copy-20-lh); }
+.text-copy-18 { font-family: var(--font-sans); font-size: var(--copy-18-size); font-weight: var(--fw-copy); line-height: var(--copy-18-lh); }
+.text-copy-16 { font-family: var(--font-sans); font-size: var(--copy-16-size); font-weight: var(--fw-copy); line-height: var(--copy-16-lh); }
+.text-copy-14 { font-family: var(--font-sans); font-size: var(--copy-14-size); font-weight: var(--fw-copy); line-height: var(--copy-14-lh); }
+.text-copy-13 { font-family: var(--font-sans); font-size: var(--copy-13-size); font-weight: var(--fw-copy); line-height: var(--copy-13-lh); }

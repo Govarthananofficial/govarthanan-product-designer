@@ -5,42 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FrameStack PDF — Case Study · Govarthanan S.</title>
   <meta name="description" content="A Figma Plugin Case Study: Solo Designer + Engineer building FrameStack PDF." />
-  <meta property="og:image" content="https://govarthanan-product-engineer.netlify.app/images/og-image.png" />
+  <meta property="og:image" content="https://govarthanan-ui-ux-designer.netlify.app/images/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="581" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://govarthanan-product-engineer.netlify.app/images/og-image.png" />
+  <meta name="twitter:image" content="https://govarthanan-ui-ux-designer.netlify.app/images/og-image.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
   <!-- Bootstrap 5.3.3 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <link rel="stylesheet" href="design-tokens.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      /* Geist tokens */
-      --gray-100: #f2f2f2;
-      --gray-200: #ebebeb;
-      --gray-300: #e6e6e6;
-      --gray-400: #eaeaea;
-      --gray-500: #c9c9c9;
-      --gray-600: #a8a8a8;
-      --gray-700: #8f8f8f;
-      --gray-800: #7d7d7d;
-      --gray-900: #4d4d4d;
-      --gray-1000: #171717;
+      /* Gray scale + alpha scale now sourced from design-tokens.css (shared :root) —
+         no longer redeclared here to avoid duplicate hardcoded hex. */
 
-      --gray-alpha-100: rgba(0,0,0,0.051);
-      --gray-alpha-200: rgba(0,0,0,0.082);
-      --gray-alpha-300: rgba(0,0,0,0.102);
-      --gray-alpha-400: rgba(0,0,0,0.078);
-      --gray-alpha-500: rgba(0,0,0,0.212);
-      --gray-alpha-600: rgba(0,0,0,0.239);
-      --gray-alpha-700: rgba(0,0,0,0.439);
-
-      /* Semantic mappings */
+      /* Semantic mappings — aliased to shared tokens */
       --primary:        var(--gray-1000);
       --primary-hover:  #000000;
       --primary-faint:  var(--gray-100);
@@ -53,20 +37,21 @@
       --ink-faint:      var(--gray-600);
       --border:         var(--gray-alpha-400);
       --border-md:      var(--gray-alpha-300);
-      --bg:             #ffffff;
-      --bg-2:           #fafafa;
+      --bg:             var(--background-100);
+      --bg-2:           var(--background-200);
       --bg-3:           var(--gray-100);
       --accent:         var(--gray-1000);
       --accent-lt:      var(--gray-100);
       --accent-dk:      #000000;
 
-      /* Warn / Red / Blue mappings for legacy compatibility */
-      --warn:           var(--gray-700);
-      --warn-lt:        var(--gray-100);
-      --red:            var(--gray-700);
-      --red-lt:         var(--gray-100);
-      --blue:           var(--gray-700);
-      --blue-lt:        var(--gray-100);
+      /* Warn / Red / Blue — real accent colors from the shared scales, wired into
+         .impact-card.warn/.red/.blue::before below */
+      --warn:           var(--amber-600);
+      --warn-lt:        var(--amber-100);
+      --red:            var(--red-800);
+      --red-lt:         var(--red-100);
+      --blue:           var(--blue-700);
+      --blue-lt:        var(--blue-100);
 
       --NAV-H:      56px;
 
@@ -75,11 +60,7 @@
       --sh2: 0 1px 1px rgba(0,0,0,0.02), 0 4px 8px -4px rgba(0,0,0,0.04), 0 16px 24px -8px rgba(0,0,0,0.06);
       --sh3: 0 1px 1px rgba(0,0,0,0.02), 0 8px 16px -4px rgba(0,0,0,0.04), 0 24px 32px -8px rgba(0,0,0,0.06);
 
-      /* Geist radii */
-      --radius-sm:   6px;
-      --radius-md:   12px;
-      --radius-lg:   16px;
-      --radius-full: 9999px;
+      /* Radii now sourced from design-tokens.css (--radius-sm/md/lg/full) */
     }
 
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
@@ -169,8 +150,8 @@
     .nav-right { display: flex; gap: 8px; }
     .nav-pill {
       display: inline-flex; align-items: center; gap: 5px;
-      font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
-      color: var(--ink-mid); padding: 5px 11px; border-radius: var(--radius-sm);
+      font-size: var(--label-12-size); font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-mid); padding: 0 11px; height: var(--btn-height-sm); border-radius: var(--radius-sm);
       border: 1px solid var(--border-md); text-decoration: none;
       transition: background .15s;
     }
@@ -248,7 +229,7 @@
     }
     .hm-val span { color: #ffffff; }
     .hm-label {
-      font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+      font-size: var(--label-12-size); letter-spacing: .1em; text-transform: uppercase;
       color: rgba(255,255,255,.35); line-height: 1.4;
     }
 
@@ -319,8 +300,8 @@
       color: var(--ink-muted);
     }
     .section p {
-      font-size: 15.5px; color: var(--ink-mid);
-      line-height: 1.78; letter-spacing: -.005em;
+      font-size: var(--copy-16-size); color: var(--ink-mid);
+      line-height: var(--copy-16-lh); letter-spacing: -.005em;
       margin-bottom: 16px;
     }
     .section p:last-child { margin-bottom: 0; }
@@ -353,7 +334,7 @@
       box-shadow: var(--sh2);
     }
     .snap-card-label {
-      font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      font-size: var(--label-12-size); font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
       color: var(--ink-muted); margin-bottom: 14px;
       display: flex;
       align-items: center;
@@ -433,7 +414,7 @@
     .problem-vs-col:first-child .pvc-title { color: var(--ink-muted); }
     .problem-vs-col:last-child .pvc-title { color: var(--ink); }
     .pvc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; }
-    .pvc-list li { font-size: 13.5px; color: var(--ink-mid); line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+    .pvc-list li { font-size: var(--copy-14-size); color: var(--ink-mid); line-height: var(--copy-14-lh); display: flex; align-items: flex-start; gap: 8px; }
     .pvc-list li i { font-size: 14px; margin-top: 3px; flex-shrink: 0; }
     .problem-vs-col:first-child .pvc-list li i { color: var(--ink-muted); }
     .problem-vs-col:last-child .pvc-list li i { color: var(--ink); }
@@ -495,8 +476,8 @@
       justify-content: center;
     }
     .arch-badge {
-      font-size: 9.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-      padding: 3px 8px; border-radius: 6px;
+      font-size: var(--label-12-size); font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: var(--radius-sm);
       display: inline-block; width: fit-content;
       text-align: center;
       line-height: 1;
@@ -504,7 +485,7 @@
     .arch-badge.required { background: var(--ink); color: #fff; border: 1px solid var(--ink); }
     .arch-badge.optional { background: var(--bg); color: var(--ink-muted); border: 1px solid var(--border-md); }
     .arch-size {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono);
       font-size: 11.5px; font-weight: 600; color: var(--ink-muted);
     }
     .arch-right {
@@ -514,7 +495,8 @@
       justify-content: center;
     }
     .arch-name {
-      font-size: 16px; font-weight: 700; letter-spacing: -.02em;
+      font-size: var(--heading-16-size); font-weight: var(--fw-heading); letter-spacing: var(--heading-16-ls);
+      line-height: var(--heading-16-lh);
       color: var(--ink); margin-bottom: 6px;
       display: flex;
       align-items: center;
@@ -531,8 +513,8 @@
       display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
     }
     .arch-tag {
-      font-size: 10.5px; font-weight: 600;
-      padding: 3px 10px; border-radius: 6px;
+      font-size: var(--label-12-size); font-weight: 600;
+      padding: 3px 10px; border-radius: var(--radius-sm);
       border: 1px solid var(--border-md);
       background: var(--bg-2);
       color: var(--ink-muted);
@@ -599,9 +581,10 @@
       border-color: var(--border-md);
     }
     .v-title {
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: -.015em;
+      font-size: var(--heading-16-size);
+      font-weight: var(--fw-heading);
+      letter-spacing: var(--heading-16-ls);
+      line-height: var(--heading-16-lh);
       color: var(--ink);
       margin-bottom: 8px;
       display: flex;
@@ -619,7 +602,7 @@
       margin-bottom: 16px;
     }
     .v-verdict {
-      font-size: 11px;
+      font-size: var(--label-12-size);
       font-weight: 700;
       letter-spacing: .04em;
       display: inline-flex;
@@ -666,12 +649,12 @@
     .code-dots span:nth-child(2) { background: rgba(255,255,255,0.25); }
     .code-dots span:nth-child(3) { background: rgba(255,255,255,0.35); }
     .code-file {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono);
       font-size: 10px; color: rgba(255,255,255,.3); letter-spacing: .04em;
     }
     .code-wrap pre { padding: 18px 20px; overflow-x: auto; margin: 0; }
     .code-wrap code {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono);
       font-size: 12.5px; line-height: 1.8;
       color: rgba(255,255,255,.85);
       white-space: pre;
@@ -732,7 +715,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+      font-size: var(--label-12-size); font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
       margin-bottom: 12px;
       padding: 4px 10px;
       border-radius: var(--radius-full);
@@ -748,19 +731,19 @@
       color: #ffffff;
       border: 1px solid var(--ink);
     }
-    .ch-text { font-size: 14.5px; color: #4b5563; line-height: 1.65; margin: 0; }
+    .ch-text { font-size: 14.5px; color: var(--gray-900); line-height: 1.65; margin: 0; }
     code.inline {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: .88em; background: #f3f4f6;
-      color: #111827;
+      font-family: var(--font-mono);
+      font-size: .88em; background: var(--gray-100);
+      color: var(--gray-1000);
       padding: 2px 6px; border-radius: var(--radius-sm);
-      border: 1px solid rgba(0,0,0,0.06);
+      border: 1px solid var(--gray-alpha-100);
       font-weight: 500;
     }
 
     /* ── IMPACT ── */
     .impact-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
+      display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 16px; margin-top: 8px;
     }
     .impact-card {
@@ -776,8 +759,8 @@
       position: absolute; top: 0; left: 0; right: 0; height: 3px;
       background: var(--accent);
     }
-    .impact-card.warn::before { background: var(--ink-muted); }
-    .impact-card.blue::before { background: var(--ink-muted); }
+    .impact-card.warn::before { background: var(--warn); }
+    .impact-card.blue::before { background: var(--blue); }
     .impact-card.neutral::before { background: var(--ink-muted); }
     .impact-val {
       font-size: 36px; font-weight: 800; letter-spacing: -.05em;
@@ -807,7 +790,7 @@
     .lesson {
       background: var(--bg);
       border: 1px solid var(--border-md);
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       padding: 28px;
       position: relative;
       overflow: hidden;
@@ -845,12 +828,12 @@
       z-index: 1;
     }
     .lesson-title {
-      font-weight: 700;
-      font-size: 15.5px;
-      letter-spacing: -.015em;
+      font-weight: var(--fw-heading);
+      font-size: var(--heading-16-size);
+      letter-spacing: var(--heading-16-ls);
       color: var(--ink);
       z-index: 2;
-      line-height: 1.3;
+      line-height: var(--heading-16-lh);
       margin: 0;
     }
     .lesson-body {
@@ -864,7 +847,7 @@
     /* ── PRODUCT THINKING ── */
     .product-thinking {
       background: var(--ink);
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       padding: 32px 36px;
       margin: 8px 0;
     }
@@ -875,7 +858,7 @@
     .pt-grid { display: flex; flex-direction: column; gap: 20px; }
     .pt-item { display: grid; grid-template-columns: 20px 1fr; gap: 14px; }
     .pt-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bg-2); margin-top: 7px; }
-    .pt-q { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 4px; }
+    .pt-q { font-size: var(--label-12-size); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 4px; }
     .pt-a { font-size: 14.5px; font-weight: 500; color: rgba(255,255,255,.85); line-height: 1.6; letter-spacing: -.01em; }
 
     /* ── RECRUITER TIMELINE ── */
@@ -888,7 +871,7 @@
       padding: 28px;
       background: var(--bg);
       border: 1px solid var(--border-md);
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       transition: all 0.25s ease;
       box-shadow: var(--sh1);
     }
@@ -898,11 +881,11 @@
     }
     .rs-time-badge {
       display: inline-block;
-      font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      font-size: var(--label-12-size); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
       background: var(--ink);
       color: #ffffff;
       padding: 4px 10px;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       margin-bottom: 16px;
     }
     .rs-check {
@@ -934,7 +917,7 @@
     .next-card {
       background: var(--bg);
       border: 1px solid var(--border-md);
-      border-radius: 16px;
+      border-radius: var(--radius-lg);
       padding: 24px;
       box-shadow: var(--sh1);
       transition: all 0.25s ease;
@@ -950,7 +933,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 10px;
+      font-size: var(--label-12-size);
       font-weight: 800;
       letter-spacing: .12em;
       text-transform: uppercase;
@@ -1010,7 +993,7 @@
     .f-btn {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 500; line-height: 20px;
-      padding: 0 14px; height: 40px; border-radius: var(--radius-sm); text-decoration: none;
+      padding: var(--btn-padding-md); height: var(--btn-height-md); border-radius: var(--radius-sm); text-decoration: none;
       transition: background .15s;
     }
     .f-btn i { font-size: 15px; }
@@ -1029,7 +1012,7 @@
       display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 32px;
     }
     .toc a {
-      font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      font-size: var(--label-12-size); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
       color: var(--ink-faint); padding: 4px 10px; border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       text-decoration: none; transition: background .15s, color .15s;
@@ -1191,13 +1174,13 @@
     .score-bar-wrap {
       height: 4px;
       background: rgba(0, 0, 0, 0.05);
-      border-radius: 2px;
+      border-radius: var(--radius-full);
       overflow: hidden;
       width: 100%;
     }
     .score-bar {
       height: 100%;
-      border-radius: 2px;
+      border-radius: var(--radius-full);
       background: var(--ink);
       transform-origin: left;
       animation: scoreFill 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;

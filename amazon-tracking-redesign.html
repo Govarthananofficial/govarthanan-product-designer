@@ -5,47 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Amazon Order Tracking Redesign — Case Study · Govarthanan S.</title>
   <meta name="description" content="Redesigning clarity, trust, and usability in one of e-commerce's most critical post-purchase moments — through real user research and systematic UX thinking." />
-  <meta property="og:image" content="https://govarthanan-product-engineer.netlify.app/images/og-image.png" />
+  <meta property="og:image" content="https://govarthanan-ui-ux-designer.netlify.app/images/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="581" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://govarthanan-product-engineer.netlify.app/images/og-image.png" />
+  <meta name="twitter:image" content="https://govarthanan-ui-ux-designer.netlify.app/images/og-image.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
   <!-- Bootstrap 5.3.3 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+  <link rel="stylesheet" href="design-tokens.css" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      /* Geist tokens */
-      --gray-100: #f2f2f2;
-      --gray-200: #ebebeb;
-      --gray-300: #e6e6e6;
-      --gray-400: #eaeaea;
-      --gray-500: #c9c9c9;
-      --gray-600: #a8a8a8;
-      --gray-700: #8f8f8f;
-      --gray-800: #7d7d7d;
-      --gray-900: #4d4d4d;
-      --gray-1000: #171717;
-
-      --gray-alpha-100: rgba(0,0,0,0.051);
-      --gray-alpha-200: rgba(0,0,0,0.082);
-      --gray-alpha-300: rgba(0,0,0,0.102);
-      --gray-alpha-400: rgba(0,0,0,0.078);
-      --gray-alpha-500: rgba(0,0,0,0.212);
-      --gray-alpha-600: rgba(0,0,0,0.239);
-      --gray-alpha-700: rgba(0,0,0,0.439);
+      /* ── DESIGN TOKENS ───
+         design-tokens.css (linked above, in <head>) is the single literal
+         source of truth for color/radius/shadow/focus-ring primitives —
+         --gray-100..1000, --gray-alpha-100..1000, --background-100/200,
+         --blue/red/green/amber-*, --radius-*, --focus-ring, --shadow-* are
+         NOT redeclared here (that would create a same-name self-reference
+         cycle in CSS and resolve to invalid). This block only defines this
+         page's local short-name aliases (--ink, --bg, --sh1, etc.), each
+         pointing at the matching shared token, so every existing
+         var(--ink)/var(--bg)-style call site in this file keeps working
+         unchanged. */
 
       /* Semantic mappings */
       --primary:        var(--gray-1000);
       --primary-hover:  #000000;
-      --primary-faint:  var(--gray-100);
-      --primary-tint:   var(--gray-alpha-100);
       --primary-border: var(--gray-alpha-300);
 
       --ink:            var(--gray-1000);
@@ -54,30 +45,27 @@
       --ink-faint:      var(--gray-600);
       --border:         var(--gray-alpha-400);
       --border-md:      var(--gray-alpha-300);
-      --bg:             #ffffff;
-      --bg-2:           #fafafa;
+      --bg:             var(--background-100);
+      --bg-2:           var(--background-200);
       --bg-3:           var(--gray-100);
       --accent:         var(--gray-1000);
       --accent-lt:      var(--gray-100);
       --accent-dk:      #000000;
 
-      /* Amazon specific brand colors, but toned to fit premium portfolio theme */
-      --amazon-orange: var(--ink);
-      --amazon-blue: var(--ink);
-      --amazon-dark: var(--ink);
+      /* Amazon-specific brand colors: this page mocks Amazon's own tracking
+         UI, so using Amazon-adjacent hues for the mockup elements is a more
+         honest rendering of the real product being redesigned than aliasing
+         them to pure ink/black. */
+      --amazon-orange: var(--amber-600);
+      --amazon-blue:   var(--blue-800);
+      --amazon-dark:   var(--gray-1000);
 
       --NAV-H:      56px;
 
       /* Geist elevations */
-      --sh1: 0 2px 2px rgba(0,0,0,0.04);
-      --sh2: 0 1px 1px rgba(0,0,0,0.02), 0 4px 8px -4px rgba(0,0,0,0.04), 0 16px 24px -8px rgba(0,0,0,0.06);
-      --sh3: 0 1px 1px rgba(0,0,0,0.02), 0 8px 16px -4px rgba(0,0,0,0.04), 0 24px 32px -8px rgba(0,0,0,0.06);
-
-      /* Geist radii */
-      --radius-sm:   6px;
-      --radius-md:   12px;
-      --radius-lg:   16px;
-      --radius-full: 9999px;
+      --sh1: var(--shadow-raised);
+      --sh2: var(--shadow-popover);
+      --sh3: var(--shadow-modal);
     }
 
     html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
@@ -171,7 +159,7 @@
     .nav-back {
       display: inline-flex; align-items: center; gap: 6px;
       font-family: 'Geist', sans-serif; font-size: 12px; font-weight: 500; line-height: 16px; color: var(--ink-mid);
-      text-decoration: none; padding: 0 12px; height: 32px; border-radius: var(--radius-sm);
+      text-decoration: none; padding: 0 12px; height: var(--btn-height-sm); border-radius: var(--radius-sm);
       border: 1px solid var(--border-md);
       transition: background .15s;
     }
@@ -181,8 +169,8 @@
     .nav-right { display: flex; gap: 8px; }
     .nav-pill {
       display: inline-flex; align-items: center; gap: 5px;
-      font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
-      color: var(--ink-mid); padding: 5px 11px; border-radius: var(--radius-sm);
+      font-size: var(--label-12-size); font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-mid); padding: 0 11px; height: var(--btn-height-sm); border-radius: var(--radius-sm);
       border: 1px solid var(--border-md); text-decoration: none;
       transition: background .15s;
     }
@@ -218,7 +206,7 @@
     /* ── HERO H1 ── */
     .hero h1 {
       font-size: clamp(38px, 5.5vw, 68px);
-      font-weight: 800;
+      font-weight: var(--fw-heading);
       line-height: .96;
       letter-spacing: -.04em;
       color: #fff;
@@ -256,12 +244,12 @@
     }
     .hm-val {
       font-size: clamp(26px, 3vw, 34px);
-      font-weight: 800; letter-spacing: -.04em;
+      font-weight: var(--fw-heading); letter-spacing: -.04em;
       color: #fff; line-height: 1;
     }
     .hm-val span { color: #ffffff; }
     .hm-label {
-      font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+      font-size: var(--label-12-size); letter-spacing: .1em; text-transform: uppercase;
       color: rgba(255,255,255,.35); line-height: 1.4;
     }
 
@@ -279,7 +267,7 @@
       display: inline-flex; align-items: center; gap: 8px;
       font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 500; line-height: 20px;
       background: #ffffff; color: #171717;
-      padding: 0 16px; height: 40px; border-radius: var(--radius-sm);
+      padding: var(--btn-padding-md); height: var(--btn-height-md); border-radius: var(--radius-sm);
       text-decoration: none; border: none;
       transition: background .15s;
     }
@@ -288,7 +276,7 @@
     .btn-ghost {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 500; line-height: 20px;
-      color: rgba(255,255,255,.6); padding: 0 16px; height: 40px; border-radius: var(--radius-sm);
+      color: rgba(255,255,255,.6); padding: var(--btn-padding-md); height: var(--btn-height-md); border-radius: var(--radius-sm);
       border: 1px solid rgba(255,255,255,.1); text-decoration: none;
       transition: background .15s;
     }
@@ -317,7 +305,7 @@
 
     .section h2 {
       font-size: clamp(22px, 2.8vw, 32px);
-      font-weight: 800; letter-spacing: -.035em;
+      font-weight: var(--fw-heading); letter-spacing: -.035em;
       color: var(--ink); line-height: 1.1;
       margin-bottom: 24px;
     }
@@ -326,7 +314,7 @@
       color: var(--ink-muted);
     }
     .section p {
-      font-size: 15.5px; color: var(--ink-mid);
+      font-size: var(--copy-16-size); color: var(--ink-mid);
       line-height: 1.78; letter-spacing: -.005em;
       margin-bottom: 16px;
     }
@@ -338,7 +326,7 @@
       display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 32px;
     }
     .toc a {
-      font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      font-size: var(--label-12-size); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
       color: var(--ink-faint); padding: 4px 10px; border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       text-decoration: none; transition: background .15s, color .15s;
@@ -373,7 +361,7 @@
       box-shadow: var(--sh2);
     }
     .snap-card-label {
-      font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+      font-size: var(--label-12-size); font-weight: var(--fw-heading); letter-spacing: .16em; text-transform: uppercase;
       color: var(--ink-muted); margin-bottom: 14px;
       display: flex;
       align-items: center;
@@ -517,7 +505,7 @@
       margin: 0;
     }
     .pvc-list li {
-      font-size: 14px;
+      font-size: var(--copy-14-size);
       color: var(--ink-mid);
       line-height: 1.6;
       display: flex;
@@ -611,8 +599,9 @@
       border-color: var(--ink);
     }
     .principle-title {
-      font-size: 15px;
-      font-weight: 700;
+      font-size: var(--heading-16-size);
+      font-weight: var(--fw-heading);
+      letter-spacing: var(--heading-16-ls);
       color: var(--ink);
       z-index: 2;
       margin: 0;
@@ -629,12 +618,37 @@
       bottom: -15px;
       right: 10px;
       font-size: 90px;
-      font-weight: 900;
+      font-weight: var(--fw-heading);
       color: var(--ink);
       opacity: 0.04;
       line-height: 1;
       pointer-events: none;
       z-index: 1;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: var(--bg-2);
+      border: 1px solid var(--border-md);
+      border-left: 3px solid var(--ink);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 18px 22px;
+      margin-top: 40px;
+    }
+    .callout-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--heading-14-size);
+      font-weight: var(--fw-heading);
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .callout p {
+      font-size: var(--copy-14-size);
+      color: var(--ink-mid);
+      line-height: 1.6;
+      margin: 0;
     }
 
     /* ── SURVEY DASHBOARD ── */
@@ -750,13 +764,13 @@
     }
     .mock-eta-label {
       font-size: 13px;
-      color: #666;
+      color: var(--gray-800);
       margin-bottom: 4px;
     }
     .mock-eta-time {
       font-size: 22px;
       font-weight: 800;
-      color: #111;
+      color: var(--ink);
       letter-spacing: -0.02em;
     }
 
@@ -774,7 +788,7 @@
       left: 10px;
       right: 10px;
       height: 3px;
-      background: #e5e5e5;
+      background: var(--gray-300);
       z-index: 1;
     }
     .mock-timeline-fill {
@@ -801,7 +815,7 @@
       height: 22px;
       border-radius: 50%;
       background: #ffffff;
-      border: 3px solid #e5e5e5;
+      border: 3px solid var(--gray-300);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -830,7 +844,7 @@
     .mock-node-label {
       font-size: 11px;
       font-weight: 600;
-      color: #888;
+      color: var(--gray-800);
       margin-top: 8px;
       white-space: nowrap;
       transition: color 0.25s;
@@ -840,7 +854,7 @@
       font-weight: 700;
     }
     .mock-node.completed .mock-node-label {
-      color: #111;
+      color: var(--ink);
     }
 
     /* Redesigned Quick Actions Panel */
@@ -849,7 +863,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: #888;
+      color: var(--gray-800);
       margin-bottom: 10px;
     }
     .mock-quick-actions {
@@ -859,29 +873,31 @@
       margin-bottom: 20px;
     }
     .mock-action-btn {
-      background: #f7f8f8;
-      border: 1px solid #d5d9d9;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-500);
       border-radius: var(--radius-sm);
+      min-height: var(--btn-height-lg);
       padding: 12px 10px;
       font-size: 12px;
       font-weight: 500;
-      color: #111;
+      color: var(--ink);
       text-align: center;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       transition: all 0.2s ease;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      box-shadow: 0 1px 2px var(--gray-alpha-100);
     }
     .mock-action-btn:hover {
-      background: #f0f2f2;
-      border-color: #a6b1b1;
+      background: var(--gray-200);
+      border-color: var(--gray-600);
     }
     .mock-action-btn i {
       font-size: 16px;
-      color: #555;
+      color: var(--gray-900);
     }
 
     /* ── MAP VIEWPORT ── */
@@ -942,24 +958,27 @@
       filter: grayscale(100%) brightness(0.95) contrast(1.05); /* Strict monochrome! */
     }
 
-    /* Above-the-fold Contact Support Button */
+    /* Above-the-fold Contact Support Button — the page's primary CTA */
     .mock-contact-btn {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--btn-height-lg);
       background: var(--ink);
       border: 1px solid var(--ink);
       border-radius: var(--radius-sm);
-      padding: 14px;
+      padding: var(--btn-padding-lg);
       font-size: 13.5px;
       font-weight: 700;
       color: #ffffff;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 5px rgba(29, 29, 31, 0.1);
+      box-shadow: 0 2px 5px var(--gray-alpha-300);
     }
     .mock-contact-btn:hover {
       background: var(--primary-hover);
-      box-shadow: 0 3px 8px rgba(29, 29, 31, 0.2);
+      box-shadow: 0 3px 8px var(--gray-alpha-500);
     }
 
     /* Interactive Controller */
@@ -1048,9 +1067,9 @@
       border-color: var(--border-md);
     }
     .v-title {
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: -.015em;
+      font-size: var(--heading-16-size);
+      font-weight: var(--fw-heading);
+      letter-spacing: var(--heading-16-ls);
       color: var(--ink);
       margin-bottom: 8px;
       display: flex;
@@ -1067,6 +1086,34 @@
       line-height: 1.65;
       margin-bottom: 0;
     }
+    .v-verdict {
+      font-size: var(--label-12-size);
+      font-weight: 700;
+      letter-spacing: .04em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      margin-top: 12px;
+      border-radius: var(--radius-sm);
+      line-height: 1;
+    }
+    .v-verdict.fail {
+      background: var(--bg-2);
+      color: var(--ink-muted);
+      border: 1px solid var(--border-md);
+    }
+    .v-verdict.fail i {
+      color: var(--ink-muted);
+    }
+    .v-verdict.pass {
+      background: var(--ink);
+      color: #ffffff;
+      border: 1px solid var(--ink);
+    }
+    .v-verdict.pass i {
+      color: #ffffff;
+    }
 
     /* ── PRODUCT THINKING / KEY INSIGHTS ── */
     .product-thinking {
@@ -1082,7 +1129,7 @@
     .pt-grid { display: flex; flex-direction: column; gap: 20px; }
     .pt-item { display: grid; grid-template-columns: 20px 1fr; gap: 14px; }
     .pt-dot { width: 6px; height: 6px; border-radius: 50%; background: #ffffff; margin-top: 7px; opacity: 0.4; }
-    .pt-q { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 4px; }
+    .pt-q { font-size: var(--label-12-size); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 4px; }
     .pt-a { font-size: 14.5px; font-weight: 500; color: rgba(255,255,255,.85); line-height: 1.6; letter-spacing: -.01em; }
 
     /* ── FOOTER ── */
@@ -1096,7 +1143,7 @@
       color: rgba(255,255,255,.25); margin-bottom: 10px;
     }
     .footer-title {
-      font-size: 20px; font-weight: 800; letter-spacing: -.03em;
+      font-size: 20px; font-weight: var(--fw-heading); letter-spacing: -.03em;
       color: #fff; margin-bottom: 6px;
     }
     .footer-sub {
@@ -1108,15 +1155,15 @@
     .f-btn {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 500; line-height: 20px;
-      padding: 0 14px; height: 40px; border-radius: var(--radius-sm); text-decoration: none;
+      padding: var(--btn-padding-md); height: var(--btn-height-md); border-radius: var(--radius-sm); text-decoration: none;
       transition: background .15s;
     }
     .f-btn i { font-size: 15px; }
     footer .f-btn.primary {
-      background: #ffffff; color: #1d1d1f;
+      background: #ffffff; color: var(--ink);
     }
     footer .f-btn.primary:hover {
-      background: #f5f5f7;
+      background: var(--bg-2);
     }
     .f-btn.ghost { background: rgba(255,255,255,.07); color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.1); }
     .f-btn.ghost:hover { background: rgba(255,255,255,.12); }
@@ -1179,8 +1226,8 @@
         <div class="hm-label">Faster Support<br>Reach support in one click</div>
       </div>
       <div class="hm">
-        <div class="hm-val">4.5<span>/5</span></div>
-        <div class="hm-label">Satisfaction Score<br>Up from 3.1 previously</div>
+        <div class="hm-val">~4.5<span>/5</span></div>
+        <div class="hm-label">Satisfaction Score<br>Self-reported, concept study</div>
       </div>
       <div class="hm">
         <div class="hm-val">82<span>%</span></div>
@@ -1713,9 +1760,9 @@
       </div>
     </div>
 
-    <div class="mt-5 p-4" style="background: var(--bg-2); border-left: 3px solid var(--ink); border-radius: 0 var(--radius-md) var(--radius-md) 0;">
-      <h6 style="color: var(--ink); font-weight: 700;"><i class="ri-magic-fill"></i> Next Iteration Focus</h6>
-      <span style="font-size:14.5px;">Design layout states for complex delivery edge cases: delayed shipments, failed attempts, and address verification updates. The happy path is resolved; the anxious path needs design attention next.</span>
+    <div class="callout">
+      <h6 class="callout-title"><i class="ri-magic-fill"></i> Next Iteration Focus</h6>
+      <p>Design layout states for complex delivery edge cases: delayed shipments, failed attempts, and address verification updates. The happy path is resolved; the anxious path needs design attention next.</p>
     </div>
   </div>
 </section>

@@ -141,8 +141,6 @@ function buildLayout(sheet) {
 
   sheet.getRange(1, 1, 1, lastCol).setValues([HEADERS]);
   sheet.setFrozenRows(1);
-  sheet.setFrozenColumns(1);
-
   // ── Header: dark bar, white bold text, comfortable height ──
   sheet.getRange(1, 1, 1, lastCol)
     .setFontWeight('bold')

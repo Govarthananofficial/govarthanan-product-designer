@@ -193,6 +193,47 @@
     }
   }
 
+  // Some providers (BigDataCloud in particular) return the official UN/ISO
+  // long-form country name — "United States of America (the)", "Russian
+  // Federation (the)", "Korea (the Republic of)" — instead of the name
+  // everyone actually uses. Maps the common ones to their normal name;
+  // falls back to just stripping a trailing "(the)" for anything unmapped.
+  var COUNTRY_NAME_FIXES = {
+    'United States of America (the)': 'United States',
+    'United States of America': 'United States',
+    'United Kingdom of Great Britain and Northern Ireland (the)': 'United Kingdom',
+    'Russian Federation (the)': 'Russia',
+    'Russian Federation': 'Russia',
+    'Korea (the Republic of)': 'South Korea',
+    "Korea (the Democratic People's Republic of)": 'North Korea',
+    'Iran (Islamic Republic of)': 'Iran',
+    'Netherlands (the)': 'Netherlands',
+    'Philippines (the)': 'Philippines',
+    'Bahamas (the)': 'Bahamas',
+    'Gambia (the)': 'Gambia',
+    'Niger (the)': 'Niger',
+    'Sudan (the)': 'Sudan',
+    'Comoros (the)': 'Comoros',
+    'Congo (the Democratic Republic of the)': 'DR Congo',
+    'Congo (the)': 'Congo',
+    'Central African Republic (the)': 'Central African Republic',
+    'Dominican Republic (the)': 'Dominican Republic',
+    'Marshall Islands (the)': 'Marshall Islands',
+    'Cayman Islands (the)': 'Cayman Islands',
+    'United Arab Emirates (the)': 'United Arab Emirates',
+    'Moldova (the Republic of)': 'Moldova',
+    "Lao People's Democratic Republic (the)": 'Laos',
+    'Taiwan (Province of China)': 'Taiwan',
+    'Viet Nam': 'Vietnam',
+    'Syrian Arab Republic': 'Syria'
+  };
+
+  function cleanCountryName(name) {
+    if (!name) return name;
+    if (COUNTRY_NAME_FIXES[name]) return COUNTRY_NAME_FIXES[name];
+    return name.replace(/\s*\(the\)\s*$/i, '').trim();
+  }
+
   // ── Location — same 3-provider fallback chain as the contact form
   // (BigDataCloud -> ipapi.co -> ipinfo.io). Now also keeps the raw lat/lon
   // each provider already returns, for a precise map pin alongside the
@@ -206,10 +247,11 @@
     return fetch('https://api.bigdatacloud.net/data/reverse-geocode-client')
       .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
       .then(function (data) {
-        if (data.city && data.principalSubdivision && data.countryName) {
-          resolvedLocation = data.city + ', ' + data.principalSubdivision + ', ' + data.countryName;
-        } else if (data.city && data.countryName) {
-          resolvedLocation = data.city + ', ' + data.countryName;
+        var country = cleanCountryName(data.countryName);
+        if (data.city && data.principalSubdivision && country) {
+          resolvedLocation = data.city + ', ' + data.principalSubdivision + ', ' + country;
+        } else if (data.city && country) {
+          resolvedLocation = data.city + ', ' + country;
         }
         if (data.latitude != null) resolvedLat = String(data.latitude);
         if (data.longitude != null) resolvedLon = String(data.longitude);
@@ -218,10 +260,11 @@
         return fetch('https://ipapi.co/json/')
           .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
           .then(function (data) {
-            if (data.city && data.region && data.country_name) {
-              resolvedLocation = data.city + ', ' + data.region + ', ' + data.country_name;
-            } else if (data.city && data.country_name) {
-              resolvedLocation = data.city + ', ' + data.country_name;
+            var country = cleanCountryName(data.country_name);
+            if (data.city && data.region && country) {
+              resolvedLocation = data.city + ', ' + data.region + ', ' + country;
+            } else if (data.city && country) {
+              resolvedLocation = data.city + ', ' + country;
             }
             if (data.latitude != null) resolvedLat = String(data.latitude);
             if (data.longitude != null) resolvedLon = String(data.longitude);
@@ -231,10 +274,11 @@
         return fetch('https://ipinfo.io/json')
           .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
           .then(function (data) {
-            if (data.city && data.region && data.country) {
-              resolvedLocation = data.city + ', ' + data.region + ', ' + data.country;
-            } else if (data.city && data.country) {
-              resolvedLocation = data.city + ', ' + data.country;
+            var country = cleanCountryName(data.country);
+            if (data.city && data.region && country) {
+              resolvedLocation = data.city + ', ' + data.region + ', ' + country;
+            } else if (data.city && country) {
+              resolvedLocation = data.city + ', ' + country;
             }
             if (data.loc) {
               var parts = data.loc.split(',');

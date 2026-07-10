@@ -93,12 +93,22 @@ function doPost(e) {
   }
 }
 
+// Coordinates arrive from the client as strings (JSON has no way to know
+// they're meant as numbers); convert here so the sheet stores real numbers,
+// not numeric-looking text — matters for sorting, filtering, and any
+// formula or map chart built on these columns later.
+function toNumberOrBlank(v) {
+  if (v === '' || v == null) return '';
+  var n = parseFloat(v);
+  return isNaN(n) ? '' : n;
+}
+
 function rowFromPayload(data, event, timeOnPage) {
   return {
     timestamp: data.timestamp, event: event, page: data.page, timeOnPage: timeOnPage,
     device: data.device, osVersion: data.osVersion, browser: data.browser,
     deviceType: data.deviceType, location: data.location, mapsLink: data.mapsLink || '',
-    latitude: data.latitude || '', longitude: data.longitude || '',
+    latitude: toNumberOrBlank(data.latitude), longitude: toNumberOrBlank(data.longitude),
     language: data.language || '', screen: data.screenRes || '',
     referrer: data.referrer, sessionId: data.sessionId || ''
   };
@@ -157,7 +167,7 @@ function buildLayout(sheet) {
   sheet.setColumnWidth(COL.event, 130);
   sheet.setColumnWidth(COL.page, 150);
   sheet.setColumnWidth(COL.timeOnPage, 110);
-  sheet.setColumnWidth(COL.device, 210);
+  sheet.setColumnWidth(COL.device, 270);
   sheet.setColumnWidth(COL.osVersion, 110);
   sheet.setColumnWidth(COL.browser, 90);
   sheet.setColumnWidth(COL.deviceType, 95);
@@ -233,8 +243,8 @@ function completeVisitRow(sheet, data) {
       if (data.device) sheet.getRange(row, COL.device).setValue(data.device);
       if (data.osVersion) sheet.getRange(row, COL.osVersion).setValue(data.osVersion);
       if (data.location) sheet.getRange(row, COL.location).setValue(data.location);
-      if (data.latitude) sheet.getRange(row, COL.latitude).setValue(data.latitude);
-      if (data.longitude) sheet.getRange(row, COL.longitude).setValue(data.longitude);
+      if (data.latitude) sheet.getRange(row, COL.latitude).setValue(toNumberOrBlank(data.latitude));
+      if (data.longitude) sheet.getRange(row, COL.longitude).setValue(toNumberOrBlank(data.longitude));
       if (data.mapsLink) linkifyMapsCell(sheet, row, data.mapsLink);
       markCompletion(sheet, row, 'Page Visit', data.timeOnPageSeconds);
       return true;

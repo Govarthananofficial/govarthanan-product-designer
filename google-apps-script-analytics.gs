@@ -107,6 +107,29 @@ function getOrCreateSheet() {
   return sheet;
 }
 
+/**
+ * Run this manually to (re)apply the header/banding/colors/column-width
+ * styling to an EXISTING "Visitor Log" tab, without deleting and recreating
+ * it — useful right after upgrading this script, or if Sheets won't let you
+ * delete the tab because it's the only one left in the file.
+ *
+ * How to run it: in this editor, click the function dropdown at the top
+ * (next to the Run/Debug buttons — it may currently say "doPost"), select
+ * "reformatVisitorLog", then click Run (▶). Approve the permission prompt
+ * if it appears. It's safe to run more than once; it only rewrites
+ * formatting, never touches your existing row data.
+ */
+function reformatVisitorLog() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    Logger.log('No "Visitor Log" tab found yet — nothing to reformat.');
+    return;
+  }
+  buildLayout(sheet);
+  Logger.log('Reformatted "Visitor Log" — check the sheet.');
+}
+
 function buildLayout(sheet) {
   var lastCol = HEADERS.length;
 

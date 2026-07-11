@@ -170,6 +170,17 @@
     .cta-sep { flex: 1; }
     .cta-note { font-size: 11px; color: rgba(255,255,255,.25); letter-spacing: .05em; text-transform: uppercase; }
 
+    /* ── MARQUEE ── */
+    .marquee-wrap { position: relative; z-index: 1; overflow: hidden; background: var(--ink); height: 46px; display: flex; align-items: center; border-top: 1px solid rgba(255,255,255,.08); }
+    .marquee-track { display: flex; width: max-content; animation: mq 30s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      display: inline-flex; align-items: center; padding: 0 0 0 30px; white-space: nowrap;
+      font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.6);
+    }
+    .marquee-item::after { content: "✦"; display: inline-block; margin-left: 30px; color: rgba(255,255,255,.22); font-size: 10px; }
+    @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
     /* ── SECTIONS ── */
     .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
     .section:last-of-type { border-bottom: none; }
@@ -614,6 +625,27 @@
       <a href="#research" class="btn-ghost"><i class="ri-bar-chart-2-fill"></i> Research &amp; Insights</a>
       <div class="cta-sep"></div>
       <span class="cta-note">Govarthanan S. · UI/UX Designer · Concept Project, 2025</span>
+    </div>
+  </div>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">UX Research</span>
+      <span class="marquee-item">Mobile App</span>
+      <span class="marquee-item">HR Tech</span>
+      <span class="marquee-item">Bond Tracker</span>
+      <span class="marquee-item">iOS &amp; Android</span>
+      <span class="marquee-item">Product Design</span>
+      <span class="marquee-item">42 Employees Surveyed</span>
+      <span class="marquee-item">Concept Project</span>
+      <span class="marquee-item">UX Research</span>
+      <span class="marquee-item">Mobile App</span>
+      <span class="marquee-item">HR Tech</span>
+      <span class="marquee-item">Bond Tracker</span>
+      <span class="marquee-item">iOS &amp; Android</span>
+      <span class="marquee-item">Product Design</span>
+      <span class="marquee-item">42 Employees Surveyed</span>
+      <span class="marquee-item">Concept Project</span>
     </div>
   </div>
 </header>

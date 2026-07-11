@@ -276,6 +276,17 @@
       letter-spacing: .05em; text-transform: uppercase;
     }
 
+    /* ── MARQUEE ── */
+    .marquee-wrap { position: relative; z-index: 1; overflow: hidden; background: var(--ink); height: 46px; display: flex; align-items: center; border-top: 1px solid rgba(255,255,255,.08); }
+    .marquee-track { display: flex; width: max-content; animation: mq 30s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      display: inline-flex; align-items: center; padding: 0 0 0 30px; white-space: nowrap;
+      font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.6);
+    }
+    .marquee-item::after { content: "✦"; display: inline-block; margin-left: 30px; color: rgba(255,255,255,.22); font-size: 10px; }
+    @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
     /* ── SECTIONS ── */
     .section {
       padding: 72px 0;
@@ -1281,6 +1292,27 @@
       </a>
       <div class="cta-sep"></div>
       <span class="cta-note">Ongoing · v1.0 through v3.1</span>
+    </div>
+  </div>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Figma Plugin</span>
+      <span class="marquee-item">Frame to PDF</span>
+      <span class="marquee-item">Design Tools</span>
+      <span class="marquee-item">Product Design</span>
+      <span class="marquee-item">Frontend Engineering</span>
+      <span class="marquee-item">4 Versions Shipped</span>
+      <span class="marquee-item">Figma API</span>
+      <span class="marquee-item">Solo Project</span>
+      <span class="marquee-item">Figma Plugin</span>
+      <span class="marquee-item">Frame to PDF</span>
+      <span class="marquee-item">Design Tools</span>
+      <span class="marquee-item">Product Design</span>
+      <span class="marquee-item">Frontend Engineering</span>
+      <span class="marquee-item">4 Versions Shipped</span>
+      <span class="marquee-item">Figma API</span>
+      <span class="marquee-item">Solo Project</span>
     </div>
   </div>
 </header>

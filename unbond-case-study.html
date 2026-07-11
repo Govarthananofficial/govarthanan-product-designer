@@ -181,6 +181,13 @@
     .marquee-item::after { content: "✦"; display: inline-block; margin-left: 30px; color: rgba(255,255,255,.22); font-size: 10px; }
     @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
+    /* ── META FACT BAR ── */
+    .meta-bar { background: var(--bg); border-bottom: 1px solid var(--border); padding: 22px 0; }
+    .meta-bar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+    .meta-fact { display: flex; flex-direction: column; gap: 4px; }
+    .mf-label { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+    .mf-val { font-size: 13px; font-weight: 700; color: var(--ink); }
+
     /* ── SECTIONS ── */
     .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
     .section:last-of-type { border-bottom: none; }
@@ -555,6 +562,7 @@
       .principles-grid, .component-preview-grid { grid-template-columns: 1fr 1fr; }
       .ov-stats { grid-template-columns: 1fr 1fr; }
       .persona-card { grid-template-columns: 80px 1fr; }
+      .meta-bar-grid { grid-template-columns: repeat(3, 1fr); row-gap: 18px; }
     }
     @media (max-width: 680px) {
       .nav-tag { display: none; }
@@ -564,6 +572,7 @@
       .wireframe-grid, .journey-map, .swatch-grid { grid-template-columns: repeat(2, 1fr); }
       .persona-card { grid-template-columns: 1fr; text-align: center; }
       .persona-quote { border-left: none; border-top: 3px solid var(--ink); padding-left: 0; padding-top: 12px; }
+      .meta-bar-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
   <script>
@@ -649,6 +658,18 @@
     </div>
   </div>
 </header>
+
+<!-- ══════════════ META FACT BAR ══════════════ -->
+<div class="meta-bar">
+  <div class="container meta-bar-grid">
+    <div class="meta-fact"><span class="mf-label">Client</span><span class="mf-val">Independent — Salkom Design Studio</span></div>
+    <div class="meta-fact"><span class="mf-label">Project</span><span class="mf-val">Unbond — Bond &amp; Salary Companion App</span></div>
+    <div class="meta-fact"><span class="mf-label">Platform</span><span class="mf-val">Mobile App · iOS &amp; Android</span></div>
+    <div class="meta-fact"><span class="mf-label">Scope</span><span class="mf-val">UX Research · UI Design · Prototyping</span></div>
+    <div class="meta-fact"><span class="mf-label">Outcome</span><span class="mf-val">88% Checklist Completion · 92% Recall Accuracy</span></div>
+    <div class="meta-fact"><span class="mf-label">Duration</span><span class="mf-val">10-Week Concept Sprint, 2025</span></div>
+  </div>
+</div>
 
 <main>
 

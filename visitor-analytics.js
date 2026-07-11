@@ -455,6 +455,37 @@
     try { sessionStorage.setItem(VISIT_STORAGE_KEY, JSON.stringify(visit)); } catch (e) {}
   }
 
+  // ── Handoff window — in-app browsers (Instagram/LinkedIn/Facebook) often
+  // open a lightweight preview WebView first, then silently hand off to a
+  // second, more capable WebView a few seconds later once you interact.
+  // Each is technically a separate browsing context, so sessionStorage (tied
+  // to one tab/context) resets between them and looks like two unrelated
+  // visits, even though it was one tap. localStorage is shared across those
+  // contexts within the same app, so a short-lived (15s) breadcrumb there
+  // lets the second context recognize "this is a handoff, not a new visit"
+  // and continue the same row instead of inserting a duplicate. ──
+  var HANDOFF_STORAGE_KEY = 'visit_handoff_v1';
+  var HANDOFF_WINDOW_MS = 15000;
+
+  function readHandoff() {
+    try {
+      var raw = localStorage.getItem(HANDOFF_STORAGE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (!parsed || (Date.now() - parsed.savedAt) > HANDOFF_WINDOW_MS) return null;
+      return parsed;
+    } catch (e) { return null; }
+  }
+
+  function writeHandoff(visit) {
+    try {
+      var copy = {};
+      for (var k in visit) copy[k] = visit[k];
+      copy.savedAt = Date.now();
+      localStorage.setItem(HANDOFF_STORAGE_KEY, JSON.stringify(copy));
+    } catch (e) {}
+  }
+
   function newVisitId() {
     return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
   }
@@ -473,17 +504,26 @@
   var visit = readVisit();
   var isNewVisit = !visit;
   if (isNewVisit) {
-    visit = {
-      visitId: newVisitId(),
-      entryPage: page,
-      pagesSeen: [page],
-      source: resolveTrafficSource(ua, referrer),
-      startedAt: Date.now()
-    };
+    var trafficSource = resolveTrafficSource(ua, referrer);
+    var handoff = readHandoff();
+    if (handoff && handoff.entryPage === page && handoff.source === trafficSource) {
+      visit = handoff;
+      isNewVisit = false;
+      if (visit.pagesSeen[visit.pagesSeen.length - 1] !== page) visit.pagesSeen.push(page);
+    } else {
+      visit = {
+        visitId: newVisitId(),
+        entryPage: page,
+        pagesSeen: [page],
+        source: trafficSource,
+        startedAt: Date.now()
+      };
+    }
   } else if (visit.pagesSeen[visit.pagesSeen.length - 1] !== page) {
     visit.pagesSeen.push(page);
   }
   writeVisit(visit);
+  writeHandoff(visit);
 
   function reportVisitState() {
     transmit({

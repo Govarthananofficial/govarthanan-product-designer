@@ -181,7 +181,7 @@
     /* ── HERO ── */
     .hero {
       background: var(--ink);
-      padding: calc(var(--NAV-H) + 64px) 0 64px;
+      padding: calc(var(--NAV-H) + 64px) 0 0;
       position: relative;
       overflow: hidden;
     }
@@ -195,6 +195,7 @@
     }
     .hero-inner {
       position: relative; z-index: 1;
+      padding-bottom: 64px;
     }
 
     /* ── EYEBROW ── */
@@ -1198,7 +1199,7 @@
     }
     @media (max-width: 680px) {
       .nav-tag { display: none; }
-      .hero { padding: calc(var(--NAV-H) + 40px) 0 40px; }
+      .hero { padding: calc(var(--NAV-H) + 40px) 0 0; }
       .hero-metrics { grid-template-columns: 1fr 1fr; }
       .meta-bar-grid { grid-template-columns: repeat(2, 1fr); }
       .snapshot-grid { grid-template-columns: 1fr; }

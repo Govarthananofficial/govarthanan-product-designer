@@ -109,7 +109,7 @@
     .nav-pill:hover { background: var(--bg-2); }
 
     /* ── HERO ── */
-    .hero { background: var(--ink); padding: calc(var(--NAV-H) + 64px) 0 64px; position: relative; overflow: hidden; }
+    .hero { background: var(--ink); padding: calc(var(--NAV-H) + 64px) 0 0; position: relative; overflow: hidden; }
     .hero::before {
       content: ""; position: absolute; inset: 0;
       background-image:
@@ -117,7 +117,7 @@
         radial-gradient(circle at 20% 80%, rgba(255,255,255,.03) 0%, transparent 45%);
       pointer-events: none;
     }
-    .hero-inner { position: relative; z-index: 1; }
+    .hero-inner { position: relative; z-index: 1; padding-bottom: 64px; }
     .eyebrow {
       display: inline-flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700;
       letter-spacing: .22em; text-transform: uppercase; color: #ffffff; margin-bottom: 20px;
@@ -566,7 +566,7 @@
     }
     @media (max-width: 680px) {
       .nav-tag { display: none; }
-      .hero { padding: calc(var(--NAV-H) + 40px) 0 40px; }
+      .hero { padding: calc(var(--NAV-H) + 40px) 0 0; }
       .hero-metrics { grid-template-columns: 1fr 1fr; }
       .problem-space-grid, .principles-grid, .component-preview-grid, .ov-stats { grid-template-columns: 1fr; }
       .wireframe-grid, .journey-map, .swatch-grid { grid-template-columns: repeat(2, 1fr); }

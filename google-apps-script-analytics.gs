@@ -82,13 +82,6 @@ var FIELDS = [
   { key: 'visitId',   label: 'Visit ID',            width: 90, hidden: true }
 ];
 
-var PALETTE = {
-  headerBg: '#1a1a1a', headerFg: '#ffffff',
-  rowA: '#ffffff', rowB: '#f6f7f9',
-  border: '#e1e3e6',
-  doneBg: '#e2f4e8', doneFg: '#1e6b34',
-  downloadBg: '#e4ecff', downloadFg: '#1d3f9e'
-};
 
 function fieldCol(key) {
   for (var i = 0; i < FIELDS.length; i++) {
@@ -192,9 +185,9 @@ function openTrackingTab() {
 }
 
 /**
- * Manual re-run: reapplies header text/colors/widths/conditional formatting
- * to the EXISTING tab without touching a single row of data. Use this after
- * editing FIELDS/PALETTE above, or whenever the layout looks off.
+ * Manual re-run: reapplies header text/widths/alignment to the EXISTING tab
+ * without touching a single row of data. Use this after editing FIELDS
+ * above, or whenever the layout looks off.
  * Run it from the Apps Script editor: pick "rebuildSheetFormatting" from the
  * function dropdown next to Run, then click Run and approve if prompted.
  */
@@ -218,17 +211,12 @@ function applyFormatting(sheet) {
   for (var i = 0; i < total; i++) labels.push(FIELDS[i].label);
   sheet.getRange(1, 1, 1, total).setValues([labels]);
   sheet.setFrozenRows(1);
-  sheet.setFrozenColumns(1);
+  sheet.setFrozenColumns(0);
 
   sheet.getRange(1, 1, 1, total)
     .setFontWeight('bold')
-    .setFontFamily('Google Sans')
-    .setFontSize(10)
-    .setBackground(PALETTE.headerBg)
-    .setFontColor(PALETTE.headerFg)
     .setVerticalAlignment('middle')
     .setHorizontalAlignment('left');
-  sheet.setRowHeight(1, 32);
 
   var bodyRows = 998;
   for (var c = 0; c < total; c++) {
@@ -240,52 +228,18 @@ function applyFormatting(sheet) {
     if (field.format) sheet.getRange(2, col, bodyRows, 1).setNumberFormat(field.format);
   }
 
-  sheet.getRange(2, 1, bodyRows, total)
-    .setFontFamily('Google Sans')
-    .setFontSize(10)
-    .setVerticalAlignment('middle');
+  sheet.getRange(2, 1, bodyRows, total).setVerticalAlignment('middle');
 
+  // Plain default Sheets look: no fill colors, no row banding, no
+  // conditional-format highlighting, no custom border grid (Sheets' own
+  // default gridlines already separate cells — drawing another border on
+  // top of them was what made every line look doubled).
   var oldBandings = sheet.getBandings();
   for (var b = 0; b < oldBandings.length; b++) oldBandings[b].remove();
-  var banding = sheet.getRange(1, 1, bodyRows + 1, total)
-    .applyRowBanding(SpreadsheetApp.BandingTheme.LIGHT_GREY, true, false);
-  banding.setHeaderRowColor(PALETTE.headerBg)
-    .setFirstRowColor(PALETTE.rowA)
-    .setSecondRowColor(PALETTE.rowB);
-
-  sheet.getRange(1, 1, bodyRows + 1, total).setBorder(
-    true, true, true, true, true, true, PALETTE.border, SpreadsheetApp.BorderStyle.SOLID
-  );
-
-  applyStatusColors(sheet);
-  sheet.setTabColor(PALETTE.headerBg);
-}
-
-// Whole-row highlight, first matching rule wins, top to bottom:
-//   1. Resume Downloaded = Yes  -> blue, no matter how the visit is going
-//   2. Time on Site is filled   -> green, visit has a final known duration
-//   3. otherwise                -> no highlight, just the plain row banding
-//      (visit still in progress — deliberately not colored, so the sheet
-//      reads as data rather than a status board)
-function applyStatusColors(sheet) {
-  var total = FIELDS.length;
-  var rows = sheet.getMaxRows();
-  var everyRow = sheet.getRange(2, 1, rows - 1, total);
-  var colLetter = function (n) { return String.fromCharCode(64 + n); };
-  var resumeCell = '$' + colLetter(fieldCol('resume')) + '2';
-  var durationCell = '$' + colLetter(fieldCol('duration')) + '2';
-
-  var downloadRule = SpreadsheetApp.newConditionalFormatRule()
-    .whenFormulaSatisfied('=' + resumeCell + '="Yes"')
-    .setBackground(PALETTE.downloadBg).setFontColor(PALETTE.downloadFg).setBold(true)
-    .setRanges([everyRow]).build();
-
-  var doneRule = SpreadsheetApp.newConditionalFormatRule()
-    .whenFormulaSatisfied('=' + durationCell + '<>""')
-    .setBackground(PALETTE.doneBg).setFontColor(PALETTE.doneFg)
-    .setRanges([everyRow]).build();
-
-  sheet.setConditionalFormatRules([downloadRule, doneRule]);
+  sheet.getRange(1, 1, bodyRows + 1, total).setBackground(null);
+  sheet.getRange(1, 1, bodyRows + 1, total).setBorder(false, false, false, false, false, false);
+  sheet.setConditionalFormatRules([]);
+  sheet.setTabColor(null);
 }
 
 function insertRow(sheet, row) {

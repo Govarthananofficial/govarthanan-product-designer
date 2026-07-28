@@ -109,7 +109,7 @@
     .nav-pill:hover { background: var(--bg-2); }
 
     /* ── HERO ── */
-    .hero { background: var(--ink); padding: calc(var(--NAV-H) + 64px) 0 64px; position: relative; overflow: hidden; }
+    .hero { background: var(--ink); padding: calc(var(--NAV-H) + 64px) 0 0; position: relative; overflow: hidden; }
     .hero::before {
       content: ""; position: absolute; inset: 0;
       background-image:
@@ -117,7 +117,7 @@
         radial-gradient(circle at 20% 80%, rgba(255,255,255,.03) 0%, transparent 45%);
       pointer-events: none;
     }
-    .hero-inner { position: relative; z-index: 1; }
+    .hero-inner { position: relative; z-index: 1; padding-bottom: 64px; }
     .eyebrow {
       display: inline-flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700;
       letter-spacing: .22em; text-transform: uppercase; color: #ffffff; margin-bottom: 20px;
@@ -169,6 +169,24 @@
     .btn-ghost:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.75); }
     .cta-sep { flex: 1; }
     .cta-note { font-size: 11px; color: rgba(255,255,255,.25); letter-spacing: .05em; text-transform: uppercase; }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap { position: relative; z-index: 1; overflow: hidden; background: var(--ink); height: 46px; display: flex; align-items: center; border-top: 1px solid rgba(255,255,255,.08); }
+    .marquee-track { display: flex; width: max-content; animation: mq 30s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      display: inline-flex; align-items: center; padding: 0 0 0 30px; white-space: nowrap;
+      font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.6);
+    }
+    .marquee-item::after { content: "✦"; display: inline-block; margin-left: 30px; color: rgba(255,255,255,.22); font-size: 10px; }
+    @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── META FACT BAR ── */
+    .meta-bar { background: var(--bg); border-bottom: 1px solid var(--border); padding: 22px 0; }
+    .meta-bar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+    .meta-fact { display: flex; flex-direction: column; gap: 4px; }
+    .mf-label { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+    .mf-val { font-size: 13px; font-weight: 700; color: var(--ink); }
 
     /* ── SECTIONS ── */
     .section { padding: 72px 0; border-bottom: 1px solid var(--border); }
@@ -544,15 +562,17 @@
       .principles-grid, .component-preview-grid { grid-template-columns: 1fr 1fr; }
       .ov-stats { grid-template-columns: 1fr 1fr; }
       .persona-card { grid-template-columns: 80px 1fr; }
+      .meta-bar-grid { grid-template-columns: repeat(3, 1fr); row-gap: 18px; }
     }
     @media (max-width: 680px) {
       .nav-tag { display: none; }
-      .hero { padding: calc(var(--NAV-H) + 40px) 0 40px; }
+      .hero { padding: calc(var(--NAV-H) + 40px) 0 0; }
       .hero-metrics { grid-template-columns: 1fr 1fr; }
       .problem-space-grid, .principles-grid, .component-preview-grid, .ov-stats { grid-template-columns: 1fr; }
       .wireframe-grid, .journey-map, .swatch-grid { grid-template-columns: repeat(2, 1fr); }
       .persona-card { grid-template-columns: 1fr; text-align: center; }
       .persona-quote { border-left: none; border-top: 3px solid var(--ink); padding-left: 0; padding-top: 12px; }
+      .meta-bar-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
   <script>
@@ -617,7 +637,40 @@
       <span class="cta-note">Govarthanan S. · UI/UX Designer · Live on Play Store, 2025</span>
     </div>
   </div>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">UX Research</span>
+      <span class="marquee-item">Mobile App</span>
+      <span class="marquee-item">HR Tech</span>
+      <span class="marquee-item">Bond Tracker</span>
+      <span class="marquee-item">iOS &amp; Android</span>
+      <span class="marquee-item">Product Design</span>
+      <span class="marquee-item">42 Employees Surveyed</span>
+      <span class="marquee-item">Concept Project</span>
+      <span class="marquee-item">UX Research</span>
+      <span class="marquee-item">Mobile App</span>
+      <span class="marquee-item">HR Tech</span>
+      <span class="marquee-item">Bond Tracker</span>
+      <span class="marquee-item">iOS &amp; Android</span>
+      <span class="marquee-item">Product Design</span>
+      <span class="marquee-item">42 Employees Surveyed</span>
+      <span class="marquee-item">Concept Project</span>
+    </div>
+  </div>
 </header>
+
+<!-- ══════════════ META FACT BAR ══════════════ -->
+<div class="meta-bar">
+  <div class="container meta-bar-grid">
+    <div class="meta-fact"><span class="mf-label">Client</span><span class="mf-val">Independent — Salkom Design Studio</span></div>
+    <div class="meta-fact"><span class="mf-label">Project</span><span class="mf-val">Unbond — Bond &amp; Salary Companion App</span></div>
+    <div class="meta-fact"><span class="mf-label">Platform</span><span class="mf-val">Mobile App · iOS &amp; Android</span></div>
+    <div class="meta-fact"><span class="mf-label">Scope</span><span class="mf-val">UX Research · UI Design · Prototyping</span></div>
+    <div class="meta-fact"><span class="mf-label">Outcome</span><span class="mf-val">88% Checklist Completion · 92% Recall Accuracy</span></div>
+    <div class="meta-fact"><span class="mf-label">Duration</span><span class="mf-val">10-Week Concept Sprint, 2025</span></div>
+  </div>
+</div>
 
 <main>
 

@@ -224,7 +224,7 @@
     /* ── HERO ── */
     .hero {
       background: var(--ink);
-      padding: calc(var(--NAV-H) + 64px) 0 64px;
+      padding: calc(var(--NAV-H) + 64px) 0 0;
       position: relative;
       overflow: hidden;
     }
@@ -238,6 +238,7 @@
     }
     .hero-inner {
       position: relative; z-index: 1;
+      padding-bottom: 64px;
     }
 
     /* ── EYEBROW ── */
@@ -334,6 +335,24 @@
       font-size: 11px; color: rgba(255,255,255,.25);
       letter-spacing: .05em; text-transform: uppercase;
     }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap { position: relative; z-index: 1; overflow: hidden; background: var(--ink); height: 46px; display: flex; align-items: center; border-top: 1px solid rgba(255,255,255,.08); }
+    .marquee-track { display: flex; width: max-content; animation: mq 30s linear infinite; }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      display: inline-flex; align-items: center; padding: 0 0 0 30px; white-space: nowrap;
+      font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.6);
+    }
+    .marquee-item::after { content: "✦"; display: inline-block; margin-left: 30px; color: rgba(255,255,255,.22); font-size: 10px; }
+    @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── META FACT BAR ── */
+    .meta-bar { background: var(--bg); border-bottom: 1px solid var(--border); padding: 22px 0; }
+    .meta-bar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+    .meta-fact { display: flex; flex-direction: column; gap: 4px; }
+    .mf-label { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+    .mf-val { font-size: 13px; font-weight: 700; color: var(--ink); }
 
     /* ── SECTIONS ── */
     .section {
@@ -1420,10 +1439,14 @@
     }
 
     /* ── RESPONSIVE ── */
+    @media (max-width: 991px) {
+      .meta-bar-grid { grid-template-columns: repeat(3, 1fr); row-gap: 18px; }
+    }
     @media (max-width: 680px) {
       .nav-tag { display: none; }
       .hero { padding: calc(var(--NAV-H) + 40px) 0 0; }
       .hero-metrics { grid-template-columns: 1fr 1fr; }
+      .meta-bar-grid { grid-template-columns: repeat(2, 1fr); }
       .snapshot-grid, .impact-grid, .next-grid { grid-template-columns: 1fr; }
       .problem-vs { grid-template-columns: 1fr; }
       .problem-vs-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
@@ -1511,7 +1534,40 @@
       <span class="cta-note">Solo · Designer + Engineer · 2024–2026 · v5.0.0</span>
     </div>
   </div>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">NPM Package</span>
+      <span class="marquee-item">CSS Animations</span>
+      <span class="marquee-item">Design Systems</span>
+      <span class="marquee-item">Open Source</span>
+      <span class="marquee-item">Zero JS</span>
+      <span class="marquee-item">600+ Effects</span>
+      <span class="marquee-item">v5.0.0</span>
+      <span class="marquee-item">Dev Tooling</span>
+      <span class="marquee-item">NPM Package</span>
+      <span class="marquee-item">CSS Animations</span>
+      <span class="marquee-item">Design Systems</span>
+      <span class="marquee-item">Open Source</span>
+      <span class="marquee-item">Zero JS</span>
+      <span class="marquee-item">600+ Effects</span>
+      <span class="marquee-item">v5.0.0</span>
+      <span class="marquee-item">Dev Tooling</span>
+    </div>
+  </div>
 </header>
+
+<!-- ══════════════ META FACT BAR ══════════════ -->
+<div class="meta-bar">
+  <div class="container meta-bar-grid">
+    <div class="meta-fact"><span class="mf-label">Client</span><span class="mf-val">Open Source — npm Community</span></div>
+    <div class="meta-fact"><span class="mf-label">Project</span><span class="mf-val">SDS Motion Forge — CSS Animation Library</span></div>
+    <div class="meta-fact"><span class="mf-label">Platform</span><span class="mf-val">npm Package · CSS</span></div>
+    <div class="meta-fact"><span class="mf-label">Scope</span><span class="mf-val">Design Systems · Engineering</span></div>
+    <div class="meta-fact"><span class="mf-label">Outcome</span><span class="mf-val">1,857 Organic Downloads · 4 Live Client Products</span></div>
+    <div class="meta-fact"><span class="mf-label">Duration</span><span class="mf-val">2024–2026 · v5.0.0</span></div>
+  </div>
+</div>
 
 <main>
 

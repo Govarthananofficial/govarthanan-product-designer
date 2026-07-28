@@ -246,47 +246,98 @@
   }
 
   // ── Location — one accurate text box. NO latitude/longitude anywhere.
-  // 3-provider IP lookup fallback chain (BigDataCloud -> ipapi.co ->
-  // ipinfo.io). Never calls navigator.geolocation, so no permission popup
-  // ever shows — this is the practical accuracy ceiling for a silent,
-  // zero-friction lookup. Picks the most specific place name each provider
-  // offers and appends a postcode when one is available. ──
+  // 5-provider IP lookup fallback chain, tried in order until one returns a
+  // usable place name. Never calls navigator.geolocation, so no permission
+  // popup ever shows — this is the practical accuracy ceiling for a silent,
+  // zero-friction lookup.
+  //
+  // Two things make the chain resilient rather than just long:
+  //   - Every provider gets a hard timeout. Some in-app browsers (Instagram,
+  //     LinkedIn, Reddit) run their own network-level tracker filtering that
+  //     can silently hang a blocked request forever instead of failing fast —
+  //     without a timeout, that stalls the whole chain and even the later,
+  //     un-blocked providers never get tried.
+  //   - 5 providers across 5 different domains means one provider being
+  //     blocked, rate-capped (BigDataCloud's free tier is only 50/day), or
+  //     down doesn't sink the whole lookup — it just falls through to the
+  //     next.
   var currentLocation = 'Unknown Location';
+  var LOCATION_TIMEOUT_MS = 4000;
 
-  function fetchAccurateLocation() {
-    return fetch('https://api.bigdatacloud.net/data/reverse-geocode-client')
-      .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
-      .then(function (data) {
+  var LOCATION_PROVIDERS = [
+    {
+      url: 'https://api.bigdatacloud.net/data/reverse-geocode-client',
+      parse: function (data) {
         var country = tidyCountryName(data.countryName);
         var place = data.locality || data.city;
         var areaPart = (data.city && data.locality && data.locality !== data.city)
           ? data.locality + ', ' + data.city
           : place;
         if (data.postcode) areaPart = areaPart ? areaPart + ' ' + data.postcode : data.postcode;
-        var parts = [areaPart, data.principalSubdivision, country].filter(Boolean);
-        if (parts.length) currentLocation = parts.join(', ');
+        return [areaPart, data.principalSubdivision, country].filter(Boolean).join(', ');
+      }
+    },
+    {
+      url: 'https://ipapi.co/json/',
+      parse: function (data) {
+        var country = tidyCountryName(data.country_name);
+        var areaPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
+        return [areaPart, data.region, country].filter(Boolean).join(', ');
+      }
+    },
+    {
+      url: 'https://ipwho.is/',
+      parse: function (data) {
+        if (!data || data.success === false) return '';
+        var country = tidyCountryName(data.country);
+        var areaPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
+        return [areaPart, data.region, country].filter(Boolean).join(', ');
+      }
+    },
+    {
+      url: 'https://ipinfo.io/json',
+      parse: function (data) {
+        var country = tidyCountryName(data.country);
+        var areaPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
+        return [areaPart, data.region, country].filter(Boolean).join(', ');
+      }
+    },
+    {
+      url: 'https://get.geojs.io/v1/ip/geo.json',
+      parse: function (data) {
+        var country = tidyCountryName(data.country);
+        return [data.city, data.region, country].filter(Boolean).join(', ');
+      }
+    }
+  ];
+
+  function withTimeout(promise, ms) {
+    return new Promise(function (resolve, reject) {
+      var timer = setTimeout(function () { reject(new Error('location lookup timed out')); }, ms);
+      promise.then(
+        function (v) { clearTimeout(timer); resolve(v); },
+        function (e) { clearTimeout(timer); reject(e); }
+      );
+    });
+  }
+
+  function tryLocationProvider(index) {
+    if (index >= LOCATION_PROVIDERS.length) return Promise.resolve();
+    var provider = LOCATION_PROVIDERS[index];
+    return withTimeout(
+      fetch(provider.url).then(function (res) { return res.ok ? res.json() : Promise.reject(); }),
+      LOCATION_TIMEOUT_MS
+    )
+      .then(function (data) {
+        var text = provider.parse(data);
+        if (text) currentLocation = text;
+        else return tryLocationProvider(index + 1);
       })
-      .catch(function () {
-        return fetch('https://ipapi.co/json/')
-          .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
-          .then(function (data) {
-            var country = tidyCountryName(data.country_name);
-            var areaPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
-            var parts = [areaPart, data.region, country].filter(Boolean);
-            if (parts.length) currentLocation = parts.join(', ');
-          });
-      })
-      .catch(function () {
-        return fetch('https://ipinfo.io/json')
-          .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
-          .then(function (data) {
-            var country = tidyCountryName(data.country);
-            var areaPart = data.postal ? (data.city ? data.city + ' ' + data.postal : data.postal) : data.city;
-            var parts = [areaPart, data.region, country].filter(Boolean);
-            if (parts.length) currentLocation = parts.join(', ');
-          });
-      })
-      .catch(function () { /* silently give up — stays "Unknown Location" */ });
+      .catch(function () { return tryLocationProvider(index + 1); });
+  }
+
+  function fetchAccurateLocation() {
+    return tryLocationProvider(0);
   }
 
   // ── Traffic source — where the visit actually came from.
@@ -404,6 +455,37 @@
     try { sessionStorage.setItem(VISIT_STORAGE_KEY, JSON.stringify(visit)); } catch (e) {}
   }
 
+  // ── Handoff window — in-app browsers (Instagram/LinkedIn/Facebook) often
+  // open a lightweight preview WebView first, then silently hand off to a
+  // second, more capable WebView a few seconds later once you interact.
+  // Each is technically a separate browsing context, so sessionStorage (tied
+  // to one tab/context) resets between them and looks like two unrelated
+  // visits, even though it was one tap. localStorage is shared across those
+  // contexts within the same app, so a short-lived (15s) breadcrumb there
+  // lets the second context recognize "this is a handoff, not a new visit"
+  // and continue the same row instead of inserting a duplicate. ──
+  var HANDOFF_STORAGE_KEY = 'visit_handoff_v1';
+  var HANDOFF_WINDOW_MS = 15000;
+
+  function readHandoff() {
+    try {
+      var raw = localStorage.getItem(HANDOFF_STORAGE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (!parsed || (Date.now() - parsed.savedAt) > HANDOFF_WINDOW_MS) return null;
+      return parsed;
+    } catch (e) { return null; }
+  }
+
+  function writeHandoff(visit) {
+    try {
+      var copy = {};
+      for (var k in visit) copy[k] = visit[k];
+      copy.savedAt = Date.now();
+      localStorage.setItem(HANDOFF_STORAGE_KEY, JSON.stringify(copy));
+    } catch (e) {}
+  }
+
   function newVisitId() {
     return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
   }
@@ -422,17 +504,26 @@
   var visit = readVisit();
   var isNewVisit = !visit;
   if (isNewVisit) {
-    visit = {
-      visitId: newVisitId(),
-      entryPage: page,
-      pagesSeen: [page],
-      source: resolveTrafficSource(ua, referrer),
-      startedAt: Date.now()
-    };
+    var trafficSource = resolveTrafficSource(ua, referrer);
+    var handoff = readHandoff();
+    if (handoff && handoff.entryPage === page && handoff.source === trafficSource) {
+      visit = handoff;
+      isNewVisit = false;
+      if (visit.pagesSeen[visit.pagesSeen.length - 1] !== page) visit.pagesSeen.push(page);
+    } else {
+      visit = {
+        visitId: newVisitId(),
+        entryPage: page,
+        pagesSeen: [page],
+        source: trafficSource,
+        startedAt: Date.now()
+      };
+    }
   } else if (visit.pagesSeen[visit.pagesSeen.length - 1] !== page) {
     visit.pagesSeen.push(page);
   }
   writeVisit(visit);
+  writeHandoff(visit);
 
   function reportVisitState() {
     transmit({

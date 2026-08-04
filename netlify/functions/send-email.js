@@ -365,8 +365,8 @@ exports.handler = async function (event) {
                 <p style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif;
                            font-size:13px;line-height:1.85;color:#6A6A62;margin:0;">
                   I&rsquo;m a <strong style="color:#1A1A18;font-weight:600;">UI/UX Designer &amp; Frontend Engineer</strong>
-                  with 2+ years building production apps across fintech, retail &amp; SaaS &mdash; including
-                  Pothys DigiGold, GRT &amp; Lalitha Jewellery. While you wait, explore the work below.
+                  with 2+ years building production apps across fintech, retail &amp; SaaS. While you wait,
+                  explore the work below.
                 </p>
               </div>
 

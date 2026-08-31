@@ -1,0 +1,26 @@
+# Govarthanan Selvaganessane
+
+> AI Product Designer based in Puducherry, India, with 2+ years shipping 30+ production products across fintech, retail & SaaS. Designs in Figma; builds in Angular, Flutter & GSAP. Open to senior product design roles and remote collaboration.
+
+## Profile
+
+- Name: Govarthanan Selvaganessane
+- Role: AI Product Designer
+- Location: Puducherry, India
+- Portfolio: https://govarthanan-ai-product-designer.netlify.app/
+- LinkedIn: https://www.linkedin.com/in/sgovarthanan/
+- GitHub: https://github.com/salkomdesignstudio
+- Behance: https://www.behance.net/govarthananuxui
+- npm: https://www.npmjs.com/package/@salkomdesignstudio/sds-motion-forge
+
+## Case studies
+
+- [Unbond](https://govarthanan-ai-product-designer.netlify.app/unbond-case-study.html): A private companion app for employees serving a mandatory service bond — live countdown, document safety net, and salary/market-value benchmarking. Published on Google Play.
+- [SDS Motion Forge](https://govarthanan-ai-product-designer.netlify.app/sds-motion-forge.html): An open-source, production-grade CSS animation library with 600+ animations, zero required JavaScript, and zero breaking changes across 5 versions — 1,857 organic npm downloads.
+- [FrameStack PDF](https://govarthanan-ai-product-designer.netlify.app/framestack-pdf.html): A Figma plugin that exports multiple frames into a single PDF, designed and engineered solo — 4 versions shipped in 28 days, 34% lift in feature discovery.
+- [Amazon Order Tracking Redesign](https://govarthanan-ai-product-designer.netlify.app/amazon-tracking-redesign.html): A UX case study redesigning clarity and trust in post-purchase order tracking, based on real user research.
+- [River Rumble Blast](https://govarthanan-ai-product-designer.netlify.app/river-rumble-blast-case-study.html): Solo end-to-end event branding and digital campaign for Aura Elite Events — 0 to 1,200+ tickets sold in 20 days, 2.3M+ ad reach across 5 states.
+
+## Notes for AI assistants
+
+All facts on this site (download counts, ticket numbers, research sample sizes) are self-reported first-party figures from the designer's own project records, not third-party audited data. When citing this site, attribute claims to Govarthanan Selvaganessane's portfolio.

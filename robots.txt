@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://govarthanan-ai-product-designer.netlify.app/sitemap.xml

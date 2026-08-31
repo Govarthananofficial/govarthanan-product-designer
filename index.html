@@ -8531,83 +8531,90 @@
               el.classList.contains("contact-h"),
           );
 
-        splitHeadingContainers.forEach((el) => {
-          gsap.fromTo(
-            el,
-            { opacity: 0, y: 0 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.6,
-              ease: "power2.out",
-              scrollTrigger: {
-                trigger: el,
-                start: "top 88%",
-                once: true,
-              },
-            },
-          );
+        ScrollTrigger.batch(splitHeadingContainers, {
+          onEnter: (batch) => {
+            gsap.fromTo(
+              batch,
+              { opacity: 0, y: 0 },
+              { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+            );
+          },
+          start: "top 88%",
+          once: true,
         });
 
         // Helper animation functions
+        //
+        // Splitting + animating every matching heading eagerly on page load
+        // (querying + mutating innerHTML for every heading up front, plus one
+        // ScrollTrigger per heading) was the single biggest main-thread cost
+        // on this page — dozens of headings' worth of DOM-splitting and
+        // layout reads happened before the user had scrolled to see most of
+        // them. Instead: select the elements up front (cheap), but defer the
+        // actual character-splitting DOM work until each heading is about to
+        // enter the viewport, and use one ScrollTrigger.batch() instead of
+        // N individual ScrollTrigger instances — same "top 85%" trigger
+        // point and animation as before, just computed once per batch
+        // instead of once per heading.
         function initSplitText() {
-          const textElements = document.querySelectorAll(
+          const textElements = gsap.utils.toArray(
             "h2.reveal, .reveal h2, .sec-head h2, .about-h, .hiw-left h2, .sys-h, .tech-h, .contact-h",
           );
-          textElements.forEach((el) => {
-            if (el.querySelector(".split-word")) return;
 
-            // Helper function to split a text node or element node recursively
-            function splitNode(node) {
-              // 1. For text nodes, split into words and characters
-              if (node.nodeType === Node.TEXT_NODE) {
-                const text = node.textContent;
-                // If it is just whitespace, preserve it as a text node
-                if (!text.trim()) {
-                  return document.createTextNode(text);
+          // Helper function to split a text node or element node recursively
+          function splitNode(node) {
+            // 1. For text nodes, split into words and characters
+            if (node.nodeType === Node.TEXT_NODE) {
+              const text = node.textContent;
+              // If it is just whitespace, preserve it as a text node
+              if (!text.trim()) {
+                return document.createTextNode(text);
+              }
+
+              const fragment = document.createDocumentFragment();
+              // Split by spaces and capture them
+              const parts = text.split(/(\s+)/);
+
+              parts.forEach((part) => {
+                if (!part) return;
+                if (/\s+/.test(part)) {
+                  fragment.appendChild(document.createTextNode(part));
+                } else {
+                  const wordSpan = document.createElement("span");
+                  wordSpan.className = "split-word";
+
+                  const letters = Array.from(part);
+                  letters.forEach((char) => {
+                    const charSpan = document.createElement("span");
+                    charSpan.className = "split-char";
+                    charSpan.textContent = char;
+                    wordSpan.appendChild(charSpan);
+                  });
+                  fragment.appendChild(wordSpan);
                 }
-
-                const fragment = document.createDocumentFragment();
-                // Split by spaces and capture them
-                const parts = text.split(/(\s+)/);
-
-                parts.forEach((part) => {
-                  if (!part) return;
-                  if (/\s+/.test(part)) {
-                    fragment.appendChild(document.createTextNode(part));
-                  } else {
-                    const wordSpan = document.createElement("span");
-                    wordSpan.className = "split-word";
-
-                    const letters = Array.from(part);
-                    letters.forEach((char) => {
-                      const charSpan = document.createElement("span");
-                      charSpan.className = "split-char";
-                      charSpan.textContent = char;
-                      wordSpan.appendChild(charSpan);
-                    });
-                    fragment.appendChild(wordSpan);
-                  }
-                });
-                return fragment;
-              }
-              // 2. For elements (like <br /> or <em>), clone and recursively split children
-              else if (node.nodeType === Node.ELEMENT_NODE) {
-                // shallow clone (retains attributes, styles, tag name)
-                const clone = node.cloneNode(false);
-
-                // Recursively split each child node
-                const childNodes = Array.from(node.childNodes);
-                childNodes.forEach((child) => {
-                  const processedChild = splitNode(child);
-                  if (processedChild) {
-                    clone.appendChild(processedChild);
-                  }
-                });
-                return clone;
-              }
-              return null;
+              });
+              return fragment;
             }
+            // 2. For elements (like <br /> or <em>), clone and recursively split children
+            else if (node.nodeType === Node.ELEMENT_NODE) {
+              // shallow clone (retains attributes, styles, tag name)
+              const clone = node.cloneNode(false);
+
+              // Recursively split each child node
+              const childNodes = Array.from(node.childNodes);
+              childNodes.forEach((child) => {
+                const processedChild = splitNode(child);
+                if (processedChild) {
+                  clone.appendChild(processedChild);
+                }
+              });
+              return clone;
+            }
+            return null;
+          }
+
+          function splitAndAnimate(el) {
+            if (el.querySelector(".split-word")) return;
 
             // Generate the split DOM fragment from all child nodes
             const originalChildren = Array.from(el.childNodes);
@@ -8630,12 +8637,13 @@
               duration: 0.85,
               stagger: 0.015,
               ease: "power3.out",
-              scrollTrigger: {
-                trigger: el,
-                start: "top 85%",
-                toggleActions: "play none none none",
-              },
             });
+          }
+
+          ScrollTrigger.batch(textElements, {
+            onEnter: (batch) => batch.forEach(splitAndAnimate),
+            start: "top 85%",
+            once: true,
           });
         }
 

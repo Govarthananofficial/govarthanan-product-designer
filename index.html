@@ -154,7 +154,7 @@
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "What does Govarthanan Selvaganessane do?",
+                "name": "What does Govarthanan do?",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "He's an AI Product Designer with 2+ years shipping 30+ production products across fintech, retail & SaaS — designing in Figma and building in Angular, Flutter & GSAP."
@@ -162,10 +162,18 @@
               },
               {
                 "@type": "Question",
-                "name": "Is he available for freelance or full-time roles?",
+                "name": "Is he open to full-time roles?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "He's selectively available for senior AI product design, product design leadership, or design systems architect roles — particularly at fintech, SaaS, or developer-tool companies that care about execution quality."
+                  "text": "Selectively available for senior AI product design, product design leadership, or design systems architect roles — particularly at fintech, SaaS, or developer-tool companies that care about execution quality."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How much experience does he have?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "2+ years shipping 30+ production products, including a gold savings platform built for one of India's largest jewellery brands."
                 }
               },
               {
@@ -178,10 +186,50 @@
               },
               {
                 "@type": "Question",
+                "name": "Where can I see proof of his work?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The Work section has full case studies with process and outcomes, and his résumé is available to download from the nav above."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is he available for freelance or contract projects?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes — selectively available for freelance and contract engagements alongside full-time roles, particularly for fintech, SaaS, or developer-tool products."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What kind of projects does he take on?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "End-to-end product design — research, flows, UI, and design systems — plus front-end builds in Angular, Flutter & GSAP when a project needs working code, not just Figma files."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How does he typically work with clients?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Every engagement starts with business goals and user research, then moves through flows, design systems, and interactive prototypes before build."
+                }
+              },
+              {
+                "@type": "Question",
                 "name": "Has he published any open-source work?",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "Yes — SDS Motion Forge, a CSS animation library on npm and GitHub, and FrameStack PDF, a Figma plugin on the Figma Community and GitHub."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How do I start a project with him?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Book a call via Calendly, or send a message using the contact form — he'll reply with next steps and availability."
                 }
               }
             ]
@@ -7656,28 +7704,188 @@
 
     <!-- ═══ FAQ ═══ -->
     <div id="faq" class="bleed sec" style="border-top:1px solid var(--gray-alpha-400);">
-      <div style="max-width:760px;margin:0 auto;padding:80px 24px;">
-        <div style="font-family:'Geist',sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-700);font-weight:600;margin-bottom:12px;">FAQ</div>
-        <h2 style="font-family:'Geist',sans-serif;font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:-.02em;color:var(--gray-1000);margin:0 0 32px;">Common questions.</h2>
-        <div style="display:flex;flex-direction:column;gap:1px;background:var(--gray-alpha-400);border:1px solid var(--gray-alpha-400);border-radius:12px;overflow:hidden;">
-          <details style="background:#ffffff;padding:20px 24px;">
-            <summary style="cursor:pointer;font-family:'Geist',sans-serif;font-weight:600;color:var(--gray-1000);">What does Govarthanan Selvaganessane do?</summary>
-            <p style="margin:12px 0 0;color:var(--gray-900);line-height:1.6;font-size:15px;">He's an AI Product Designer with 2+ years shipping 30+ production products across fintech, retail &amp; SaaS — designing in Figma and building in Angular, Flutter &amp; GSAP.</p>
+      <style>
+        .faq-layout { display: grid; grid-template-columns: 300px 1fr; gap: 96px; align-items: start; }
+        .faq-side { position: sticky; top: calc(var(--NAV-H) + 32px); }
+        .faq-eyebrow { font-family: "Geist", sans-serif; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--gray-700); font-weight: 600; margin-bottom: 12px; }
+        .faq-heading { font-family: "Geist", sans-serif; font-size: clamp(26px, 2.6vw, 34px); font-weight: 800; letter-spacing: -.02em; color: var(--gray-1000); margin: 0 0 14px; }
+        .faq-sub { font-family: "Geist", sans-serif; font-size: 15px; line-height: 1.6; color: var(--gray-800); max-width: 34ch; margin: 0; }
+
+        .faq-tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--gray-100); border: 1px solid var(--bd); border-radius: 999px; margin-bottom: 28px; }
+        .faq-tab { display: inline-flex; align-items: center; gap: 8px; font-family: "Geist", sans-serif; font-size: 13.5px; font-weight: 600; color: var(--gray-700); background: transparent; border: none; padding: 10px 20px; border-radius: 999px; cursor: pointer; transition: background .2s var(--ease-geist), color .2s var(--ease-geist), box-shadow .2s; }
+        .faq-tab i { font-size: 15px; }
+        .faq-tab:hover { color: var(--gray-1000); }
+        .faq-tab[aria-selected="true"] { background: var(--gray-1000); color: #fff; box-shadow: var(--sh1); }
+
+        .faq-panel { display: flex; flex-direction: column; gap: 12px; }
+        .faq-panel[hidden] { display: none; }
+        .faq-item { background: var(--surface); border: 1px solid var(--bd); border-radius: 16px; overflow: hidden; transition: border-color .25s, box-shadow .25s, background .25s; }
+        .faq-item:hover { border-color: var(--bd3); }
+        .faq-item[open] { border-color: var(--gray-alpha-500); box-shadow: var(--sh1); }
+        .faq-q { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 22px; -webkit-tap-highlight-color: transparent; }
+        .faq-q::-webkit-details-marker { display: none; }
+        .faq-q::marker { content: ""; }
+        .faq-q-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
+        .faq-q-icon { flex-shrink: 0; width: 38px; height: 38px; border-radius: 11px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; color: var(--gray-900); font-size: 16px; transition: background .25s, color .25s; }
+        .faq-item[open] .faq-q-icon { background: var(--gray-1000); color: #fff; }
+        .faq-q-text { font-family: "Geist", sans-serif; font-weight: 600; font-size: 15.5px; color: var(--gray-1000); line-height: 1.4; }
+        .faq-chevron { flex-shrink: 0; font-size: 18px; color: var(--gray-700); transition: transform .25s var(--ease-geist); }
+        .faq-item[open] .faq-chevron { transform: rotate(45deg); color: var(--gray-1000); }
+        .faq-a { margin: 0; padding: 0 22px 22px 76px; color: var(--gray-800); line-height: 1.65; font-size: 14.5px; font-family: "Geist", sans-serif; }
+        .faq-a a { color: var(--gray-1000); text-decoration: underline; text-underline-offset: 2px; }
+
+        @media (max-width: 900px) {
+          .faq-layout { grid-template-columns: 1fr; gap: 32px; }
+          .faq-side { position: static; }
+        }
+        @media (max-width: 640px) {
+          .faq-tabs { display: flex; }
+          .faq-tab { flex: 1; justify-content: center; padding: 10px 12px; }
+          .faq-a { padding-left: 22px; }
+        }
+      </style>
+
+      <div class="container">
+        <div class="faq-layout">
+          <div class="faq-side">
+            <div class="faq-eyebrow">FAQ</div>
+            <h2 class="faq-heading reveal">Common questions.</h2>
+            <p class="faq-sub reveal">
+              Answers grouped by why you're here — hiring, or building something together.
+            </p>
+          </div>
+
+          <div class="faq-main">
+            <div class="faq-tabs reveal" role="tablist" aria-label="FAQ audience">
+              <button type="button" class="faq-tab" id="faqTabRecruiter" role="tab" aria-selected="true" aria-controls="faqPanelRecruiter">
+                <i class="ri-briefcase-4-fill"></i> For Recruiters
+              </button>
+              <button type="button" class="faq-tab" id="faqTabClient" role="tab" aria-selected="false" aria-controls="faqPanelClient">
+                <i class="ri-rocket-2-fill"></i> For Clients &amp; Founders
+              </button>
+            </div>
+
+            <div class="faq-panel reveal" id="faqPanelRecruiter" role="tabpanel" aria-labelledby="faqTabRecruiter">
+          <details class="faq-item" open>
+            <summary class="faq-q">
+              <span class="faq-q-left">
+                <span class="faq-q-icon"><i class="ri-user-star-fill"></i></span>
+                <span class="faq-q-text">What does Govarthanan do?</span>
+              </span>
+              <i class="ri-add-fill faq-chevron"></i>
+            </summary>
+            <p class="faq-a">He's an AI Product Designer with 2+ years shipping 30+ production products across fintech, retail &amp; SaaS — designing in Figma and building in Angular, Flutter &amp; GSAP.</p>
           </details>
-          <details style="background:#ffffff;padding:20px 24px;">
-            <summary style="cursor:pointer;font-family:'Geist',sans-serif;font-weight:600;color:var(--gray-1000);">Is he available for freelance or full-time roles?</summary>
-            <p style="margin:12px 0 0;color:var(--gray-900);line-height:1.6;font-size:15px;">He's selectively available for senior AI product design, product design leadership, or design systems architect roles — particularly at fintech, SaaS, or developer-tool companies that care about execution quality.</p>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span class="faq-q-left">
+                <span class="faq-q-icon"><i class="ri-briefcase-4-fill"></i></span>
+                <span class="faq-q-text">Is he open to full-time roles?</span>
+              </span>
+              <i class="ri-add-fill faq-chevron"></i>
+            </summary>
+            <p class="faq-a">Selectively available for senior AI product design, product design leadership, or design systems architect roles — particularly at fintech, SaaS, or developer-tool companies that care about execution quality.</p>
           </details>
-          <details style="background:#ffffff;padding:20px 24px;">
-            <summary style="cursor:pointer;font-family:'Geist',sans-serif;font-weight:600;color:var(--gray-1000);">Where is he based, and does he work remotely?</summary>
-            <p style="margin:12px 0 0;color:var(--gray-900);line-height:1.6;font-size:15px;">He's based in Puducherry, India, and open to remote collaboration.</p>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span class="faq-q-left">
+                <span class="faq-q-icon"><i class="ri-medal-fill"></i></span>
+                <span class="faq-q-text">How much experience does he have?</span>
+              </span>
+              <i class="ri-add-fill faq-chevron"></i>
+            </summary>
+            <p class="faq-a">2+ years shipping 30+ production products, including a gold savings platform built for one of India's largest jewellery brands — see the <a href="#impact">Impact</a> and <a href="#projects">Work</a> sections for the full breakdown.</p>
           </details>
-          <details style="background:#ffffff;padding:20px 24px;">
-            <summary style="cursor:pointer;font-family:'Geist',sans-serif;font-weight:600;color:var(--gray-1000);">Has he published any open-source work?</summary>
-            <p style="margin:12px 0 0;color:var(--gray-900);line-height:1.6;font-size:15px;">Yes — SDS Motion Forge, a CSS animation library on npm and GitHub, and FrameStack PDF, a Figma plugin on the Figma Community and GitHub.</p>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span class="faq-q-left">
+                <span class="faq-q-icon"><i class="ri-map-pin-2-fill"></i></span>
+                <span class="faq-q-text">Where is he based, and does he work remotely?</span>
+              </span>
+              <i class="ri-add-fill faq-chevron"></i>
+            </summary>
+            <p class="faq-a">He's based in Puducherry, India, and open to remote collaboration.</p>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span class="faq-q-left">
+                <span class="faq-q-icon"><i class="ri-file-list-3-fill"></i></span>
+                <span class="faq-q-text">Where can I see proof of his work?</span>
+              </span>
+              <i class="ri-add-fill faq-chevron"></i>
+            </summary>
+            <p class="faq-a">The <a href="#projects">Work</a> section has full case studies with process and outcomes, and his résumé is available to <a href="Govarthanan-Selvaganessane-Resume.pdf" download="Govarthanan-Selvaganessane-Resume.pdf">download</a> from the nav above.</p>
           </details>
         </div>
+
+        <div class="faq-panel" id="faqPanelClient" role="tabpanel" aria-labelledby="faqTabClient" hidden>
+          <details class="faq-item" open>
+            <summary class="faq-q">
+              <span class="faq-q-left">
+                <span class="faq-q-icon"><i class="ri-flashlight-fill"></i></span>
+                <span class="faq-q-text">Is he available for freelance or contract projects?</span>
+              </span>
+              <i class="ri-add-fill faq-chevron"></i>
+            </summary>
+            <p class="faq-a">Yes — selectively available for freelance and contract engagements alongside full-time roles, particularly for fintech, SaaS, or developer-tool products.</p>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span class="faq-q-left">
+                <span class="faq-q-icon"><i class="ri-apps-2-fill"></i></span>
+                <span class="faq-q-text">What kind of projects does he take on?</span>
+              </span>
+              <i class="ri-add-fill faq-chevron"></i>
+            </summary>
+            <p class="faq-a">End-to-end product design — research, flows, UI, and design systems — plus front-end builds in Angular, Flutter &amp; GSAP when a project needs working code, not just Figma files.</p>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span class="faq-q-left">
+                <span class="faq-q-icon"><i class="ri-git-branch-fill"></i></span>
+                <span class="faq-q-text">How does he typically work with clients?</span>
+              </span>
+              <i class="ri-add-fill faq-chevron"></i>
+            </summary>
+            <p class="faq-a">Every engagement starts with business goals and user research, then moves through flows, design systems, and interactive prototypes before build — see the <a href="#how-i-build">Process</a> section for the full breakdown.</p>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span class="faq-q-left">
+                <span class="faq-q-icon"><i class="ri-code-s-slash-fill"></i></span>
+                <span class="faq-q-text">Has he published any open-source work?</span>
+              </span>
+              <i class="ri-add-fill faq-chevron"></i>
+            </summary>
+            <p class="faq-a">Yes — SDS Motion Forge, a CSS animation library on npm and GitHub, and FrameStack PDF, a Figma plugin on the Figma Community and GitHub.</p>
+          </details>
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span class="faq-q-left">
+                <span class="faq-q-icon"><i class="ri-send-plane-fill"></i></span>
+                <span class="faq-q-text">How do I start a project with him?</span>
+              </span>
+              <i class="ri-add-fill faq-chevron"></i>
+            </summary>
+            <p class="faq-a"><a href="https://calendly.com/salkomdesignstudio" target="_blank" rel="noopener noreferrer">Book a call via Calendly</a>, or send a message using the form <a href="#contact">below</a> — he'll reply with next steps and availability.</p>
+              </details>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <script>
+        (function () {
+          var tabs = [document.getElementById("faqTabRecruiter"), document.getElementById("faqTabClient")];
+          var panels = [document.getElementById("faqPanelRecruiter"), document.getElementById("faqPanelClient")];
+          tabs.forEach(function (tab, i) {
+            tab.addEventListener("click", function () {
+              tabs.forEach(function (t, j) { t.setAttribute("aria-selected", i === j ? "true" : "false"); });
+              panels.forEach(function (p, j) { p.hidden = i !== j; });
+            });
+          });
+        })();
+      </script>
     </div>
 
     <div class="divider"></div>
